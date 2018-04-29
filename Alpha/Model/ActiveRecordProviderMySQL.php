@@ -2538,4 +2538,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $connection->query('DROP DATABASE '.$config->get('db.name'));
     }
+
+    /**
+     * (non-PHPdoc).
+     *
+     * @see Alpha\Model\ActiveRecordProviderInterface::backupDatabase()
+     */
+    public static function backupDatabase($targetFile)
+    {
+        $config = ConfigProvider::getInstance();
+
+        exec('mysqldump  --host="'.$config->get('db.hostname').'" --user="'.$config->get('db.username').'" --password="'.$config->get('db.password').'" --opt '.$config->get('db.name').' 2>&1 >'.$targetFile);
+    }
 }

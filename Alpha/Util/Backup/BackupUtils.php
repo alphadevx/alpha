@@ -4,6 +4,7 @@ namespace Alpha\Util\Backup;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\File\FileUtils;
+use Alpha\Model\ActiveRecord;
 
 /**
  * A utility class for carrying out various backup tasks.
@@ -56,7 +57,7 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backUpAttachmentsAndLogs($backupDir)
+    public static function backupAttachmentsAndLogs($backupDir)
     {
         $config = ConfigProvider::getInstance();
 
@@ -71,12 +72,12 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backUpDatabase($backupDir)
+    public static function backupDatabase($backupDir)
     {
         $config = ConfigProvider::getInstance();
 
         $targetFileName = $backupDir.$config->get('db.name').'_'.date('Y-m-d').'.sql';
 
-        exec('mysqldump  --host="'.$config->get('db.hostname').'" --user="'.$config->get('db.username').'" --password="'.$config->get('db.password').'" --opt '.$config->get('db.name').' 2>&1 >'.$targetFileName);
+        ActiveRecord::backupDatabase($targetFileName);
     }
 }

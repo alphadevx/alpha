@@ -2668,4 +2668,22 @@ abstract class ActiveRecord
         $provider->setRecord(new Person());
         $provider->dropDatabase();
     }
+
+    /**
+     * Backup the configured database.
+     *
+     * @param string $targetFile The file that the backup data will be written to.
+     *
+     * @throws \Alpha\Exception\AlphaException
+     *
+     * @since 3.0
+     */
+    public static function backupDatabase($targetFile)
+    {
+        $config = ConfigProvider::getInstance();
+
+        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+        $provider->setRecord(new Person());
+        $provider->backupDatabase($targetFile);
+    }
 }

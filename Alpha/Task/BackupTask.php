@@ -83,8 +83,8 @@ class BackupTask implements TaskInterface
         }
 
         $back = new BackupUtils();
-        $back->backUpAttachmentsAndLogs($targetDir);
-        $back->backUpDatabase($targetDir);
+        $back->backupAttachmentsAndLogs($targetDir);
+        $back->backupDatabase($targetDir);
 
         $additionalDirectories = explode(',', $config->get('backup.include.dirs'));
 

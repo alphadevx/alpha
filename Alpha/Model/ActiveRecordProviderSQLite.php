@@ -2336,4 +2336,16 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             unlink($config->get('db.file.path'));
         }
     }
+
+    /**
+     * (non-PHPdoc).
+     *
+     * @see Alpha\Model\ActiveRecordProviderInterface::backupDatabase()
+     */
+    public static function backupDatabase($targetFile)
+    {
+        $config = ConfigProvider::getInstance();
+
+        exec('sqlite3 '.$config->get('db.file.path').' ".backup '.$targetFile.'"');
+    }
 }
