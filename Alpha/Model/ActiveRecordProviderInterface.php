@@ -273,10 +273,12 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      *
+     * @param bool $checkIndexes Set to false if you do not want to check for any additional required indexes while creating the table (default is true).
+     *
      * @throws \Alpha\Exception\AlphaException
      * @return void
      */
-    public function makeTable();
+    public function makeTable($checkIndexes = true);
 
     /**
      * Builds a new database table for the Record class to store it's history.
