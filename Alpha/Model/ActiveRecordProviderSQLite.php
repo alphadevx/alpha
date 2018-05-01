@@ -913,7 +913,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $stmt->execute();
                 } catch (Exception $e) {
                     if (self::getConnection()->lastErrorCode() == 19) {
-                        throw new ValidationException('Unique key violation while trying to save object, SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
+                        throw new ValidationException('Unique key violation while trying to save object, exception ['.$e->getMessage().'], SQLite error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
                     } else {
                         throw new FailedSaveException('Failed to save object, exception ['.$e->getMessage().'], DB error is ['.self::getLastDatabaseError().'], query ['.$this->record->getLastQuery().']');
                     }
@@ -1274,7 +1274,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeTable()
      */
-    public function makeTable()
+    public function makeTable($checkIndexes = true)
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1358,7 +1358,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         }
 
         // check the table indexes if any additional ones required
-        $this->checkIndexes();
+        if ($checkIndexes) {
+            $this->checkIndexes();
+        }
 
         if ($this->record->getMaintainHistory()) {
             $this->record->makeHistoryTable();
@@ -2005,6 +2007,58 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             }
         }
 
+        // process foreign-key indexes
+        // get the class attributes
+        $reflection = new ReflectionClass(get_class($this->record));
+        $properties = $reflection->getProperties();
+        foreach ($properties as $propObj) {
+            $propName = $propObj->name;
+            $prop = $this->record->getPropObject($propName);
+            if ($prop instanceof Relation) {
+                if ($prop->getRelationType() == 'MANY-TO-ONE') {
+                    $indexExists = false;
+                    foreach ($indexNames as $index) {
+                        if ($this->record->getTableName().'_'.$propName.'_fk_idx' == $index) {
+                            $indexExists = true;
+                        }
+                    }
+                    if (!$indexExists) {
+                        $this->createForeignIndex($propName, $prop->getRelatedClass(), $prop->getRelatedClassField());
+                    }
+                }
+                if ($prop->getRelationType() == 'MANY-TO-MANY') {
+                    $lookup = $prop->getLookup();
+                    if ($lookup != null) {
+                        try {
+                            $lookupIndexNames = $lookup->getIndexes();
+                            // handle index check/creation on left side of Relation
+                            $indexExists = false;
+                            foreach ($lookupIndexNames as $index) {
+                                if ($lookup->getTableName().'_leftID_fk_idx' == $index) {
+                                    $indexExists = true;
+                                }
+                            }
+                            if (!$indexExists) {
+                                $lookup->createForeignIndex('leftID', $prop->getRelatedClass('left'), 'ID');
+                            }
+                            // handle index check/creation on right side of Relation
+                            $indexExists = false;
+                            foreach ($lookupIndexNames as $index) {
+                                if ($lookup->getTableName().'_rightID_fk_idx' == $index) {
+                                    $indexExists = true;
+                                }
+                            }
+                            if (!$indexExists) {
+                                $lookup->createForeignIndex('rightID', $prop->getRelatedClass('right'), 'ID');
+                            }
+                        } catch (AlphaException $e) {
+                            self::$logger->error($e->getMessage());
+                        }
+                    }
+                }
+            }
+        }
+
         self::$logger->debug('<<checkIndexes');
     }
 
@@ -2028,8 +2082,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
          * 4. Drop [tablename]_temp.
          */
         try {
-            ActiveRecord::begin($this->record);
-
             // rename the table to [tablename]_temp
             $query = 'ALTER TABLE '.$this->record->getTableName().' RENAME TO '.$this->record->getTableName().'_temp;';
             $this->record->setLastQuery($query);
@@ -2042,7 +2094,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $tableName = $record->getTableName();
             $this->foreignKeys[$attributeName] = array($tableName, $relatedClassAttribute);
 
-            $this->makeTable();
+            if (!$this->checkTableExists()) {
+                $this->makeTable(false);
+            }
 
             self::$logger->info('Made a new copy of the table ['.$this->record->getTableName().']');
 
@@ -2057,11 +2111,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
             $this->record->dropTable($this->record->getTableName().'_temp');
 
             self::$logger->info('Dropped the table ['.$this->record->getTableName().'_temp]');
-
-            ActiveRecord::commit($this->record);
         } catch (Exception $e) {
-            ActiveRecord::rollback($this->record);
-
             throw new FailedIndexCreateException('Failed to create the index ['.$attributeName.'] on ['.$this->record->getTableName().'], error is ['.$e->getMessage().'], query ['.$this->record->getLastQuery().']');
         }
 
@@ -2320,6 +2370,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         if (!self::checkDatabaseExists()) {
             fopen($config->get('db.file.path'), 'x+');
+            chmod($config->get('db.file.path'), 0755);
         }
     }
 

@@ -64,6 +64,7 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
         $config->set('app.file.store.dir', $testInstallDir.'/store/');
         $config->set('db.file.path', $testInstallDir.'/unittests.db');
         $config->set('db.file.test.path', $testInstallDir.'/unittests.db');
+        ActiveRecord::disconnect();
 
         if (!file_exists($testInstallDir)) {
             mkdir($testInstallDir);
@@ -80,7 +81,7 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
         $person->set('password', 'testpassword');
 
         $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', $person);
     }
 
@@ -90,6 +91,7 @@ class InstallControllerTest extends \PHPUnit_Framework_TestCase
         $config->set('app.root', '');
         $config->set('app.file.store.dir', '/tmp/');
         $config->set('db.file.path', '/tmp/unittests.db');
+        ActiveRecord::disconnect();
     }
 
     /**

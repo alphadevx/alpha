@@ -882,7 +882,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeTable()
+    public function makeTable($checkIndexes = true)
     {
         self::$logger->debug('>>makeTable()');
 
@@ -894,7 +894,7 @@ abstract class ActiveRecord
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
-        $provider->makeTable();
+        $provider->makeTable($checkIndexes);
 
         if (method_exists($this, 'after_makeTable_callback')) {
             $this->{'after_makeTable_callback'}();

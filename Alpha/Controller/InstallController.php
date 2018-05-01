@@ -298,7 +298,7 @@ class InstallController extends Controller implements ControllerInterface
         ActiveRecord::commit();
 
         self::$logger->info('Finished installation!');
-        self::$logger->action('Installed the application');
+        self::$logger->info('Installed the application');
         self::$logger->debug('<<doGET');
 
         return new Response(200, $body, array('Content-Type' => 'text/html'));

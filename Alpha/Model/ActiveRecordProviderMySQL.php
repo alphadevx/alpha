@@ -1233,7 +1233,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeTable()
      */
-    public function makeTable()
+    public function makeTable($checkIndexes = true)
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1298,7 +1298,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         // check the table indexes if any additional ones required
-        $this->checkIndexes();
+        if ($checkIndexes) {
+            $this->checkIndexes();
+        }
 
         if ($this->record->getMaintainHistory()) {
             $this->record->makeHistoryTable();
