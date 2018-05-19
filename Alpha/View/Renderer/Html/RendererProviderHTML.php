@@ -163,32 +163,10 @@ class RendererProviderHTML implements RendererProviderInterface
         $button = new Button('submit', 'Save', 'saveBut');
         $fields['saveButton'] = $button->render();
 
-        $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to delete this item?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
-                                    $('#deleteForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+        $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
+            
+        $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
+
         $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();
 
@@ -319,32 +297,9 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= $button->render();
             $html .= '&nbsp;&nbsp;';
 
-            $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to delete this item?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
-                                    $('#deleteForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+            $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
+            
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
             $button = new Button($js, 'Delete', 'delete'.$this->record->getID().'But');
             $html .= $button->render();
@@ -392,32 +347,9 @@ class RendererProviderHTML implements RendererProviderInterface
             }
             $html .= $button->render();
 
-            $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to delete this item?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
-                                    $('#deleteForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+            $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
+            
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
             $button = new Button($js, 'Delete', 'deleteBut');
             $html .= $button->render();
@@ -502,9 +434,9 @@ class RendererProviderHTML implements RendererProviderInterface
         // recreate and update table buttons (if required)
         $html = '';
         if ($this->record->checkTableNeedsUpdate() && $this->record->checkTableExists()) {
-            $buttonPressedId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
+            $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             
-            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to recreate this class table (all data will be lost)?', 'buttonPressedId' => $buttonPressedId, 'buttonName' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to recreate this class table (all data will be lost)?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Recreate Table', 'recreateTableBut');
             $html .= $button->render();
@@ -512,9 +444,9 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->record).'"/>';
             $html .= '&nbsp;&nbsp;';
 
-            $buttonPressedId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
+            $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             
-            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'buttonPressedId' => $buttonPressedId, 'buttonName' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Update Table', 'updateTableBut');
             $html .= $button->render();

@@ -16,7 +16,7 @@ if(window.jQuery) {
                 label: 'Okay',
                 cssClass: 'btn btn-default btn-xs',
                 action: function(dialogItself) {
-                    $('[Id="<?= $buttonPressedId ?>"]').attr('value', '<?= $buttonName ?>');
+                    $('[Id="<?= $formFieldId ?>"]').attr('value', '<?= $formFieldValue ?>');
                     $('#<?= $formId ?>').submit();
                     dialogItself.close();
                 }
