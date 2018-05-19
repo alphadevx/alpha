@@ -1,4 +1,4 @@
- Copyright (c) 2016, John Collins (founder of Alpha Framework).
+ Copyright (c) 2018, John Collins (founder of Alpha Framework).
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or
