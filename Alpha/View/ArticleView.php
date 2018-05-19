@@ -163,32 +163,9 @@ class ArticleView extends View
         $button = new Button('submit', 'Save', 'saveBut');
         $fields['saveButton'] = $button->render();
 
-        $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to delete this item?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID')."\"]').attr('value', '".$this->record->getID()."');
-                                    $('#deleteForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+        $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
+            
+        $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
         $button = new Button($js, 'Delete', 'deleteBut');
         $fields['deleteButton'] = $button->render();

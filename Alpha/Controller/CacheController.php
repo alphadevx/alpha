@@ -138,32 +138,9 @@ class CacheController extends Controller implements ControllerInterface
         $body .= '<form action="'.$request->getURI().'" method="post" name="clearForm" id="clearForm">';
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearCache')) : 'clearCache');
         $body .= '<input type="hidden" name="'.$fieldname.'" id="'.$fieldname.'" value="false"/>';
-        $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you want to delete all files in the cache?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[id=\"".$fieldname."\"]').attr('value', 'true');
-                                    $('#clearForm').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+
+        $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you want to delete all files in the cache?', 'formFieldId' => $fieldname, 'formFieldValue' => 'true', 'formId' => 'clearForm'));
+
         $button = new Button($js, 'Clear cache', 'clearBut');
         $body .= $button->render();
 
