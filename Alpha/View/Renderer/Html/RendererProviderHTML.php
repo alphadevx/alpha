@@ -502,32 +502,9 @@ class RendererProviderHTML implements RendererProviderInterface
         // recreate and update table buttons (if required)
         $html = '';
         if ($this->record->checkTableNeedsUpdate() && $this->record->checkTableExists()) {
-            $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to recreate this class table (all data will be lost)?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed')."\"]').attr('value', 'recreateTableBut');
-                                    $('#admin_".stripslashes(get_class($this->record))."').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+            $buttonPressedId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
+            
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to recreate this class table (all data will be lost)?', 'buttonPressedId' => $buttonPressedId, 'buttonName' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Recreate Table', 'recreateTableBut');
             $html .= $button->render();
@@ -535,32 +512,9 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= '<input type="hidden" name="recreateTableClass" value="'.get_class($this->record).'"/>';
             $html .= '&nbsp;&nbsp;';
 
-            $js = "if(window.jQuery) {
-                    BootstrapDialog.show({
-                        title: 'Confirmation',
-                        message: 'Are you sure you wish to attempt to modify this class table by adding new attributes?',
-                        buttons: [
-                            {
-                                icon: 'glyphicon glyphicon-remove',
-                                label: 'Cancel',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself){
-                                    dialogItself.close();
-                                }
-                            },
-                            {
-                                icon: 'glyphicon glyphicon-ok',
-                                label: 'Okay',
-                                cssClass: 'btn btn-default btn-xs',
-                                action: function(dialogItself) {
-                                    $('[Id=\"".($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed')."\"]').attr('value', 'updateTableBut');
-                                    $('#admin_".stripslashes(get_class($this->record))."').submit();
-                                    dialogItself.close();
-                                }
-                            }
-                        ]
-                    });
-                }";
+            $buttonPressedId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
+            
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'buttonPressedId' => $buttonPressedId, 'buttonName' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Update Table', 'updateTableBut');
             $html .= $button->render();

@@ -1,0 +1,26 @@
+if(window.jQuery) {
+    BootstrapDialog.show({
+        title: 'Confirmation',
+        message: '<?= $prompt ?>',
+        buttons: [
+            {
+                icon: 'glyphicon glyphicon-remove',
+                label: 'Cancel',
+                cssClass: 'btn btn-default btn-xs',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            },
+            {
+                icon: 'glyphicon glyphicon-ok',
+                label: 'Okay',
+                cssClass: 'btn btn-default btn-xs',
+                action: function(dialogItself) {
+                    $('[Id="<?= $buttonPressedId ?>"]').attr('value', '<?= $buttonName ?>');
+                    $('#<?= $formId ?>').submit();
+                    dialogItself.close();
+                }
+            }
+        ]
+    });
+}
