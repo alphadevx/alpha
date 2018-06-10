@@ -3,6 +3,7 @@
 namespace Alpha\Util\Cache;
 
 use Alpha\Util\Logging\Logger;
+use Alpha\Util\Config\ConfigProvider;
 
 /**
  * An implementation of the CacheProviderInterface interface that uses an array as the
@@ -68,6 +69,16 @@ class CacheProviderArray implements CacheProviderInterface
     public static $cacheArray = array();
 
     /**
+     * Cache key prefix to use, based on the application title, to prevent key clashes between different apps
+     * using the same cache provider.
+     *
+     * @var string
+     *
+     * @since 3.0.0
+     */
+    private $appPrefix;
+
+    /**
      * Constructor.
      *
      * @since 1.2.1
@@ -75,6 +86,10 @@ class CacheProviderArray implements CacheProviderInterface
     public function __construct()
     {
         self::$logger = new Logger('CacheProviderArray');
+
+        $config = ConfigProvider::getInstance();
+
+        $this->appPrefix = preg_replace("/[^a-zA-Z0-9]+/", "", $config->get('app.title'));
     }
 
     /**
@@ -86,8 +101,8 @@ class CacheProviderArray implements CacheProviderInterface
 
         self::$logger->debug('Getting value for key ['.$key.']');
 
-        if (array_key_exists($key, self::$cacheArray)) {
-            return self::$cacheArray[$key];
+        if (array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray)) {
+            return self::$cacheArray[$this->appPrefix.'-'.$key];
         } else {
             return false;
         }
@@ -100,7 +115,7 @@ class CacheProviderArray implements CacheProviderInterface
     {
         self::$logger->debug('Setting value for key ['.$key.']');
 
-        self::$cacheArray[$key] = $value;
+        self::$cacheArray[$this->appPrefix.'-'.$key] = $value;
     }
 
     /**
@@ -110,6 +125,6 @@ class CacheProviderArray implements CacheProviderInterface
     {
         self::$logger->debug('Removing value for key ['.$key.']');
 
-        unset(self::$cacheArray[$key]);
+        unset(self::$cacheArray[$this->appPrefix.'-'.$key]);
     }
 }
