@@ -16,6 +16,7 @@ use Alpha\Exception\FailedDeleteException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\LockingException;
 use Alpha\Exception\NotImplementedException;
 use ReflectionClass;
 use ReflectionProperty;
@@ -574,6 +575,20 @@ abstract class ActiveRecord
 
         // firstly we will validate the object before we try to save it
         $this->validate();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        if ($this->getVersion() != $this->getVersionNumber()->getValue()) {
+            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+        }
+
+        // set the "updated by" fields, we can only set the user id if someone is logged in
+        if ($session->get('currentUser') != null) {
+            $this->set('updated_by', $session->get('currentUser')->getID());
+        }
+
+        $this->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);

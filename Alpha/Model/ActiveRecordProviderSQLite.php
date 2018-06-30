@@ -831,24 +831,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>save()');
 
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
         $properties = $reflection->getProperties();
-
-        if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
-            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-        }
-
-        // set the "updated by" fields, we can only set the user id if someone is logged in
-        if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getID());
-        }
-
-        $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
 
         // check to see if it is a transient object that needs to be inserted
         if ($this->record->isTransient()) {
