@@ -934,66 +934,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 $this->record->setID(self::getConnection()->insert_id);
             }
 
-            try {
-                foreach ($properties as $propObj) {
-                    $propName = $propObj->name;
-
-                    if ($this->record->getPropObject($propName) instanceof Relation) {
-                        $prop = $this->record->getPropObject($propName);
-
-                        // handle the saving of MANY-TO-MANY relation values
-                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
-                            try {
-                                try {
-                                    // check to see if the rel is on this class
-                                    $side = $prop->getSide(get_class($this->record));
-                                } catch (IllegalArguementException $iae) {
-                                    $side = $prop->getSide(get_parent_class($this->record));
-                                }
-
-                                $lookUp = $prop->getLookup();
-
-                                // first delete all of the old RelationLookup objects for this rel
-                                try {
-                                    if ($side == 'left') {
-                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getID());
-                                    } else {
-                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getID());
-                                    }
-                                } catch (\Exception $e) {
-                                    throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
-                                }
-
-                                $IDs = $prop->getRelatedIDs();
-
-                                if (isset($IDs) && !empty($IDs[0])) {
-                                    // now for each posted ID, create a new RelationLookup record and save
-                                    foreach ($IDs as $id) {
-                                        $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-                                        if ($side == 'left') {
-                                            $newLookUp->set('leftID', $this->record->getID());
-                                            $newLookUp->set('rightID', $id);
-                                        } else {
-                                            $newLookUp->set('rightID', $this->record->getID());
-                                            $newLookUp->set('leftID', $id);
-                                        }
-                                        $newLookUp->save();
-                                    }
-                                }
-                            } catch (\Exception $e) {
-                                throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-                            }
-                        }
-
-                        // handle the saving of ONE-TO-MANY relation values
-                        if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $prop->setValue($this->record->getID());
-                        }
-                    }
-                }
-            } catch (\Exception $e) {
-                throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-            }
+            $this->record->saveRelations($properties);
 
             $stmt->close();
         } else {

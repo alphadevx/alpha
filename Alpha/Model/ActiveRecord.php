@@ -605,6 +605,80 @@ abstract class ActiveRecord
     }
 
     /**
+     * Saves relationship values, including lookup entries, for this record.
+     *
+     * @since 3.0
+     *
+     * @throws \Alpha\Exception\FailedSaveException
+     */
+    public function saveRelations()
+    {
+        $reflection = new ReflectionClass(get_class($this));
+        $properties = $reflection->getProperties();
+
+        try {
+            foreach ($properties as $propObj) {
+                $propName = $propObj->name;
+
+                if ($this->getPropObject($propName) instanceof Relation) {
+                    $prop = $this->getPropObject($propName);
+
+                    // handle the saving of MANY-TO-MANY relation values
+                    if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
+                        try {
+                            try {
+                                // check to see if the rel is on this class
+                                $side = $prop->getSide(get_class($this));
+                            } catch (IllegalArguementException $iae) {
+                                $side = $prop->getSide(get_parent_class($this));
+                            }
+
+                            $lookUp = $prop->getLookup();
+
+                            // first delete all of the old RelationLookup objects for this rel
+                            try {
+                                if ($side == 'left') {
+                                    $lookUp->deleteAllByAttribute('leftID', $this->getID());
+                                } else {
+                                    $lookUp->deleteAllByAttribute('rightID', $this->getID());
+                                }
+                            } catch (\Exception $e) {
+                                throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+                            }
+
+                            $IDs = $prop->getRelatedIDs();
+
+                            if (isset($IDs) && !empty($IDs[0])) {
+                                // now for each posted ID, create a new RelationLookup record and save
+                                foreach ($IDs as $id) {
+                                    $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+                                    if ($side == 'left') {
+                                        $newLookUp->set('leftID', $this->getID());
+                                        $newLookUp->set('rightID', $id);
+                                    } else {
+                                        $newLookUp->set('rightID', $this->getID());
+                                        $newLookUp->set('leftID', $id);
+                                    }
+                                    $newLookUp->save();
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+                        }
+                    }
+
+                    // handle the saving of ONE-TO-MANY relation values
+                    if ($prop->getRelationType() == 'ONE-TO-MANY') {
+                        $prop->setValue($this->getID());
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
+        }
+    }
+
+    /**
      * Saves the field specified with the value supplied.  Only works for persistent records.  Note that no Alpha type
      * validation is performed with this method!
      *
