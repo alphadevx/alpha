@@ -29,9 +29,5 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./Alpha</directory>
         </whitelist>
-        <exclude>
-            <directory>./vendor</directory>
-            <directory>./test</directory>
-        </exclude>
     </filter>
 </phpunit>
