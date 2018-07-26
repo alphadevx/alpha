@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/alphadevx/alpha/badge.svg?branch=develop)](https://coveralls.io/github/alphadevx/alpha?branch=develop)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=develop)
 
-Alpha Framework (3.0.0-RC.1)
+Alpha Framework (3.0.0-RC.2)
 =================================================================
 
 Introduction
