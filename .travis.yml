@@ -1,5 +1,5 @@
 language: php
-dist: precise
+dist: trusty
 
 php:
  - '7.2.7'
@@ -12,7 +12,7 @@ before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add php.ini
- - yes '' | pecl install -f apcu-5.1.7
+ - yes '' | pecl install -f apcu-5.1.12
 
 script:
  - vendor/bin/phpunit
