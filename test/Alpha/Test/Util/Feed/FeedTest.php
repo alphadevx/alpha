@@ -11,6 +11,7 @@ use Alpha\Util\Feed\RSS;
 use Alpha\Util\Feed\RSS2;
 use XMLReader;
 use SimpleXMLElement;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the Feed class and its children.
@@ -19,7 +20,7 @@ use SimpleXMLElement;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -54,7 +55,7 @@ use SimpleXMLElement;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class FeedTest extends \PHPUnit_Framework_TestCase
+class FeedTest extends TestCase
 {
     /**
      * Test object to inject into a feed.

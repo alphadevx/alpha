@@ -12,7 +12,7 @@
          verbose="false"
 >
     <php>
-        <env name="HOSTNAME" value="unittests"/>
+        <env name="HOSTNAME" value="unittests" force="true"/>
     </php>
 
     <logging>

@@ -5,6 +5,7 @@ namespace Alpha\Test\Model\Type;
 use Alpha\Model\Type\SmallText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the SmallText data type.
@@ -12,9 +13,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -49,7 +49,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SmallTextTest extends \PHPUnit_Framework_TestCase
+class SmallTextTest extends TestCase
 {
     /**
      * A SmallText for testing.

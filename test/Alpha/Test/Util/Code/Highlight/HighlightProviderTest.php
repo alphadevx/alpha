@@ -4,6 +4,7 @@ namespace Alpha\Test\Util\Code\Highlight;
 
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the HighlightProviderInterface implementations.
@@ -12,7 +13,7 @@ use Alpha\Util\Helper\Validator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -47,7 +48,7 @@ use Alpha\Util\Helper\Validator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class HighlightProviderTest extends \PHPUnit_Framework_TestCase
+class HighlightProviderTest extends TestCase
 {
     /**
      * Returns an array of highlight providers.

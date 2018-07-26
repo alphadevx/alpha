@@ -6,6 +6,7 @@ use Alpha\View\Widget\TagCloud;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\Tag;
 use Alpha\Model\Article;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the TagCloud widget.
@@ -14,7 +15,7 @@ use Alpha\Model\Article;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -49,7 +50,7 @@ use Alpha\Model\Article;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class TagCloudTest extends \PHPUnit_Framework_TestCase
+class TagCloudTest extends TestCase
 {
     /**
      * Set up tests.

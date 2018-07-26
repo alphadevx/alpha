@@ -4,6 +4,7 @@ namespace Alpha\Test\Util\Cache;
 
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Config\ConfigProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the CacheProviderInterface implementations.
@@ -47,7 +48,7 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class CacheProviderTest extends \PHPUnit_Framework_TestCase
+class CacheProviderTest extends TestCase
 {
     /**
      * Returns an array of cache providers.

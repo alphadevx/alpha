@@ -10,6 +10,7 @@ use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Model\ActionLog;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the LoginController class.
@@ -18,7 +19,7 @@ use Alpha\Model\ActionLog;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,7 +54,7 @@ use Alpha\Model\ActionLog;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class LoginControllerTest extends \PHPUnit_Framework_TestCase
+class LoginControllerTest extends TestCase
 {
     /**
      * Set up tests.
