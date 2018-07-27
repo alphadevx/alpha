@@ -155,6 +155,8 @@ class SmallTextTest extends TestCase
             $this->str1->setHelper($this->usernameHelper);
 
             $this->str1->setValue('user_name.-test123gg');
+
+            $this->assertEquals('user_name.-test123gg', $this->str1->getValue());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid username string: '.$e->getMessage());
         }
@@ -201,6 +203,8 @@ class SmallTextTest extends TestCase
             $this->str1->setValue('some.user@somewhere.co.uk');
             $this->str1->setValue('some.user@somewhere.net');
             $this->str1->setValue('some.user@somewhere.org');
+
+            $this->assertEquals($this->emailHelper, $this->str1->getHelper());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid email string: '.$e->getMessage());
         }
@@ -241,6 +245,8 @@ class SmallTextTest extends TestCase
             $this->str1->setValue('http://www.design-ireland.net/');
             $this->str1->setValue('http://www.theregister.co.uk/');
             $this->str1->setValue('http://www.bbc.co.uk/');
+
+            $this->assertEquals($this->urlHelper, $this->str1->getHelper());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid URL string: '.$e->getMessage());
         }

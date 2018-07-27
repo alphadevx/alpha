@@ -135,6 +135,7 @@ class DEnumTest extends ModelTestCase
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
             $this->denum1->setValue($optionIDs[0]);
+            $this->assertEquals('00000000001', $this->denum1->getValue());
         } catch (AlphaException $e) {
             $this->fail('testing the setValue method with a good options index array value, exception: '.$e->getMessage());
         }

@@ -435,6 +435,7 @@ class ControllerTest extends TestCase
 
         try {
             $this->controller->commit();
+            $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
@@ -456,6 +457,7 @@ class ControllerTest extends TestCase
 
         try {
             $this->controller->commit();
+            $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
@@ -463,6 +465,7 @@ class ControllerTest extends TestCase
         $newPerson = new Person();
         try {
             $newPerson->loadByAttribute('email', 'newuser@test.com');
+            $this->assertEquals('newuser@test.com', $newPerson->get('email'));
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the new person that we commited in the unit of work');
         }
@@ -470,6 +473,7 @@ class ControllerTest extends TestCase
         $dirtyPerson = new Person();
         try {
             $dirtyPerson->loadByAttribute('email', 'changed@test.com');
+            $this->assertEquals('changed@test.com', $dirtyPerson->get('email'));
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the dirty person that we commited in the unit of work');
         }

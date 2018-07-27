@@ -140,6 +140,7 @@ class RelationTest extends ModelTestCase
     {
         try {
             $this->rel1->setRelatedClass('Alpha\Model\Article');
+            $this->assertEquals('Alpha\Model\Article', $this->rel1->getRelatedClass());
         } catch (AlphaException $e) {
             $this->fail('Testing passing a valid BO name to setRelatedClass');
         }
@@ -170,6 +171,7 @@ class RelationTest extends ModelTestCase
         try {
             $this->rel1->setRelatedClass('Alpha\Model\Person');
             $this->rel1->setRelatedClassField('email');
+            $this->assertEquals('email', $this->rel1->getRelatedClassField());
         } catch (AlphaException $e) {
             $this->fail('Testing passing a valid field name to setRelatedClassField');
         }
@@ -200,6 +202,7 @@ class RelationTest extends ModelTestCase
     {
         try {
             $this->rel1->setRelationType('MANY-TO-ONE');
+            $this->assertEquals('MANY-TO-ONE', $this->rel1->getRelationType());
         } catch (AlphaException $e) {
             $this->fail('Testing passing a valid type name to setRelationType');
         }
@@ -230,6 +233,7 @@ class RelationTest extends ModelTestCase
         try {
             $this->rel1->setValue(100);
             $this->rel1->setValue('2777');
+            $this->assertEquals(2777, $this->rel1->getValue());
         } catch (AlphaException $e) {
             $this->fail('Testing setValue method with a valid value');
         }
