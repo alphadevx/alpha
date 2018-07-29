@@ -18,4 +18,5 @@ script:
  - vendor/bin/phpunit
 
 after_script:
- - vendor/bin/php-coveralls -vvv --root_dir=./
+ - ls -l /home/travis/build/alphadevx/alpha
+ - vendor/bin/php-coveralls -vvv --root_dir=/home/travis/build/alphadevx/alpha
