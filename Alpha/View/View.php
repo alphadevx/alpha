@@ -2,6 +2,7 @@
 
 namespace Alpha\View;
 
+use Alpha\Controller\Front\FrontController;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
