@@ -27,7 +27,7 @@
         "tecnickcom/tcpdf": "6.2.17",
         "michelf/php-markdown": "1.6.0",
         "themattharris/tmhoauth": "0.8.4",
-        "geshi/geshi": "v1.0.9.0",
+        "easybook/geshi": "v1.0.8.19",
         "luminous/luminous": "dev-psr-conversion"
     },
     "require-dev": {
