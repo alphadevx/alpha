@@ -15,6 +15,10 @@
         <env name="HOSTNAME" value="unittests" force="true"/>
     </php>
 
+    <logging>
+        <log type="coverage-clover" target="./clover.xml"/>
+    </logging>
+
     <testsuites>
         <testsuite name="Alpha Framework Test Suite">
             <directory suffix="Test.php">./test</directory>
