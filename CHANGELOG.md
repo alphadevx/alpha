@@ -1,13 +1,5 @@
 # Change Log
 
-## [Unreleased](https://github.com/alphadevx/alpha/tree/HEAD)
-
-[Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0...HEAD)
-
-**Merged pull requests:**
-
-- Release/3.0.0 release [\#339](https://github.com/alphadevx/alpha/pull/339) ([alphadevx](https://github.com/alphadevx))
-
 ## [3.0.0](https://github.com/alphadevx/alpha/tree/3.0.0) (2018-08-04)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0-RC.2...3.0.0)
 
