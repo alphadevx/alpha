@@ -41,7 +41,7 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	    "minimum-stability": "dev",
 	    "prefer-stable": true,
 	    "require": {
-	        "alphadevx/alpha": "2.0.*"
+	        "alphadevx/alpha": "3.0.*"
 	    },
 	    "autoload": {
 	        "psr-0": {
