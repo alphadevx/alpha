@@ -4,6 +4,7 @@ namespace Alpha\Test\Util;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Exception\PHPException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the exception handling functionality.
@@ -11,11 +12,8 @@ use Alpha\Exception\PHPException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: Exceptions_Test.php 1496 2012-02-12 20:32:21Z alphadev $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,7 +48,7 @@ use Alpha\Exception\PHPException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ErrorHandlersTest extends \PHPUnit_Framework_TestCase
+class ErrorHandlersTest extends TestCase
 {
     protected function setUp()
     {

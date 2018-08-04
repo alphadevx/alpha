@@ -7,6 +7,7 @@ use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Model\ActionLog;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class used by tests that need to have a logged in admin user.
@@ -15,7 +16,7 @@ use Alpha\Model\ActionLog;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,7 +51,7 @@ use Alpha\Model\ActionLog;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ControllerTestCase extends \PHPUnit_Framework_TestCase
+class ControllerTestCase extends TestCase
 {
     /**
      * Creates the user and rights group tables, adds a user into both as

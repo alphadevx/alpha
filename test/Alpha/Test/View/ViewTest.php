@@ -9,6 +9,7 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the View class.
@@ -17,7 +18,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,7 +53,7 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     /**
      * View class for testing.

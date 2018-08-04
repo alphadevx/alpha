@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Http;
 
 use Alpha\Util\Http\AgentUtils;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the AgentUtils class.
@@ -11,7 +12,7 @@ use Alpha\Util\Http\AgentUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -46,7 +47,7 @@ use Alpha\Util\Http\AgentUtils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class AgentUtilsTest extends \PHPUnit_Framework_TestCase
+class AgentUtilsTest extends TestCase
 {
     /**
      * Testing various browser agent strings to ensure that they are not mistakenly threated as bots.

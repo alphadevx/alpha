@@ -3,6 +3,8 @@
 namespace Alpha\Test\Util\Cache;
 
 use Alpha\Util\Service\ServiceFactory;
+use Alpha\Util\Config\ConfigProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the CacheProviderInterface implementations.
@@ -46,7 +48,7 @@ use Alpha\Util\Service\ServiceFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class CacheProviderTest extends \PHPUnit_Framework_TestCase
+class CacheProviderTest extends TestCase
 {
     /**
      * Returns an array of cache providers.
@@ -91,5 +93,32 @@ class CacheProviderTest extends \PHPUnit_Framework_TestCase
         $cache->delete('cached');
 
         $this->assertFalse($cache->get('cached'), 'Testing the delete method');
+    }
+
+    /**
+     * Testing the application key prefix is working as expected to prevent collisions
+     *
+     * @since 3.0
+     * @dataProvider getCacheProviders
+     */
+    public function testKeyPrefix($provider)
+    {
+        $config = ConfigProvider::getInstance();
+
+        $config->set('app.title', 'Application 1');
+        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
+        $cache->set('testkey', 'testkey value for application 1');
+
+        $config->set('app.title', 'Application 2');
+        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
+        $cache->set('testkey', 'testkey value for application 2');
+
+        $config->set('app.title', 'Application 1');
+        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
+        $this->assertEquals('testkey value for application 1', $cache->get('testkey'));
+
+        $config->set('app.title', 'Application 2');
+        $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
+        $this->assertEquals('testkey value for application 2', $cache->get('testkey'));
     }
 }

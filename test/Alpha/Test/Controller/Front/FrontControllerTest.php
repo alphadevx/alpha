@@ -10,6 +10,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the FrontController class.
@@ -18,7 +19,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,7 +54,7 @@ use Alpha\Exception\AlphaException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class FrontControllerTest extends \PHPUnit_Framework_TestCase
+class FrontControllerTest extends TestCase
 {
     /**
      * Testing the encodeQuery method with a known encrypted result for a test key.

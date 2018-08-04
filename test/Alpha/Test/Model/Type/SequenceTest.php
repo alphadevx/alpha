@@ -12,11 +12,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: SequenceTest.php 1843 2014-11-13 22:41:33Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>

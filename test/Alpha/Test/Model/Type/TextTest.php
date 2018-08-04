@@ -5,6 +5,7 @@ namespace Alpha\Test\Model\Type;
 use Alpha\Model\Type\Text;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the Text data type.
@@ -12,11 +13,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: TextTest.php 1837 2014-11-10 16:26:29Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -51,7 +49,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class TextTest extends \PHPUnit_Framework_TestCase
+class TextTest extends TestCase
 {
     /**
      * A Text for testing.

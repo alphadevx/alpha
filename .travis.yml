@@ -2,7 +2,7 @@ language: php
 dist: precise
 
 php:
- - '7.1.7'
+ - '7.2.7'
 
 services:
  - memcached
@@ -11,11 +11,11 @@ services:
 before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
- - phpenv config-add php.ini
- - yes '' | pecl install -f apcu-5.1.7
+ - phpenv config-add travisphp.ini
+ - yes '' | pecl install -f apcu-5.1.12
 
 script:
  - vendor/bin/phpunit
 
 after_script:
- - vendor/bin/coveralls
+ - vendor/bin/php-coveralls -vvv

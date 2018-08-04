@@ -137,56 +137,56 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
 
             if (isset($params['createTableBut'])) {
                 try {
-                    $classname = $params['createTableClass'];
+                    $className = $params['createTableClass'];
 
-                    $Record = new $classname();
+                    $Record = new $className();
                     $Record->makeTable();
 
-                    self::$logger->action('Created the table for class '.$classname);
+                    self::$logger->action('Created the table for class '.$className);
 
-                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully created.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$className.' has been successfully created.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    $body .= View::displayErrorMessage('Error creating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error creating the table for the class '.$className.', check the log!');
                 }
             }
 
             if (isset($params['createHistoryTableBut'])) {
                 try {
-                    $classname = $params['createTableClass'];
+                    $className = $params['createTableClass'];
 
-                    $Record = new $classname();
+                    $Record = new $className();
                     $Record->makeHistoryTable();
 
-                    self::$logger->action('Created the history table for class '.$classname);
+                    self::$logger->action('Created the history table for class '.$className);
 
-                    $body .= View::displayUpdateMessage('The history table for the class '.$classname.' has been successfully created.');
+                    $body .= View::displayUpdateMessage('The history table for the class '.$className.' has been successfully created.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    $body .= View::displayErrorMessage('Error creating the history table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error creating the history table for the class '.$className.', check the log!');
                 }
             }
 
             if (isset($params['recreateTableClass']) && $params['admin_'.stripslashes($params['recreateTableClass']).'_button_pressed'] == 'recreateTableBut') {
                 try {
-                    $classname = $params['recreateTableClass'];
-                    $Record = new $classname();
+                    $className = $params['recreateTableClass'];
+                    $Record = new $className();
                     $Record->rebuildTable();
 
-                    self::$logger->action('Recreated the table for class '.$classname);
+                    self::$logger->action('Recreated the table for class '.$className);
 
-                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully recreated.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$className.' has been successfully recreated.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    $body .= View::displayErrorMessage('Error recreating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error recreating the table for the class '.$className.', check the log!');
                 }
             }
 
             if (isset($params['updateTableClass']) && $params['admin_'.stripslashes($params['updateTableClass']).'_button_pressed'] == 'updateTableBut') {
                 try {
-                    $classname = $params['updateTableClass'];
+                    $className = $params['updateTableClass'];
 
-                    $Record = new $classname();
+                    $Record = new $className();
                     $missingFields = $Record->findMissingFields();
 
                     $count = count($missingFields);
@@ -195,12 +195,12 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                         $Record->addProperty($missingFields[$i]);
                     }
 
-                    self::$logger->action('Updated the table for class '.$classname);
+                    self::$logger->action('Updated the table for class '.$className);
 
-                    $body .= View::displayUpdateMessage('The table for the class '.$classname.' has been successfully updated.');
+                    $body .= View::displayUpdateMessage('The table for the class '.$className.' has been successfully updated.');
                 } catch (AlphaException $e) {
                     self::$logger->error($e->getMessage());
-                    $body .= View::displayErrorMessage('Error updating the table for the class '.$classname.', check the log!');
+                    $body .= View::displayErrorMessage('Error updating the table for the class '.$className.', check the log!');
                 }
             }
         } catch (SecurityException $e) {
@@ -238,7 +238,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 $view = View::getInstance($activeRecord);
                 $body .= $view->adminView($fields);
             } catch (AlphaException $e) {
-                self::$logger->error("[$classname]:".$e->getMessage());
+                self::$logger->error("[$className]:".$e->getMessage());
                 // its possible that the exception occured due to the table schema being out of date
                 if ($activeRecord->checkTableExists() && $activeRecord->checkTableNeedsUpdate()) {
                     $missingFields = $activeRecord->findMissingFields();
@@ -256,7 +256,7 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
                 }
             } catch (\Exception $e) {
                 self::$logger->error($e->getMessage());
-                $body .= View::displayErrorMessage('Error accessing the class ['.$classname.'], check the log!');
+                $body .= View::displayErrorMessage('Error accessing the class ['.$className.'], check the log!');
             }
         }
 

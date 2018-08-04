@@ -9,6 +9,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the ExcelController class.
@@ -17,7 +18,7 @@ use Alpha\Model\Rights;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,7 +53,7 @@ use Alpha\Model\Rights;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ExcelControllerTest extends \PHPUnit_Framework_TestCase
+class ExcelControllerTest extends TestCase
 {
     /**
      * Set up tests.

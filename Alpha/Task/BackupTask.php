@@ -120,6 +120,6 @@ class BackupTask implements TaskInterface
      */
     public function getMaxRunTime()
     {
-        return 180;
+        return 600;
     }
 }

@@ -4,6 +4,7 @@ namespace Alpha\Test\Model\Type;
 
 use Alpha\Model\Type\Integer;
 use Alpha\Exception\IllegalArguementException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the Integer data type.
@@ -11,11 +12,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: IntegerTest.php 1836 2014-11-10 16:13:36Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,7 +48,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class IntegerTest extends \PHPUnit_Framework_TestCase
+class IntegerTest extends TestCase
 {
     /**
      * An Integer for testing.

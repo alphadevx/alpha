@@ -4,6 +4,7 @@ namespace Alpha\Test\Model\Type;
 
 use Alpha\Model\Type\Boolean;
 use Alpha\Exception\IllegalArguementException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the Boolean data type.
@@ -11,11 +12,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
- * @version $Id: BooleanTest.php 1835 2014-11-10 15:59:23Z alphadevx $
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2012, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,7 +48,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class BooleanTest extends \PHPUnit_Framework_TestCase
+class BooleanTest extends TestCase
 {
     /**
      * An Boolean for testing.

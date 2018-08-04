@@ -11,6 +11,7 @@ use Alpha\Model\Rights;
 use Alpha\Model\Person;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the RecordSelectorController class.
@@ -19,7 +20,7 @@ use Alpha\Model\ArticleComment;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -54,7 +55,7 @@ use Alpha\Model\ArticleComment;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class RecordSelectorControllerTest extends \PHPUnit_Framework_TestCase
+class RecordSelectorControllerTest extends TestCase
 {
     /**
      * Set up tests.
