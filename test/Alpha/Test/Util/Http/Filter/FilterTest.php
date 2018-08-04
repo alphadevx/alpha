@@ -12,6 +12,7 @@ use Alpha\Util\Http\Filter\ClientTempBlacklistFilter;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Filter\IPBlacklistFilter;
 use Alpha\Util\Http\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for implementations of the FilterInterface.
@@ -20,7 +21,7 @@ use Alpha\Util\Http\Request;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -55,7 +56,7 @@ use Alpha\Util\Http\Request;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class FilterTest extends \PHPUnit_Framework_TestCase
+class FilterTest extends TestCase
 {
     /**
      * Blacklisted client string.

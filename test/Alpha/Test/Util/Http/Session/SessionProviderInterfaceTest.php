@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Http\Session;
 
 use Alpha\Util\Service\ServiceFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the session providers.
@@ -11,7 +12,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -46,7 +47,7 @@ use Alpha\Util\Service\ServiceFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SessionProviderInterfaceTest extends \PHPUnit_Framework_TestCase
+class SessionProviderInterfaceTest extends TestCase
 {
     /**
      * @dataProvider getProviders

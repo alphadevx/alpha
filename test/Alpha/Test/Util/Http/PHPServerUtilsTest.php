@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Http;
 
 use Alpha\Util\Http\PHPServerUtils;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for implementations of the AlphaFilterInterface.
@@ -11,7 +12,7 @@ use Alpha\Util\Http\PHPServerUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -46,7 +47,7 @@ use Alpha\Util\Http\PHPServerUtils;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class PHPServerUtilsTest extends \PHPUnit_Framework_TestCase
+class PHPServerUtilsTest extends TestCase
 {
     /**
      * Testing that we can start the server and hit it with a curl request.

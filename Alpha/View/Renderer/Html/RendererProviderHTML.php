@@ -413,8 +413,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
 
         if (!$this->record->checkTableExists()) {
-            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableBut')) : 'createTableBut');
-            $button = new Button('submit', 'Create Table', $fieldname);
+            $button = new Button('submit', 'Create Table', 'createTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableClass')) : 'createTableClass');
@@ -422,8 +421,7 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         if ($html == '' && $this->record->getMaintainHistory() && !$this->record->checkTableExists(true)) {
-            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createHistoryTableBut')) : 'createHistoryTableBut');
-            $button = new Button('submit', 'Create History Table', $fieldname);
+            $button = new Button('submit', 'Create History Table', 'createHistoryTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to create the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('createTableClass')) : 'createTableClass');

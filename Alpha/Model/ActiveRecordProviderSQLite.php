@@ -831,24 +831,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
     {
         self::$logger->debug('>>save()');
 
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this->record));
         $properties = $reflection->getProperties();
-
-        if ($this->record->getVersion() != $this->record->getVersionNumber()->getValue()) {
-            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
-        }
-
-        // set the "updated by" fields, we can only set the user id if someone is logged in
-        if ($session->get('currentUser') != null) {
-            $this->record->set('updated_by', $session->get('currentUser')->getID());
-        }
-
-        $this->record->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
 
         // check to see if it is a transient object that needs to be inserted
         if ($this->record->isTransient()) {
@@ -984,66 +969,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $this->record->setID(self::getConnection()->lastInsertRowID());
             }
 
-            try {
-                foreach ($properties as $propObj) {
-                    $propName = $propObj->name;
-
-                    if ($this->record->getPropObject($propName) instanceof Relation) {
-                        $prop = $this->record->getPropObject($propName);
-
-                        // handle the saving of MANY-TO-MANY relation values
-                        if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
-                            try {
-                                try {
-                                    // check to see if the rel is on this class
-                                    $side = $prop->getSide(get_class($this->record));
-                                } catch (IllegalArguementException $iae) {
-                                    $side = $prop->getSide(get_parent_class($this->record));
-                                }
-
-                                $lookUp = $prop->getLookup();
-
-                                // first delete all of the old RelationLookup objects for this rel
-                                try {
-                                    if ($side == 'left') {
-                                        $lookUp->deleteAllByAttribute('leftID', $this->record->getID());
-                                    } else {
-                                        $lookUp->deleteAllByAttribute('rightID', $this->record->getID());
-                                    }
-                                } catch (Exception $e) {
-                                    throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
-                                }
-
-                                $IDs = $prop->getRelatedIDs();
-
-                                if (isset($IDs) && !empty($IDs[0])) {
-                                    // now for each posted ID, create a new RelationLookup record and save
-                                    foreach ($IDs as $id) {
-                                        $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
-                                        if ($side == 'left') {
-                                            $newLookUp->set('leftID', $this->record->getID());
-                                            $newLookUp->set('rightID', $id);
-                                        } else {
-                                            $newLookUp->set('rightID', $this->record->getID());
-                                            $newLookUp->set('leftID', $id);
-                                        }
-                                        $newLookUp->save();
-                                    }
-                                }
-                            } catch (Exception $e) {
-                                throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
-                            }
-                        }
-
-                        // handle the saving of ONE-TO-MANY relation values
-                        if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $prop->setValue($this->record->getID());
-                        }
-                    }
-                }
-            } catch (Exception $e) {
-                throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
-            }
+            $this->record->saveRelations($properties);
 
             $stmt->close();
         } else {

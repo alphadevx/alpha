@@ -60,6 +60,16 @@ class CacheProviderFile implements CacheProviderInterface
     private static $logger = null;
 
     /**
+     * Cache key prefix to use, based on the application title, to prevent key clashes between different apps
+     * using the same cache provider.
+     *
+     * @var string
+     *
+     * @since 3.0.0
+     */
+    private $appPrefix;
+
+    /**
      * Constructor.
      *
      * @since 3.0.0
@@ -67,6 +77,10 @@ class CacheProviderFile implements CacheProviderInterface
     public function __construct()
     {
         self::$logger = new Logger('CacheProviderFile');
+
+        $config = ConfigProvider::getInstance();
+
+        $this->appPrefix = preg_replace("/[^a-zA-Z0-9]+/", "", $config->get('app.title'));
     }
 
     /**
@@ -79,7 +93,7 @@ class CacheProviderFile implements CacheProviderInterface
         self::$logger->debug('Getting value for key ['.$key.']');
 
         $config = ConfigProvider::getInstance();
-        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$this->appPrefix.'-'.$key;
 
         if (file_exists($filepath)) {
             return unserialize(file_get_contents($filepath));
@@ -96,7 +110,7 @@ class CacheProviderFile implements CacheProviderInterface
         self::$logger->debug('Setting value for key ['.$key.']');
 
         $config = ConfigProvider::getInstance();
-        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$this->appPrefix.'-'.$key;
 
         file_put_contents($filepath, serialize($value));
     }
@@ -109,7 +123,7 @@ class CacheProviderFile implements CacheProviderInterface
         self::$logger->debug('Removing value for key ['.$key.']');
 
         $config = ConfigProvider::getInstance();
-        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$key;
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$this->appPrefix.'-'.$key;
 
         unlink($filepath);
     }

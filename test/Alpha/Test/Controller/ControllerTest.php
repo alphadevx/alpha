@@ -19,6 +19,7 @@ use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\RecordNotFoundException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the Controller class.
@@ -27,7 +28,7 @@ use Alpha\Exception\RecordNotFoundException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -62,7 +63,7 @@ use Alpha\Exception\RecordNotFoundException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     /**
      * Sample controller for testing with.
@@ -434,6 +435,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->controller->commit();
+            $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
@@ -455,6 +457,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 
         try {
             $this->controller->commit();
+            $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
@@ -462,6 +465,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $newPerson = new Person();
         try {
             $newPerson->loadByAttribute('email', 'newuser@test.com');
+            $this->assertEquals('newuser@test.com', $newPerson->get('email'));
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the new person that we commited in the unit of work');
         }
@@ -469,6 +473,7 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
         $dirtyPerson = new Person();
         try {
             $dirtyPerson->loadByAttribute('email', 'changed@test.com');
+            $this->assertEquals('changed@test.com', $dirtyPerson->get('email'));
         } catch (RecordNotFoundException $e) {
             $this->fail('Failed to load the dirty person that we commited in the unit of work');
         }

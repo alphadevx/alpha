@@ -4,6 +4,7 @@ namespace Alpha\Test\Model;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test class used by tests that need to write to the unit test database.
@@ -12,7 +13,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -47,7 +48,7 @@ use Alpha\Model\ActiveRecord;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ModelTestCase extends \PHPUnit_Framework_TestCase
+class ModelTestCase extends TestCase
 {
     /**
      * Switches to using the test database.

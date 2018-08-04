@@ -16,6 +16,7 @@ use Alpha\Exception\FailedDeleteException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\LockingException;
 use Alpha\Exception\NotImplementedException;
 use ReflectionClass;
 use ReflectionProperty;
@@ -575,6 +576,20 @@ abstract class ActiveRecord
         // firstly we will validate the object before we try to save it
         $this->validate();
 
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        if ($this->getVersion() != $this->getVersionNumber()->getValue()) {
+            throw new LockingException('Could not save the object as it has been updated by another user.  Please try saving again.');
+        }
+
+        // set the "updated by" fields, we can only set the user id if someone is logged in
+        if ($session->get('currentUser') != null) {
+            $this->set('updated_by', $session->get('currentUser')->getID());
+        }
+
+        $this->set('updated_ts', new Timestamp(date('Y-m-d H:i:s')));
+
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
         $provider->save();
@@ -586,6 +601,80 @@ abstract class ActiveRecord
 
         if (method_exists($this, 'after_save_callback')) {
             $this->{'after_save_callback'}();
+        }
+    }
+
+    /**
+     * Saves relationship values, including lookup entries, for this record.
+     *
+     * @since 3.0
+     *
+     * @throws \Alpha\Exception\FailedSaveException
+     */
+    public function saveRelations()
+    {
+        $reflection = new ReflectionClass(get_class($this));
+        $properties = $reflection->getProperties();
+
+        try {
+            foreach ($properties as $propObj) {
+                $propName = $propObj->name;
+
+                if ($this->getPropObject($propName) instanceof Relation) {
+                    $prop = $this->getPropObject($propName);
+
+                    // handle the saving of MANY-TO-MANY relation values
+                    if ($prop->getRelationType() == 'MANY-TO-MANY' && count($prop->getRelatedIDs()) > 0) {
+                        try {
+                            try {
+                                // check to see if the rel is on this class
+                                $side = $prop->getSide(get_class($this));
+                            } catch (IllegalArguementException $iae) {
+                                $side = $prop->getSide(get_parent_class($this));
+                            }
+
+                            $lookUp = $prop->getLookup();
+
+                            // first delete all of the old RelationLookup objects for this rel
+                            try {
+                                if ($side == 'left') {
+                                    $lookUp->deleteAllByAttribute('leftID', $this->getID());
+                                } else {
+                                    $lookUp->deleteAllByAttribute('rightID', $this->getID());
+                                }
+                            } catch (\Exception $e) {
+                                throw new FailedSaveException('Failed to delete old RelationLookup objects on the table ['.$prop->getLookup()->getTableName().'], error is ['.$e->getMessage().']');
+                            }
+
+                            $IDs = $prop->getRelatedIDs();
+
+                            if (isset($IDs) && !empty($IDs[0])) {
+                                // now for each posted ID, create a new RelationLookup record and save
+                                foreach ($IDs as $id) {
+                                    $newLookUp = new RelationLookup($lookUp->get('leftClassName'), $lookUp->get('rightClassName'));
+                                    if ($side == 'left') {
+                                        $newLookUp->set('leftID', $this->getID());
+                                        $newLookUp->set('rightID', $id);
+                                    } else {
+                                        $newLookUp->set('rightID', $this->getID());
+                                        $newLookUp->set('leftID', $id);
+                                    }
+                                    $newLookUp->save();
+                                }
+                            }
+                        } catch (\Exception $e) {
+                            throw new FailedSaveException('Failed to update a MANY-TO-MANY relation on the object, error is ['.$e->getMessage().']');
+                        }
+                    }
+
+                    // handle the saving of ONE-TO-MANY relation values
+                    if ($prop->getRelationType() == 'ONE-TO-MANY') {
+                        $prop->setValue($this->getID());
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().']');
         }
     }
 

@@ -28,7 +28,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -937,38 +937,38 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->person->save();
 
-        if ($config->get('db.provider.name') == 'ActiveRecordProviderMySQL') {
+        if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
             $this->assertEquals('INSERT INTO Person', mb_substr($this->person->getLastQuery(), 0, 18),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->checkTableNeedsUpdate();
             $this->assertEquals('SHOW INDEX FROM Person', mb_substr($this->person->getLastQuery(), 0, 22),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 17),
+            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 16),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 15),
+            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 14),
                 'Testing the getLastQuery method after various persistance calls');
             $this->person->load($this->person->getID());
-            $this->assertEquals('SHOW COLUMNS FROM Person', mb_substr($this->person->getLastQuery(), 0, 24),
+            $this->assertEquals('SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = ? LIMIT 1;', $this->person->getLastQuery(),
                 'Testing the getLastQuery method after various persistance calls');
         }
 
-        if ($config->get('db.provider.name') == 'ActiveRecordProviderSQLite') {
+        if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderSQLite') {
             $this->assertEquals('PRAGMA table_info(Person)', mb_substr($this->person->getLastQuery(), 0, 25),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->checkTableNeedsUpdate();
-            $this->assertEquals('SELECT name FROM sqlite_master WHERE type=\'index\'', mb_substr($this->person->getLastQuery(), 0, 49),
+            $this->assertEquals('PRAGMA foreign_key_list(Person)', mb_substr($this->person->getLastQuery(), 0, 49),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 17),
+            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 16),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 15),
+            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 14),
                     'Testing the getLastQuery method after various persistance calls');
             $this->person->load($this->person->getID());
             $this->assertEquals('SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;',
-                    mb_substr($this->person->getLastQuery(), 0, 150),
+                    $this->person->getLastQuery(),
                     'Testing the getLastQuery method after various persistance calls');
         }
     }

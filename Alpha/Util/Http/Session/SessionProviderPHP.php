@@ -89,7 +89,9 @@ class SessionProviderPHP implements SessionProviderInterface
     public function destroy()
     {
         $_SESSION = array();
-        session_destroy();
+        if (session_id() != '') {
+            session_destroy();
+        }
     }
 
     /**

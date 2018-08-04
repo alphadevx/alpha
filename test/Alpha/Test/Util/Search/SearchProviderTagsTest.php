@@ -9,6 +9,7 @@ use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\ActiveRecord;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Config\ConfigProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the SearchProviderTags class.
@@ -17,7 +18,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,7 +53,7 @@ use Alpha\Util\Config\ConfigProvider;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SearchProviderTagsTest extends \PHPUnit_Framework_TestCase
+class SearchProviderTagsTest extends TestCase
 {
     /**
      * An Article for testing.

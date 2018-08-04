@@ -16,6 +16,7 @@ use Alpha\Model\Rights;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the ArticleController class.
@@ -24,7 +25,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -59,7 +60,7 @@ use Alpha\Util\Service\ServiceFactory;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ArticleControllerTest extends \PHPUnit_Framework_TestCase
+class ArticleControllerTest extends TestCase
 {
     /**
      * Set up tests.

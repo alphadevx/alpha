@@ -5,6 +5,7 @@ namespace Alpha\Test\Model\Type;
 use Alpha\Model\Type\SmallText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the SmallText data type.
@@ -12,9 +13,8 @@ use Alpha\Exception\IllegalArguementException;
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
- *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -49,7 +49,7 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class SmallTextTest extends \PHPUnit_Framework_TestCase
+class SmallTextTest extends TestCase
 {
     /**
      * A SmallText for testing.
@@ -155,6 +155,8 @@ class SmallTextTest extends \PHPUnit_Framework_TestCase
             $this->str1->setHelper($this->usernameHelper);
 
             $this->str1->setValue('user_name.-test123gg');
+
+            $this->assertEquals('user_name.-test123gg', $this->str1->getValue());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid username string: '.$e->getMessage());
         }
@@ -201,6 +203,8 @@ class SmallTextTest extends \PHPUnit_Framework_TestCase
             $this->str1->setValue('some.user@somewhere.co.uk');
             $this->str1->setValue('some.user@somewhere.net');
             $this->str1->setValue('some.user@somewhere.org');
+
+            $this->assertEquals($this->emailHelper, $this->str1->getHelper());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid email string: '.$e->getMessage());
         }
@@ -241,6 +245,8 @@ class SmallTextTest extends \PHPUnit_Framework_TestCase
             $this->str1->setValue('http://www.design-ireland.net/');
             $this->str1->setValue('http://www.theregister.co.uk/');
             $this->str1->setValue('http://www.bbc.co.uk/');
+
+            $this->assertEquals($this->urlHelper, $this->str1->getHelper());
         } catch (IllegalArguementException $e) {
             $this->fail('testing passing a valid URL string: '.$e->getMessage());
         }

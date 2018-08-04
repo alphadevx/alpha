@@ -70,6 +70,16 @@ class CacheProviderMemcache implements CacheProviderInterface
     private $connection;
 
     /**
+     * Cache key prefix to use, based on the application title, to prevent key clashes between different apps
+     * using the same cache provider.
+     *
+     * @var string
+     *
+     * @since 3.0.0
+     */
+    private $appPrefix;
+
+    /**
      * Constructor.
      *
      * @since 1.1
@@ -79,6 +89,8 @@ class CacheProviderMemcache implements CacheProviderInterface
         self::$logger = new Logger('CacheProviderMemcache');
 
         $config = ConfigProvider::getInstance();
+
+        $this->appPrefix = preg_replace("/[^a-zA-Z0-9]+/", "", $config->get('app.title'));
 
         try {
             $this->connection = new Memcached();
@@ -97,7 +109,7 @@ class CacheProviderMemcache implements CacheProviderInterface
         self::$logger->debug('>>get(key=['.$key.'])');
 
         try {
-            $value = $this->connection->get($key);
+            $value = $this->connection->get($this->appPrefix.'-'.$key);
 
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
@@ -117,9 +129,9 @@ class CacheProviderMemcache implements CacheProviderInterface
     {
         try {
             if ($expiry > 0) {
-                $this->connection->set($key, $value, $expiry);
+                $this->connection->set($this->appPrefix.'-'.$key, $value, $expiry);
             } else {
-                $this->connection->set($key, $value);
+                $this->connection->set($this->appPrefix.'-'.$key, $value);
             }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to store a value to Memcached instance: ['.$e->getMessage().']');
@@ -132,7 +144,7 @@ class CacheProviderMemcache implements CacheProviderInterface
     public function delete($key)
     {
         try {
-            $this->connection->delete($key);
+            $this->connection->delete($this->appPrefix.'-'.$key);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Memcached instance: ['.$e->getMessage().']');
         }

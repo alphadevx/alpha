@@ -1,16 +1,103 @@
 # Change Log
 
+## [3.0.0-RC.1](https://github.com/alphadevx/alpha/tree/3.0.0-RC.1) (2018-05-19)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4...3.0.0-RC.1)
+
+**Implemented enhancements:**
+
+- Increase test case coverage to 75% [\#316](https://github.com/alphadevx/alpha/issues/316)
+- Consider switching to versioned fork of Geshi [\#315](https://github.com/alphadevx/alpha/issues/315)
+- Load PEAR packages from the Packist repo rather than pear.php.net [\#313](https://github.com/alphadevx/alpha/issues/313)
+- Update to the latest version of PHP-CS-Fixer [\#309](https://github.com/alphadevx/alpha/issues/309)
+- Replace Memcache extension calls with Memcached in the Memcache provider class [\#306](https://github.com/alphadevx/alpha/issues/306)
+- Test Alpha on PHP7 and fix any resulting issues [\#270](https://github.com/alphadevx/alpha/issues/270)
+- Alpha should use JQuery UI tooltips instead of the existing custom tooltips for validation [\#107](https://github.com/alphadevx/alpha/issues/107)
+- Determine a method for listing existing foreign keys in SQLite3 [\#38](https://github.com/alphadevx/alpha/issues/38)
+
+**Fixed bugs:**
+
+- Alpha is rendering SmallText fields as text areas rather than input boxes [\#328](https://github.com/alphadevx/alpha/issues/328)
+- Inspector class is no longer digging into dub-directories [\#326](https://github.com/alphadevx/alpha/issues/326)
+- Article-\>headerContent is no longer being rendered [\#323](https://github.com/alphadevx/alpha/issues/323)
+- Review the major issues report from Scrutinizer [\#285](https://github.com/alphadevx/alpha/issues/285)
+- The CMS editor should throw a validation exception if a title contains a cms.url.title.separator character [\#284](https://github.com/alphadevx/alpha/issues/284)
+
+**Closed issues:**
+
+- Add a file-based implementation of CacheProviderInterface [\#333](https://github.com/alphadevx/alpha/issues/333)
+- Add Bootstrap tooltip support to the Button widget [\#324](https://github.com/alphadevx/alpha/issues/324)
+- Switch to a version of Luminous compatible with PHP7 [\#321](https://github.com/alphadevx/alpha/issues/321)
+- Replace the displayName attribute with usename [\#312](https://github.com/alphadevx/alpha/issues/312)
+- Replace references of OID with ID [\#311](https://github.com/alphadevx/alpha/issues/311)
+- Replace references to BO with record [\#310](https://github.com/alphadevx/alpha/issues/310)
+- Update the documentation regarding the renaming of the String and StringBox classes [\#308](https://github.com/alphadevx/alpha/issues/308)
+- Update to the latest version of ApiGen [\#305](https://github.com/alphadevx/alpha/issues/305)
+- The RendererProviderHTML::displayPageHead\(\) method should not be outputting HTML directly [\#265](https://github.com/alphadevx/alpha/issues/265)
+- Remove references to the deprecated app.use.mod.rewrite setting from the code [\#264](https://github.com/alphadevx/alpha/issues/264)
+- Consider removing the Article::section attribute as tags could carry out the same function [\#253](https://github.com/alphadevx/alpha/issues/253)
+- Check to see if $customViewControllerName and $customEditControllerName are still required in RecordSelector [\#244](https://github.com/alphadevx/alpha/issues/244)
+- Remove the $\_COOKIE reference from Image::renderImage\(\) [\#243](https://github.com/alphadevx/alpha/issues/243)
+- Tidy up the links rendered in Image::renderHTMLLinks\(\) [\#242](https://github.com/alphadevx/alpha/issues/242)
+- The LogProviderFile::writeLine\(\) method should write to PHP system log on exception [\#241](https://github.com/alphadevx/alpha/issues/241)
+- Add foreign key to ActiveRecordProviderSQLite::makeTable\(\) INTEGER switch case [\#239](https://github.com/alphadevx/alpha/issues/239)
+- Check if the classname string comparisons in ActiveRecord::populateFromArray\(\) need to be namespace-aware [\#238](https://github.com/alphadevx/alpha/issues/238)
+- Move the FrontController::multipleExplode\(\) method to the string utils class [\#237](https://github.com/alphadevx/alpha/issues/237)
+- Refactor link generation in ActiveRecordController::renderPageLinks\(\) [\#236](https://github.com/alphadevx/alpha/issues/236)
+- The Rights::setupRels\(\) method should be protected to allow overriding [\#224](https://github.com/alphadevx/alpha/issues/224)
+- The LoginController::doLoginAndRedirect\(\) method should support redirecting to URLs [\#223](https://github.com/alphadevx/alpha/issues/223)
+- Update the Validator class to support validating https URLs [\#222](https://github.com/alphadevx/alpha/issues/222)
+- Consider converting Tag from an ActiveRecord to a Type [\#212](https://github.com/alphadevx/alpha/issues/212)
+- Namespaces in PHP docblocks should have a leading slash [\#210](https://github.com/alphadevx/alpha/issues/210)
+- Remove calls to get\_magic\_quotes\_gpc\(\) from InputFilter [\#209](https://github.com/alphadevx/alpha/issues/209)
+- Remove any dynamic php.ini overrides in the code [\#201](https://github.com/alphadevx/alpha/issues/201)
+- Remove "and" usage in TCPDF extension [\#200](https://github.com/alphadevx/alpha/issues/200)
+- Calls to exit and die\(\) should be removed [\#199](https://github.com/alphadevx/alpha/issues/199)
+- Check for missing use statements [\#198](https://github.com/alphadevx/alpha/issues/198)
+- Remove remaining globals in usage [\#197](https://github.com/alphadevx/alpha/issues/197)
+- Remove HTML markup from the TagControler [\#193](https://github.com/alphadevx/alpha/issues/193)
+- Remove all of the HTML markup from the TagController [\#187](https://github.com/alphadevx/alpha/issues/187)
+- Consider converting Alpha\Model\Tag to be a data type [\#185](https://github.com/alphadevx/alpha/issues/185)
+- Add an AdminController [\#181](https://github.com/alphadevx/alpha/issues/181)
+- Move the password reset code from LoginController to a new seperate controller [\#179](https://github.com/alphadevx/alpha/issues/179)
+- Move any HTTP level code from the Image widget to the ImageController [\#176](https://github.com/alphadevx/alpha/issues/176)
+- Move attachment handling code from ArticleController to AttachmentController [\#173](https://github.com/alphadevx/alpha/issues/173)
+- Remove ArticleComment and ArticleVote save calls from the ArticleController [\#172](https://github.com/alphadevx/alpha/issues/172)
+- TCPDFFacade should use the standard caching interface [\#167](https://github.com/alphadevx/alpha/issues/167)
+- MarkdownFacade should use the standard caching interface [\#166](https://github.com/alphadevx/alpha/issues/166)
+- Move ActiveRecordController::renderPageLinks\(\) method to the view layer [\#129](https://github.com/alphadevx/alpha/issues/129)
+- All services should sit behind a single ServiceFactory [\#127](https://github.com/alphadevx/alpha/issues/127)
+- DEnumItem table should have a composite unique key between value and DEnumID fields [\#89](https://github.com/alphadevx/alpha/issues/89)
+- The HTML in the methods of the PersonView class should be extracted into templates [\#86](https://github.com/alphadevx/alpha/issues/86)
+- Consider merging Relation::getRelatedObject\(\) and Relation::getRelatedObjects\(\) into Relation::getRelated\(\) [\#75](https://github.com/alphadevx/alpha/issues/75)
+- maintainHistory should be automatically set to true for DAOs that already have a \_history table in the DB [\#73](https://github.com/alphadevx/alpha/issues/73)
+- The saveAttribute\(\) method in the DAO providers should update all housekeeping attributes like normal save\(\) [\#72](https://github.com/alphadevx/alpha/issues/72)
+- The database backup routines should be implemented in the DAO providers [\#34](https://github.com/alphadevx/alpha/issues/34)
+- The setBO method should not be part of the AlphaDAOProviderInterface [\#27](https://github.com/alphadevx/alpha/issues/27)
+- Check the syntax of the generated feeds [\#15](https://github.com/alphadevx/alpha/issues/15)
+
+**Merged pull requests:**
+
+- \#75 - merged the Relation::getRelatedObject\(\) and Relation::getRelate… [\#330](https://github.com/alphadevx/alpha/pull/330) ([alphadevx](https://github.com/alphadevx))
+- Feature/127 service factory [\#329](https://github.com/alphadevx/alpha/pull/329) ([alphadevx](https://github.com/alphadevx))
+- Scrutinizer Auto-Fixes [\#325](https://github.com/alphadevx/alpha/pull/325) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Scrutinizer Auto-Fixes [\#320](https://github.com/alphadevx/alpha/pull/320) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Scrutinizer Auto-Fixes [\#319](https://github.com/alphadevx/alpha/pull/319) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Scrutinizer Auto-Fixes [\#318](https://github.com/alphadevx/alpha/pull/318) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Scrutinizer Auto-Fixes [\#317](https://github.com/alphadevx/alpha/pull/317) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
+- Feature/270 alpha on php7 [\#307](https://github.com/alphadevx/alpha/pull/307) ([alphadevx](https://github.com/alphadevx))
+
 ## [2.0.4](https://github.com/alphadevx/alpha/tree/2.0.4) (2017-01-01)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4-RC.1...2.0.4)
 
 **Implemented enhancements:**
 
-- 404s should be logged at INFO rather than WARN [\#81](https://github.com/alphadevx/alpha/issues/81)
+- The .ini config files should be compiled to PHP files on first access [\#231](https://github.com/alphadevx/alpha/issues/231)
 - The log file backup method should compress the old log files [\#32](https://github.com/alphadevx/alpha/issues/32)
 
 **Closed issues:**
 
-- The .ini config files should be compiled to PHP files on first access [\#231](https://github.com/alphadevx/alpha/issues/231)
+- 2.0.4 release [\#303](https://github.com/alphadevx/alpha/issues/303)
+- 404s should be logged at INFO rather than WARN [\#81](https://github.com/alphadevx/alpha/issues/81)
 
 **Merged pull requests:**
 

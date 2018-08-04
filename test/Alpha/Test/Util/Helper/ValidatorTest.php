@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Helper;
 
 use Alpha\Util\Helper\Validator;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the Validator helper class.
@@ -11,7 +12,7 @@ use Alpha\Util\Helper\Validator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2017, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -46,7 +47,7 @@ use Alpha\Util\Helper\Validator;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ValidatorTest extends \PHPUnit_Framework_TestCase
+class ValidatorTest extends TestCase
 {
     /**
      * Validate that the provided value is a valid integer.
