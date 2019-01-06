@@ -54,12 +54,13 @@ interface SearchProviderInterface
      * @param string $returnType Use this filter to determine that only business objects of a certain class hould be returned (default is to return all classes indexed).
      * @param int    $start      Start point for pagination.
      * @param int    $limit      The maximum amount to return in the list (for pagination).
+     * @param int    $createdBy  Optionally provide the creator ID to restrict search to Tags created by that user.
      *
      * @return array An array of matching business objects.
      *
      * @since 1.2.3
      */
-    public function search($query, $returnType = 'all', $start = 0, $limit = 10);
+    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0);
 
     /**
      * Gets a list of documents related to the business objects matching the object provided.  An array
