@@ -444,13 +444,14 @@ class RendererProviderHTML implements RendererProviderInterface
 
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             
-            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'updateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Update Table', 'updateTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to update the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
             $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->record).'"/>';
+
             // hidden field to tell us which button was pressed
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             $html .= '<input type="hidden" id="'.$fieldname.'" name="'.$fieldname.'" value=""/>';
