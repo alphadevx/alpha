@@ -279,7 +279,8 @@ class Logger
     {
         $config = ConfigProvider::getInstance();
 
-        $this->logProvider = new LogProviderFile($filepath);
+        $this->logProvider = new LogProviderFile();
+        $this->logProvider->setPath($filepath);
         $this->logProvider->setMaxSize($config->get('app.log.file.max.size'));
     }
 }

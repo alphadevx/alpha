@@ -2,6 +2,8 @@
 
 namespace Alpha\Task;
 
+require_once './vendor/autoload.php';
+
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -9,11 +11,13 @@ use Alpha\Util\Config\ConfigProvider;
  * The main class responsible for running custom cron tasks found under the [webapp]/Task
  * directory.  This class should be executed from Linux cron via the CLI.
  *
+ * To run: cd to app.root, then "php vendor/alphadevx/alpha/Alpha/Task/CronManager.php"
+ *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -77,10 +81,10 @@ class CronManager
 
         $taskList = self::getTaskClassNames();
 
-        self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('app.root').'tasks]');
+        self::$logger->info('Found ['.count($taskList).'] tasks in the directory ['.$config->get('app.root').'src/Task]');
 
         foreach ($taskList as $taskClass) {
-            $taskClass = 'Alpha\Task\\'.$taskClass;
+            $taskClass = $taskClass;
             self::$logger->info('Loading task ['.$taskClass.']');
             $task = new $taskClass();
 
@@ -116,37 +120,24 @@ class CronManager
             self::$logger = new Logger('CronManager');
             self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
         }
-        self::$logger->debug('>>getTaskClassNames()');
+        self::$logger->info('>>getTaskClassNames()');
 
         $classNameArray = array();
 
-        if (file_exists($config->get('app.root').'Task')) {
-            $handle = opendir($config->get('app.root').'Task');
+        if (file_exists($config->get('app.root').'src/Task')) {
+            $handle = opendir($config->get('app.root').'src/Task');
 
             // loop over the custom task directory
             while (false !== ($file = readdir($handle))) {
                 if (preg_match('/Task.php/', $file)) {
-                    $classname = mb_substr($file, 0, -4);
+                    $classname = 'Task\\'.mb_substr($file, 0, -4);
 
                     array_push($classNameArray, $classname);
                 }
             }
         }
 
-        if (file_exists($config->get('app.root').'Alpha/Task')) {
-            $handle = opendir($config->get('app.root').'Alpha/Task');
-
-            // loop over the custom task directory
-            while (false !== ($file = readdir($handle))) {
-                if (preg_match('/Task.php/', $file)) {
-                    $classname = mb_substr($file, 0, -4);
-
-                    array_push($classNameArray, $classname);
-                }
-            }
-        }
-
-        self::$logger->debug('<<getTaskClassNames ['.var_export($classNameArray, true).']');
+        self::$logger->info('<<getTaskClassNames ['.var_export($classNameArray, true).']');
 
         return $classNameArray;
     }
