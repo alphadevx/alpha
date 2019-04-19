@@ -147,7 +147,7 @@ class Button
      *
      * @return string
      */
-    public function render($width = 0, $cssClasses)
+    public function render($width = 0, $cssClasses = '')
     {
         $html = '';
         $tooltip = '';
