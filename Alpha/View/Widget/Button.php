@@ -12,7 +12,7 @@ use Alpha\Util\Security\SecurityUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -141,13 +141,14 @@ class Button
     /**
      * Renders the HTML and javascript for the button.
      *
-     * @param int $width The width in pixels of the button (will also accept percentage values), defaults to 0 meaning auto-width to fit text.
+     * @param int    $width      The width in pixels of the button (will also accept percentage values), defaults to 0 meaning auto-width to fit text.
+     * @param string $cssClasses List of CSS classes to apply to the button (optional)
      *
      * @since 1.0
      *
      * @return string
      */
-    public function render($width = 0)
+    public function render($width = 0, $cssClasses = '')
     {
         $html = '';
         $tooltip = '';
@@ -174,15 +175,17 @@ class Button
             return $html;
         }
 
+        $css = ($cssClasses == '' ? 'btn btn-primary' : $cssClasses);
+
         switch ($this->action) {
             case 'submit':
-                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
             break;
             case 'file':
-                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
             break;
             default:
-                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="btn btn-primary"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
                 $html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
             break;
         }
