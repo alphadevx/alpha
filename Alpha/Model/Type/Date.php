@@ -5,6 +5,7 @@ namespace Alpha\Model\Type;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
+use \DateTime;
 
 /**
  * The Date complex data type.
@@ -373,5 +374,44 @@ class Date extends Type implements TypeInterface
     public function setRule($rule)
     {
         $this->validationRule = $rule;
+    }
+
+    /**
+     *
+     * Increment the cunrrent date by the amount provided
+     *
+     * @param string $amount The amount to increment the date by, e.g. "1 day"
+     *
+     * @since 3.1.0
+     */
+    public function increment($amount)
+    {
+        $date = strtotime($amount, strtotime($this->getValue()));
+        $this->setValue(date("Y-m-d", $date));
+    }
+
+    /**
+     *
+     * Get the start date and the end date of the week of the year provided
+     *
+     * @param int The number of the week (1-52)
+     * @param int The year (YYYY)
+     *
+     * @return array An array containing the "start" date and "end" date.
+     *
+     * @since 3.1.0
+     */
+    public static function getStartAndEndDate($week, $year)
+    {
+        $dateTime = new DateTime();
+        $dateTime->setISODate($year, $week);
+
+        $value = array();
+
+        $value['start'] = $dateTime->format('Y-m-d');
+        $dateTime->modify('+6 days');
+        $value['end'] = $dateTime->format('Y-m-d');
+        
+        return $value;
     }
 }
