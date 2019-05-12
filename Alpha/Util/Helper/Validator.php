@@ -9,7 +9,7 @@ namespace Alpha\Util\Helper;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -314,7 +314,7 @@ class Validator
     public static function isURL($url)
     {
         if (preg_match(self::REQUIRED_HTTP_URL, $url)) {
-            if (!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_HOST_REQUIRED)) {
+            if (!filter_var($url, FILTER_VALIDATE_URL)) {
                 return false;
             } else {
                 return true;
