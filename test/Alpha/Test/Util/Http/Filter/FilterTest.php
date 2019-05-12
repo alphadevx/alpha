@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -146,7 +146,7 @@ class FilterTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
@@ -180,26 +180,6 @@ class FilterTest extends TestCase
         $this->badRequest3->set('requestedResource', '/doesNotExist');
         $this->badRequest3->save();
     }
-
-    /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    /*protected function tearDown()
-    {
-        $this->blacklistedClient->dropTable();
-        unset($this->blacklistedClient);
-
-        $this->badRequest1->dropTable();
-        unset($this->badRequest1);
-
-        unset($this->badRequest2);
-
-        unset($this->badRequest3);
-    }*/
 
     /**
      * Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter.

@@ -28,7 +28,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -81,7 +81,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -178,23 +178,38 @@ class ActiveRecordTest extends ModelTestCase
         $request->save();
 
         // make sure the person logged in is the same person to create/update the object
-        $this->assertEquals($session->get('currentUser')->getID(), $request->getCreatorId()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes');
-        $this->assertEquals($session->get('currentUser')->getID(), $request->getUpdatorId()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes');
+        $this->assertEquals(
+            $session->get('currentUser')->getID(),
+            $request->getCreatorId()->getValue(),
+            'test that the constructor sets the correct values of the "house keeping" attributes'
+        );
+        $this->assertEquals(
+            $session->get('currentUser')->getID(),
+            $request->getUpdatorId()->getValue(),
+            'test that the constructor sets the correct values of the "house keeping" attributes'
+        );
 
         $request = new BadRequest();
 
         // as it is a new object, make sure the version number is zero
-        $this->assertEquals(0, $request->getVersionNumber()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes');
+        $this->assertEquals(
+            0,
+            $request->getVersionNumber()->getValue(),
+            'test that the constructor sets the correct values of the "house keeping" attributes'
+        );
 
         // check that the date created and updated equal to today
         $today = date('Y-m-d');
-        $this->assertEquals($today, $request->getCreateTS()->getDate(),
-            'test that the constructor sets the correct values of the "house keeping" attributes');
-        $this->assertEquals($today, $request->getUpdateTS()->getDate(),
-            'test that the constructor sets the correct values of the "house keeping" attributes');
+        $this->assertEquals(
+            $today,
+            $request->getCreateTS()->getDate(),
+            'test that the constructor sets the correct values of the "house keeping" attributes'
+        );
+        $this->assertEquals(
+            $today,
+            $request->getUpdateTS()->getDate(),
+            'test that the constructor sets the correct values of the "house keeping" attributes'
+        );
 
         // make sure the object is transient
         $this->assertTrue($request->isTransient(), 'test that the constructor sets the correct values of the "house keeping" attributes');
@@ -454,9 +469,11 @@ class ActiveRecordTest extends ModelTestCase
             $personInstance2->save();
             $this->fail('Testing optimistic locking mechanism');
         } catch (LockingException $e) {
-            $this->assertEquals('Could not save the object as it has been updated by another user.  Please try saving again.',
-                            $e->getMessage(),
-                            'Testing optimistic locking mechanism');
+            $this->assertEquals(
+                'Could not save the object as it has been updated by another user.  Please try saving again.',
+                $e->getMessage(),
+                'Testing optimistic locking mechanism'
+            );
         }
     }
 
@@ -476,9 +493,11 @@ class ActiveRecordTest extends ModelTestCase
             $person->save();
             $this->fail('Testing the validation method');
         } catch (ValidationException $e) {
-            $this->assertEquals('Failed to save, validation error is:',
-                            mb_substr($e->getMessage(), 0, 36),
-                            'Testing the validation method');
+            $this->assertEquals(
+                'Failed to save, validation error is:',
+                mb_substr($e->getMessage(), 0, 36),
+                'Testing the validation method'
+            );
         }
     }
 
@@ -505,9 +524,11 @@ class ActiveRecordTest extends ModelTestCase
             $this->person->load($id);
             $this->fail('Testing the delete method');
         } catch (RecordNotFoundException $e) {
-            $this->assertEquals('Failed to load object',
-                            mb_substr($e->getMessage(), 0, 21),
-                            'Testing the delete method');
+            $this->assertEquals(
+                'Failed to load object',
+                mb_substr($e->getMessage(), 0, 21),
+                'Testing the delete method'
+            );
         }
     }
 
@@ -642,8 +663,10 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
         $id = $this->person->getMAX();
         $this->person->load($id);
-        $this->assertTrue(in_array('Active', $this->person->getPropObject('state')->getOptions()),
-            'Testing the setEnumOptions method is loading enum options correctly');
+        $this->assertTrue(
+            in_array('Active', $this->person->getPropObject('state')->getOptions()),
+            'Testing the setEnumOptions method is loading enum options correctly'
+        );
     }
 
     /**
@@ -685,8 +708,11 @@ class ActiveRecordTest extends ModelTestCase
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
 
-        $this->assertEquals('Person', $this->person->getTableName(),
-            'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class');
+        $this->assertEquals(
+            'Person',
+            $this->person->getTableName(),
+            'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'
+        );
     }
 
     /**
@@ -732,10 +758,16 @@ class ActiveRecordTest extends ModelTestCase
 
         $state = $this->person->getPropObject('state');
 
-        $this->assertEquals('Alpha\Model\Type\Enum', get_class($state),
-            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
-        $this->assertEquals('Active', $state->getValue(),
-            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+        $this->assertEquals(
+            'Alpha\Model\Type\Enum',
+            get_class($state),
+            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+        );
+        $this->assertEquals(
+            'Active',
+            $state->getValue(),
+            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+        );
     }
 
     /**
@@ -791,8 +823,11 @@ class ActiveRecordTest extends ModelTestCase
     {
         $this->person->set('state', 'Active');
 
-        $this->assertEquals('Active', $this->person->get('state'),
-            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)');
+        $this->assertEquals(
+            'Active',
+            $this->person->get('state'),
+            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+        );
     }
 
     /**
@@ -804,8 +839,11 @@ class ActiveRecordTest extends ModelTestCase
     {
         $this->person->set('state', 'Active', true);
 
-        $this->assertEquals('Active', $this->person->get('state'),
-            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+        $this->assertEquals(
+            'Active',
+            $this->person->get('state'),
+            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled'
+        );
     }
 
     /**
@@ -898,14 +936,20 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testGetTransientAttributes()
     {
-        $this->assertTrue(is_array($this->person->getTransientAttributes()),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+        $this->assertTrue(
+            is_array($this->person->getTransientAttributes()),
+            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+        );
         $this->person->markTransient('URL');
-        $this->assertTrue(in_array('URL', $this->person->getTransientAttributes()),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+        $this->assertTrue(
+            in_array('URL', $this->person->getTransientAttributes()),
+            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+        );
         $this->person->markPersistent('URL');
-        $this->assertFalse(in_array('URL', $this->person->getTransientAttributes()),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent');
+        $this->assertFalse(
+            in_array('URL', $this->person->getTransientAttributes()),
+            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+        );
     }
 
     /**
@@ -938,38 +982,67 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
 
         if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
-            $this->assertEquals('INSERT INTO Person', mb_substr($this->person->getLastQuery(), 0, 18),
-                'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'INSERT INTO Person',
+                mb_substr($this->person->getLastQuery(), 0, 18),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->checkTableNeedsUpdate();
-            $this->assertEquals('SHOW INDEX FROM Person', mb_substr($this->person->getLastQuery(), 0, 22),
-                'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SHOW INDEX FROM Person',
+                mb_substr($this->person->getLastQuery(), 0, 22),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 16),
-                'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT COUNT(ID)',
+                mb_substr($this->person->getLastQuery(), 0, 16),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 14),
-                'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT MAX(ID)',
+                mb_substr($this->person->getLastQuery(), 0, 14),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->load($this->person->getID());
-            $this->assertEquals('SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = ? LIMIT 1;', $this->person->getLastQuery(),
-                'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = ? LIMIT 1;',
+                $this->person->getLastQuery(),
+                'Testing the getLastQuery method after various persistance calls'
+            );
         }
 
         if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderSQLite') {
-            $this->assertEquals('PRAGMA table_info(Person)', mb_substr($this->person->getLastQuery(), 0, 25),
-                    'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'PRAGMA table_info(Person)',
+                mb_substr($this->person->getLastQuery(), 0, 25),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->checkTableNeedsUpdate();
-            $this->assertEquals('PRAGMA foreign_key_list(Person)', mb_substr($this->person->getLastQuery(), 0, 49),
-                    'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'PRAGMA foreign_key_list(Person)',
+                mb_substr($this->person->getLastQuery(), 0, 49),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->getCount();
-            $this->assertEquals('SELECT COUNT(ID)', mb_substr($this->person->getLastQuery(), 0, 16),
-                    'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT COUNT(ID)',
+                mb_substr($this->person->getLastQuery(), 0, 16),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->getMAX();
-            $this->assertEquals('SELECT MAX(ID)', mb_substr($this->person->getLastQuery(), 0, 14),
-                    'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT MAX(ID)',
+                mb_substr($this->person->getLastQuery(), 0, 14),
+                'Testing the getLastQuery method after various persistance calls'
+            );
             $this->person->load($this->person->getID());
-            $this->assertEquals('SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;',
-                    $this->person->getLastQuery(),
-                    'Testing the getLastQuery method after various persistance calls');
+            $this->assertEquals(
+                'SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;',
+                $this->person->getLastQuery(),
+                'Testing the getLastQuery method after various persistance calls'
+            );
         }
     }
 
@@ -1013,11 +1086,17 @@ class ActiveRecordTest extends ModelTestCase
                 try {
                     $this->person->get($propName);
                 } catch (PHPException $e) {
-                    $this->assertEquals(preg_match('/Undefined property/', $e->getMessage()), 1,
-                        'Testing the clear method for unsetting the attributes of an object');
+                    $this->assertEquals(
+                        preg_match('/Undefined property/', $e->getMessage()),
+                        1,
+                        'Testing the clear method for unsetting the attributes of an object'
+                    );
                 } catch (AlphaException $e) {
-                    $this->assertEquals('Could not access the property ['.$propName.'] on the object of class [Alpha\Model\Person]', $e->getMessage(),
-                        'Testing the clear method for unsetting the attributes of an object');
+                    $this->assertEquals(
+                        'Could not access the property ['.$propName.'] on the object of class [Alpha\Model\Person]',
+                        $e->getMessage(),
+                        'Testing the clear method for unsetting the attributes of an object'
+                    );
                 }
             }
         }
@@ -1037,8 +1116,11 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->save();
         $this->person->saveAttribute('username', 'unitTestUserNew');
 
-        $this->assertEquals('unitTestUserNew', $this->person->getUsername()->getValue(),
-            'Testing that the value was set on the object in memory along with saving to the database');
+        $this->assertEquals(
+            'unitTestUserNew',
+            $this->person->getUsername()->getValue(),
+            'Testing that the value was set on the object in memory along with saving to the database'
+        );
 
         $person = new Person();
 

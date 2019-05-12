@@ -67,7 +67,7 @@ class AttachmentControllerTest extends TestCase
      *
      * @since 2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');

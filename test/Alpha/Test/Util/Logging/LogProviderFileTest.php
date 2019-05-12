@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -51,7 +51,7 @@ class LogProviderFileTest extends TestCase
 {
     private $logPath = '/tmp/alphatestlog.log';
 
-    protected function setUp()
+    protected function setUp(): void
     {
         if (file_exists($this->logPath)) {
             unlink($this->logPath);

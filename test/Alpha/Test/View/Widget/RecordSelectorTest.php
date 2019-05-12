@@ -18,7 +18,7 @@ use Alpha\Model\Tag;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -60,7 +60,7 @@ class RecordSelectorTest extends ModelTestCase
      *
      * @since 3.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -69,25 +69,6 @@ class RecordSelectorTest extends ModelTestCase
 
         foreach ($this->getActiveRecordProviders() as $provider) {
             $config->set('db.provider.name', $provider[0]);
-
-            //$rights = new Rights();
-            //$rights->rebuildTable();
-
-            //$standardGroup = new Rights();
-            //$standardGroup->set('name', 'Standard');
-            //$standardGroup->save();
-
-            //$request = new BadRequest();
-            //$request->rebuildTable();
-
-            //$this->person = $this->createPersonObject('unitTestUser');
-            //$this->person->rebuildTable();
-
-            //$lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
-
-            // just making sure no previous test user is in the DB
-            //$this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-            //$this->person->deleteAllByAttribute('username', 'unitTestUser');
 
             $article = new Article();
             $article->rebuildTable();
