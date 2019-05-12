@@ -60,8 +60,7 @@ class HighlightProviderTest extends TestCase
     public function getHighlightProviders()
     {
         return array(
-            array('Alpha\Util\Code\Highlight\HighlightProviderGeshi'),
-            array('Alpha\Util\Code\Highlight\HighlightProviderLuminous')
+            array('Alpha\Util\Code\Highlight\HighlightProviderGeshi')
         );
     }
 

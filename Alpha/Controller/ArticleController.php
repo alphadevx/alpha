@@ -405,11 +405,6 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $html = '';
 
-        if ($config->get('cms.highlight.provider.name') == 'Alpha\Util\Code\Highlight\HighlightProviderLuminous') {
-            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous.css">';
-            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/luminous_light.css">';
-        }
-
         if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordID']))) {
             $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
 

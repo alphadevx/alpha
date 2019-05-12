@@ -192,7 +192,7 @@ Content Cell  | Content Cell
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
 
-        $this->assertContains('<script>alert();</script>', $response->getBody(), 'Testing that the article header content was rendered');
+        $this->assertStringContainsString('<script>alert();</script>', $response->getBody(), 'Testing that the article header content was rendered');
 
         $request = new Request(array('method' => 'GET', 'URI' => '/a/not-there'));
 
