@@ -12,7 +12,6 @@ before_script:
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add travisphp.ini
- - yes '' | sudo apt-get install php-pecl-apcu
 
 script:
  - vendor/bin/phpunit
