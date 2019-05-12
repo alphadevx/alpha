@@ -24,8 +24,8 @@
         "ext-mbstring": "*",
         "ext-sqlite3": "*",
         "ext-gd": "*",
-        "tecnickcom/tcpdf": "6.2.17",
-        "michelf/php-markdown": "1.6.0",
+        "tecnickcom/tcpdf": "6.2.26",
+        "michelf/php-markdown": "1.8.0",
         "themattharris/tmhoauth": "0.8.4",
         "easybook/geshi": "v1.0.8.19",
         "luminous/luminous": "dev-psr-conversion"
