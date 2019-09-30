@@ -70,6 +70,15 @@ class Date extends Type implements TypeInterface
     private $month;
 
     /**
+     * The textual version of the month, e.g. July.
+     *
+     * @var string
+     *
+     * @since 3.1
+     */
+    private $monthName;
+
+    /**
      * The day part.
      *
      * @var string
