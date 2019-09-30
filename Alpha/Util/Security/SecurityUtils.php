@@ -11,7 +11,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,22 +52,25 @@ class SecurityUtils
      * Encrypt provided data using AES 256 algorithm and the security.encryption.key.
      *
      * @param string $data
+     * @param string $key  Optional, if provided use this as the key rather than the security.encryption.key setting.
      *
      * @return string
      *
      * @since 1.2.2
      */
-    public static function encrypt($data)
+    public static function encrypt($data, $key = '')
     {
         $config = ConfigProvider::getInstance();
 
         $ivsize = openssl_cipher_iv_length('aes-256-ecb');
         $iv = openssl_random_pseudo_bytes($ivsize);
 
+        $key = ($key == '' ? $config->get('security.encryption.key') : $key);
+
         $encryptedData = openssl_encrypt(
             $data,
             'aes-256-ecb',
-            $config->get('security.encryption.key'),
+            $key,
             OPENSSL_RAW_DATA,
             $iv
         );
@@ -79,12 +82,13 @@ class SecurityUtils
      * Decrypt provided data using AES 256 algorithm and the security.encryption.key.
      *
      * @param string $data
+     * @param string $key  Optional, if provided use this as the key rather than the security.encryption.key setting.
      *
      * @return string
      *
      * @since 1.2.2
      */
-    public static function decrypt($data)
+    public static function decrypt($data, $key = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -92,10 +96,12 @@ class SecurityUtils
         $iv = mb_substr($data, 0, $ivsize, '8bit');
         $ciphertext = mb_substr($data, $ivsize, null, '8bit');
 
+        $key = ($key == '' ? $config->get('security.encryption.key') : $key);
+
         $decryptedData = openssl_decrypt(
             $ciphertext,
             'aes-256-ecb',
-            $config->get('security.encryption.key'),
+            $key,
             OPENSSL_RAW_DATA,
             $iv
         );
