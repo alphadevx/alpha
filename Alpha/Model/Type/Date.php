@@ -266,6 +266,18 @@ class Date extends Type implements TypeInterface
     }
 
     /**
+     * Get the month part.
+     *
+     * @return string
+     *
+     * @since 3.1
+     */
+    public function getMonthName()
+    {
+        return $this->monthName;
+    }
+
+    /**
      * Get the day part.
      *
      * @return string
