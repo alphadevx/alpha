@@ -14,7 +14,7 @@ use \DateTime;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -135,6 +135,7 @@ class Date extends Type implements TypeInterface
                 $this->month = date('m');
                 $this->day = date('d');
                 $this->weekday = date('l');
+                $this->monthName = date('F');
             } else {
                 $this->year = '0000';
                 $this->month = '00';
@@ -199,6 +200,7 @@ class Date extends Type implements TypeInterface
             $this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
             $unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year);
             $this->weekday = date('l', $unixTime);
+            $this->monthName = date('F', $unixTime);
         }
     }
 
