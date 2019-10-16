@@ -371,6 +371,7 @@ class Date extends Type implements TypeInterface
                 $this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
                 $unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year);
                 $this->weekday = date('l', $unixTime);
+                $this->monthName = date('F', $unixTime);
             }
         }
     }
