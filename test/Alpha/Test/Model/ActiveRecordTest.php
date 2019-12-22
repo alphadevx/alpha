@@ -66,15 +66,6 @@ use Alpha\Util\Service\ServiceFactory;
 class ActiveRecordTest extends ModelTestCase
 {
     /**
-     * A Person for testing (any business object will do).
-     *
-     * @var \Alpha\Model\Person
-     *
-     * @since 1.0
-     */
-    private $person;
-
-    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here.
@@ -116,24 +107,6 @@ class ActiveRecordTest extends ModelTestCase
             $tag = new Tag();
             $tag->rebuildTable();
         }
-    }
-
-    /**
-     * Creates a person object for Testing.
-     *
-     * @return \Alpha\Model\Person
-     *
-     * @since 1.0
-     */
-    private function createPersonObject($name)
-    {
-        $person = new Person();
-        $person->setUsername($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
-
-        return $person;
     }
 
     /**
@@ -219,6 +192,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the basic load/save functionality.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testBasicLoadSave($provider)
@@ -236,6 +210,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that load will create a table if it does not already exist
      *
      * @since 2.0.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadCreatesMissingTable($provider)
@@ -261,6 +236,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the checkRecordExists method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testCheckRecordExists($provider)
@@ -277,6 +253,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the loadByAttribute method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadByAttribute($provider)
@@ -295,6 +272,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing loadAllOldVersions method.
      *
      * @since 2.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAllOldVersions($provider)
@@ -324,6 +302,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing loadAll method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAll($provider)
@@ -344,6 +323,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the loadAllByAttribute method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAllByAttribute($provider)
@@ -362,6 +342,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the loadAllByAttributes method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAllByAttributes($provider)
@@ -380,6 +361,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the loadAllByDayUpdated method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAllByDayUpdated($provider)
@@ -397,6 +379,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the loadAllFieldValuesByAttribute method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadAllFieldValuesByAttribute($provider)
@@ -413,6 +396,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the save method on transient and non-transient objects.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSaveTransientOrPersistent($provider)
@@ -433,6 +417,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing to ensure that a transient object, once saved, will have an ID.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSaveTransientID($provider)
@@ -450,6 +435,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing optimistic locking mechanism#.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSaveObjectLocking($provider)
@@ -481,6 +467,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the validation method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testValidation($provider)
@@ -505,6 +492,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the delete method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testDelete($provider)
@@ -536,6 +524,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the delete method also removes Tags related to the deleted record.
      *
      * @since 2.0.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testDeleteRelatedTags($provider)
@@ -563,6 +552,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the deleteAllByAttribute method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testDeleteAllByAttribute($provider)
@@ -598,6 +588,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the version numbers of business objects.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetVersion($provider)
@@ -619,6 +610,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the getMAX method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetMAX($provider)
@@ -637,6 +629,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the getCount method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetCount($provider)
@@ -653,6 +646,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the setEnumOptions method is loading enum options correctly.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSetEnumOptions($provider)
@@ -673,6 +667,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that checkTableExists returns true for the person BO.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testCheckTableExists($provider)
@@ -687,6 +682,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that checkTableNeedsUpdate returns false for the person BO.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testCheckTableNeedsUpdate($provider)
@@ -701,6 +697,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetTableName($provider)
@@ -719,6 +716,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the getDataLabel method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetDataLabel($provider)
@@ -733,6 +731,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing get on a String attribute with no child get method available.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetNoChildMethod($provider)
@@ -749,6 +748,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing get on an Enum attribute with a child method available, with $noChildMethods disabled (default).
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetNoChildMethodsDisabled($provider)
@@ -774,6 +774,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing get on an Enum attribute with a child method available, with $noChildMethods enabled.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetNoChildMethodsEnabled($provider)
@@ -790,6 +791,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing get on a simple data type.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetSimpleType($provider)
@@ -891,6 +893,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that markTransient and markPersistent methods.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testMarkTransientPersistent($provider)
@@ -956,6 +959,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing isTransient before and after save.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testIsTransient($provider)
@@ -972,6 +976,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the getLastQuery method after various persistance calls.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testGetLastQuery($provider)
@@ -1050,6 +1055,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the clear method for unsetting the attributes of an object.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testClear($provider)
@@ -1106,6 +1112,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the saveAttribute method.
      *
      * @since 1.0
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSaveAttribute($provider)
@@ -1148,6 +1155,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing to ensure that a history table was created automatically.
      *
      * @since 1.2.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testHistoryTableCreated($provider)
@@ -1167,6 +1175,7 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that the saveHistory() method is automatically invoked when it should be.
      *
      * @since 1.2.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testSaveHistory($provider)
@@ -1227,14 +1236,13 @@ class ActiveRecordTest extends ModelTestCase
      * Testing that a saved record is subsequently retrievable from the cache.
      *
      * @since 1.2.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testLoadFromCache($provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-
-        $config = ConfigProvider::getInstance();
 
         $oldSetting = $config->get('cache.provider.name');
         $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
@@ -1254,14 +1262,13 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the removeFromCache method.
      *
      * @since 1.2.1
+     *
      * @dataProvider getActiveRecordProviders
      */
     public function testRemoveFromCache($provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-
-        $config = ConfigProvider::getInstance();
 
         $oldSetting = $config->get('cache.provider.name');
         $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');

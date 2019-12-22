@@ -65,15 +65,6 @@ class RelationTest extends ModelTestCase
     private $rel1;
 
     /**
-     * A Person for testing.
-     *
-     * @var \Alpha\Model\Person
-     *
-     * @since 1.2.1
-     */
-    private $person;
-
-    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here.

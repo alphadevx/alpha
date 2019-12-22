@@ -4,6 +4,7 @@ namespace Alpha\Test\Model;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
+use Alpha\Model\Person;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -51,6 +52,15 @@ use PHPUnit\Framework\TestCase;
 class ModelTestCase extends TestCase
 {
     /**
+     * A Person for testing.
+     *
+     * @var \Alpha\Model\Person
+     *
+     * @since 1.0
+     */
+    protected $person;
+
+    /**
      * Switches to using the test database.
      *
      * @since 2.0
@@ -94,5 +104,23 @@ class ModelTestCase extends TestCase
             array('Alpha\Model\ActiveRecordProviderSQLite'),
             array('Alpha\Model\ActiveRecordProviderMySQL'),
         );
+    }
+
+    /**
+    * Creates a person object for Testing.
+    *
+    * @return \Alpha\Model\Person
+    *
+    * @since 1.0
+    */
+    protected function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setUsername($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
+
+        return $person;
     }
 }

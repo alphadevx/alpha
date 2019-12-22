@@ -62,15 +62,6 @@ class EnumTest extends ModelTestCase
     private $enum1;
 
     /**
-     * A person for testing.
-     *
-     * @var Person
-     *
-     * @since 1.0
-     */
-    private $person;
-
-    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here.
