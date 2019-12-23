@@ -9,6 +9,7 @@ use Alpha\Model\Article;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\FailedLookupCreateException;
+use Alpha\Util\Config\Configprovider;
 
 /**
  * Test case for the RelationLookup data type.
@@ -64,49 +65,39 @@ class RelationLookupTest extends ModelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $rights = new Rights();
-        $rights->rebuildTable();
 
-        $standardGroup = new Rights();
-        $standardGroup->set('name', 'Standard');
-        $standardGroup->save();
+        $config = ConfigProvider::getInstance();
 
-        $person = new Person();
-        $person->rebuildTable();
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
 
-        $article = new Article();
-        $article->rebuildTable();
-    }
+            $rights = new Rights();
+            $rights->rebuildTable();
 
-    /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $person = new Person();
-        $person->dropTable();
+            $standardGroup = new Rights();
+            $standardGroup->set('name', 'Standard');
+            $standardGroup->save();
 
-        $rights = new Rights();
-        $rights->dropTable();
-        $rights->dropTable('Person2Rights');
-        $rights->dropTable('Person2Article');
+            $person = new Person();
+            $person->rebuildTable();
 
-        $article = new Article();
-        $article->dropTable();
+            $article = new Article();
+            $article->rebuildTable();
+        }
     }
 
     /**
      * Testing the RelationLookup constructor.
      *
      * @since 1.2.1
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testConstruct()
+    public function testConstruct($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         try {
             $lookup = new RelationLookup('', '');
             $this->fail('testing the RelationLookup constructor');
@@ -181,9 +172,14 @@ class RelationLookupTest extends ModelTestCase
      * Testing the loadAllbyAttribute() method.
      *
      * @since 1.2.1
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testLoadAllbyAttribute()
+    public function testLoadAllbyAttribute($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $group = new Rights();
         $group->set('name', 'unittestgroup');
         $group->save();

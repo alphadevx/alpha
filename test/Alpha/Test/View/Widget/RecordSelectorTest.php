@@ -83,9 +83,14 @@ class RecordSelectorTest extends ModelTestCase
      * Testing the render() method.
      *
      * @since 3.0
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testRender()
+    public function testRender($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $article = new Article();
         $article->set('title', 'unit test');
         $article->set('description', 'unit test');

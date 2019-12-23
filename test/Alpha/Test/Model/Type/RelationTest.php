@@ -10,6 +10,7 @@ use Alpha\Model\ArticleComment;
 use Alpha\Model\Type\Relation;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
+use Alpha\Util\Config\Configprovider;
 
 /**
  * Test case for the Relation data type.
@@ -62,7 +63,7 @@ class RelationTest extends ModelTestCase
      *
      * @since 1.0
      */
-    private $rel1;
+    protected $rel1;
 
     /**
      * Called before the test functions will be executed
@@ -74,52 +75,34 @@ class RelationTest extends ModelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->rel1 = new Relation();
 
-        $rights = new Rights();
-        $rights->rebuildTable();
+        $config = ConfigProvider::getInstance();
 
-        $article = new Article();
-        $article->rebuildTable();
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
 
-        $comment = new ArticleComment();
-        $comment->rebuildTable();
+            $this->rel1 = new Relation();
 
-        $standardGroup = new Rights();
-        $standardGroup->set('name', 'Standard');
-        $standardGroup->save();
+            $rights = new Rights();
+            $rights->rebuildTable();
 
-        $this->person = new Person();
-        $this->person->set('username', 'unittestuser');
-        $this->person->set('email', 'unittestuser@alphaframework.org');
-        $this->person->set('password', 'password');
-        $this->person->rebuildTable();
-        $this->person->save();
-    }
+            $article = new Article();
+            $article->rebuildTable();
 
-    /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        unset($this->rel1);
-        $person = new Person();
-        $person->dropTable();
+            $comment = new ArticleComment();
+            $comment->rebuildTable();
 
-        $rights = new Rights();
-        $rights->dropTable();
-        $rights->dropTable('Person2Rights');
+            $standardGroup = new Rights();
+            $standardGroup->set('name', 'Standard');
+            $standardGroup->save();
 
-        $comment = new ArticleComment();
-        $comment->dropTable();
-
-        $article = new Article();
-        $article->dropTable();
+            $this->person = new Person();
+            $this->person->set('username', 'unittestuser');
+            $this->person->set('email', 'unittestuser@alphaframework.org');
+            $this->person->set('password', 'password');
+            $this->person->rebuildTable();
+            $this->person->save();
+        }
     }
 
     /**
@@ -284,9 +267,14 @@ class RelationTest extends ModelTestCase
      * Testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations.
      *
      * @since 1.2.1
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testGetRelatedClassDisplayFieldValuePass()
+    public function testGetRelatedClassDisplayFieldValuePass($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $oneToManyRel = new Relation();
         $oneToManyRel->setRelatedClass('Alpha\Model\Person');
         $oneToManyRel->setRelatedClassField('ID');
@@ -405,9 +393,14 @@ class RelationTest extends ModelTestCase
      * Testing the getRelated method.
      *
      * @since 1.2.1
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testGetRelated()
+    public function testGetRelated($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $oneToOneRel = new Relation();
         $oneToOneRel->setRelatedClass('Alpha\Model\Person');
         $oneToOneRel->setRelatedClassField('ID');

@@ -7,6 +7,7 @@ use Alpha\Model\Type\Enum;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\Configprovider;
 
 /**
  * Test case for the Enum data type.
@@ -59,7 +60,7 @@ class EnumTest extends ModelTestCase
      *
      * @since 1.0
      */
-    private $enum1;
+    protected $enum1;
 
     /**
      * Called before the test functions will be executed
@@ -71,44 +72,38 @@ class EnumTest extends ModelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->enum1 = new Enum();
 
-        $rights = new Rights();
-        $rights->rebuildTable();
+        $config = ConfigProvider::getInstance();
 
-        $this->person = new Person();
-        $this->person->set('username', 'enumunittest');
-        $this->person->set('email', 'enumunittest@test.com');
-        $this->person->set('password', 'password');
-        $this->person->rebuildTable();
-        $this->person->save();
-    }
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
 
-    /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        unset($this->enum1);
-        $this->person->dropTable();
-        $rights = new Rights();
-        $rights->dropTable();
-        $rights->dropTable('Person2Rights');
-        unset($this->person);
+            $this->enum1 = new Enum();
+
+            $rights = new Rights();
+            $rights->rebuildTable();
+
+            $this->person = new Person();
+            $this->person->set('username', 'enumunittest');
+            $this->person->set('email', 'enumunittest@test.com');
+            $this->person->set('password', 'password');
+            $this->person->rebuildTable();
+            $this->person->save();
+        }
     }
 
     /**
      * Testing that enum options are loaded correctly from the database.
      *
      * @since 1.0
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testLoadEnumOptions()
+    public function testLoadEnumOptions($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $this->person->loadByAttribute('username', 'enumunittest', true);
 
         $this->assertEquals('Active', $this->person->getPropObject('state')->getValue(), 'Testing that enum options are loaded correctly from the database');

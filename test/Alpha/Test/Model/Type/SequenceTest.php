@@ -5,6 +5,7 @@ namespace Alpha\Test\Model\Type;
 use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Sequence;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Util\Config\Configprovider;
 
 /**
  * Test cases for the Sequence data type.
@@ -69,25 +70,18 @@ class SequenceTest extends ModelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->sequence = new Sequence();
-        $this->sequence->rebuildTable();
-        $this->sequence->set('prefix', 'TEST');
-        $this->sequence->set('sequence', 1);
-        $this->sequence->save();
-    }
 
-    /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        $this->sequence->dropTable();
-        unset($this->sequence);
+        $config = ConfigProvider::getInstance();
+
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
+
+            $this->sequence = new Sequence();
+            $this->sequence->rebuildTable();
+            $this->sequence->set('prefix', 'TEST');
+            $this->sequence->set('sequence', 1);
+            $this->sequence->save();
+        }
     }
 
     /**
@@ -139,9 +133,14 @@ class SequenceTest extends ModelTestCase
      * Testing the setSequenceToNext methid increments the sequence number.
      *
      * @since 1.0
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testSetSequenceToNext()
+    public function testSetSequenceToNext($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $this->sequence->setSequenceToNext();
 
         $this->assertEquals('TEST-2', $this->sequence->getValue(), 'Testing the setSequenceToNext methid increments the sequence number');
