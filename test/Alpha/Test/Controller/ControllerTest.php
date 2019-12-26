@@ -352,6 +352,10 @@ class ControllerTest extends TestCase
         $controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
         $this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'Test the getUnitDuration method for greater than');
+
+        $this->assertEquals(2006, $this->controller1->getEndTime()->getYear());
+        $this->assertEquals(30, $this->controller1->getEndTime()->getDay());
+        $this->assertEquals(15, $this->controller1->getEndTime()->getSecond());
     }
 
     /**

@@ -107,6 +107,26 @@ class DoubleTest extends TestCase
     }
 
     /**
+     * Testing the Double constructor for rejection of bad data.
+     */
+    public function testConstructorFail()
+    {
+        try {
+            $this->dbl1 = new Double('blah');
+            $this->fail('testing the Double constructor for rejection of bad data');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage());
+        }
+
+        try {
+            $this->dbl1 = new Double(123451234512345);
+            $this->fail('testing the Double constructor for rejection of bad data');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage());
+        }
+    }
+
+    /**
      * Testing passing invalid data to setValue.
      *
      * @since 1.0
@@ -143,11 +163,21 @@ class DoubleTest extends TestCase
         $this->dbl1 = new Double();
         $this->dbl1->setSize(2);
 
+        $this->assertEquals(2, $this->dbl1->getSize());
+        $this->assertEquals('2,2', $this->dbl1->getSize(true));
+
         try {
             $this->dbl1->setValue(200);
             $this->fail('testing passing invalid data to setValue');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Not a valid double value!', $e->getMessage(), 'testing passing invalid data to setValue');
+        }
+
+        try {
+            $this->dbl1->setSize(20);
+            $this->fail('testing passing invalid data to setSize');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The value 20 provided by setSize is greater than the MAX_SIZE 13 of this data type.', $e->getMessage());
         }
     }
 
