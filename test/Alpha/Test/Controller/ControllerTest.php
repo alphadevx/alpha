@@ -435,12 +435,18 @@ class ControllerTest extends TestCase
         $person->set('email', 'newuser@test.com');
         $this->controller->markNew($person);
 
+        $this->controller->setUnitStartTime(2006, 10, 30, 21, 15, 15);
+
         try {
             $this->controller->commit();
             $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
+
+        $this->assertEquals(2006, $this->controller->getStartTime()->getYear());
+        $this->assertEquals(30, $this->controller->getStartTime()->getDay());
+        $this->assertEquals(15, $this->controller->getStartTime()->getSecond());
     }
 
     /**
@@ -772,14 +778,13 @@ class ControllerTest extends TestCase
         $config->set('security.encrypt.http.fieldnames', true);
 
         $front = new FrontController();
-        $controller = new LoginController();
 
         $front->addRoute('/login', function ($request) {
             $controller = new LoginController();
             return $controller->process($request);
         });
 
-        $securityFields = $controller->generateSecurityFields();
+        $securityFields = $this->controller->generateSecurityFields();
 
         $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => array(
             'var1' => $securityFields[0],
