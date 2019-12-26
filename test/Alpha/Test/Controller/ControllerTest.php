@@ -3,6 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\ImageController;
+use Alpha\Controller\LoginController;
 use Alpha\Controller\Controller;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Article;
@@ -15,6 +16,7 @@ use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
+use Alpha\Util\Security\SecurityUtils;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
@@ -759,5 +761,35 @@ class ControllerTest extends TestCase
         $slug4 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'), true);
 
         $this->assertEquals('2760658738-a-new-blog-entry', $slug4);
+    }
+
+    /**
+     * Testing the process method with an encrypted request
+     */
+    public function testProcessEncrypted()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', true);
+
+        $front = new FrontController();
+        $controller = new LoginController();
+
+        $front->addRoute('/login', function ($request) {
+            $controller = new LoginController();
+            return $controller->process($request);
+        });
+
+        $securityFields = $controller->generateSecurityFields();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => array(
+            'var1' => $securityFields[0],
+            'var2' => $securityFields[1],
+            base64_encode(SecurityUtils::encrypt('resetBut')) => true,
+            base64_encode(SecurityUtils::encrypt('email')) => 'test@test.com')
+        ));
+
+        $response = $front->process($request);
+
+        $this->assertTrue(strpos($response->getBody(), 'test@test.com') !== false);
     }
 }
