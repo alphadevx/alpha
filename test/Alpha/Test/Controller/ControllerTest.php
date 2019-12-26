@@ -28,7 +28,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -737,5 +737,27 @@ class ControllerTest extends TestCase
         $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
         $response = $front->process($request);
         $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+    }
+
+    /**
+     * Testing the generation of URL slugs in the CMS.
+     */
+    public function testGenerateURLSlug()
+    {
+        $slug1 = Controller::generateURLSlug('A new blog entry');
+
+        $this->assertEquals('a-new-blog-entry', $slug1);
+
+        $slug2 = Controller::generateURLSlug('A new blog entry', '_');
+
+        $this->assertEquals('a_new_blog_entry', $slug2);
+
+        $slug3 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'));
+
+        $this->assertEquals('a-new-blog-entry', $slug3);
+
+        $slug4 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'), true);
+
+        $this->assertEquals('2760658738-a-new-blog-entry', $slug4);
     }
 }
