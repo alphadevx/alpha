@@ -353,9 +353,9 @@ class ControllerTest extends TestCase
 
         $this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'Test the getUnitDuration method for greater than');
 
-        $this->assertEquals(2006, $this->controller1->getEndTime()->getYear());
-        $this->assertEquals(30, $this->controller1->getEndTime()->getDay());
-        $this->assertEquals(15, $this->controller1->getEndTime()->getSecond());
+        $this->assertEquals(2006, $controller1->getEndTime()->getYear());
+        $this->assertEquals(30, $controller1->getEndTime()->getDay());
+        $this->assertEquals(15, $controller1->getEndTime()->getSecond());
     }
 
     /**
@@ -749,6 +749,9 @@ class ControllerTest extends TestCase
         $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
         $response = $front->process($request);
         $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+
+        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = '';
+        $_POST['_METHOD'] = '';
     }
 
     /**
@@ -800,5 +803,7 @@ class ControllerTest extends TestCase
         $response = $front->process($request);
 
         $this->assertTrue(strpos($response->getBody(), 'test@test.com') !== false);
+
+        $config->set('security.encrypt.http.fieldnames', false);
     }
 }
