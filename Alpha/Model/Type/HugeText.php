@@ -6,7 +6,7 @@ use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 
 /**
- * The LargeText complex data type.
+ * The HugeText complex data type.
  *
  * @since 3.1
  *
@@ -47,10 +47,10 @@ use Alpha\Exception\IllegalArguementException;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class LargeText extends Text implements TypeInterface
+class HugeText extends Text implements TypeInterface
 {
     /**
-     * The value of the LargeText object.
+     * The value of the HugeText object.
      *
      * @var string
      *
@@ -59,7 +59,7 @@ class LargeText extends Text implements TypeInterface
     private $value;
 
     /**
-     * The validation rule for the LargeText type.
+     * The validation rule for the HugeText type.
      *
      * @var string
      *
@@ -68,7 +68,7 @@ class LargeText extends Text implements TypeInterface
     private $validationRule;
 
     /**
-     * Used to determine if the LargeText object can support HTML content or not.  Defaults to true, if set to false
+     * Used to determine if the HugeText object can support HTML content or not.  Defaults to true, if set to false
      * then HTML content should be filtered.
      *
      * @var bool
@@ -84,23 +84,23 @@ class LargeText extends Text implements TypeInterface
      *
      * @since 3.1
      */
-    protected $helper = 'Not a valid LargeText value!';
+    protected $helper = 'Not a valid HugeText value!';
 
     /**
-     * The size of the value for the this LargeText.
+     * The size of the value for the this HugeText.
      *
      * @var int
      *
      * @since 3.1
      */
-    private $size = 16777215;
+    private $size = 4294967295;
 
     /**
-     * The absolute maximum size of the value for the this LargeText.
+     * The absolute maximum size of the value for the this HugeText.
      *
      * @var int
      *
      * @since 1.0
      */
-    const MAX_SIZE = 16777215;
+    const MAX_SIZE = 4294967295;
 }
