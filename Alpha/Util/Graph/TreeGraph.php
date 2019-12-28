@@ -161,6 +161,7 @@ class TreeGraph
         self::$logger = new Logger('TreeGraph');
 
         $this->root = new GraphNode(0, 0, 0);
+        $this->nodes[0] = $this->root;
         $this->rowSpace = $rowSpace;
         $this->colSpace = $colSpace;
         $this->branchSpace = $branchSpace;
