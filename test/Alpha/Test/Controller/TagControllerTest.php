@@ -172,6 +172,22 @@ class TagControllerTest extends ControllerTestCase
         }
 
         $this->assertTrue($found, 'Checking that the new tag added was actually saved');
+
+        $tag = new Tag();
+        $tag->deleteAllByAttribute('taggedID', $article->getID());
+
+        $this->assertTrue($tag->getCount() == 0, 'Checking that tags are gone from the DB before we clear and rebuild them');
+
+        $params = array('clearTaggedClass' => '\\Alpha\\Model\\Article', 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = array_merge($params, $existingTags);
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/tag/'.urlencode('Alpha\Model\Article').'/'.$article->getID(), 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+
+        $this->assertTrue($tag->getCount() > 0, 'Checking that tags are back in the DB before we clear and rebuild them');
     }
 
     /**
