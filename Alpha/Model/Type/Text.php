@@ -84,7 +84,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    protected $helper = 'Not a valid text value!';
+    protected $helper = 'Not a valid Text value!';
 
     /**
      * The size of the value for the this Text.
