@@ -9,6 +9,8 @@ use Alpha\Model\Type\Relation;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Model\Type\Double;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
+use Alpha\Model\Type\HugeText;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Date;
 use Alpha\Model\Type\Enum;
@@ -1228,6 +1230,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                     $sqlQuery .= "$propName TEXT(".$prop->getSize().'),';
                 } elseif ($prop instanceof Text) {
                     $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof LargeText) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof HugeText) {
+                    $sqlQuery .= "$propName TEXT,";
                 } elseif ($prop instanceof Boolean) {
                     $sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";
                 } elseif ($prop instanceof Date) {
@@ -1325,6 +1331,10 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 } elseif ($prop instanceof SmallText) {
                     $sqlQuery .= "$propName TEXT(".$prop->getSize().'),';
                 } elseif ($prop instanceof Text) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof LargeText) {
+                    $sqlQuery .= "$propName TEXT,";
+                } elseif ($prop instanceof HugeText) {
                     $sqlQuery .= "$propName TEXT,";
                 } elseif ($prop instanceof Boolean) {
                     $sqlQuery .= "$propName INTEGER(1) DEFAULT '0',";

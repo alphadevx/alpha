@@ -9,6 +9,8 @@ use Alpha\Model\Type\Relation;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Model\Type\Double;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
+use Alpha\Model\Type\HugeText;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Date;
 use Alpha\Model\Type\Enum;
@@ -1185,6 +1187,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $sqlQuery .= "$propName VARCHAR(".$prop->getSize().') CHARACTER SET utf8,';
                 } elseif ($prop instanceof Text) {
                     $sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
+                } elseif ($prop instanceof LargeText) {
+                    $sqlQuery .= "$propName MEDIUMTEXT CHARACTER SET utf8,";
+                } elseif ($prop instanceof HugeText) {
+                    $sqlQuery .= "$propName LONGTEXT CHARACTER SET utf8,";
                 } elseif ($prop instanceof Boolean) {
                     $sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
                 } elseif ($prop instanceof Date) {
@@ -1266,6 +1272,10 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     $sqlQuery .= "$propName VARCHAR(".$prop->getSize().') CHARACTER SET utf8,';
                 } elseif ($prop instanceof Text) {
                     $sqlQuery .= "$propName TEXT CHARACTER SET utf8,";
+                } elseif ($prop instanceof LargeText) {
+                    $sqlQuery .= "$propName MEDIUMTEXT CHARACTER SET utf8,";
+                } elseif ($prop instanceof HugeText) {
+                    $sqlQuery .= "$propName LONGTEXT CHARACTER SET utf8,";
                 } elseif ($prop instanceof Boolean) {
                     $sqlQuery .= "$propName CHAR(1) DEFAULT '0',";
                 } elseif ($prop instanceof Date) {

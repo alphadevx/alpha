@@ -6,6 +6,8 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Security\SecurityUtils;
 use Alpha\Util\InputFilter;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
+use Alpha\Model\Type\HugeText;
 use Alpha\Exception\IllegalArguementException;
 
 /**
@@ -15,7 +17,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -101,10 +103,10 @@ class TextBox
      * The constructor.
      *
      * @param \Alpha\Model\Type\Text $text       The text object that will be edited by this text box.
-     * @param string                $label      The data label for the text object.
-     * @param string                $name       The name of the HTML input box.
-     * @param int                   $rows       The display size (rows).
-     * @param int                   $identifier An additional idenitfier to append to the id of the text box.
+     * @param string                 $label      The data label for the text object.
+     * @param string                 $name       The name of the HTML input box.
+     * @param int                    $rows       The display size (rows).
+     * @param int                    $identifier An additional idenitfier to append to the id of the text box.
      *
      * @since 1.0
      *
