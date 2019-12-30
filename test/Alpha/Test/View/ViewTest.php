@@ -212,8 +212,6 @@ class ViewTest extends TestCase
     {
         $generatedHTML = View::loadTemplateFragment('html', 'footer.phtml', array());
 
-        $pos = strpos($generatedHTML, '<footer>');
-
         $this->assertTrue(strpos($generatedHTML, '<footer>') > 0, 'Testing that a generated HTML fragment can load from a file');
     }
 
@@ -298,5 +296,17 @@ class ViewTest extends TestCase
 
         $this->assertNotEmpty($this->view->editView(array('formAction' => '/')), 'Testing the editView() method');
         $this->assertTrue(strpos($this->view->editView(array('formAction' => '/')), 'very bad client') !== false, 'Testing the editView() method');
+    }
+
+    public function testDisplayErrorMessage()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('app.renderer.provider.name', 'Alpha\View\Renderer\Html\RendererProviderJSON');
+
+        $this->assertTrue(strpos(View::displayErrorMessage('something went wrong'), 'something went wrong') > 0);
+
+        $config->set('app.renderer.provider.name', 'Alpha\View\Renderer\Html\RendererProviderHTML');
+
+        $this->assertTrue(strpos(View::displayErrorMessage('something went wrong'), 'something went wrong') > 0);
     }
 }
