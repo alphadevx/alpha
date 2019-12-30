@@ -19,7 +19,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -222,7 +222,6 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * (non-PHPdoc)
      *
      * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
-     * @param string $attribute
      */
     public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
     {
@@ -247,43 +246,6 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         }
 
         self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
-
-        return $objects;
-    }
-
-    /**
-     * This custom version provides the left/right class names to the business object constructor, required
-     * for RelationLookup objects.
-     *
-     * (non-PHPdoc)
-     *
-     * @see Alpha\Model\ActiveRecord::loadAllByAttributes()
-     */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
-    {
-        self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
-            $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
-
-        if (method_exists($this, 'before_loadAllByAttributes_callback')) {
-            $this->{'before_loadAllByAttributes_callback'}();
-        }
-
-        $config = ConfigProvider::getInstance();
-
-        if (!is_array($attributes) || !is_array($values)) {
-            throw new IllegalArguementException('Illegal arrays attributes=['.var_export($attributes, true).'] and values=['.var_export($values, true).
-                '] provided to loadAllByAttributes');
-        }
-
-        $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
-        $provider->setRecord($this);
-        $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
-
-        if (method_exists($this, 'after_loadAllByAttributes_callback')) {
-            $this->{'after_loadAllByAttributes_callback'}();
-        }
-
-        self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
 
         return $objects;
     }
