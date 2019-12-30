@@ -611,4 +611,16 @@ class GraphNode
     {
         $this->y = $y;
     }
+
+    /**
+     * Returns the node ID.
+     *
+     * @return int
+     *
+     * @since 3.1
+     */
+    public function getID()
+    {
+        return $this->id;
+    }
 }

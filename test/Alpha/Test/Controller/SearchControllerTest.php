@@ -95,6 +95,7 @@ class SearchControllerTest extends TestCase
         $article->set('description', 'A test article called unitTestArticle with some stop words and the unitTestArticle title twice');
         $article->set('author', 'blah');
         $article->set('content', 'blah');
+        $article->set('published', true);
 
         return $article;
     }
