@@ -12,7 +12,7 @@ use Alpha\Util\File\FileUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -111,7 +111,7 @@ class LogProviderFile implements LogProviderInterface
                 $logsDir = $config->get('app.file.store.dir').'logs';
 
                 if (!file_exists($logsDir)) {
-                    if (!mkdir($logsDir, 0766)) {
+                    if (!mkdir($logsDir, 0766, true)) {
                         error_log('Could not create the directory ['.$logsDir.']');
                     }
                 }

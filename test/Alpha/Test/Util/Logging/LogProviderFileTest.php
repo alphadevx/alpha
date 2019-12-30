@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Logging;
 
 use Alpha\Util\Logging\LogProviderFile;
+use Alpha\Util\Config\ConfigProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -66,8 +67,6 @@ class LogProviderFileTest extends TestCase
 
     /**
      * Testing the writeLine() method.
-     *
-     * @since 2.0.4
      */
     public function testWriteLine()
     {
@@ -81,9 +80,24 @@ class LogProviderFileTest extends TestCase
     }
 
     /**
+     * Testing the writeLine() method.
+     */
+    public function testWriteLineErrorHandle()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('app.file.store.dir', '/tmp/not/');
+
+        $logFile = new LogProviderFile();
+        $logFile->setPath('/tmp/not/logs/there.log');
+        $logFile->writeLine(array('test entry'));
+
+        $this->assertTrue(file_exists('/tmp/not/logs/there.log'));
+
+        $config->set('app.file.store.dir', '/tmp/');
+    }
+
+    /**
      * Testing the backupFile() method.
-     *
-     * @since 2.0.4
      */
     public function testBackupFile()
     {
