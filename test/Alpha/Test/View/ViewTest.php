@@ -298,15 +298,17 @@ class ViewTest extends TestCase
         $this->assertTrue(strpos($this->view->editView(array('formAction' => '/')), 'very bad client') !== false, 'Testing the editView() method');
     }
 
+    /**
+     * Testing the displayErrorMessage() method.
+     *
+     * @since 3.1
+     */
     public function testDisplayErrorMessage()
     {
-        $config = ConfigProvider::getInstance();
-        $config->set('app.renderer.provider.name', 'Alpha\View\Renderer\Html\RendererProviderJSON');
-
+        $this->view->setProvider('Alpha\View\Renderer\Json\RendererProviderJSON');
         $this->assertTrue(strpos(View::displayErrorMessage('something went wrong'), 'something went wrong') > 0);
 
-        $config->set('app.renderer.provider.name', 'Alpha\View\Renderer\Html\RendererProviderHTML');
-
+        $this->view->setProvider('Alpha\View\Renderer\Html\RendererProviderHTML');
         $this->assertTrue(strpos(View::displayErrorMessage('something went wrong'), 'something went wrong') > 0);
     }
 }
