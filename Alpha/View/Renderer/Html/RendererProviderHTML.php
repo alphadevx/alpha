@@ -107,9 +107,9 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecord($Record)
+    public function setRecord($record)
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**

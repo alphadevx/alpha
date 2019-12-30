@@ -265,6 +265,17 @@ class ViewTest extends TestCase
 
         $this->assertNotEmpty($this->view->renderAllFields('view'), 'Testing the renderAllFields() method');
         $this->assertTrue(strpos($this->view->renderAllFields('view'), 'Test Article') !== false, 'Testing the renderAllFields() method');
+
+        $this->view->setProvider('auto', 'application/json');
+        $this->view->setRecord($article);
+
+        $this->assertTrue($this->view->getProvider() instanceof \Alpha\View\Renderer\Json\RendererProviderJSON, 'Testing the renderAllFields() method');
+
+        $this->assertNotEmpty($this->view->renderAllFields('view'), 'Testing the renderAllFields() method');
+        $this->assertTrue(strpos($this->view->renderAllFields('view'), 'Test Article') !== false, 'Testing the renderAllFields() method');
+
+        $result = json_decode($this->view->renderAllFields('view'));
+        $this->assertTrue(json_last_error() === JSON_ERROR_NONE);
     }
 
     /**
