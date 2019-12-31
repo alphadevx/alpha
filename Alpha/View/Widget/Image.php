@@ -244,14 +244,11 @@ class Image
             // make a cache dir for the article
             $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_')+20, 11);
             if (!file_exists($cacheDir)) {
-                $success = mkdir($cacheDir);
+                $success = mkdir($cacheDir, 0777, true);
 
                 if (!$success) {
                     throw new AlphaException('Unable to create the folder '.$cacheDir.' for the cache image, source file is '.$this->source);
                 }
-
-                // ...and set write permissions on the folder
-                $success = chmod($cacheDir, 0777);
 
                 if (!$success) {
                     throw new AlphaException('Unable to set write permissions on the folder ['.$cacheDir.'].');
