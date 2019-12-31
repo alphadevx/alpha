@@ -154,4 +154,19 @@ class ImageTest extends TestCase
 
         $this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'/images/testimage.png'), 'testing the convertImageURLToPath method');
     }
+
+    /**
+     * Testing the renderHTMLLink method.
+     *
+     * @since 3.1
+     */
+    public function testRenderHTMLLink()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0);
+
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
+    }
 }
