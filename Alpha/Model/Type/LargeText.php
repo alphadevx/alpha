@@ -93,7 +93,7 @@ class LargeText extends Text implements TypeInterface
      *
      * @since 3.1
      */
-    private $size = 16777215;
+    protected $size = 16777215;
 
     /**
      * The absolute maximum size of the value for the this LargeText.
