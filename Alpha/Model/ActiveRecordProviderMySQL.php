@@ -936,7 +936,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 $this->record->setID(self::getConnection()->insert_id);
             }
 
-            $this->record->saveRelations($properties);
+            $this->record->saveRelations();
 
             $stmt->close();
         } else {

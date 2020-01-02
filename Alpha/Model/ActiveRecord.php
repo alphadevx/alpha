@@ -7,6 +7,7 @@ use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\TypeInterface;
 use Alpha\Model\Type\Relation;
+use Alpha\Model\Type\RelationLookup;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Service\ServiceFactory;

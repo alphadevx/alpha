@@ -1388,4 +1388,27 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertEquals('2001-01-01 20:20:20', $record->getUpdateTS()->getValue(), 'Testing the populateFromArray() method');
     }
+
+    /**
+     * Testing the saveRelations() method.
+     *
+     * @since 3.1
+     *
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testSaveRelations($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $group = new Rights();
+        $group->set('name', 'unittestgroup');
+        $group->save();
+
+        $group->getPropObject('members')->setRelatedIDs(array(1, 2, 3));
+        $group->saveRelations();
+
+        $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
+        $this->assertEquals(3, count($lookup->loadAllbyAttribute('rightID', $group->getID())), 'testing the loadAllbyAttribute() method');
+    }
 }

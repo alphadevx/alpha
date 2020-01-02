@@ -971,7 +971,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $this->record->setID(self::getConnection()->lastInsertRowID());
             }
 
-            $this->record->saveRelations($properties);
+            $this->record->saveRelations();
 
             $stmt->close();
         } else {
