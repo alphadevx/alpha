@@ -93,7 +93,7 @@ class HugeText extends Text implements TypeInterface
      *
      * @since 3.1
      */
-    private $size = 4294967295;
+    protected $size = 4294967295;
 
     /**
      * The absolute maximum size of the value for the this HugeText.
