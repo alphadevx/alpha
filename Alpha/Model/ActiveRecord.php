@@ -2176,39 +2176,6 @@ abstract class ActiveRecord
     }
 
     /**
-     * Loads the definition from the file system for the Record class name provided.
-     *
-     * @param string $classname The name of the business object class name.
-     *
-     * @since 1.0
-     *
-     * @throws \Alpha\Exception\IllegalArguementException
-     *
-     * @deprecated Use autoloader!
-     */
-    public static function loadClassDef($classname)
-    {
-        if (self::$logger == null) {
-            self::$logger = new Logger('ActiveRecord');
-        }
-        self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
-
-        $config = ConfigProvider::getInstance();
-
-        if (file_exists($config->get('app.root').'Model/'.$classname.'.php')) {
-            require_once $config->get('app.root').'Model/'.$classname.'.php';
-        } elseif (file_exists($config->get('app.root').'alpha/Alpha/Model/'.$classname.'.php')) {
-            require_once $config->get('app.root').'alpha/Alpha/Model/'.$classname.'.php';
-        } elseif (file_exists($config->get('app.root').'alpha/Alpha/Model/Types/'.$classname.'.php')) {
-            require_once $config->get('app.root').'alpha/Alpha/Model/Types/'.$classname.'.php';
-        } else {
-            throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
-        }
-
-        self::$logger->debug('<<loadClassDef');
-    }
-
-    /**
      * Checks that a record exists for the Record in the database.
      *
      * @param int $ID The Object ID of the object we want to see whether it exists or not.
