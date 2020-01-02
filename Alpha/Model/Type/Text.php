@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -93,7 +93,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    private $size = 65535;
+    protected $size = 65535;
 
     /**
      * The absolute maximum size of the value for the this Text.
