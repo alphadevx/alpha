@@ -1582,7 +1582,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             $propName = $propObj->name;
             if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
                 $propClass = get_class($this->record->getPropObject($propName));
-                if ($propClass == 'Enum') {
+                if ($propClass == 'Alpha\Model\Type\Enum') {
                     $sqlQuery = 'SHOW COLUMNS FROM '.$this->record->getTableName()." LIKE '$propName'";
 
                     $this->record->setLastQuery($sqlQuery);
