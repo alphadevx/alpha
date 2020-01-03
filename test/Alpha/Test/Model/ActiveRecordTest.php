@@ -1012,7 +1012,7 @@ class ActiveRecordTest extends ModelTestCase
             );
             $this->person->load($this->person->getID());
             $this->assertEquals(
-                'SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = ? LIMIT 1;',
+                'SHOW COLUMNS FROM Person LIKE \'state\'',
                 $this->person->getLastQuery(),
                 'Testing the getLastQuery method after various persistance calls'
             );
