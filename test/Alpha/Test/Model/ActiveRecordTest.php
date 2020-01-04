@@ -1342,9 +1342,14 @@ class ActiveRecordTest extends ModelTestCase
      * Testing the addProperty() method.
      *
      * @since 2.0
+     *
+     * @dataProvider getActiveRecordProviders
      */
-    public function testAddProperty()
+    public function testAddProperty($provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+        
         $record = new BadRequest();
         $record->newStringField = new SmallText();
 
