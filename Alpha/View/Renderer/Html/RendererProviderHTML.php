@@ -866,11 +866,11 @@ class RendererProviderHTML implements RendererProviderInterface
         $request = new Request(array('method' => 'GET'));
 
         if ($mode == 'create') {
-            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';
+            $html .= '<strong>'.$label.':</strong> <textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';
         }
 
         if ($mode == 'edit') {
-            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
+            $html .= '<strong>'.$label.':</strong> <textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
         }
 
         if ($mode == 'view') {

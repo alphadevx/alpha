@@ -4,6 +4,7 @@ namespace Alpha\Test\View;
 
 use Alpha\View\View;
 use Alpha\Model\Article;
+use Alpha\Model\ArticleComment;
 use Alpha\Model\BlacklistedClient;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
@@ -79,6 +80,12 @@ class ViewTest extends TestCase
 
         $item = new DEnumItem();
         $item->rebuildTable();
+
+        $article = new Article();
+        $article->rebuildTable();
+
+        $articleComment = new ArticleComment();
+        $articleComment->rebuildTable();
 
         $this->view = View::getInstance(new Article());
     }
@@ -310,5 +317,154 @@ class ViewTest extends TestCase
 
         $this->view->setProvider('Alpha\View\Renderer\Html\RendererProviderHTML');
         $this->assertTrue(strpos(View::displayErrorMessage('something went wrong'), 'something went wrong') > 0);
+    }
+
+    /**
+     * Testing the renderIntegerField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderIntegerField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderIntegerField('fieldname', 'Integer field', 'edit', '1234');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'Integer field') > 0);
+        $this->assertTrue(strpos($html, '1234') > 0);
+    }
+
+    /**
+     * Testing the renderDoubleField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderDoubleField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderDoubleField('fieldname', 'Double field', 'edit', '12.34');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'Double field') > 0);
+        $this->assertTrue(strpos($html, '12.34') > 0);
+    }
+
+    /**
+     * Testing the renderBooleanField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderBooleanField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderBooleanField('fieldname', 'Boolean field', 'edit', 'true');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'Boolean field') > 0);
+    }
+
+    /**
+     * Testing the renderEnumField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderEnumField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderEnumField('fieldname', 'Enum field', 'edit', array('red', 'green', 'blue'), 'blue');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'Enum field') > 0);
+        $this->assertTrue(strpos($html, 'blue') > 0);
+    }
+
+    /**
+     * Testing the renderDEnumField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderDEnumField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderDEnumField('fieldname', 'DEnum field', 'edit', array('red', 'green', 'blue'), 'blue');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'DEnum field') > 0);
+        $this->assertTrue(strpos($html, 'blue') > 0);
+    }
+
+    /**
+     * Testing the renderDefaultField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderDefaultField()
+    {
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderDefaultField('fieldname', 'Default field', 'edit', 'value 1');
+        $this->assertTrue(strpos($html, 'fieldname') > 0);
+        $this->assertTrue(strpos($html, 'Default field') > 0);
+        $this->assertTrue(strpos($html, 'value 1') > 0);
+    }
+
+    /**
+     * Testing the renderTextField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderTextField()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', false);
+        
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderTextField('content', 'Text field', 'edit', 'value 1');
+        $this->assertTrue(strpos($html, 'content') > 0);
+        $this->assertTrue(strpos($html, 'Text field') > 0);
+    }
+
+    /**
+     * Testing the renderRelationField() method.
+     *
+     * @since 3.1
+     */
+    public function testRenderRelationField()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', false);
+
+        $article = new Article();
+        $article->set('title', 'Test Article');
+        $article->set('description', 'Test Description');
+        $article->set('author', 'Author');
+        $article->save();
+
+        $comment = new ArticleComment();
+        $comment->set('content', 'Test comment');
+        $comment->set('articleID', $article->getID());
+        $comment->save();
+
+        $this->view = View::getInstance($article);
+
+        $html = $this->view->renderRelationField('comments', 'Relation field', 'edit');
+        $this->assertTrue(strpos($html, 'comments') > 0);
+        $this->assertTrue(strpos($html, 'Relation field') > 0);
+        $this->assertTrue(strpos($html, 'Test comment') > 0);
     }
 }
