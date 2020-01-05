@@ -411,7 +411,7 @@ class Date extends Type implements TypeInterface
     public function increment($amount)
     {
         $date = strtotime($amount, strtotime($this->getValue()));
-        $this->setValue(date("Y-m-d", $date));
+        $this->setValue(date('Y-m-d', $date));
     }
 
     /**
