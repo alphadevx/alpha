@@ -182,5 +182,11 @@ class ImageTest extends TestCase
 
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
+
+        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0, false, true);
+
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'O1PhUkdjKYhuj11XmP8agcssjpO3K4SMTUeqKrZmNZrtkFcNXnD8rrZSRpapCexz5jrF9_QK1EgOzQ4_Ag==') !== false);
     }
 }
