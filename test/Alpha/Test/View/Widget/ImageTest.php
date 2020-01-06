@@ -187,6 +187,6 @@ class ImageTest extends TestCase
 
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
-        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'O1PhUkdjKYhuj11XmP8agcssjpO3K4SMTUeqKrZmNZrtkFcNXnD8rrZSRpapCexz5jrF9_QK1EgOzQ4_Ag==') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'O1PhUkdjKYhuj11XmF8sjidP7eXibOK-FgVGdgxheAeTu7Jn5CIAcFtoxnPjLP_CVhxA57Cr6A_udOrmKQ==') !== false);
     }
 }
