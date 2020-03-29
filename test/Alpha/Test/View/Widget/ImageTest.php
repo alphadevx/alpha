@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -187,6 +187,6 @@ class ImageTest extends TestCase
 
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
-        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'O1PhUkdjKYhuj11XmF8sjidP7eXibOK-FgVGdgxheAeTu7Jn5CIAcFtoxnPjLP_CVhxA57Cr6A_udOrmKQ==') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '/tk/') !== false);
     }
 }
