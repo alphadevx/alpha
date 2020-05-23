@@ -25,7 +25,7 @@
         "ext-sqlite3": "*",
         "ext-gd": "*",
         "tecnickcom/tcpdf": "6.2.26",
-        "michelf/php-markdown": "1.8.0",
+        "michelf/php-markdown": "1.9.0",
         "themattharris/tmhoauth": "0.8.4",
         "easybook/geshi": "v1.0.8.19"
     },
