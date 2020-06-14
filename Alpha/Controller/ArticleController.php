@@ -350,8 +350,10 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $record = new Article();
             $record->loadByAttribute('title', $title);
             $params['ActiveRecordID'] = $record->getID();
+
+            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article', 'ActiveRecordID' => $params['ActiveRecordID']));
         }
-        $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article', 'ActiveRecordID' => $params['ActiveRecordID']));
+        
         $response = parent::doPUT($request);
 
         if ($this->getNextJob() != '') {
