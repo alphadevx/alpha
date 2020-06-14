@@ -21,6 +21,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
@@ -36,7 +37,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1097,6 +1098,9 @@ class RendererProviderHTML implements RendererProviderInterface
                         $html .= $this->renderStringField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'TEXT':
+                        $html .= $this->renderTextField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
+                    break;
+                    case 'LARGETEXT':
                         $html .= $this->renderTextField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'BOOLEAN':
