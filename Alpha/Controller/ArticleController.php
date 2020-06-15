@@ -351,7 +351,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $record->loadByAttribute('title', $title);
             $params['ActiveRecordID'] = $record->getID();
 
-            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article', 'ActiveRecordID' => $params['ActiveRecordID']));
+            $request->addParams(array('ActiveRecordID' => $params['ActiveRecordID']));
+        }
+        
+        if (!isset($params['ActiveRecordType'])) {
+            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
         }
         
         $response = parent::doPUT($request);
