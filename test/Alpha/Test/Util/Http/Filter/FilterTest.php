@@ -211,11 +211,11 @@ class FilterTest extends TestCase
     public function testClientTempBlacklistFilter()
     {
         $config = ConfigProvider::getInstance();
-        $config->set('security.client.temp.blacklist.filter.limit', 3);
+        $config->set('security.client.temp.blacklist.filter.limit', 1);
 
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
-        $_SERVER['REQUEST_URI'] = 'DoesNotExist';
+        $_SERVER['REQUEST_URI'] = '/doesNotExist';
 
         $request = new Request(array('method' => 'GET'));
 
