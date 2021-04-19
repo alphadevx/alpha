@@ -2,7 +2,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/alphadevx/alpha/badge.svg?branch=develop)](https://coveralls.io/github/alphadevx/alpha?branch=develop)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=develop)
 
-Alpha Framework (3.0.0)
+Alpha Framework (3.1.0)
 =================================================================
 
 Introduction
@@ -41,7 +41,7 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	    "minimum-stability": "dev",
 	    "prefer-stable": true,
 	    "require": {
-	        "alphadevx/alpha": "3.0.*"
+	        "alphadevx/alpha": "3.1.*"
 	    },
 	    "autoload": {
 	        "psr-0": {
