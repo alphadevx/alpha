@@ -3,6 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\ImageController;
+use Alpha\Controller\LoginController;
 use Alpha\Controller\Controller;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Article;
@@ -15,6 +16,7 @@ use Alpha\Model\ActiveRecord;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
+use Alpha\Util\Security\SecurityUtils;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
@@ -28,7 +30,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -106,7 +108,7 @@ class ControllerTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
@@ -150,7 +152,7 @@ class ControllerTest extends TestCase
      * @see alpha/lib/PEAR/PHPUnit-3.2.9/PHPUnit/Framework/PHPUnit_Framework_TestCase::tearDown()
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
@@ -350,6 +352,10 @@ class ControllerTest extends TestCase
         $controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
         $this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'Test the getUnitDuration method for greater than');
+
+        $this->assertEquals(2006, $controller1->getEndTime()->getYear());
+        $this->assertEquals(30, $controller1->getEndTime()->getDay());
+        $this->assertEquals(15, $controller1->getEndTime()->getSecond());
     }
 
     /**
@@ -433,12 +439,18 @@ class ControllerTest extends TestCase
         $person->set('email', 'newuser@test.com');
         $this->controller->markNew($person);
 
+        $this->controller->setUnitStartTime(2006, 10, 30, 21, 15, 15);
+
         try {
             $this->controller->commit();
             $this->assertEquals('', $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
             $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
         }
+
+        $this->assertEquals(2006, $this->controller->getStartTime()->getYear());
+        $this->assertEquals(30, $this->controller->getStartTime()->getDay());
+        $this->assertEquals(15, $this->controller->getStartTime()->getSecond());
     }
 
     /**
@@ -737,5 +749,61 @@ class ControllerTest extends TestCase
         $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
         $response = $front->process($request);
         $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+
+        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = '';
+        $_POST['_METHOD'] = '';
+    }
+
+    /**
+     * Testing the generation of URL slugs in the CMS.
+     */
+    public function testGenerateURLSlug()
+    {
+        $slug1 = Controller::generateURLSlug('A new blog entry');
+
+        $this->assertEquals('a-new-blog-entry', $slug1);
+
+        $slug2 = Controller::generateURLSlug('A new blog entry', '_');
+
+        $this->assertEquals('a_new_blog_entry', $slug2);
+
+        $slug3 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'));
+
+        $this->assertEquals('a-new-blog-entry', $slug3);
+
+        $slug4 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'), true);
+
+        $this->assertEquals('2760658738-a-new-blog-entry', $slug4);
+    }
+
+    /**
+     * Testing the process method with an encrypted request
+     */
+    public function testProcessEncrypted()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', true);
+
+        $front = new FrontController();
+
+        $front->addRoute('/login', function ($request) {
+            $controller = new LoginController();
+            return $controller->process($request);
+        });
+
+        $securityFields = $this->controller->generateSecurityFields();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => array(
+            'var1' => $securityFields[0],
+            'var2' => $securityFields[1],
+            base64_encode(SecurityUtils::encrypt('resetBut')) => true,
+            base64_encode(SecurityUtils::encrypt('email')) => 'test@test.com')
+        ));
+
+        $response = $front->process($request);
+
+        $this->assertTrue(strpos($response->getBody(), 'test@test.com') !== false);
+
+        $config->set('security.encrypt.http.fieldnames', false);
     }
 }

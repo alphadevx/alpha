@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -146,7 +146,7 @@ class FilterTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
@@ -182,26 +182,6 @@ class FilterTest extends TestCase
     }
 
     /**
-     * Called after the test functions are executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
-     *
-     * @since 1.0
-     */
-    /*protected function tearDown()
-    {
-        $this->blacklistedClient->dropTable();
-        unset($this->blacklistedClient);
-
-        $this->badRequest1->dropTable();
-        unset($this->badRequest1);
-
-        unset($this->badRequest2);
-
-        unset($this->badRequest3);
-    }*/
-
-    /**
      * Testing that a blacklisted user agent string cannot pass the ClientBlacklistFilter filter.
      *
      * @since 1.0
@@ -231,11 +211,11 @@ class FilterTest extends TestCase
     public function testClientTempBlacklistFilter()
     {
         $config = ConfigProvider::getInstance();
-        $config->set('security.client.temp.blacklist.filter.limit', 3);
+        $config->set('security.client.temp.blacklist.filter.limit', 1);
 
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
-        $_SERVER['REQUEST_URI'] = 'DoesNotExist';
+        $_SERVER['REQUEST_URI'] = '/doesNotExist';
 
         $request = new Request(array('method' => 'GET'));
 

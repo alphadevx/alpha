@@ -1,25 +1,19 @@
 <?php
 
-namespace Alpha\Test\Util\Config;
+namespace Alpha\Test\Model;
 
-use Alpha\Util\Config\ConfigProvider;
-use Alpha\Util\Backup\BackupUtils;
-use Alpha\Exception\IllegalArguementException;
-use Alpha\Model\ActiveRecord;
+use Alpha\Model\ActionLog;
 use Alpha\Model\Person;
-use Alpha\Model\Rights;
-use Alpha\Model\BadRequest;
-use Alpha\Model\Article;
-use Alpha\Model\ArticleComment;
-use Alpha\Model\ArticleVote;
-use Alpha\Model\Tag;
-use Alpha\Model\Type\RelationLookup;
-use Alpha\Test\Model\ModelTestCase;
+use Alpha\Util\Logging\Logger;
+use Alpha\Util\Http\Request;
+use Alpha\Util\Config\Configprovider;
+use Alpha\Util\Service\ServiceFactory;
+use Alpha\Exception\AlphaException;
 
 /**
- * Test cases for the BackupUtils class.
+ * Test case for the ActionLog class.
  *
- * @since 3.0
+ * @since 3.1
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -58,14 +52,12 @@ use Alpha\Test\Model\ModelTestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class BackupUtilsTest extends ModelTestCase
+class ActionLogTest extends ModelTestCase
 {
     /**
-     * Called before the test functions will be executed
-     * this function is defined in PHPUnit_TestCase and overwritten
-     * here.
+     * Build required tables
      *
-     * @since 3.0
+     * @since 3.1
      */
     protected function setUp(): void
     {
@@ -73,62 +65,53 @@ class BackupUtilsTest extends ModelTestCase
 
         $config = ConfigProvider::getInstance();
 
-        if (file_exists($config->get('backup.dir').'testbackup.sql')) {
-            unlink($config->get('backup.dir').'testbackup.sql');
-        }
-
         foreach ($this->getActiveRecordProviders() as $provider) {
             $config->set('db.provider.name', $provider[0]);
 
-            $rights = new Rights();
-            $rights->rebuildTable();
+            $config = ConfigProvider::getInstance();
+            $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
 
-            $standardGroup = new Rights();
-            $standardGroup->set('name', 'Standard');
-            $standardGroup->save();
+            $person = new Person();
+            $person->rebuildTable();
 
-            $request = new BadRequest();
-            $request->rebuildTable();
-
-            $this->person = $this->createPersonObject('unitTestUser');
-            $this->person->rebuildTable();
-
-            $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
-
-            // just making sure no previous test user is in the DB
-            $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-            $this->person->deleteAllByAttribute('username', 'unitTestUser');
-
-            $article = new Article();
-            $article->rebuildTable();
-            $comment = new ArticleComment();
-            $comment->rebuildTable();
-            $tag = new Tag();
-            $tag->rebuildTable();
+            $action = new ActionLog();
+            $action->rebuildTable();
         }
+
+        $this->person = $this->createPersonObject('john');
     }
 
     /**
-     * Testing that attempting to access a config value that is not set will cause an exception.
+     * Testing ActionLog is honouring the app.log.action.logging config setting
      *
-     * @since 3.0
+     * @since 3.1
      *
      * @dataProvider getActiveRecordProviders
      */
-    public function testBackUpDatabase($provider)
+    public function testLogAction($provider)
     {
         $config = ConfigProvider::getInstance();
+        $config->set('app.log.action.logging', true);
         $config->set('db.provider.name', $provider);
 
-        BackupUtils::backupDatabase($config->get('backup.dir'));
+        $request = new Request(array('method' => 'GET'));
 
-        $filename = $config->get('backup.dir').$config->get('db.name').'_'.date('Y-m-d').'.sql';
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session->set('currentUser', $this->person);
 
-        $this->assertTrue(file_exists($filename));
-        $this->assertTrue(filesize($filename) > 0);
+        $logger = new Logger('ActionLogTest');
+        $logger->action('test action 1');
+        $logger->action('test action 2');
 
-        $content = file_get_contents($filename);
+        $action = new ActionLog();
 
-        $this->assertTrue(strpos($content, 'Person') !== false);
+        $this->assertEquals(2, $action->getCount());
+
+        $config->set('app.log.action.logging', false);
+
+        $logger->action('test action 3');
+
+        $this->assertEquals(2, $action->getCount());
     }
 }

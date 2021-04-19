@@ -145,7 +145,7 @@ class CacheProviderRedis implements CacheProviderInterface
     public function delete($key)
     {
         try {
-            $this->connection->delete($this->appPrefix.'-'.$key);
+            $this->connection->del($this->appPrefix.'-'.$key);
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
         }

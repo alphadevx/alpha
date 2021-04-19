@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -75,7 +75,7 @@ class DoubleTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dbl1 = new Double();
         $this->dbl2 = new Double();
@@ -88,7 +88,7 @@ class DoubleTest extends TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->dbl1);
         unset($this->dbl2);
@@ -104,6 +104,26 @@ class DoubleTest extends TestCase
         $this->dbl1 = new Double(5.77);
 
         $this->assertEquals(5.77, $this->dbl1->getValue(), 'testing the Double constructor for pass');
+    }
+
+    /**
+     * Testing the Double constructor for rejection of bad data.
+     */
+    public function testConstructorFail()
+    {
+        try {
+            $this->dbl1 = new Double('blah');
+            $this->fail('testing the Double constructor for rejection of bad data');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage());
+        }
+
+        try {
+            $this->dbl1 = new Double(123451234512345);
+            $this->fail('testing the Double constructor for rejection of bad data');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid double value!', $e->getMessage());
+        }
     }
 
     /**
@@ -143,11 +163,21 @@ class DoubleTest extends TestCase
         $this->dbl1 = new Double();
         $this->dbl1->setSize(2);
 
+        $this->assertEquals(2, $this->dbl1->getSize());
+        $this->assertEquals('2,2', $this->dbl1->getSize(true));
+
         try {
             $this->dbl1->setValue(200);
             $this->fail('testing passing invalid data to setValue');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Not a valid double value!', $e->getMessage(), 'testing passing invalid data to setValue');
+        }
+
+        try {
+            $this->dbl1->setSize(20);
+            $this->fail('testing passing invalid data to setSize');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The value 20 provided by setSize is greater than the MAX_SIZE 13 of this data type.', $e->getMessage());
         }
     }
 

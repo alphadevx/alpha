@@ -5,6 +5,7 @@ namespace Alpha\Model\Type;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
+use \DateTime;
 
 /**
  * The Date complex data type.
@@ -13,7 +14,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -67,6 +68,15 @@ class Date extends Type implements TypeInterface
      * @since 1.0
      */
     private $month;
+
+    /**
+     * The textual version of the month, e.g. July.
+     *
+     * @var string
+     *
+     * @since 3.1
+     */
+    private $monthName;
 
     /**
      * The day part.
@@ -125,6 +135,7 @@ class Date extends Type implements TypeInterface
                 $this->month = date('m');
                 $this->day = date('d');
                 $this->weekday = date('l');
+                $this->monthName = date('F');
             } else {
                 $this->year = '0000';
                 $this->month = '00';
@@ -189,6 +200,7 @@ class Date extends Type implements TypeInterface
             $this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
             $unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year);
             $this->weekday = date('l', $unixTime);
+            $this->monthName = date('F', $unixTime);
         }
     }
 
@@ -262,6 +274,18 @@ class Date extends Type implements TypeInterface
     public function getMonth()
     {
         return $this->month;
+    }
+
+    /**
+     * Get the month part.
+     *
+     * @return string
+     *
+     * @since 3.1
+     */
+    public function getMonthName()
+    {
+        return $this->monthName;
     }
 
     /**
@@ -347,6 +371,7 @@ class Date extends Type implements TypeInterface
                 $this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
                 $unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year);
                 $this->weekday = date('l', $unixTime);
+                $this->monthName = date('F', $unixTime);
             }
         }
     }
@@ -373,5 +398,44 @@ class Date extends Type implements TypeInterface
     public function setRule($rule)
     {
         $this->validationRule = $rule;
+    }
+
+    /**
+     *
+     * Increment the cunrrent date by the amount provided
+     *
+     * @param string $amount The amount to increment the date by, e.g. "1 day"
+     *
+     * @since 3.1.0
+     */
+    public function increment($amount)
+    {
+        $date = strtotime($amount, strtotime($this->getValue()));
+        $this->setValue(date('Y-m-d', $date));
+    }
+
+    /**
+     *
+     * Get the start date and the end date of the week of the year provided
+     *
+     * @param int The number of the week (1-52)
+     * @param int The year (YYYY)
+     *
+     * @return array An array containing the "start" date and "end" date.
+     *
+     * @since 3.1.0
+     */
+    public static function getStartAndEndDate($week, $year)
+    {
+        $dateTime = new DateTime();
+        $dateTime->setISODate($year, $week);
+
+        $value = array();
+
+        $value['start'] = $dateTime->format('Y-m-d');
+        $dateTime->modify('+6 days');
+        $value['end'] = $dateTime->format('Y-m-d');
+        
+        return $value;
     }
 }

@@ -4,6 +4,7 @@ namespace Alpha\Test\Model;
 
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\ActiveRecord;
+use Alpha\Model\Person;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -51,11 +52,20 @@ use PHPUnit\Framework\TestCase;
 class ModelTestCase extends TestCase
 {
     /**
+     * A Person for testing.
+     *
+     * @var \Alpha\Model\Person
+     *
+     * @since 1.0
+     */
+    protected $person;
+
+    /**
      * Switches to using the test database.
      *
      * @since 2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
@@ -71,7 +81,7 @@ class ModelTestCase extends TestCase
      *
      * @since 2.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $config = ConfigProvider::getInstance();
         foreach ($this->getActiveRecordProviders() as $provider) {
@@ -94,5 +104,23 @@ class ModelTestCase extends TestCase
             array('Alpha\Model\ActiveRecordProviderSQLite'),
             array('Alpha\Model\ActiveRecordProviderMySQL'),
         );
+    }
+
+    /**
+    * Creates a person object for Testing.
+    *
+    * @return \Alpha\Model\Person
+    *
+    * @since 1.0
+    */
+    protected function createPersonObject($name)
+    {
+        $person = new Person();
+        $person->setUsername($name);
+        $person->set('email', $name.'@test.com');
+        $person->set('password', 'passwordTest');
+        $person->set('URL', 'http://unitTestUser/');
+
+        return $person;
     }
 }

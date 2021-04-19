@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -67,7 +67,7 @@ class DateTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -84,7 +84,7 @@ class DateTest extends TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->date1);
     }
@@ -135,9 +135,23 @@ class DateTest extends TestCase
     {
         try {
             $this->date1->setDateValue(2000, 13, 1);
+            $this->fail('testing the setDateValue method with a bad date value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setDateValue method with a bad date value (out of range)');
+        }
+
+        try {
+            $date = new Date('2000-13-01');
+            $this->fail('testing the constructor method with a bad date value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the constructor method with a bad date value (out of range)');
+        }
+
+        try {
+            $this->date1->setValue('2000-13-01');
             $this->fail('testing the setValue method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
+            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
         }
     }
 
@@ -229,5 +243,36 @@ class DateTest extends TestCase
     public function testGetUSValue()
     {
         $this->assertEquals(date('m/d/y'), $this->date1->getUSValue(), 'testing the getUSValue method for converting to US date format');
+    }
+
+    /**
+     * Testing the increment method
+     *
+     * @since 3.1
+     */
+    public function testIncrement()
+    {
+        $this->date1 = new Date('2020-01-01');
+        $this->date1->increment('7 day');
+        $this->assertEquals('2020-01-08', $this->date1->getValue(), 'testing the increment method');
+        $this->date1->increment('1 month');
+        $this->assertEquals('2020-02-08', $this->date1->getValue(), 'testing the increment method');
+        $this->date1->increment('1 year');
+        $this->assertEquals('2021-02-08', $this->date1->getValue(), 'testing the increment method');
+    }
+
+    /**
+     * Testing the getStartAndEndDate method
+     *
+     * @since 3.1
+     */
+    public function testGetStartAndEndDate()
+    {
+        $this->assertEquals('2019-12-30', Date::getStartAndEndDate(1, 2020)['start'], 'testing the getStartAndEndDate method');
+        $this->assertEquals('2020-01-05', Date::getStartAndEndDate(1, 2020)['end'], 'testing the getStartAndEndDate method');
+        $this->assertEquals('2019-12-23', Date::getStartAndEndDate(52, 2019)['start'], 'testing the getStartAndEndDate method');
+        $this->assertEquals('2019-12-29', Date::getStartAndEndDate(52, 2019)['end'], 'testing the getStartAndEndDate method');
+        $this->assertEquals('2020-02-03', Date::getStartAndEndDate(6, 2020)['start'], 'testing the getStartAndEndDate method');
+        $this->assertEquals('2020-02-09', Date::getStartAndEndDate(6, 2020)['end'], 'testing the getStartAndEndDate method');
     }
 }

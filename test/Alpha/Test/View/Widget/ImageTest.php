@@ -4,6 +4,7 @@ namespace Alpha\Test\View\Widget;
 
 use Alpha\View\Widget\Image;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\File\FileUtils;
 use Alpha\Exception\IllegalArguementException;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -65,7 +66,7 @@ class ImageTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -77,7 +78,7 @@ class ImageTest extends TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->img);
     }
@@ -132,7 +133,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * Testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically.
+     * Testing that the constructor will call setFilename internally to get up a filename to store the generated image automatically.
      *
      * @since 1.0
      */
@@ -140,7 +141,20 @@ class ImageTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $this->assertEquals($config->get('app.file.store.dir').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename  to store the generated image automatically');
+        $this->assertEquals($config->get('app.file.store.dir').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename to store the generated image automatically');
+
+        if (!file_exists('/tmp/attachments/article_123/')) {
+            $this->assertTrue(mkdir('/tmp/attachments/article_123/', 0777, true));
+        }
+
+        FileUtils::copy($config->get('app.root').'public/images/icons/accept.png', '/tmp/attachments/article_123/accept.png');
+
+        try {
+            $this->img = new Image('/tmp/attachments/article_123/accept.png', 16, 16, 'png');
+        } catch (\Exception $e) {
+            $cacheDir = $config->get('app.file.store.dir').'cache/images/article_123';
+            $this->assertTrue(file_exists($cacheDir));
+        }
     }
 
     /**
@@ -153,5 +167,26 @@ class ImageTest extends TestCase
         $config = ConfigProvider::getInstance();
 
         $this->assertEquals('images/testimage.png', Image::convertImageURLToPath($config->get('app.url').'/images/testimage.png'), 'testing the convertImageURLToPath method');
+    }
+
+    /**
+     * Testing the renderHTMLLink method.
+     *
+     * @since 3.1
+     */
+    public function testRenderHTMLLink()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0);
+
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
+
+        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0, false, true);
+
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
+        $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '/tk/') !== false);
     }
 }

@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -66,7 +66,7 @@ class TagTest extends TestCase
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $tag = new Tag();
         $tag->rebuildTable();
@@ -88,7 +88,7 @@ class TagTest extends TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $article = new Article();
         $article->dropTable();

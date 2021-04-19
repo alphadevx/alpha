@@ -17,7 +17,7 @@ use Alpha\Model\Tag;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -85,7 +85,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function search($query, $returnType = 'all', $start = 0, $limit = 10)
+    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0)
     {
         $config = ConfigProvider::getInstance();
 
@@ -95,7 +95,11 @@ class SearchProviderTags implements SearchProviderInterface
 
         // load Tags from the DB where content equals the content of one of our transient Tags
         foreach ($queryTags as $queryTag) {
-            $tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
+            if ($createdBy == 0) {
+                $tags = $queryTag->loadAllByAttribute('content', $queryTag->get('content'));
+            } else {
+                $tags = $queryTag->loadAllByAttributes(array('content', 'created_by'), array($queryTag->get('content'), $createdBy));
+            }
             $matchingTags = array_merge($matchingTags, $tags);
         }
 

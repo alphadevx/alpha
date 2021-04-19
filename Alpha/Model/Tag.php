@@ -21,7 +21,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -171,7 +171,10 @@ class Tag extends ActiveRecord
      * ordered by alphabet and restricted to the a count matching the $limit supplied.  The
      * returned has array uses the tag content as a key and the database value as a value.
      *
-     * @param $limit
+     * @param $limit     The maximum amount of tags to return
+     * @param $ownerID   The ID of the owner of the tags that we should load by (optional)
+     * @param $startDate The start date of the date range to load the tags of (optional, YYYY-MM-DD format)
+     * @param $endDate   The end date of the date range to load the tags of (optional, YYYY-MM-DD format)
      *
      * @return array
      *
@@ -179,14 +182,14 @@ class Tag extends ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function getPopularTagsArray($limit)
+    public static function getPopularTagsArray($limit, $ownerID = '', $startDate = '', $endDate = '')
     {
         $config = ConfigProvider::getInstance();
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord(new self());
 
-        $sqlQuery = 'SELECT content, count(*) as count FROM '.self::TABLE_NAME." GROUP BY content ORDER BY count DESC LIMIT $limit";
+        $sqlQuery = 'SELECT content, count(*) as count FROM '.self::TABLE_NAME.($ownerID == '' ? '' : " WHERE created_by = '".$ownerID."'").($startDate == '' ? '' : " AND created_ts >= '".$startDate."'").($startDate == '' ? '' : " AND created_ts <= '".$endDate."'")." GROUP BY content ORDER BY count DESC LIMIT $limit";
 
         try {
             $result = $provider->query($sqlQuery);
@@ -316,7 +319,7 @@ class Tag extends ActiveRecord
                 $cache->delete($this->get('content'));
             } catch (\Exception $e) {
                 self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
-	      			instance: ['.$e->getMessage().']');
+                    instance: ['.$e->getMessage().']');
             }
         }
     }

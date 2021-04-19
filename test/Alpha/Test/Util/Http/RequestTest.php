@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,7 +58,7 @@ class RequestTest extends TestCase
      *
      * @since 2.0
      */
-    protected function setup()
+    protected function setup(): void
     {
         if (!isset($this->serverGlobalCopy)) {
             $this->serverGlobalCopy = $_SERVER;
@@ -66,7 +66,7 @@ class RequestTest extends TestCase
         $_SERVER = array();
     }
 
-    protected function teardown()
+    protected function teardown(): void
     {
         $_SERVER = $this->serverGlobalCopy;
     }

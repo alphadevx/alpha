@@ -30,7 +30,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1405,7 +1405,7 @@ abstract class Controller
         $URLPart = trim($URLPart);
 
         if (count($filter) > 0) {
-            $URLPart = str_replace($filter, ' ', $URLPart);
+            $URLPart = str_replace($filter, '', $URLPart);
         }
 
         $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $URLPart);

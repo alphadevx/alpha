@@ -7,6 +7,7 @@ use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Model\Type\TypeInterface;
 use Alpha\Model\Type\Relation;
+use Alpha\Model\Type\RelationLookup;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Service\ServiceFactory;
@@ -2173,39 +2174,6 @@ abstract class ActiveRecord
             throw new AlphaException('Cannot reload transient object from database!');
         }
         self::$logger->debug('<<reload');
-    }
-
-    /**
-     * Loads the definition from the file system for the Record class name provided.
-     *
-     * @param string $classname The name of the business object class name.
-     *
-     * @since 1.0
-     *
-     * @throws \Alpha\Exception\IllegalArguementException
-     *
-     * @deprecated Use autoloader!
-     */
-    public static function loadClassDef($classname)
-    {
-        if (self::$logger == null) {
-            self::$logger = new Logger('ActiveRecord');
-        }
-        self::$logger->debug('>>loadClassDef(classname=['.$classname.'])');
-
-        $config = ConfigProvider::getInstance();
-
-        if (file_exists($config->get('app.root').'Model/'.$classname.'.php')) {
-            require_once $config->get('app.root').'Model/'.$classname.'.php';
-        } elseif (file_exists($config->get('app.root').'alpha/Alpha/Model/'.$classname.'.php')) {
-            require_once $config->get('app.root').'alpha/Alpha/Model/'.$classname.'.php';
-        } elseif (file_exists($config->get('app.root').'alpha/Alpha/Model/Types/'.$classname.'.php')) {
-            require_once $config->get('app.root').'alpha/Alpha/Model/Types/'.$classname.'.php';
-        } else {
-            throw new IllegalArguementException('The class ['.$classname.'] is not defined anywhere!');
-        }
-
-        self::$logger->debug('<<loadClassDef');
     }
 
     /**

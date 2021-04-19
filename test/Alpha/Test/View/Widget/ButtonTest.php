@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,28 +58,28 @@ class ButtonTest extends TestCase
     public function testRender()
     {
         $button = new Button('submit', 'Save', 'buttonID', '', '', 'Tooltip test helloworld', 'right');
-        $this->assertContains('helloworld', $button->render(), 'Checking for tooltip text');
-        $this->assertContains('Save', $button->render(), 'Checking for botton text');
-        $this->assertContains('buttonID', $button->render(), 'Checking for ID text');
-        $this->assertContains('right', $button->render(), 'Checking for tooltip position text');
+        $this->assertStringContainsString('helloworld', $button->render(), 'Checking for tooltip text');
+        $this->assertStringContainsString('Save', $button->render(), 'Checking for botton text');
+        $this->assertStringContainsString('buttonID', $button->render(), 'Checking for ID text');
+        $this->assertStringContainsString('right', $button->render(), 'Checking for tooltip position text');
 
         $button = new Button('submit', 'Save', 'buttonID', '/path/to/image.png', '', 'Tooltip test helloworld', 'right');
-        $this->assertContains('helloworld', $button->render(), 'Checking for tooltip text');
-        $this->assertContains('Save', $button->render(), 'Checking for botton text');
-        $this->assertContains('buttonID', $button->render(), 'Checking for ID text');
-        $this->assertContains('right', $button->render(), 'Checking for tooltip position text');
-        $this->assertContains('<img', $button->render(), 'Checking that an image tag is rendered');
-        $this->assertContains('image.png', $button->render(), 'Checking for image URL text');
+        $this->assertStringContainsString('helloworld', $button->render(), 'Checking for tooltip text');
+        $this->assertStringContainsString('Save', $button->render(), 'Checking for botton text');
+        $this->assertStringContainsString('buttonID', $button->render(), 'Checking for ID text');
+        $this->assertStringContainsString('right', $button->render(), 'Checking for tooltip position text');
+        $this->assertStringContainsString('<img', $button->render(), 'Checking that an image tag is rendered');
+        $this->assertStringContainsString('image.png', $button->render(), 'Checking for image URL text');
 
         $button = new Button('submit', 'Save', 'buttonID', '', '/path/to/glyph.png', 'Tooltip test helloworld', 'right');
-        $this->assertContains('helloworld', $button->render(), 'Checking for tooltip text');
-        $this->assertContains('Save', $button->render(), 'Checking for botton text');
-        $this->assertContains('buttonID', $button->render(), 'Checking for ID text');
-        $this->assertContains('right', $button->render(), 'Checking for tooltip position text');
-        $this->assertContains('<span', $button->render(), 'Checking that a span tag is rendered');
-        $this->assertContains('glyph.png', $button->render(), 'Checking for glyph image URL text');
+        $this->assertStringContainsString('helloworld', $button->render(), 'Checking for tooltip text');
+        $this->assertStringContainsString('Save', $button->render(), 'Checking for botton text');
+        $this->assertStringContainsString('buttonID', $button->render(), 'Checking for ID text');
+        $this->assertStringContainsString('right', $button->render(), 'Checking for tooltip position text');
+        $this->assertStringContainsString('<span', $button->render(), 'Checking that a span tag is rendered');
+        $this->assertStringContainsString('glyph.png', $button->render(), 'Checking for glyph image URL text');
 
         $button = new Button('submit', 'Save', 'buttonID');
-        $this->assertContains('1234', $button->render('1234'), 'Checking that the desired button width is rendered');
+        $this->assertStringContainsString('1234', $button->render('1234'), 'Checking that the desired button width is rendered');
     }
 }

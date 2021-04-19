@@ -1,15 +1,14 @@
 <?php
 
-namespace Alpha\Test\View;
+namespace Alpha\Model\Type;
 
-use Alpha\View\ViewState;
-use Alpha\Util\Config\ConfigProvider;
-use PHPUnit\Framework\TestCase;
+use Alpha\Util\Helper\Validator;
+use Alpha\Exception\IllegalArguementException;
 
 /**
- * Test cases for the ViewState class.
+ * The HugeText complex data type.
  *
- * @since 2.0
+ * @since 3.1
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -48,45 +47,60 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ViewStateTest extends TestCase
+class HugeText extends Text implements TypeInterface
 {
     /**
-     * {@inheritdoc}
+     * The value of the HugeText object.
      *
-     * @since 2.0
+     * @var string
+     *
+     * @since 3.1
      */
-    protected function setUp(): void
-    {
-        $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-    }
+    private $value;
 
     /**
-     * Testing the getInstance method.
+     * The validation rule for the HugeText type.
      *
-     * @since 2.0
+     * @var string
+     *
+     * @since 3.1
      */
-    public function testGetInstance()
-    {
-        $viewState = ViewState::getInstance();
-
-        $this->assertTrue($viewState instanceof ViewState, 'Testing the getInstance method');
-    }
+    private $validationRule;
 
     /**
-     * Testing the get/set methods.
+     * Used to determine if the HugeText object can support HTML content or not.  Defaults to true, if set to false
+     * then HTML content should be filtered.
      *
-     * @since 2.0
+     * @var bool
+     *
+     * @since 3.1
      */
-    public function testSetGet()
-    {
-        $viewState1 = ViewState::getInstance();
-        $viewState1->set('selectedTab', 'test');
+    private $allowHTML = true;
 
-        $this->assertEquals('test', $viewState1->get('selectedTab'), 'Testing the get/set methods');
+    /**
+     * The error message for the string type when validation fails.
+     *
+     * @var string
+     *
+     * @since 3.1
+     */
+    protected $helper = 'Not a valid HugeText value!';
 
-        $viewState2 = ViewState::getInstance();
+    /**
+     * The size of the value for the this HugeText.
+     *
+     * @var int
+     *
+     * @since 3.1
+     */
+    protected $size = 4294967295;
 
-        $this->assertEquals('test', $viewState2->get('selectedTab'), 'Testing the get/set methods');
-    }
+    /**
+     * The absolute maximum size of the value for the this HugeText.
+     *
+     * @var int
+     *
+     * @since 1.0
+     */
+    const MAX_SIZE = 4294967295;
 }

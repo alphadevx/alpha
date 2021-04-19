@@ -5,6 +5,7 @@ namespace Alpha\Model;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
 use Alpha\Model\Type\Boolean;
 use Alpha\Model\Type\Relation;
 use Alpha\Util\Config\Configprovider;
@@ -98,7 +99,7 @@ class Article extends ActiveRecord
     /**
      * The article content.
      *
-     * @var \Alpha\Model\Type\Text
+     * @var \Alpha\Model\Type\LargeText
      *
      * @since 1.0
      */
@@ -237,7 +238,7 @@ class Article extends ActiveRecord
         $this->description->setSize(200);
         $this->description->setRule("/\w+/");
         $this->bodyOnload = new SmallText();
-        $this->content = new Text();
+        $this->content = new LargeText();
         $this->headerContent = new Text();
         $this->author = new SmallText();
         $this->author->setHelper('Please state the name of the author of this article');

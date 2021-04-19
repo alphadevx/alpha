@@ -21,6 +21,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
 use Alpha\Model\ActiveRecord;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
@@ -36,7 +37,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -107,9 +108,9 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecord($Record)
+    public function setRecord($record)
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**
@@ -444,13 +445,14 @@ class RendererProviderHTML implements RendererProviderInterface
 
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             
-            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
+            $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'updateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Update Table', 'updateTableBut');
             $html .= $button->render();
             // hidden field so that we know which class to update the table for
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('updateTableClass')) : 'updateTableClass');
             $html .= '<input type="hidden" name="'.$fieldname.'" value="'.get_class($this->record).'"/>';
+
             // hidden field to tell us which button was pressed
             $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
             $html .= '<input type="hidden" id="'.$fieldname.'" name="'.$fieldname.'" value=""/>';
@@ -865,11 +867,11 @@ class RendererProviderHTML implements RendererProviderInterface
         $request = new Request(array('method' => 'GET'));
 
         if ($mode == 'create') {
-            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';
+            $html .= '<strong>'.$label.':</strong> <textarea cols="100" rows="3" name="'.$fieldname.'">'.$request->getParam($name, '').'</textarea>';
         }
 
         if ($mode == 'edit') {
-            $html .= '<textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
+            $html .= '<strong>'.$label.':</strong> <textarea cols="100" rows="3" name="'.$fieldname.'">'.$value.'</textarea>';
         }
 
         if ($mode == 'view') {
@@ -1096,6 +1098,9 @@ class RendererProviderHTML implements RendererProviderInterface
                         $html .= $this->renderStringField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'TEXT':
+                        $html .= $this->renderTextField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
+                    break;
+                    case 'LARGETEXT':
                         $html .= $this->renderTextField($propName, $this->record->getDataLabel($propName), $mode, $this->record->get($propName));
                     break;
                     case 'BOOLEAN':

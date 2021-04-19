@@ -1,7 +1,7 @@
 # Change Log
 
-## [3.0.0-RC.1](https://github.com/alphadevx/alpha/tree/3.0.0-RC.1) (2018-05-19)
-[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4...3.0.0-RC.1)
+## [3.0.0](https://github.com/alphadevx/alpha/tree/3.0.0) (2018-08-04)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0-RC.2...3.0.0)
 
 **Implemented enhancements:**
 
@@ -11,11 +11,12 @@
 - Update to the latest version of PHP-CS-Fixer [\#309](https://github.com/alphadevx/alpha/issues/309)
 - Replace Memcache extension calls with Memcached in the Memcache provider class [\#306](https://github.com/alphadevx/alpha/issues/306)
 - Test Alpha on PHP7 and fix any resulting issues [\#270](https://github.com/alphadevx/alpha/issues/270)
-- Alpha should use JQuery UI tooltips instead of the existing custom tooltips for validation [\#107](https://github.com/alphadevx/alpha/issues/107)
 - Determine a method for listing existing foreign keys in SQLite3 [\#38](https://github.com/alphadevx/alpha/issues/38)
 
 **Fixed bugs:**
 
+- The ListActiveRecordsController::displayBodyContent\(\) method is not handling errors correctly [\#335](https://github.com/alphadevx/alpha/issues/335)
+- Cache providers can key clash when multiple apps are using the same provider engine [\#334](https://github.com/alphadevx/alpha/issues/334)
 - Alpha is rendering SmallText fields as text areas rather than input boxes [\#328](https://github.com/alphadevx/alpha/issues/328)
 - Inspector class is no longer digging into dub-directories [\#326](https://github.com/alphadevx/alpha/issues/326)
 - Article-\>headerContent is no longer being rendered [\#323](https://github.com/alphadevx/alpha/issues/323)
@@ -24,8 +25,10 @@
 
 **Closed issues:**
 
+- Prepare the 3.0 final release [\#337](https://github.com/alphadevx/alpha/issues/337)
 - Add a file-based implementation of CacheProviderInterface [\#333](https://github.com/alphadevx/alpha/issues/333)
 - Add Bootstrap tooltip support to the Button widget [\#324](https://github.com/alphadevx/alpha/issues/324)
+- Introduce private methods to decompose 10 most complex methods highlighted by Scrutinizer [\#322](https://github.com/alphadevx/alpha/issues/322)
 - Switch to a version of Luminous compatible with PHP7 [\#321](https://github.com/alphadevx/alpha/issues/321)
 - Replace the displayName attribute with usename [\#312](https://github.com/alphadevx/alpha/issues/312)
 - Replace references of OID with ID [\#311](https://github.com/alphadevx/alpha/issues/311)
@@ -77,6 +80,21 @@
 
 **Merged pull requests:**
 
+- Release/3.0.0 release [\#338](https://github.com/alphadevx/alpha/pull/338) ([alphadevx](https://github.com/alphadevx))
+- Feature/270 alpha on php7 [\#307](https://github.com/alphadevx/alpha/pull/307) ([alphadevx](https://github.com/alphadevx))
+
+## [3.0.0-RC.2](https://github.com/alphadevx/alpha/tree/3.0.0-RC.2) (2018-07-29)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0-RC.1...3.0.0-RC.2)
+
+## [3.0.0-RC.1](https://github.com/alphadevx/alpha/tree/3.0.0-RC.1) (2018-05-19)
+[Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4...3.0.0-RC.1)
+
+**Implemented enhancements:**
+
+- Alpha should use JQuery UI tooltips instead of the existing custom tooltips for validation [\#107](https://github.com/alphadevx/alpha/issues/107)
+
+**Merged pull requests:**
+
 - \#75 - merged the Relation::getRelatedObject\(\) and Relation::getRelate… [\#330](https://github.com/alphadevx/alpha/pull/330) ([alphadevx](https://github.com/alphadevx))
 - Feature/127 service factory [\#329](https://github.com/alphadevx/alpha/pull/329) ([alphadevx](https://github.com/alphadevx))
 - Scrutinizer Auto-Fixes [\#325](https://github.com/alphadevx/alpha/pull/325) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
@@ -84,7 +102,6 @@
 - Scrutinizer Auto-Fixes [\#319](https://github.com/alphadevx/alpha/pull/319) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#318](https://github.com/alphadevx/alpha/pull/318) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 - Scrutinizer Auto-Fixes [\#317](https://github.com/alphadevx/alpha/pull/317) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
-- Feature/270 alpha on php7 [\#307](https://github.com/alphadevx/alpha/pull/307) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.4](https://github.com/alphadevx/alpha/tree/2.0.4) (2017-01-01)
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4-RC.1...2.0.4)

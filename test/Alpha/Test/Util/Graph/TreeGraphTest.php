@@ -3,6 +3,7 @@
 namespace Alpha\Test\Util\Graph;
 
 use Alpha\Util\Graph\TreeGraph;
+use Alpha\Util\Graph\GraphNode;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -68,5 +69,19 @@ class TreeGraphTest extends TestCase
         $this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
         $this->assertEquals('Second child', $graph->next()->getMessage(), 'Testing the next method');
         $this->assertFalse($graph->hasNext(), 'Testing the hasNext method');
+    }
+
+    public function testWithLeftSibling()
+    {
+        $graph = new TreeGraph();
+        $graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+        $graph->add(2, 0, 'Second child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+
+        $node = new GraphNode(3, 0, 10, 'Left node', array(0, 0, 0), 'http://www.alphaframework.org/');
+
+        $graph->get(0)->setLeftSibling($node);
+
+        $this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
+        $this->assertTrue($graph->next() instanceof GraphNode, 'Testing the next method');
     }
 }

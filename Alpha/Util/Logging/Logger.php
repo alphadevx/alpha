@@ -231,7 +231,7 @@ class Logger
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
-        if ($session->get('currentUser') != null) {
+        if ($session->get('currentUser') != null && $config->get('app.log.action.logging')) {
             $action = new ActionLog();
             $action->set('client', $this->request->getUserAgent());
             $action->set('IP', $this->request->getIP());
@@ -279,7 +279,8 @@ class Logger
     {
         $config = ConfigProvider::getInstance();
 
-        $this->logProvider = new LogProviderFile($filepath);
+        $this->logProvider = new LogProviderFile();
+        $this->logProvider->setPath($filepath);
         $this->logProvider->setMaxSize($config->get('app.log.file.max.size'));
     }
 }

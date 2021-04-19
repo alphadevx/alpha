@@ -17,7 +17,7 @@ use Alpha\Model\Type\DEnumItem;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -68,7 +68,7 @@ class DEnumControllerTest extends ControllerTestCase
      *
      * @since 2.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -87,7 +87,7 @@ class DEnumControllerTest extends ControllerTestCase
     /**
      * Testing the doGET method.
      */
-    public function testDoGET()
+    public function testDoGET(): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');

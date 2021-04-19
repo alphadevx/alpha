@@ -21,7 +21,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -244,14 +244,11 @@ class Image
             // make a cache dir for the article
             $cacheDir = $config->get('app.file.store.dir').'cache/images/article_'.mb_substr($this->source, mb_strpos($this->source, 'attachments/article_')+20, 11);
             if (!file_exists($cacheDir)) {
-                $success = mkdir($cacheDir);
+                $success = mkdir($cacheDir, 0777, true);
 
                 if (!$success) {
                     throw new AlphaException('Unable to create the folder '.$cacheDir.' for the cache image, source file is '.$this->source);
                 }
-
-                // ...and set write permissions on the folder
-                $success = chmod($cacheDir, 0777);
 
                 if (!$success) {
                     throw new AlphaException('Unable to set write permissions on the folder ['.$cacheDir.'].');
@@ -282,34 +279,11 @@ class Image
     /**
      * Renders the actual binary image using GD library calls.
      *
-     * @param $screenSize The optional size of the target screen to scale to in the format [X-pixels]x[Y-pixels]
-     *
      * @since 1.0
      */
-    public function renderImage($screenSize = null)
+    public function renderImage()
     {
         $config = ConfigProvider::getInstance();
-
-        // if scaled, we need to compute the target image size
-        if ($this->scale->getBooleanValue() && $screenSize !== null) {
-            $originalScreenResolution = explode('x', $config->get('sysCMSImagesWidgetScreenResolution'));
-            $originalScreenX = $originalScreenResolution[0];
-            $originalScreenY = $originalScreenResolution[1];
-
-            $targetScreenResolution = explode('x', $screenSize);
-            $targetScreenX = $targetScreenResolution[0];
-            $targetScreenY = $targetScreenResolution[1];
-
-            // calculate the new units we will scale by
-            $xu = $targetScreenX/$originalScreenX;
-            $yu = $targetScreenY/$originalScreenY;
-
-            $this->width = new Integer(intval($this->width->getValue()*$xu));
-            $this->height = new Integer(intval($this->height->getValue()*$yu));
-
-            // need to update the cache filename as the dimensions have changed
-            $this->setFilename();
-        }
 
         // check the image cache first before we proceed
         if ($this->checkCache()) {

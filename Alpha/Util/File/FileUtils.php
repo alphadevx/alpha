@@ -658,7 +658,7 @@ class FileUtils
 
         // Make destination directory if it does not already exist
         if (!file_exists($dest) && !is_dir($dest)) {
-            if (!mkdir($dest)) {
+            if (!mkdir($dest, 0777, true)) {
                 throw new AlphaException("Error creating the destination directory [$dest].");
             }
         }

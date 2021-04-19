@@ -3,6 +3,8 @@
 namespace Alpha\Test\Model\Type;
 
 use Alpha\Model\Type\Text;
+use Alpha\Model\Type\LargeText;
+use Alpha\Model\Type\HugeText;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 use PHPUnit\Framework\TestCase;
@@ -14,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -61,15 +63,35 @@ class TextTest extends TestCase
     private $txt;
 
     /**
+     * A LargeText for testing.
+     *
+     * @var LargeText
+     *
+     * @since 3.1
+     */
+    private $lTxt;
+
+    /**
+     * A HugeText for testing.
+     *
+     * @var HugeText
+     *
+     * @since 3.1
+     */
+    private $hTxt;
+
+    /**
      * Called before the test functions will be executed
      * this function is defined in PHPUnit_TestCase and overwritten
      * here.
      *
      * @since 1.0
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->txt = new Text();
+        $this->lTxt = new LargeText();
+        $this->hTxt = new HugeText();
     }
 
     /**
@@ -79,9 +101,11 @@ class TextTest extends TestCase
      *
      * @since 1.0
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         unset($this->txt);
+        unset($this->lTxt);
+        unset($this->hTxt);
     }
 
     /**
@@ -94,6 +118,14 @@ class TextTest extends TestCase
         $this->txt = new Text('A Text Value!');
 
         $this->assertEquals('A Text Value!', $this->txt->getValue(), 'testing the Text constructor for pass');
+
+        $this->lTxt = new LargeText('A LargeText Value!');
+
+        $this->assertEquals('A LargeText Value!', $this->lTxt->getValue(), 'testing the LargeText constructor for pass');
+
+        $this->hTxt = new HugeText('A HugeText Value!');
+
+        $this->assertEquals('A HugeText Value!', $this->hTxt->getValue(), 'testing the HugeText constructor for pass');
     }
 
     /**
@@ -107,6 +139,24 @@ class TextTest extends TestCase
 
         try {
             $this->txt->setValue('');
+            $this->fail('testing the text setValue method with bad data when the default validation rule is overridden');
+        } catch (IllegalArguementException $e) {
+            $this->assertTrue(true, 'testing the text setValue method with bad data when the default validation rule is overridden');
+        }
+
+        $this->lTxt->setRule(Validator::REQUIRED_TEXT);
+
+        try {
+            $this->lTxt->setValue('');
+            $this->fail('testing the text setValue method with bad data when the default validation rule is overridden');
+        } catch (IllegalArguementException $e) {
+            $this->assertTrue(true, 'testing the text setValue method with bad data when the default validation rule is overridden');
+        }
+
+        $this->hTxt->setRule(Validator::REQUIRED_TEXT);
+
+        try {
+            $this->hTxt->setValue('');
             $this->fail('testing the text setValue method with bad data when the default validation rule is overridden');
         } catch (IllegalArguementException $e) {
             $this->assertTrue(true, 'testing the text setValue method with bad data when the default validation rule is overridden');
@@ -129,6 +179,26 @@ class TextTest extends TestCase
         } catch (IllegalArguementException $e) {
             $this->fail('testing the text setValue method with good data when the default validation rule is overridden');
         }
+
+        $this->lTxt->setRule(Validator::REQUIRED_TEXT);
+
+        try {
+            $this->lTxt->setValue('Some text');
+
+            $this->assertEquals('Some text', $this->lTxt->getValue(), 'testing the text setValue method with good data when the default validation rule is overridden');
+        } catch (IllegalArguementException $e) {
+            $this->fail('testing the text setValue method with good data when the default validation rule is overridden');
+        }
+
+        $this->hTxt->setRule(Validator::REQUIRED_TEXT);
+
+        try {
+            $this->hTxt->setValue('Some text');
+
+            $this->assertEquals('Some text', $this->hTxt->getValue(), 'testing the text setValue method with good data when the default validation rule is overridden');
+        } catch (IllegalArguementException $e) {
+            $this->fail('testing the text setValue method with good data when the default validation rule is overridden');
+        }
     }
 
     /**
@@ -145,7 +215,27 @@ class TextTest extends TestCase
             $this->txt->setValue('Too many characters!');
             $this->fail('testing the setSize method to see if validation fails');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid text value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
+            $this->assertEquals('Not a valid Text value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
+        }
+
+        $this->lTxt = new LargeText();
+        $this->lTxt->setSize(4);
+
+        try {
+            $this->lTxt->setValue('Too many characters!');
+            $this->fail('testing the setSize method to see if validation fails');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid LargeText value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
+        }
+
+        $this->hTxt = new HugeText();
+        $this->hTxt->setSize(4);
+
+        try {
+            $this->hTxt->setValue('Too many characters!');
+            $this->fail('testing the setSize method to see if validation fails');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid HugeText value!', $e->getMessage(), 'testing the setSize method to see if validation fails');
         }
     }
 
@@ -159,5 +249,13 @@ class TextTest extends TestCase
         $this->txt = new Text('__toString result');
 
         $this->assertEquals('The value of __toString result', 'The value of '.$this->txt, 'testing the __toString method');
+
+        $this->lTxt = new LargeText('__toString result');
+
+        $this->assertEquals('The value of __toString result', 'The value of '.$this->lTxt, 'testing the __toString method');
+
+        $this->hTxt = new HugeText('__toString result');
+
+        $this->assertEquals('The value of __toString result', 'The value of '.$this->hTxt, 'testing the __toString method');
     }
 }
