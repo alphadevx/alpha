@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "780eeb6be6627d375b5ccd1e91a587c2",
+    "content-hash": "9ae9bad6ae16ba92c21d4efe3fd61f8e",
     "packages": [
         {
             "name": "easybook/geshi",
@@ -7804,7 +7804,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3.0",
+        "php": ">=7.4.0",
         "ext-openssl": "*",
         "ext-mbstring": "*",
         "ext-sqlite3": "*",
