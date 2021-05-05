@@ -16,28 +16,16 @@ jobs:
         php-versions: ['7.4']
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Validate composer.json and composer.lock
-      run: composer validate
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-      
-    - name: PHPUnit Tests
-      uses: php-actions/phpunit@v2
-      env:
-         TEST_NAME: Scarlett
-      with:
-         bootstrap: vendor/autoload.php
-         configuration: test/phpunit.xml
-         args: --coverage-text
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Switch PHP Version
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+      - name: Check PHP Version
+        run: php -v
+      - name: Composer Install Project
+        uses: php-actions/composer@v2
+      - name: Run Unit Tests
+        uses: php-actions/phpunit@v8
