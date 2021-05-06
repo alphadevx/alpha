@@ -10,7 +10,7 @@ services:
  - mysql
 
 before_script:
- - pecl install -f memcached
+ - sudo apt-get install php-memcached
  - wget http://getcomposer.org/composer.phar
  - php composer.phar install --dev --no-interaction
  - phpenv config-add travisphp.ini
