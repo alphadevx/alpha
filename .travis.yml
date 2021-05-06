@@ -7,6 +7,7 @@ php:
 services:
  - memcached
  - redis
+ - mysql
 
 before_script:
  - wget http://getcomposer.org/composer.phar
