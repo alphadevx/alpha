@@ -21,6 +21,7 @@ jobs:
       DB_USER: root
       DB_PASSWORD: 'root'
       DB_HOST: localhost
+      hostname: unittests
 
     steps:
     - uses: actions/checkout@v2
@@ -33,6 +34,7 @@ jobs:
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
           mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
+          hostname
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
