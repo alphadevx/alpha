@@ -22,9 +22,9 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
           mysql -e 'SHOW DATABASES;' -uroot -proot
+          sudo /etc/init.d/memcached start
+          sudo /etc/init.d/redis start
           sudo hostname unittests
-    - uses: niden/actions-memcached@v7
-    - uses: zhulik/redis-action@1.1.0
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
