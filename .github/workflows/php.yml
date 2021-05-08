@@ -23,7 +23,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          extensions: gd, redis, apcu, memcached
+          extensions: gd-php/php-src@PHP-${{ matrix.php }}
+        env:
+          GD_CONFIGURE_OPTS: --enable-gd=shared,/usr --with-external-gd --with-jpeg
+          GD_LIBS: libgd-dev libjpeg-dev
+          GD_PATH: ext/gd
       - name: Check PHP Version
         run: php -v
       - name: Composer Install Project
