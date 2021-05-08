@@ -30,6 +30,7 @@ jobs:
       with:
         php-version: '7.4'
         extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
+        ini-values: apc.enable_cli=1
     - run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
