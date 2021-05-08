@@ -21,6 +21,8 @@ jobs:
           GD_CONFIGURE_OPTS: --enable-gd=shared,/usr --with-external-gd --with-jpeg
           GD_LIBS: libgd-dev libjpeg-dev
           GD_PATH: ext/gd
+      - name: Checkout Repository
+        uses: actions/checkout@v2
       - name: Composer Install Project
         uses: php-actions/composer@v2
       - name: Run Unit Tests
