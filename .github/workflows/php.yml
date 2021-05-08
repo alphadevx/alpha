@@ -35,7 +35,7 @@ jobs:
           mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
           hostname
-          php -i
+          php74 -i
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
