@@ -5,6 +5,12 @@ on: [push]
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    
+    env:
+      DB_DATABASE: unittests
+      DB_USER: root
+      DB_PASSWORD: 'unittests'
+      DB_HOST: localhost
 
     steps:
     - uses: actions/checkout@v2
@@ -12,9 +18,10 @@ jobs:
       with:
         php_version: 7.4
         php_extensions: gd
-    - uses: mirromutth/mysql-action@v1.1
-      with:
-        mysql root password: unittests
+    - run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE unittests;' -uroot -punittests
+          mysql -e 'SHOW DATABASES;' -uroot -punittests
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
