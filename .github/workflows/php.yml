@@ -1,6 +1,9 @@
-name: Test
+name: Install and unit tests
 on:
   push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 jobs:
   job1:
     runs-on: ${{ matrix.os }}
@@ -18,8 +21,7 @@ jobs:
           GD_CONFIGURE_OPTS: --enable-gd=shared,/usr --with-external-gd --with-jpeg
           GD_LIBS: libgd-dev libjpeg-dev
           GD_PATH: ext/gd
-      - name: Test
-        run: |
-          php -v
-          php -r 'foreach (gd_info() as $key => $value) { echo "$key: $value \n"; }'
-          php -m
+      - name: Composer Install Project
+        uses: php-actions/composer@v2
+      - name: Run Unit Tests
+        uses: php-actions/phpunit@v8
