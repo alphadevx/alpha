@@ -28,13 +28,14 @@ jobs:
     - uses: php-actions/composer@v5
       with:
         php_version: 7.4
-        php_extensions: gd
+        php_extensions: gd mysqli redis apcu memcached sqlite3 mbstring iconv
     - run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
           mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
           hostname
+          php -i
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
