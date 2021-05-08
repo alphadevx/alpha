@@ -25,19 +25,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - uses: php-actions/composer@v5
+    - name: Setup PHP with PECL extension
+      uses: shivammathur/setup-php@v2
       with:
-        php_version: 7.4
-        php_extensions: gd mysqli redis apcu memcached sqlite3 mbstring iconv
+        php-version: '7.4'
+        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
     - run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
           mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
           hostname
-          php74 -i
-    - uses: php-actions/phpunit@v2
-      with:
-        php_version: 7.4
-        php_extensions: gd mysqli redis apcu memcached sqlite3 mbstring iconv
-        configuration: phpunit.xml
+          php -i
+    - name: Composer Install Project
+      run: composer install
+    - name: Run unit tests
+      run: vendor/bin/phpunit
