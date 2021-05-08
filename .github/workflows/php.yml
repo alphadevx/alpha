@@ -1,36 +1,25 @@
-name: PHP Composer
-
+name: Test
 on:
   push:
-    branches: [ develop ]
-  pull_request:
-    branches: [ develop ]
-
 jobs:
-  build:
-
-    runs-on: ${{ matrix.operating-system }}
+  job1:
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        operating-system: [ubuntu-latest]
-        php-versions: ['7.4']
-
+        os: [ubuntu-latest]
+        php: ['7.4']
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Switch PHP Version
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@develop
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php }}
           extensions: gd-php/php-src@PHP-${{ matrix.php }}
         env:
           GD_CONFIGURE_OPTS: --enable-gd=shared,/usr --with-external-gd --with-jpeg
           GD_LIBS: libgd-dev libjpeg-dev
           GD_PATH: ext/gd
-      - name: Check PHP Version
-        run: php -v
-      - name: Composer Install Project
-        uses: php-actions/composer@v2
-      - name: Run Unit Tests
-        uses: php-actions/phpunit@v8
+      - name: Test
+        run: |
+          php -v
+          php -r 'foreach (gd_info() as $key => $value) { echo "$key: $value \n"; }'
+          php -m
