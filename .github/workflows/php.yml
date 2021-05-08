@@ -23,7 +23,9 @@ jobs:
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
           mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
+    - uses: niden/actions-memcached@v7
+    - uses: zhulik/redis-action@1.1.0
     - uses: php-actions/phpunit@v2
       with:
         php_version: 7.4
-        php_extensions: gd mysqli redis apcu
+        php_extensions: gd mysqli redis apcu memcached
