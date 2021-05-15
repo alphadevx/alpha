@@ -5,6 +5,7 @@
     "keywords": ["mvc","rest","http","framework","fullstack"],
     "homepage": "http://www.alphaframework.org/",
     "license": "BSD-2-Clause",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "John Collins",
@@ -33,7 +34,7 @@
         "phpunit/phpunit": "9.5.4",
         "php-coveralls/php-coveralls": "v2.4.3",
         "friendsofphp/php-cs-fixer": "v3.0.0",
-        "phpdocumentor/phpdocumentor": "v3.0.0"
+        "phpdocumentor/phpdocumentor": "dev-master"
     },
     "autoload": {
         "psr-0": {
