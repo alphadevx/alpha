@@ -28,7 +28,7 @@ jobs:
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '7.4'
+        php-version: '8.0'
         extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
         ini-values: apc.enable_cli=1
     - run: |

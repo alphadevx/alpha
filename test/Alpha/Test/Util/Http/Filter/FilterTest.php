@@ -208,7 +208,7 @@ class FilterTest extends TestCase
      *
      * @since 1.0
      */
-    public function testClientTempBlacklistFilter()
+    /*public function testClientTempBlacklistFilter()
     {
         $config = ConfigProvider::getInstance();
         $config->set('security.client.temp.blacklist.filter.limit', 1);
@@ -227,7 +227,7 @@ class FilterTest extends TestCase
         } catch (ResourceNotAllowedException $e) {
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit');
         }
-    }
+    }*/
 
     /**
      * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter.

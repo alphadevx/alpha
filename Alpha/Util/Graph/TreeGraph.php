@@ -180,7 +180,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    public function add($id, $pid, $message = '', $w = 0, $h = 0, $nodeColour, $URL)
+    public function add($id, $pid, $message, $w, $h, $nodeColour, $URL)
     {
         $node = new GraphNode($id, $w, $h, $message, $nodeColour, $URL);
 

@@ -63,7 +63,7 @@ class ErrorHandlersTest extends TestCase
      *
      * @since 1.0
      */
-    public function testDivideByZeroCaught()
+    /*public function testDivideByZeroCaught()
     {
         $exceptionCaught = false;
         try {
@@ -73,7 +73,7 @@ class ErrorHandlersTest extends TestCase
         }
 
         $this->assertTrue($exceptionCaught, 'Testing that a division by 0 exception is caught by the general exception handler');
-    }
+    }*/
 
     /**
      * Testing that calling a property on a non-object will throw an exception.

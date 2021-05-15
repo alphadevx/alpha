@@ -169,7 +169,6 @@ class FrontController
 
         mb_internal_encoding('UTF-8');
         mb_http_output('UTF-8');
-        mb_http_input('UTF-8');
         if (!mb_check_encoding()) {
             throw new BadRequestException('Request character encoding does not match expected UTF-8');
         }
@@ -563,7 +562,7 @@ class FrontController
                 }
             }
 
-                // route URIs with params missing (will attempt to layer on defaults later on in Request class)
+            // route URIs with params missing (will attempt to layer on defaults later on in Request class)
             foreach ($this->routes as $route => $callback) {
                 $pattern = '#^'.$route.'$#s';
                 $pattern = preg_replace('#\/\{\S+\}#', '\/?', $pattern);
