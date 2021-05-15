@@ -1,6 +1,42 @@
-# Change Log
+# Changelog
+
+## [3.1.0](https://github.com/alphadevx/alpha/tree/3.1.0) (2021-04-19)
+
+[Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0...3.1.0)
+
+**Implemented enhancements:**
+
+- Increase the size of the client string in BadRequest [\#359](https://github.com/alphadevx/alpha/issues/359)
+- Add LargeText and HugeText data types [\#358](https://github.com/alphadevx/alpha/issues/358)
+- The Validator class should accept .email addresses [\#355](https://github.com/alphadevx/alpha/issues/355)
+- Add a new Date::getMonthName\(\) method [\#354](https://github.com/alphadevx/alpha/issues/354)
+- Add optional key param to the SecurityUtils::encrypt/decrypt methods [\#353](https://github.com/alphadevx/alpha/issues/353)
+- Add start/end date params to the Tag::getPopularTagsArray\(\) method [\#352](https://github.com/alphadevx/alpha/issues/352)
+- Add support for changing the CSS class of the Button [\#350](https://github.com/alphadevx/alpha/issues/350)
+- Add support for loading popular tags per user [\#349](https://github.com/alphadevx/alpha/issues/349)
+- Add a Date method for getting the dates of a given numeric week [\#348](https://github.com/alphadevx/alpha/issues/348)
+- The Button class should allow changing the Bootstrap CSS class [\#342](https://github.com/alphadevx/alpha/issues/342)
+- Add search filter for current user [\#341](https://github.com/alphadevx/alpha/issues/341)
+- Logging to ActionLog should be optional via a new config option [\#245](https://github.com/alphadevx/alpha/issues/245)
+- Increase unit test coverage to 80% [\#229](https://github.com/alphadevx/alpha/issues/229)
+
+**Fixed bugs:**
+
+- Remove hard-coded references to Article from the ArticleController class in case this controller is used on other ActiveRecord objects [\#364](https://github.com/alphadevx/alpha/issues/364)
+- The HTML renderer should use the TextBox widget for the new LargeText type [\#363](https://github.com/alphadevx/alpha/issues/363)
+- Fix path issues with the CronManager [\#347](https://github.com/alphadevx/alpha/issues/347)
+- The update table button in the admin backend is triggering the table recreate rather than the update action [\#343](https://github.com/alphadevx/alpha/issues/343)
+
+**Closed issues:**
+
+- Upgrade Markdown version [\#362](https://github.com/alphadevx/alpha/issues/362)
+- Fix use of aes-256-ecb for encryption [\#360](https://github.com/alphadevx/alpha/issues/360)
+- Not all model unit tests are using the getActiveRecordProviders\(\) injector [\#357](https://github.com/alphadevx/alpha/issues/357)
+- Updated deprecated method notices in PHP Redis calls [\#356](https://github.com/alphadevx/alpha/issues/356)
+- Upgrade to PHP 7.3 [\#351](https://github.com/alphadevx/alpha/issues/351)
 
 ## [3.0.0](https://github.com/alphadevx/alpha/tree/3.0.0) (2018-08-04)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0-RC.2...3.0.0)
 
 **Implemented enhancements:**
@@ -15,6 +51,7 @@
 
 **Fixed bugs:**
 
+- Articles are not saving correctly [\#340](https://github.com/alphadevx/alpha/issues/340)
 - The ListActiveRecordsController::displayBodyContent\(\) method is not handling errors correctly [\#335](https://github.com/alphadevx/alpha/issues/335)
 - Cache providers can key clash when multiple apps are using the same provider engine [\#334](https://github.com/alphadevx/alpha/issues/334)
 - Alpha is rendering SmallText fields as text areas rather than input boxes [\#328](https://github.com/alphadevx/alpha/issues/328)
@@ -80,13 +117,14 @@
 
 **Merged pull requests:**
 
-- Release/3.0.0 release [\#338](https://github.com/alphadevx/alpha/pull/338) ([alphadevx](https://github.com/alphadevx))
 - Feature/270 alpha on php7 [\#307](https://github.com/alphadevx/alpha/pull/307) ([alphadevx](https://github.com/alphadevx))
 
 ## [3.0.0-RC.2](https://github.com/alphadevx/alpha/tree/3.0.0-RC.2) (2018-07-29)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0-RC.1...3.0.0-RC.2)
 
 ## [3.0.0-RC.1](https://github.com/alphadevx/alpha/tree/3.0.0-RC.1) (2018-05-19)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4...3.0.0-RC.1)
 
 **Implemented enhancements:**
@@ -104,6 +142,7 @@
 - Scrutinizer Auto-Fixes [\#317](https://github.com/alphadevx/alpha/pull/317) ([scrutinizer-auto-fixer](https://github.com/scrutinizer-auto-fixer))
 
 ## [2.0.4](https://github.com/alphadevx/alpha/tree/2.0.4) (2017-01-01)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.4-RC.1...2.0.4)
 
 **Implemented enhancements:**
@@ -118,10 +157,10 @@
 
 **Merged pull requests:**
 
-- Release/2.0.4 release [\#304](https://github.com/alphadevx/alpha/pull/304) ([alphadevx](https://github.com/alphadevx))
 - Feature/32 log file backup compression [\#302](https://github.com/alphadevx/alpha/pull/302) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.4-RC.1](https://github.com/alphadevx/alpha/tree/2.0.4-RC.1) (2016-11-28)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.3...2.0.4-RC.1)
 
 **Implemented enhancements:**
@@ -134,7 +173,12 @@
 - AlphaDAOProviderInterface::save\(\) implementations should not be accessing $\_POST directly [\#161](https://github.com/alphadevx/alpha/issues/161)
 - All interactions on a single BO should be wrapped in one controller [\#37](https://github.com/alphadevx/alpha/issues/37)
 
+**Merged pull requests:**
+
+- \#233 - updated the version number to 2.0.3 [\#299](https://github.com/alphadevx/alpha/pull/299) ([alphadevx](https://github.com/alphadevx))
+
 ## [2.0.3](https://github.com/alphadevx/alpha/tree/2.0.3) (2016-09-12)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.3-RC.1...2.0.3)
 
 **Implemented enhancements:**
@@ -144,11 +188,10 @@
 
 **Merged pull requests:**
 
-- Release/2.0.3 release [\#301](https://github.com/alphadevx/alpha/pull/301) ([alphadevx](https://github.com/alphadevx))
-- \#233 - updated the version number to 2.0.3 [\#299](https://github.com/alphadevx/alpha/pull/299) ([alphadevx](https://github.com/alphadevx))
 - Feature/233 update to the latest bootstrap [\#298](https://github.com/alphadevx/alpha/pull/298) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.3-RC.1](https://github.com/alphadevx/alpha/tree/2.0.3-RC.1) (2016-09-09)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2...2.0.3-RC.1)
 
 **Merged pull requests:**
@@ -156,6 +199,7 @@
 - Feature/292 phpinfo controller admin backend [\#297](https://github.com/alphadevx/alpha/pull/297) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.2](https://github.com/alphadevx/alpha/tree/2.0.2) (2016-08-08)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.2-RC.1...2.0.2)
 
 **Implemented enhancements:**
@@ -165,11 +209,8 @@
 - Remove MCrypt calls from Alpha [\#286](https://github.com/alphadevx/alpha/issues/286)
 - Run a security audit using W3AF [\#232](https://github.com/alphadevx/alpha/issues/232)
 
-**Merged pull requests:**
-
-- Release/2.0.2 release [\#296](https://github.com/alphadevx/alpha/pull/296) ([alphadevx](https://github.com/alphadevx))
-
 ## [2.0.2-RC.1](https://github.com/alphadevx/alpha/tree/2.0.2-RC.1) (2016-07-25)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1...2.0.2-RC.1)
 
 **Merged pull requests:**
@@ -179,6 +220,7 @@
 - Feature/291 admin password reset warning banner [\#293](https://github.com/alphadevx/alpha/pull/293) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.1](https://github.com/alphadevx/alpha/tree/2.0.1) (2016-07-04)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.1-RC.1...2.0.1)
 
 **Implemented enhancements:**
@@ -208,11 +250,11 @@
 **Merged pull requests:**
 
 - Release/2.0.1 release [\#289](https://github.com/alphadevx/alpha/pull/289) ([alphadevx](https://github.com/alphadevx))
-- Release/2.0.1 release [\#288](https://github.com/alphadevx/alpha/pull/288) ([alphadevx](https://github.com/alphadevx))
 - \#82 - added the optional indexName param to the ActiveRecord::createF… [\#282](https://github.com/alphadevx/alpha/pull/282) ([alphadevx](https://github.com/alphadevx))
 - Feature/277 add 10 more unit tests [\#281](https://github.com/alphadevx/alpha/pull/281) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.1-RC.1](https://github.com/alphadevx/alpha/tree/2.0.1-RC.1) (2016-05-08)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/2.0.0...2.0.1-RC.1)
 
 **Merged pull requests:**
@@ -222,6 +264,7 @@
 - feature/276 the logger class should log requested uri where available [\#278](https://github.com/alphadevx/alpha/pull/278) ([alphadevx](https://github.com/alphadevx))
 
 ## [2.0.0](https://github.com/alphadevx/alpha/tree/2.0.0) (2016-02-07)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/1.2.4...2.0.0)
 
 **Implemented enhancements:**
@@ -386,6 +429,7 @@
 - Abstract out the logging implementation [\#11](https://github.com/alphadevx/alpha/issues/11)
 
 ## [1.2.4](https://github.com/alphadevx/alpha/tree/1.2.4) (2014-10-29)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/1.2.3...1.2.4)
 
 **Closed issues:**
@@ -414,24 +458,33 @@
 - Add an APC implementation of AlphaCacheProviderInterface [\#101](https://github.com/alphadevx/alpha/issues/101)
 
 ## [1.2.3](https://github.com/alphadevx/alpha/tree/1.2.3) (2014-04-30)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.2.3...1.2.3)
 
 ## [alpha-1.2.3](https://github.com/alphadevx/alpha/tree/alpha-1.2.3) (2014-04-22)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.2.2...alpha-1.2.3)
 
 ## [alpha-1.2.2](https://github.com/alphadevx/alpha/tree/alpha-1.2.2) (2013-10-21)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.2.1...alpha-1.2.2)
 
 ## [alpha-1.2.1](https://github.com/alphadevx/alpha/tree/alpha-1.2.1) (2012-12-21)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.2.0...alpha-1.2.1)
 
 ## [alpha-1.2.0](https://github.com/alphadevx/alpha/tree/alpha-1.2.0) (2012-11-15)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.1...alpha-1.2.0)
 
 ## [alpha-1.1](https://github.com/alphadevx/alpha/tree/alpha-1.1) (2011-12-13)
+
 [Full Changelog](https://github.com/alphadevx/alpha/compare/alpha-1.0...alpha-1.1)
 
 ## [alpha-1.0](https://github.com/alphadevx/alpha/tree/alpha-1.0) (2011-03-17)
 
+[Full Changelog](https://github.com/alphadevx/alpha/compare/5aa97a692379e7cf41ce8c38cce2e3b78e16701a...alpha-1.0)
 
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+
+
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*

@@ -1,6 +1,5 @@
-[![Build Status](https://travis-ci.org/alphadevx/alpha.svg?branch=develop)](https://travis-ci.org/alphadevx/alpha)
-[![Coverage Status](https://coveralls.io/repos/github/alphadevx/alpha/badge.svg?branch=develop)](https://coveralls.io/github/alphadevx/alpha?branch=develop)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/alphadevx/alpha/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/alphadevx/alpha/?branch=develop)
+[![Install and unit tests](https://github.com/alphadevx/alpha/actions/workflows/php.yml/badge.svg)](https://github.com/alphadevx/alpha/actions/workflows/php.yml)
+[![codecov](https://codecov.io/gh/alphadevx/alpha/branch/develop/graph/badge.svg?token=ASL3NLDW1F)](https://codecov.io/gh/alphadevx/alpha)
 
 Alpha Framework (3.1.0)
 =================================================================
