@@ -16,7 +16,7 @@ use RecursiveDirectoryIterator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -608,14 +608,15 @@ class FileUtils
     /**
      * Recursively deletes the contents of the directory indicated (the directory itself is not deleted).
      *
-     * @param string $sourceDir    The path to the source directory.
-     * @param string[]  $excludeFiles An array of file names to exclude from the deletion.
+     * @param string    $sourceDir        The path to the source directory.
+     * @param string[]  $excludeFiles     An array of file names to exclude from the deletion.
+     * @param boolean   $deleteSourceDir  Set to true to also delete the sourceDir, default is false.
      *
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
-    public static function deleteDirectoryContents($sourceDir, $excludeFiles = array())
+    public static function deleteDirectoryContents($sourceDir, $excludeFiles = array(), $deleteSourceDir = false)
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
@@ -625,11 +626,15 @@ class FileUtils
                     if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles)) { // remove an empty directory
                         rmdir($file->getPathname());
                     } else {
-                        self::deleteDirectoryContents($file->getPathname(), $excludeFiles);
+                        self::deleteDirectoryContents($file->getPathname(), $excludeFiles, true);
                     }
                 } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles)) {
                     unlink($file->getPathname());
                 }
+            }
+
+            if (file_exists($sourceDir) && $deleteSourceDir) {
+                rmdir($sourceDir);
             }
         } catch (\Exception $e) {
             throw new AlphaException('Failed to delete files files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
