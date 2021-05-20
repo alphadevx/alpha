@@ -29,7 +29,7 @@ use ReflectionProperty;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -215,7 +215,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public static function disconnect()
+    public static function disconnect(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -259,7 +259,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function load($ID, $version = 0)
+    public function load($ID, $version = 0): void
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
@@ -303,7 +303,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($ID)
+    public function loadAllOldVersions($ID): array
     {
         self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
@@ -330,7 +330,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
+    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
             loadAttributes=['.var_export($loadAttributes, true).'])');
@@ -373,7 +373,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -415,7 +415,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -456,7 +456,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -501,7 +501,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -540,7 +540,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false)
+    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 

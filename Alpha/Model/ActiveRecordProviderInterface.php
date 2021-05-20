@@ -10,7 +10,7 @@ namespace Alpha\Model;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,11 +50,11 @@ interface ActiveRecordProviderInterface
     /**
      * Gets the current connection singleton, or creates a new one if none exists.
      *
-     * @return mixed
+     * @return \Mysqli|\SQLite3
      *
      * @since 1.1
      */
-    public static function getConnection();
+    public static function getConnection(): \Mysqli|\SQLite3;
 
     /**
      * Disconnects the current database connection if one exists (self::$connection is set).
@@ -62,7 +62,7 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      * @return void
      */
-    public static function disconnect();
+    public static function disconnect(): void;
 
     /**
      * Returns the last database error string for the current connection.
@@ -71,7 +71,7 @@ interface ActiveRecordProviderInterface
      *
      * @return string
      */
-    public static function getLastDatabaseError();
+    public static function getLastDatabaseError(): string;
 
     /**
      * Populates the record object with the properties retrived from the database for the record $ID.
@@ -84,7 +84,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @return void
      */
-    public function load($ID, $version = 0);
+    public function load($ID, $version = 0): void;
 
     /**
      * Load all old versions (if any) of this record from the [tablename]_history table.
@@ -97,7 +97,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($ID);
+    public function loadAllOldVersions($ID): array;
 
     /**
      * Populates the record object from the database table by the given attribute value.
@@ -112,7 +112,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @return void
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array());
+    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void;
 
     /**
      * Loads all of the record objects of this class into an array which is returned.
@@ -129,7 +129,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false);
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array;
 
     /**
      * Loads all of the objects of this class by the specified attribute into an array which is returned.
@@ -150,7 +150,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array;
 
     /**
      * Loads all of the record objects of this class by the specified attributes into an array which is returned.
@@ -171,7 +171,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array());
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array;
 
     /**
      * Loads all of the record objects of this class that where updated (updated_ts value) on the date indicated.
@@ -189,7 +189,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false);
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array;
 
     /**
      * Loads all of the specified attribute values of this class by the specified attribute into an
@@ -207,7 +207,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false);
+    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array;
 
     /**
      * Saves the record.  If $this->ID is empty or null it will INSERT, otherwise UPDATE.
