@@ -260,13 +260,12 @@ interface ActiveRecordProviderInterface
     /**
      * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
      *
-     * @return int
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
+     * @return int
      */
-    public function getVersion();
+    public function getVersion(): int;
 
     /**
      * Builds a new database table for the Record class.

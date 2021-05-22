@@ -1111,7 +1111,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getVersion()
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
@@ -1139,8 +1139,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                 throw new RecordNotFoundException('Failed to get the version number, table did not exist so had to create!');
             }
-
-            return;
         }
 
         if (!isset($row['version_num']) || $row['version_num'] < 1) {

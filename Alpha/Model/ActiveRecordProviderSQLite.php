@@ -1155,7 +1155,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getVersion()
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
@@ -1180,8 +1180,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                 throw new RecordNotFoundException('Failed to get the version number, table did not exist so had to create!');
             }
-
-            return;
         }
 
         if (!isset($row['version_num']) || $row['version_num'] < 1) {

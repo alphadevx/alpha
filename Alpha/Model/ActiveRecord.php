@@ -950,7 +950,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
