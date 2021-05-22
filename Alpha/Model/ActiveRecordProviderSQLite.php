@@ -1127,7 +1127,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::delete()
      */
-    public function delete()
+    public function delete(): void
     {
         self::$logger->debug('>>delete()');
 

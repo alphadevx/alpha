@@ -806,8 +806,10 @@ abstract class ActiveRecord
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedDeleteException
+     *
+     * @return void
      */
-    public function delete()
+    public function delete(): void
     {
         self::$logger->debug('>>delete()');
 

@@ -255,7 +255,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\FailedDeleteException
      * @return void
      */
-    public function delete();
+    public function delete(): void;
 
     /**
      * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
