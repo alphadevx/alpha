@@ -50,8 +50,6 @@ interface ActiveRecordProviderInterface
     /**
      * Gets the current connection singleton, or creates a new one if none exists.
      *
-     * @return \Mysqli|\SQLite3
-     *
      * @since 1.1
      */
     public static function getConnection(): \Mysqli|\SQLite3;
@@ -60,7 +58,6 @@ interface ActiveRecordProviderInterface
      * Disconnects the current database connection if one exists (self::$connection is set).
      *
      * @since 1.1
-     * @return void
      */
     public static function disconnect(): void;
 
@@ -68,8 +65,6 @@ interface ActiveRecordProviderInterface
      * Returns the last database error string for the current connection.
      *
      * @since 1.1
-     *
-     * @return string
      */
     public static function getLastDatabaseError(): string;
 
@@ -82,7 +77,6 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
-     * @return void
      */
     public function load($ID, $version = 0): void;
 
@@ -90,8 +84,6 @@ interface ActiveRecordProviderInterface
      * Load all old versions (if any) of this record from the [tablename]_history table.
      *
      * @param int $ID The object ID of the record to load.
-     *
-     * @return array An array containing objects of this type of record object, order by version.
      *
      * @since 2.0
      *
@@ -110,7 +102,6 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
-     * @return void
      */
     public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void;
 
@@ -122,8 +113,6 @@ interface ActiveRecordProviderInterface
      * @param string $orderBy         The name of the field to sort the records by.
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-     *
-     * @return array An array containing objects of this type of record object.
      *
      * @since 1.1
      *
@@ -142,8 +131,6 @@ interface ActiveRecordProviderInterface
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      * @param string[]  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
-     *
-     * @return array An array containing objects of this type of business object.
      *
      * @since 1.1
      *
@@ -164,8 +151,6 @@ interface ActiveRecordProviderInterface
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      * @param string[]  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
-     * @return array An array containing objects of this type of record object.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
@@ -183,8 +168,6 @@ interface ActiveRecordProviderInterface
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of record object.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
@@ -201,8 +184,6 @@ interface ActiveRecordProviderInterface
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      *
-     * @return array An array of field values.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
@@ -217,7 +198,6 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
      * @throws \Alpha\Exception\ValidationException
-     * @return void
      */
     public function save(): void;
 
@@ -233,7 +213,6 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
-     * @return void
      */
     public function saveAttribute($attribute, $value): void;
 
@@ -243,7 +222,6 @@ interface ActiveRecordProviderInterface
      * @since 1.2
      *
      * @throws \Alpha\Exception\FailedSaveException
-     * @return void
      */
     public function saveHistory(): void;
 
@@ -253,7 +231,6 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedDeleteException
-     * @return void
      */
     public function delete(): void;
 
@@ -263,7 +240,6 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\RecordFoundException
-     * @return int
      */
     public function getVersion(): int;
 
@@ -275,9 +251,8 @@ interface ActiveRecordProviderInterface
      * @param bool $checkIndexes Set to false if you do not want to check for any additional required indexes while creating the table (default is true).
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function makeTable($checkIndexes = true);
+    public function makeTable($checkIndexes = true): void;
 
     /**
      * Builds a new database table for the Record class to store it's history.
@@ -285,9 +260,8 @@ interface ActiveRecordProviderInterface
      * @since 1.2
      *
      * @throws \AlphaException
-     * @return void
      */
-    public function makeHistoryTable();
+    public function makeHistoryTable(): void;
 
     /**
      * Re-builds the table if the model requirements have changed.  All data is lost!
@@ -295,9 +269,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function rebuildTable();
+    public function rebuildTable(): void;
 
     /**
      * Drops the table if the model requirements have changed.  All data is lost!
@@ -307,9 +280,8 @@ interface ActiveRecordProviderInterface
      * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function dropTable($tableName = null);
+    public function dropTable($tableName = null): void;
 
     /**
      * Adds in a new class property without loosing existing data (does an ALTER TABLE query on the
@@ -320,9 +292,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function addProperty($propName);
+    public function addProperty($propName): void;
 
     /**
      * Gets the maximum ID value from the database for this class type.

@@ -980,7 +980,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeTable($checkIndexes = true)
+    public function makeTable($checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1010,7 +1010,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeHistoryTable()
+    public function makeHistoryTable(): void
     {
         self::$logger->debug('>>makeHistoryTable()');
 
@@ -1040,7 +1040,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function rebuildTable()
+    public function rebuildTable(): void
     {
         self::$logger->debug('>>rebuildTable()');
 
@@ -1070,7 +1070,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function dropTable($tableName = null)
+    public function dropTable($tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1101,7 +1101,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function addProperty($propName)
+    public function addProperty($propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 

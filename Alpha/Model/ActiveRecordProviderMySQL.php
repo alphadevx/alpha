@@ -1159,7 +1159,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeTable()
      */
-    public function makeTable($checkIndexes = true)
+    public function makeTable($checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1244,7 +1244,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeHistoryTable()
      */
-    public function makeHistoryTable()
+    public function makeHistoryTable(): void
     {
         self::$logger->debug('>>makeHistoryTable()');
 
@@ -1321,7 +1321,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rebuildTable()
      */
-    public function rebuildTable()
+    public function rebuildTable(): void
     {
         self::$logger->debug('>>rebuildTable()');
 
@@ -1344,7 +1344,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropTable()
      */
-    public function dropTable($tableName = null)
+    public function dropTable($tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1380,7 +1380,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::addProperty()
      */
-    public function addProperty($propName)
+    public function addProperty($propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 
