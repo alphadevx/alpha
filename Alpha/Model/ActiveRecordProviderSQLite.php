@@ -829,7 +829,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::save()
      */
-    public function save()
+    public function save(): void
     {
         self::$logger->debug('>>save()');
 
@@ -992,7 +992,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveAttribute()
      */
-    public function saveAttribute($attribute, $value)
+    public function saveAttribute($attribute, $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -1056,7 +1056,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveHistory()
      */
-    public function saveHistory()
+    public function saveHistory(): void
     {
         self::$logger->debug('>>saveHistory()');
 

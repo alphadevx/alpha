@@ -219,7 +219,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\ValidationException
      * @return void
      */
-    public function save();
+    public function save(): void;
 
     /**
      * Saves the field specified with the value supplied.  Only works for persistent records.  Note that no Alpha type
@@ -235,7 +235,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\LockingException
      * @return void
      */
-    public function saveAttribute($attribute, $value);
+    public function saveAttribute($attribute, $value): void;
 
     /**
      * Saves the object history to the [tablename]_history table. It always does an INSERT.
@@ -245,7 +245,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\FailedSaveException
      * @return void
      */
-    public function saveHistory();
+    public function saveHistory(): void;
 
     /**
      * Deletes the current object from the database.

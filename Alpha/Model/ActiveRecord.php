@@ -563,8 +563,10 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
      * @throws \Alpha\Exception\ValidationException
+     *
+     * @return void
      */
-    public function save()
+    public function save(): void
     {
         self::$logger->debug('>>save()');
 
@@ -690,8 +692,10 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
+     *
+     * @return void
      */
-    public function saveAttribute($attribute, $value)
+    public function saveAttribute($attribute, $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -731,8 +735,10 @@ abstract class ActiveRecord
      * @since 1.2
      *
      * @throws \Alpha\Exception\FailedSaveException
+     *
+     * @return void
      */
-    public function saveHistory()
+    public function saveHistory(): void
     {
         self::$logger->debug('>>saveHistory()');
 
