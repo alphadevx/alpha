@@ -1456,7 +1456,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getMAX()
      */
-    public function getMAX()
+    public function getMAX(): int
     {
         self::$logger->debug('>>getMAX()');
 
@@ -1487,7 +1487,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getCount()
      */
-    public function getCount($attributes = array(), $values = array())
+    public function getCount($attributes = array(), $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
@@ -1533,7 +1533,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getHistoryCount()
      */
-    public function getHistoryCount()
+    public function getHistoryCount(): int
     {
         self::$logger->debug('>>getHistoryCount()');
 

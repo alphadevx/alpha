@@ -1169,13 +1169,11 @@ abstract class ActiveRecord
     /**
      * Gets the maximum ID value from the database for this class type.
      *
-     * @return int The maximum ID value in the class table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getMAX()
+    public function getMAX(): int
     {
         self::$logger->debug('>>getMAX()');
 
@@ -1204,14 +1202,12 @@ abstract class ActiveRecord
      * @param array $attributes The attributes to count the objects by (optional).
      * @param array $values     The values of the attributes to count the objects by (optional).
      *
-     * @return int
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getCount($attributes = array(), $values = array())
+    public function getCount($attributes = array(), $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
@@ -1242,13 +1238,11 @@ abstract class ActiveRecord
      * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
      * this method on classes where maintainHistory = true, otherwise an exception will be thrown.
      *
-     * @return int
-     *
      * @since 1.2
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getHistoryCount()
+    public function getHistoryCount(): int
     {
         self::$logger->debug('>>getHistoryCount()');
 

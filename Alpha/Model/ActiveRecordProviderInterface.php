@@ -298,13 +298,11 @@ interface ActiveRecordProviderInterface
     /**
      * Gets the maximum ID value from the database for this class type.
      *
-     * @return int The maximum ID value in the class table.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getMAX();
+    public function getMAX(): int;
 
     /**
      * Gets the count from the database for the amount of objects of this class.
@@ -312,25 +310,21 @@ interface ActiveRecordProviderInterface
      * @param array $attributes The attributes to count the objects by (optional).
      * @param array $values    The values of the attributes to count the objects by (optional).
      *
-     * @return int
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getCount($attributes = array(), $values = array());
+    public function getCount($attributes = array(), $values = array()): int;
 
     /**
      * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
      * this method on classes where maintainHistory = true, otherwise an exception will be thrown.
      *
-     * @return int
-     *
      * @since 1.2
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getHistoryCount();
+    public function getHistoryCount(): int;
 
     /**
      * Populate all of the enum options for this object from the database.
