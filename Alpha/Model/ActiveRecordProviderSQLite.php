@@ -1615,7 +1615,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\NotImplementedException
      */
-    public function setEnumOptions()
+    public function setEnumOptions(): void
     {
         throw new NotImplementedException('ActiveRecordProviderInterface::setEnumOptions() not implemented by the SQLite3 provider');
     }
@@ -1625,7 +1625,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableExists()
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists($checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 
@@ -1659,7 +1659,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordTableExists()
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -1707,7 +1707,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableNeedsUpdate()
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
@@ -1788,7 +1788,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::findMissingFields()
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
@@ -1853,7 +1853,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getIndexes()
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
@@ -1896,7 +1896,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @since 1.2
      */
-    private function checkIndexes()
+    private function checkIndexes(): void
     {
         self::$logger->debug('>>checkIndexes()');
 
@@ -2003,7 +2003,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createForeignIndex()
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
     {
         self::$logger->info('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
@@ -2057,7 +2057,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createUniqueIndex()
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 

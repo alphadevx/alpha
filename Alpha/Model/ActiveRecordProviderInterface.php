@@ -332,22 +332,19 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function setEnumOptions();
+    public function setEnumOptions(): void;
 
     /**
      * Checks to see if the table exists in the database for the current business class.
      *
      * @param bool $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableExists($checkHistoryTable = false);
+    public function checkTableExists($checkHistoryTable = false): bool;
 
     /**
      * Static method to check the database and see if the table for the indicated Record class name
@@ -356,49 +353,41 @@ interface ActiveRecordProviderInterface
      * @param string $RecordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you	want to	check for the existance	of the _history	table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false);
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool;
 
     /**
      * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
      * database table is in sync with the class definition.
      *
-     * @return bool
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableNeedsUpdate();
+    public function checkTableNeedsUpdate(): bool;
 
     /**
      * Returns an array containing any properties on the class which have not been created on the database
      * table yet.
      *
-     * @return array An array of missing fields in the database table.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function findMissingFields();
+    public function findMissingFields(): array;
 
     /**
      * Gets an array of all of the names of the active database indexes for this class.
      *
-     * @return array An array of database indexes on this table.
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getIndexes();
+    public function getIndexes(): array;
 
     /**
      * Creates a foreign key constraint (index) in the database on the given attribute.
@@ -411,9 +400,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
-     * @return void
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null);
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void;
 
     /**
      * Creates a unique index in the database on the given attribute(s).
@@ -425,9 +413,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
-     * @return void
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '');
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void;
 
     /**
      * Reloads the object from the database, overwritting any attribute values in memory.

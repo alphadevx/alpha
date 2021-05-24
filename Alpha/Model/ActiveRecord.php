@@ -1306,7 +1306,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    protected function setEnumOptions()
+    protected function setEnumOptions(): void
     {
         self::$logger->debug('>>setEnumOptions()');
 
@@ -1512,13 +1512,11 @@ abstract class ActiveRecord
      *
      * @param bool $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists($checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists()');
 
@@ -1548,13 +1546,11 @@ abstract class ActiveRecord
      * @param string $recordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function checkRecordTableExists($recordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($recordClassName, $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1576,13 +1572,11 @@ abstract class ActiveRecord
      * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
      * database table is in sync with the class definition.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
@@ -1617,13 +1611,11 @@ abstract class ActiveRecord
      * Returns an array containing any properties on the class which have not been created on the database
      * table yet.
      *
-     * @return array An array of missing fields in the database table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
@@ -1808,13 +1800,11 @@ abstract class ActiveRecord
     /**
      * Gets an array of all of the names of the active database indexes for this class.
      *
-     * @return array An array of database indexes on this table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
@@ -1841,7 +1831,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
     {
         self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
@@ -1883,7 +1873,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 

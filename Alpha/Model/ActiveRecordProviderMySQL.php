@@ -1565,7 +1565,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * @see Alpha\Model\ActiveRecordProviderInterface::setEnumOptions()
      * @since 1.1
      */
-    public function setEnumOptions()
+    public function setEnumOptions(): void
     {
         self::$logger->debug('>>setEnumOptions()');
 
@@ -1615,7 +1615,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableExists()
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists($checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 
@@ -1648,7 +1648,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordTableExists()
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderMySQL');
@@ -1696,7 +1696,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableNeedsUpdate()
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
@@ -1773,7 +1773,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::findMissingFields()
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
@@ -1840,7 +1840,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getIndexes()
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
@@ -1870,7 +1870,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    private function checkIndexes()
+    private function checkIndexes(): void
     {
         self::$logger->debug('>>checkIndexes()');
 
@@ -1983,7 +1983,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createForeignIndex()
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
     {
         self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
@@ -2042,7 +2042,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createUniqueIndex()
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
