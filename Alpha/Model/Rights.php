@@ -13,7 +13,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -84,7 +84,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'Rights';
+    public const TABLE_NAME = 'Rights';
 
     /**
      * Trace logger.
@@ -119,11 +119,9 @@ class Rights extends ActiveRecord
     /**
      * Get the group members Relation.
      *
-     * @return \Alpha\Model\Type\Relation
-     *
      * @since 1.0
      */
-    public function getMembers()
+    public function getMembers(): \Alpha\Model\Type\Relation
     {
         return $this->members;
     }
@@ -133,7 +131,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_load_callback()
+    protected function after_load_callback(): void
     {
         $this->setupRels();
     }
@@ -143,7 +141,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.2.1
      */
-    protected function after_save_callback()
+    protected function after_save_callback(): void
     {
         $this->setupRels();
     }
@@ -153,7 +151,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_loadByAttribute_callback()
+    protected function after_loadByAttribute_callback(): void
     {
         $this->setupRels();
     }
@@ -163,7 +161,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function setupRels()
+    protected function setupRels(): void
     {
         // set up MANY-TO-MANY relation person2rights
         $this->members->setRelatedClass('Alpha\Model\Person', 'left');
