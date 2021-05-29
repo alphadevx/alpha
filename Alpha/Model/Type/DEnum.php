@@ -19,7 +19,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -90,7 +90,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'DEnum';
+    public const TABLE_NAME = 'DEnum';
 
     /**
      * An array of data display labels for the class properties.
@@ -145,11 +145,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Saves a new DEnum record with the same name as this instance if one does not already exist
      *
-     * @return void
-     *
      * @since 3.0
      */
-    public function saveIfNew()
+    public function saveIfNew(): void
     {
         if (isset($this->name) && $this->checkTableExists()) {
             try {
@@ -174,7 +172,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setName($name)
+    public function setName($name): void
     {
         $this->name->setValue($name);
     }
@@ -184,13 +182,11 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @param bool $alphaSort
      *
-     * @return array
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getOptions($alphaSort = false)
+    public function getOptions($alphaSort = false): array
     {
         try {
             $options = new self();
@@ -220,11 +216,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Getter for the validation helper string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -232,11 +226,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Set the validation helper text.
      *
-     * @param string $helper
-     *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper($helper): void
     {
         $this->helper = $helper;
     }
@@ -244,11 +236,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Getter for the name.
      *
-     * @return SmallText
-     *
      * @since 1.0
      */
-    public function getName()
+    public function getName(): \Alpha\Model\Type\SmallText
     {
         return $this->name;
     }
@@ -256,11 +246,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Used to get the current DEnum item selected index value.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
@@ -268,11 +256,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Used to get the current DEnum item string value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDisplayValue()
+    public function getDisplayValue(): string
     {
         // check to see if the options have already been loaded from the DB
         if (empty($this->options)) {
@@ -294,7 +280,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setValue($item)
+    public function setValue($item): void
     {
         // check to see if the options have already been loaded from the DB
         if (empty($this->options)) {
@@ -312,13 +298,11 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Gets the count from the database of the DEnumItems associated with this object.
      *
-     * @return int
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getItemCount()
+    public function getItemCount(): int
     {
         $config = ConfigProvider::getInstance();
 
@@ -343,11 +327,9 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @param string $optionName
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getOptionID($optionName)
+    public function getOptionID($optionName): int
     {
         $denumItem = new DEnumItem();
         $denumItem->loadByAttribute('value', $optionName);
@@ -363,11 +345,9 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval($this->value);
     }

@@ -17,7 +17,7 @@ use Alpha\Exception\CustomQueryException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -79,7 +79,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'DEnumItem';
+    public const TABLE_NAME = 'DEnumItem';
 
     /**
      * an array of data display labels for the class properties.
@@ -122,13 +122,11 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @param int $EnumID The ID of the parent DEnum object.
      *
-     * @return array
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function loadItems($EnumID)
+    public function loadItems($EnumID): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -162,11 +160,9 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * used to get the current DEnum item.
      *
-     * @return \Alpha\Model\Type\SmallText
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): \Alpha\Model\Type\SmallText
     {
         return $this->value;
     }
@@ -174,11 +170,9 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * used to set the current DEnum item.
      *
-     * @param string $item
-     *
      * @since 1.0
      */
-    public function setValue($item)
+    public function setValue($item): void
     {
         $this->value->setValue($item);
     }
@@ -186,11 +180,9 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * Getter for the validation helper string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -202,7 +194,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper($helper): void
     {
         $this->helper = $helper;
     }
@@ -210,11 +202,9 @@ class DEnumItem extends ActiveRecord implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval($this->value);
     }

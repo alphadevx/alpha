@@ -13,7 +13,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -177,7 +177,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setValue($dateTime)
+    public function setValue($dateTime): void
     {
         $this->populateFromString($dateTime);
     }
@@ -196,7 +196,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTimestampValue($year, $month, $day, $hour, $minute, $second)
+    public function setTimestampValue($year, $month, $day, $hour, $minute, $second): void
     {
         $valid = null;
 
@@ -239,11 +239,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the Timestamp value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':'.$this->second;
     }
@@ -251,11 +249,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Return the value in UNIX timestamp format.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getUnixValue()
+    public function getUnixValue(): int
     {
         return mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
     }
@@ -263,11 +259,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the date part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->year.'-'.$this->month.'-'.$this->day;
     }
@@ -275,11 +269,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the date value as a string in the format "DD/MM/YYYY".
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getEuroValue()
+    public function getEuroValue(): string
     {
         return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
     }
@@ -295,7 +287,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setDate($year, $month, $day)
+    public function setDate($year, $month, $day): void
     {
         $valid = null;
 
@@ -326,11 +318,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the time part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getTime()
+    public function getTime(): string
     {
         return $this->hour.':'.$this->minute.':'.$this->second;
     }
@@ -338,11 +328,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the year part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getYear()
+    public function getYear(): string
     {
         return $this->year;
     }
@@ -350,11 +338,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the month part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMonth()
+    public function getMonth(): string
     {
         return $this->month;
     }
@@ -362,11 +348,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the day part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDay()
+    public function getDay(): string
     {
         return $this->day;
     }
@@ -374,11 +358,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the textual weekday part, e.g. Monday.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getWeekday()
+    public function getWeekday(): string
     {
         return $this->weekday;
     }
@@ -386,11 +368,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the hour part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHour()
+    public function getHour(): string
     {
         return $this->hour;
     }
@@ -398,11 +378,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the minute part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMinute()
+    public function getMinute(): string
     {
         return $this->minute;
     }
@@ -410,11 +388,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the second part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getSecond()
+    public function getSecond(): string
     {
         return $this->second;
     }
@@ -430,7 +406,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTime($hour, $minute, $second)
+    public function setTime($hour, $minute, $second): void
     {
         $valid = null;
 
@@ -462,7 +438,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function populateFromString($dateTime)
+    public function populateFromString($dateTime): void
     {
         $valid = null;
 
@@ -568,11 +544,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -584,7 +558,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule($rule): void
     {
         $this->validationRule = $rule;
     }
@@ -592,11 +566,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the validation helper text.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -608,7 +580,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper($helper): void
     {
         $this->helper = $helper;
     }
@@ -616,11 +588,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Returns the difference between now and this timestamp value, in a human-readable format, e.g: 3 days ago, 3 days from now.
      *
-     * @return string
-     *
      * @since 1.2.4
      */
-    public function getTimeAway()
+    public function getTimeAway(): string
     {
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
         $lengths = array('60', '60', '24', '7', '4.35', '12', '10');

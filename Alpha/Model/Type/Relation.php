@@ -15,7 +15,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -215,7 +215,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 11;
+    public const MAX_SIZE = 11;
 
     /**
      * Constructor.
@@ -238,7 +238,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClass($RC, $side = '')
+    public function setRelatedClass($RC, $side = ''): void
     {
         if (in_array($RC, ActiveRecord::getRecordClassNames())) {
             switch ($side) {
@@ -264,13 +264,11 @@ class Relation extends Type implements TypeInterface
      *
      * @param string $side
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClass($side = '')
+    public function getRelatedClass($side = ''): string
     {
         switch ($side) {
             case '':
@@ -296,7 +294,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClassField($RCF)
+    public function setRelatedClassField($RCF): void
     {
         // use reflection to sure the related class has the field $RCF
         $reflection = new ReflectionClass($this->relatedClass);
@@ -320,11 +318,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the field of the related class.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRelatedClassField()
+    public function getRelatedClassField(): string
     {
         return $this->relatedClassField;
     }
@@ -337,7 +333,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRelatedClassHeaderFields($fieldNames)
+    public function setRelatedClassHeaderFields($fieldNames): void
     {
         $this->relatedClassHeaderFields = $fieldNames;
     }
@@ -345,11 +341,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the selection widget field headings of the related class.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getRelatedClassHeaderFields()
+    public function getRelatedClassHeaderFields(): array
     {
         return $this->relatedClassHeaderFields;
     }
@@ -364,7 +358,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClassDisplayField($RCDF, $side = '')
+    public function setRelatedClassDisplayField($RCDF, $side = ''): void
     {
         switch ($side) {
             case '':
@@ -386,13 +380,11 @@ class Relation extends Type implements TypeInterface
      *
      * @param string $side Only required for MANY-TO-MANY relations
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClassDisplayField($side = '')
+    public function getRelatedClassDisplayField($side = ''): string
     {
         switch ($side) {
             case '':
@@ -419,7 +411,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRelationType($RT)
+    public function setRelationType($RT): void
     {
         if (in_array($RT, $this->allowableRelationTypes)) {
             $this->relationType = $RT;
@@ -440,11 +432,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the relation type.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRelationType()
+    public function getRelationType(): string
     {
         return $this->relationType;
     }
@@ -458,7 +448,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue($val): void
     {
         if (empty($val)) {
             $this->value = null;
@@ -478,11 +468,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the array of IDs used by MANY-TO-MANY instances.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getRelatedIDs()
+    public function getRelatedIDs(): array
     {
         return $this->IDs;
     }
@@ -496,7 +484,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedIDs($IDs)
+    public function setRelatedIDs($IDs): void
     {
         if (is_array($IDs)) {
             $this->IDs = $IDs;
@@ -508,11 +496,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Getter for the Relation value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string|null
     {
         return $this->value;
     }
@@ -520,11 +506,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -536,7 +520,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule($rule): void
     {
         $this->validationRule = $rule;
     }
@@ -547,13 +531,11 @@ class Relation extends Type implements TypeInterface
      *
      * @param string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClassDisplayFieldValue($accessingClassName = '')
+    public function getRelatedClassDisplayFieldValue($accessingClassName = ''): string
     {
         if ($this->relationType == 'MANY-TO-MANY') {
             /*
@@ -621,13 +603,11 @@ class Relation extends Type implements TypeInterface
      *
      * string $accessingClassName Used to indicate the reading side when accessing from MANY-TO-MANY relation (leave blank for other relation types)
      *
-     * @return array|Alpha\Model\ActiveRecord
-     *
      * @since 3.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelated($accessingClassName = '')
+    public function getRelated($accessingClassName = ''): \Alpha\Model\ActiveRecord|array
     {
         if ($this->relationType == 'ONE-TO-ONE') {
             if (!class_exists($this->relatedClass)) {
@@ -692,11 +672,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Get the allowable size of the Relation in the database field.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -704,11 +682,9 @@ class Relation extends Type implements TypeInterface
     /**
      * Get the lookup object if available (only on MANY-TO-MANY relations, null otherwise).
      *
-     * @return RelationLookup
-     *
      * @since 1.0
      */
-    public function getLookup()
+    public function getLookup(): \Alpha\Model\Type\RelationLookup
     {
         return $this->lookup;
     }
@@ -718,13 +694,11 @@ class Relation extends Type implements TypeInterface
      *
      * @param string $RecordClassname
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Model\Type\IllegalArguementException
      */
-    public function getSide($RecordClassname)
+    public function getSide($RecordClassname): string
     {
         if ($RecordClassname == $this->relatedClassLeft) {
             return 'left';
@@ -743,7 +717,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setTaggedClass($taggedClass)
+    public function setTaggedClass($taggedClass): void
     {
         $this->taggedClass = $taggedClass;
     }

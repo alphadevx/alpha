@@ -9,7 +9,7 @@ namespace Alpha\Model\Type;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -54,15 +54,13 @@ abstract class Type
      * @since 3.0
      */
     protected $helper;
- 
+
     /**
      * Used to get the validation helper message string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -74,7 +72,7 @@ abstract class Type
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper($helper): void
     {
         $this->helper = $helper;
     }
@@ -82,11 +80,9 @@ abstract class Type
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval($this->getValue());
     }

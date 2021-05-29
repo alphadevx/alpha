@@ -9,7 +9,7 @@ namespace Alpha\Model\Type;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,16 +53,14 @@ interface TypeInterface
      *
      * @since 1.0
      */
-    public function setValue($val);
+    public function setValue($val): void;
 
     /**
      * Get the value.
      *
-     * @return mixed
-     *
      * @since 1.0
      */
-    public function getValue();
+    public function getValue(): mixed;
 
     /**
      * Set the validation helper text.
@@ -71,23 +69,19 @@ interface TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper);
+    public function setHelper($helper): void;
 
     /**
      * Get the validation helper text.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper();
+    public function getHelper(): string;
 
     /**
      * Convert the valud of the complex type to a string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString();
+    public function __toString(): string;
 }

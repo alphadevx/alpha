@@ -11,7 +11,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -102,7 +102,7 @@ class Enum extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setOptions($opts)
+    public function setOptions($opts): void
     {
         if (is_array($opts)) {
             $this->options = $opts;
@@ -116,11 +116,9 @@ class Enum extends Type implements TypeInterface
      *
      * @param bool $alphaSort Set to true if you want the Enum options in alphabetical order (default false)
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getOptions($alphaSort = false)
+    public function getOptions($alphaSort = false): array
     {
         if ($alphaSort) {
             sort($this->options, SORT_STRING);
@@ -132,11 +130,9 @@ class Enum extends Type implements TypeInterface
     /**
      * Used to get the current enum item.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -150,7 +146,7 @@ class Enum extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($item)
+    public function setValue($item): void
     {
         if (in_array($item, $this->options)) {
             $this->value = $item;

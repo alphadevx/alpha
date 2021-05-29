@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -102,7 +102,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 65535;
+    public const MAX_SIZE = 65535;
 
     /**
      * Constructor.
@@ -137,7 +137,7 @@ class Text extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue($val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
@@ -153,11 +153,9 @@ class Text extends Type implements TypeInterface
     /**
      * Getter for the value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -169,7 +167,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule($rule): void
     {
         $this->validationRule = $rule;
     }
@@ -177,11 +175,9 @@ class Text extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -195,7 +191,7 @@ class Text extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size)
+    public function setSize($size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -207,11 +203,9 @@ class Text extends Type implements TypeInterface
     /**
      * Get the allowable size of the Double in the database field.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -223,7 +217,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setAllowHTML($allowHTML)
+    public function setAllowHTML($allowHTML): void
     {
         $this->allowHTML = $allowHTML;
     }
@@ -231,11 +225,9 @@ class Text extends Type implements TypeInterface
     /**
      * Get the $allowHTML value.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function getAllowHTML()
+    public function getAllowHTML(): bool
     {
         return $this->allowHTML;
     }

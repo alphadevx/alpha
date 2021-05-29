@@ -5,7 +5,7 @@ namespace Alpha\Model\Type;
 use Alpha\Util\Helper\Validator;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
-use \DateTime;
+use DateTime;
 
 /**
  * The Date complex data type.
@@ -14,7 +14,7 @@ use \DateTime;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -159,7 +159,7 @@ class Date extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($date)
+    public function setValue($date): void
     {
         $this->populateFromString($date);
     }
@@ -175,7 +175,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setDateValue($year, $month, $day)
+    public function setDateValue($year, $month, $day): void
     {
         $valid = null;
 
@@ -207,11 +207,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the date value as a string in the format "YYYY-MM-DD".
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->year.'-'.$this->month.'-'.$this->day;
     }
@@ -219,11 +217,9 @@ class Date extends Type implements TypeInterface
     /**
      * Return the value in UNIX timestamp format.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getUnixValue()
+    public function getUnixValue(): int
     {
         return mktime(0, 0, 0, $this->month, $this->day, $this->year);
     }
@@ -231,11 +227,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the date value as a string in the format "DD/MM/YYYY".
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getEuroValue()
+    public function getEuroValue(): string
     {
         return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
     }
@@ -243,11 +237,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the date value as a string in the format "MM/DD/YYYY".
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getUSValue()
+    public function getUSValue(): string
     {
         return $this->month.'/'.$this->day.'/'.mb_substr($this->year, 2, 2);
     }
@@ -255,11 +247,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the year part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getYear()
+    public function getYear(): string
     {
         return $this->year;
     }
@@ -267,11 +257,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the month part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMonth()
+    public function getMonth(): string
     {
         return $this->month;
     }
@@ -279,11 +267,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the month part.
      *
-     * @return string
-     *
      * @since 3.1
      */
-    public function getMonthName()
+    public function getMonthName(): string
     {
         return $this->monthName;
     }
@@ -291,11 +277,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the day part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDay()
+    public function getDay(): string
     {
         return $this->day;
     }
@@ -303,11 +287,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the textual weekday part, e.g. Monday.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getWeekday()
+    public function getWeekday(): string
     {
         return $this->weekday;
     }
@@ -321,7 +303,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function populateFromString($date)
+    public function populateFromString($date): void
     {
         $valid = null;
 
@@ -379,11 +361,9 @@ class Date extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -391,11 +371,9 @@ class Date extends Type implements TypeInterface
     /**
      * Set the validation rule.
      *
-     * @param string $rule
-     *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule($rule): string
     {
         $this->validationRule = $rule;
     }
@@ -408,7 +386,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 3.1.0
      */
-    public function increment($amount)
+    public function increment($amount): void
     {
         $date = strtotime($amount, strtotime($this->getValue()));
         $this->setValue(date('Y-m-d', $date));
@@ -416,16 +394,14 @@ class Date extends Type implements TypeInterface
 
     /**
      *
-     * Get the start date and the end date of the week of the year provided
+     * Get the start date and the end date of the week of the year provided. Returns an array containing the "start" date and "end" date.
      *
      * @param int The number of the week (1-52)
      * @param int The year (YYYY)
      *
-     * @return array An array containing the "start" date and "end" date.
-     *
      * @since 3.1.0
      */
-    public static function getStartAndEndDate($week, $year)
+    public static function getStartAndEndDate($week, $year): array
     {
         $dateTime = new DateTime();
         $dateTime->setISODate($year, $week);
@@ -435,7 +411,7 @@ class Date extends Type implements TypeInterface
         $value['start'] = $dateTime->format('Y-m-d');
         $dateTime->modify('+6 days');
         $value['end'] = $dateTime->format('Y-m-d');
-        
+
         return $value;
     }
 }

@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -92,7 +92,7 @@ class Double extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 13;
+    public const MAX_SIZE = 13;
 
     /**
      * Constructor.
@@ -127,7 +127,7 @@ class Double extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue($val): void
     {
         if (!Validator::isDouble($val)) {
             throw new IllegalArguementException($this->helper);
@@ -143,11 +143,9 @@ class Double extends Type implements TypeInterface
     /**
      * Getter for the Double value.
      *
-     * @return float
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): float
     {
         return $this->value;
     }
@@ -155,11 +153,9 @@ class Double extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -173,7 +169,7 @@ class Double extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size)
+    public function setSize($size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -187,11 +183,9 @@ class Double extends Type implements TypeInterface
      *
      * @param bool $databaseDimension
      *
-     * @return mixed
-     *
      * @since 1.0
      */
-    public function getSize($databaseDimension = false)
+    public function getSize($databaseDimension = false): mixed
     {
         if ($databaseDimension) {
             return $this->size.',2';
@@ -203,11 +197,9 @@ class Double extends Type implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval(sprintf('%01.2f', $this->value));
     }

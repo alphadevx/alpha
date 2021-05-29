@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,7 +52,7 @@ class SmallText extends Type implements TypeInterface
     /**
      * The value of the string.
      *
-     * @var string
+     * @var string|null
      *
      * @since 1.0
      */
@@ -92,7 +92,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 255;
+    public const MAX_SIZE = 255;
 
     /**
      * Simple boolean to determine if the string is a password or not.
@@ -136,7 +136,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue($val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
@@ -152,11 +152,9 @@ class SmallText extends Type implements TypeInterface
     /**
      * Getter for the value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string|null
     {
         return $this->value;
     }
@@ -168,7 +166,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule($rule): void
     {
         $this->validationRule = $rule;
     }
@@ -176,11 +174,9 @@ class SmallText extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -194,7 +190,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size)
+    public function setSize($size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -206,11 +202,9 @@ class SmallText extends Type implements TypeInterface
     /**
      * Get the allowable size of the Double in the database field.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -222,7 +216,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function isRequired($req = true)
+    public function isRequired($req = true): void
     {
         if ($req) {
             $this->validationRule = Validator::REQUIRED_STRING;
@@ -237,7 +231,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function isPassword($pass = true)
+    public function isPassword($pass = true): void
     {
         $this->password = $pass;
 
@@ -250,11 +244,9 @@ class SmallText extends Type implements TypeInterface
     /**
      * Checks to see if the string is a password or not.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function checkIsPassword()
+    public function checkIsPassword(): bool
     {
         return $this->password;
     }
