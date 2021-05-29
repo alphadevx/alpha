@@ -42,7 +42,7 @@ use Alpha\Controller\PhpinfoController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -361,7 +361,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public function setEncrypt($encryptedQuery)
+    public function setEncrypt($encryptedQuery): void
     {
         $this->encryptedQuery = $encryptedQuery;
     }
@@ -371,11 +371,9 @@ class FrontController
      *
      * @param string $params
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function generateSecureURL($params)
+    public static function generateSecureURL($params): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -391,11 +389,9 @@ class FrontController
      *
      * @param string $queryString
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function encodeQuery($queryString)
+    public static function encodeQuery($queryString): string
     {
         $return = base64_encode(SecurityUtils::encrypt($queryString));
         // remove any characters that are likely to cause trouble on a URL
@@ -407,11 +403,9 @@ class FrontController
     /**
      * Static method to return the decoded GET paramters from an encrytpted tk value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function decodeQueryParams($tk)
+    public static function decodeQueryParams($tk): string
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
@@ -424,11 +418,9 @@ class FrontController
     /**
      * Static method to return the decoded GET paramters from an encrytpted tk value as an array of key/value pairs.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public static function getDecodeQueryParams($tk)
+    public static function getDecodeQueryParams($tk): array
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
@@ -450,11 +442,9 @@ class FrontController
     /**
      * Getter for the page controller.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getPageController()
+    public function getPageController(): string
     {
         return $this->pageController;
     }
@@ -468,7 +458,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public function registerFilter($filterObject)
+    public function registerFilter($filterObject): void
     {
         if ($filterObject instanceof FilterInterface) {
             array_push($this->filters, $filterObject);
@@ -480,11 +470,9 @@ class FrontController
     /**
      * Returns the array of filters currently attached to this FrontController.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return $this->filters;
     }
@@ -498,11 +486,9 @@ class FrontController
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \Alpha\Controller\Front\FrontController
-     *
      * @since 2.0
      */
-    public function addRoute($URI, $callback)
+    public function addRoute($URI, $callback): \Alpha\Controller\Front\FrontController
     {
         if (is_callable($callback)) {
             $this->routes[$URI] = $callback;
@@ -520,11 +506,9 @@ class FrontController
      * @param string $param        The param name (as defined on the route between {} braces)
      * @param mixed  $defaultValue The value to use
      *
-     * @return \Alpha\Controller\Front\FrontController
-     *
      * @since 2.0
      */
-    public function value($param, $defaultValue)
+    public function value($param, $defaultValue): \Alpha\Controller\Front\FrontController
     {
         $this->defaultParamValues[$this->currentRoute][$param] = $defaultValue;
 
@@ -536,13 +520,11 @@ class FrontController
      *
      * @param string $URI The URI to search for.
      *
-     * @return callable
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
-    public function getRouteCallback($URI)
+    public function getRouteCallback($URI): callable
     {
         if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
             $this->currentRoute = $URI;
@@ -584,15 +566,13 @@ class FrontController
      *
      * @param \Alpha\Util\Http\Request $request The request to process
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\ResourceNotAllowedException
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
      */
-    public function process($request)
+    public function process($request): \Alpha\Util\Http\Response
     {
         foreach ($this->filters as $filter) {
             $filter->process($request);
