@@ -169,11 +169,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Get the leftClassName value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getLeftClassName()
+    public function getLeftClassName(): string
     {
         return $this->leftClassName;
     }
@@ -181,11 +179,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Get the rightClassName value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRightClassName()
+    public function getRightClassName(): string
     {
         return $this->rightClassName;
     }
@@ -194,13 +190,11 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Custom getter for the TABLE_NAME, which can't be static in this class due to
      * the lookup tablenames being different each time.
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         if (isset($this->leftClassName) && isset($this->rightClassName)) {
             $leftClass = new ReflectionClass($this->leftClassName);
@@ -253,11 +247,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Getter for the validation helper string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -269,7 +261,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper($helper): void
     {
         $this->helper = $helper;
     }
@@ -277,11 +269,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Returns an array of the IDs of the related objects.
      *
-     * @return integer[]
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): array
     {
         return array($this->leftID->getValue(), $this->rightID->getValue());
     }
@@ -290,13 +280,13 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Used to set the IDs of the related objects.  Pass a two-item array of IDs, the first
      * one being the left object ID, the second being the right.
      *
-     * @param string[] $IDs
+     * @param array $IDs
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($IDs)
+    public function setValue($IDs): void
     {
         try {
             $this->leftID->setValue($IDs[0]);
@@ -309,11 +299,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval($this->getTableName());
     }

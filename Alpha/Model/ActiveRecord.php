@@ -82,7 +82,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected $lastQuery;
+    protected $lastQuery = '';
 
     /**
      * The version number of the object, used for locking mechanism.
@@ -295,8 +295,6 @@ abstract class ActiveRecord
      *
      * @param int $ID The object ID of the record to load.
      *
-     * @return array An array containing objects of this type of record object, order by version.
-     *
      * @since 2.0
      *
      * @throws \Alpha\Exception\RecordFoundException
@@ -365,8 +363,6 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
@@ -406,8 +402,6 @@ abstract class ActiveRecord
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
@@ -446,8 +440,6 @@ abstract class ActiveRecord
      * @param string $orderBy         The name of the field to sort the objects by.
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
-     *
-     * @return array An array containing objects of this type of business object.
      *
      * @since 1.0
      *
@@ -493,8 +485,6 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
@@ -532,8 +522,6 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      *
-     * @return array An array of field values.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
@@ -561,8 +549,6 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
      * @throws \Alpha\Exception\ValidationException
-     *
-     * @return void
      */
     public function save(): void
     {
@@ -612,7 +598,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveRelations()
+    public function saveRelations(): void
     {
         $reflection = new ReflectionClass(get_class($this));
         $properties = $reflection->getProperties();
@@ -690,8 +676,6 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
-     *
-     * @return void
      */
     public function saveAttribute($attribute, $value): void
     {
@@ -733,8 +717,6 @@ abstract class ActiveRecord
      * @since 1.2
      *
      * @throws \Alpha\Exception\FailedSaveException
-     *
-     * @return void
      */
     public function saveHistory(): void
     {
@@ -762,7 +744,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\ValidationException
      */
-    protected function validate()
+    protected function validate(): void
     {
         self::$logger->debug('>>validate()');
 
@@ -804,8 +786,6 @@ abstract class ActiveRecord
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedDeleteException
-     *
-     * @return void
      */
     public function delete(): void
     {
@@ -893,18 +873,16 @@ abstract class ActiveRecord
     }
 
     /**
-     * Delete all object instances from the database by the specified attribute matching the value provided.
+     * Delete all object instances from the database by the specified attribute matching the value provided. Returns the count of deleted records.
      *
      * @param string $attribute The name of the field to delete the objects by.
      * @param mixed  $value     The value of the field to delete the objects by.
-     *
-     * @return int The number of rows deleted.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedDeleteException
      */
-    public function deleteAllByAttribute($attribute, $value)
+    public function deleteAllByAttribute($attribute, $value): int
     {
         self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -941,8 +919,6 @@ abstract class ActiveRecord
 
     /**
      * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
-     *
-     * @return int
      *
      * @since 1.0
      *
@@ -1127,7 +1103,7 @@ abstract class ActiveRecord
      *
      * @since 1.2.1
      */
-    public function populateFromArray($hashArray)
+    public function populateFromArray($hashArray): void
     {
         self::$logger->debug('>>populateFromArray(hashArray=['.print_r($hashArray, true).'])');
 
@@ -1264,32 +1240,28 @@ abstract class ActiveRecord
     }
 
     /**
-     * Gets the ID for the object in zero-padded format (same as getID()).
-     *
-     * @return string 11 digit zero-padded ID value.
+     * Gets the ID for the object in 11 digit zero-padded format (same as getID()).
      *
      * @since 1.0
      */
-    final public function getID()
+    final public function getID(): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
         self::$logger->debug('>>getID()');
-        $oid = str_pad($this->ID, 11, '0', STR_PAD_LEFT);
-        self::$logger->debug('<<getID ['.$oid.']');
+        $id = str_pad($this->ID, 11, '0', STR_PAD_LEFT);
+        self::$logger->debug('<<getID ['.$id.']');
 
-        return $oid;
+        return $id;
     }
 
     /**
      * Method for getting version number of the object.
      *
-     * @return \Alpha\Model\Type\Integer The object version number.
-     *
      * @since 1.0
      */
-    public function getVersionNumber()
+    public function getVersionNumber(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getVersionNumber()');
         self::$logger->debug('<<getVersionNumber ['.$this->version_num.']');
@@ -1333,14 +1305,12 @@ abstract class ActiveRecord
      * @param string $prop           The name of the object property to get.
      * @param bool   $noChildMethods Set to true if you do not want to use getters in the child object, defaults to false.
      *
-     * @return mixed The property value.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\AlphaException
      */
-    public function get($prop, $noChildMethods = false)
+    public function get($prop, $noChildMethods = false): mixed
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1407,7 +1377,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function set($prop, $value, $noChildMethods = false)
+    public function set($prop, $value, $noChildMethods = false): void
     {
         self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
@@ -1456,13 +1426,11 @@ abstract class ActiveRecord
      *
      * @param string $prop The name of the property we are getting.
      *
-     * @return \Alpha\Model\Type\Type|bool The complex type object found.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getPropObject($prop)
+    public function getPropObject($prop): mixed
     {
         self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
 
@@ -1637,15 +1605,13 @@ abstract class ActiveRecord
     }
 
     /**
-     * Getter for the TABLE_NAME, which should be set by a child of this class.
-     *
-     * @return string The table name in the database.
+     * Getter for the TABLE_NAME, the name of the table in the database for this class, which should be set by a child of this class.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         self::$logger->debug('>>getTableName()');
 
@@ -1665,11 +1631,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the ID of the person who created this record.
      *
-     * @return \Alpha\Model\Type\Integer The ID of the creator.
-     *
      * @since 1.0
      */
-    public function getCreatorId()
+    public function getCreatorId(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getCreatorId()');
         self::$logger->debug('<<getCreatorId ['.$this->created_by.']');
@@ -1680,11 +1644,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the ID of the person who updated this record.
      *
-     * @return \Alpha\Model\Type\Integer The ID of the updator.
-     *
      * @since 1.0
      */
-    public function getUpdatorId()
+    public function getUpdatorId(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getUpdatorId()');
         self::$logger->debug('<<getUpdatorId ['.$this->updated_by.']');
@@ -1695,11 +1657,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the Record was created.
      *
-     * @return \Alpha\Model\Type\Timestamp
-     *
      * @since 1.0
      */
-    public function getCreateTS()
+    public function getCreateTS(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getCreateTS()');
         self::$logger->debug('<<getCreateTS ['.$this->created_ts.']');
@@ -1710,11 +1670,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the Record was last updated.
      *
-     * @return \Alpha\Model\Type\Timestamp
-     *
      * @since 1.0
      */
-    public function getUpdateTS()
+    public function getUpdateTS(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getUpdateTS()');
         self::$logger->debug('<<getUpdateTS ['.$this->updated_ts.']');
@@ -1729,7 +1687,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markTransient($attributeName)
+    public function markTransient($attributeName): void
     {
         self::$logger->debug('>>markTransient(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markTransient');
@@ -1744,7 +1702,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markPersistent($attributeName)
+    public function markPersistent($attributeName): void
     {
         self::$logger->debug('>>markPersistent(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markPersistent');
@@ -1760,7 +1718,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected function markUnique($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    protected function markUnique($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -1783,11 +1741,9 @@ abstract class ActiveRecord
     /**
      * Returns the array of names of unique attributes on this record.
      *
-     * @return array
-     *
      * @since 1.1
      */
-    public function getUniqueAttributes()
+    public function getUniqueAttributes(): array
     {
         self::$logger->debug('>>getUniqueAttributes()');
         self::$logger->debug('<<getUniqueAttributes: ['.print_r($this->uniqueAttributes, true).']');
@@ -1895,11 +1851,9 @@ abstract class ActiveRecord
     /**
      * Gets the data labels array.
      *
-     * @return array An array of attribute labels.
-     *
      * @since 1.0
      */
-    public function getDataLabels()
+    public function getDataLabels(): array
     {
         self::$logger->debug('>>getDataLabels()');
         self::$logger->debug('<<getDataLabels() ['.var_export($this->dataLabels, true).'])');
@@ -1916,7 +1870,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setDataLabels($labels)
+    public function setDataLabels($labels): void
     {
         self::$logger->debug('>>setDataLabels(labels=['.print_r($labels, true).'])');
 
@@ -1934,13 +1888,11 @@ abstract class ActiveRecord
      *
      * @param $att The attribute name to get the label for.
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getDataLabel($att)
+    public function getDataLabel($att): string
     {
         self::$logger->debug('>>getDataLabel(att=['.$att.'])');
 
@@ -1957,11 +1909,9 @@ abstract class ActiveRecord
     /**
      * Loops over the core and custom Record directories and builds an array of all of the Record class names in the system.
      *
-     * @return array An array of business object class names.
-     *
      * @since 1.0
      */
-    public static function getRecordClassNames()
+    public static function getRecordClassNames(): array
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2015,11 +1965,9 @@ abstract class ActiveRecord
     /**
      * Get the array of default attribute names.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getDefaultAttributes()
+    public function getDefaultAttributes(): array
     {
         self::$logger->debug('>>getDefaultAttributes()');
         self::$logger->debug('<<getDefaultAttributes ['.var_export($this->defaultAttributes, true).']');
@@ -2030,11 +1978,9 @@ abstract class ActiveRecord
     /**
      * Get the array of transient attribute names.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getTransientAttributes()
+    public function getTransientAttributes(): array
     {
         self::$logger->debug('>>getTransientAttributes()');
         self::$logger->debug('<<getTransientAttributes ['.var_export($this->transientAttributes, true).']');
@@ -2045,11 +1991,9 @@ abstract class ActiveRecord
     /**
      * Get the array of persistent attribute names, i.e. those that are saved in the database.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getPersistentAttributes()
+    public function getPersistentAttributes(): array
     {
         self::$logger->debug('>>getPersistentAttributes()');
 
@@ -2080,7 +2024,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function setID($ID)
+    public function setID($ID): void
     {
         self::$logger->debug('>>setID(ID=['.$ID.'])');
         self::$logger->debug('<<setID');
@@ -2090,11 +2034,9 @@ abstract class ActiveRecord
     /**
      * Inspector to see if the business object is transient (not presently stored in the database).
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function isTransient()
+    public function isTransient(): bool
     {
         self::$logger->debug('>>isTransient()');
 
@@ -2112,11 +2054,9 @@ abstract class ActiveRecord
     /**
      * Get the last database query run on this object.
      *
-     * @return string An SQL query string.
-     *
      * @since 1.0
      */
-    public function getLastQuery()
+    public function getLastQuery(): string
     {
         self::$logger->debug('>>getLastQuery()');
         self::$logger->debug('<<getLastQuery ['.$this->lastQuery.']');
@@ -2129,7 +2069,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    private function clear()
+    private function clear(): void
     {
         self::$logger->debug('>>clear()');
 
@@ -2170,8 +2110,6 @@ abstract class ActiveRecord
      * Checks that a record exists for the Record in the database.
      *
      * @param int $ID The Object ID of the object we want to see whether it exists or not.
-     *
-     * @return bool
      *
      * @since 1.0
      *
@@ -2332,11 +2270,9 @@ abstract class ActiveRecord
     /**
      * Static method that tries to determine if the system database has been installed or not.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isInstalled()
+    public static function isInstalled(): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2363,11 +2299,9 @@ abstract class ActiveRecord
     /**
      * Returns true if the Record has a Relation property called tags, false otherwise.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function isTagged()
+    public function isTagged(): bool
     {
         if (property_exists($this, 'taggedAttributes') && property_exists($this, 'tags') && $this->{'tags'} instanceof \Alpha\Model\Type\Relation) {
             return true;
@@ -2379,11 +2313,9 @@ abstract class ActiveRecord
     /**
      * Returns the contents of the taggedAttributes array, or an empty array if that does not exist.
      *
-     * @return array
-     *
      * @since 1.2.3
      */
-    public function getTaggedAttributes()
+    public function getTaggedAttributes(): array
     {
         if ($this->isTagged()) {
             return $this->{'taggedAttributes'};
@@ -2399,7 +2331,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    private function setVersion($versionNumber)
+    private function setVersion($versionNumber): void
     {
         $this->version_num->setValue($versionNumber);
     }
@@ -2412,11 +2344,9 @@ abstract class ActiveRecord
      * @param string                    $targetClassName     The fully-qualified name of the target Record class.
      * @param \Alpha\Model\ActiveRecord $originalRecord      The original business object.
      *
-     * @return \Alpha\Model\ActiveRecord The new business object resulting from the cast.
-     *
      * @since 1.0
      */
-    public function cast($targetClassName, $originalRecord)
+    public function cast($targetClassName, $originalRecord): \Alpha\Model\ActiveRecord
     {
         $record = new $targetClassName();
         $record->setID($originalRecord->getID());
@@ -2454,11 +2384,9 @@ abstract class ActiveRecord
     /**
      * Returns the simple class name, stripped of the namespace.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getFriendlyClassName()
+    public function getFriendlyClassName(): string
     {
         $reflectClass = new ReflectionClass($this);
 
@@ -2470,11 +2398,9 @@ abstract class ActiveRecord
      *
      * @param string $attribute The attribute name.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function hasAttribute($attribute)
+    public function hasAttribute($attribute): bool
     {
         return property_exists($this, $attribute);
     }
@@ -2484,7 +2410,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function addToCache()
+    public function addToCache(): void
     {
         self::$logger->debug('>>addToCache()');
         $config = ConfigProvider::getInstance();
@@ -2505,7 +2431,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function removeFromCache()
+    public function removeFromCache(): void
     {
         self::$logger->debug('>>removeFromCache()');
         $config = ConfigProvider::getInstance();
@@ -2522,13 +2448,11 @@ abstract class ActiveRecord
     }
 
     /**
-     * Attempts to load the business object from the configured cache instance.
+     * Attempts to load the business object from the configured cache instance, returns true on a cache hit.
      *
      * @since 1.1
-     *
-     * @return bool
      */
-    public function loadFromCache()
+    public function loadFromCache(): bool
     {
         self::$logger->debug('>>loadFromCache()');
         $config = ConfigProvider::getInstance();
@@ -2584,7 +2508,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function setLastQuery($query)
+    public function setLastQuery($query): void
     {
         self::$logger->sql($query);
         $this->lastQuery = $query;
@@ -2596,7 +2520,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function __wakeup()
+    public function __wakeup(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger(get_class($this));
@@ -2612,7 +2536,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setMaintainHistory($maintainHistory)
+    public function setMaintainHistory($maintainHistory): void
     {
         if (!is_bool($maintainHistory)) {
             throw new IllegalArguementException('Non-boolean value ['.$maintainHistory.'] passed to setMaintainHistory method!');
@@ -2624,11 +2548,9 @@ abstract class ActiveRecord
     /**
      * Gets the value of the  maintainHistory attribute.
      *
-     * @return bool
-     *
      * @since 1.2
      */
-    public function getMaintainHistory()
+    public function getMaintainHistory(): bool
     {
         return $this->maintainHistory;
     }
@@ -2636,11 +2558,9 @@ abstract class ActiveRecord
     /**
      * Return a hash array of the object containing attribute names and simplfied values.
      *
-     * @return array
-     *
      * @since  1.2.4
      */
-    public function toArray()
+    public function toArray(): array
     {
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this));
