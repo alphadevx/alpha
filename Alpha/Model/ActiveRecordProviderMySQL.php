@@ -177,7 +177,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::query()
      */
-    public function query($sqlQuery)
+    public function query($sqlQuery): array
     {
         $this->record->setLastQuery($sqlQuery);
 
@@ -2262,9 +2262,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::setRecord()
      */
-    public function setRecord($Record)
+    public function setRecord($record): void
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**
@@ -2432,7 +2432,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkDatabaseExists()
      */
-    public static function checkDatabaseExists()
+    public static function checkDatabaseExists(): bool
     {
         $config = ConfigProvider::getInstance();
 
@@ -2452,7 +2452,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createDatabase()
      */
-    public static function createDatabase()
+    public static function createDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2466,7 +2466,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropDatabase()
      */
-    public static function dropDatabase()
+    public static function dropDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2480,7 +2480,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::backupDatabase()
      */
-    public static function backupDatabase($targetFile)
+    public static function backupDatabase($targetFile): void
     {
         $config = ConfigProvider::getInstance();
 

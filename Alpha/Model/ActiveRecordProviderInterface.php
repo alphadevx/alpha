@@ -477,12 +477,11 @@ interface ActiveRecordProviderInterface
     /**
      * Provide the Record that we are going to map the data to from this provider.
      *
-     * @param \Alpha\Model\ActiveRecord $Record
+     * @param \Alpha\Model\ActiveRecord $record
      *
      * @since 1.1
-     * @return void
      */
-    public function setRecord($Record);
+    public function setRecord($record): void;
 
     /**
      * Returns a 2d array, where each element in the array is another array
@@ -492,20 +491,16 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\CustomQueryException
      *
-     * @return array
-     *
      * @since 1.1
      */
-    public function query($sqlQuery);
+    public function query($sqlQuery): array;
 
     /**
      * Check to see if the configured database exists.
      *
-     * @return bool
-     *
      * @since 2.0
      */
-    public static function checkDatabaseExists();
+    public static function checkDatabaseExists(): bool;
 
     /**
      * Creates the configured database.
@@ -513,9 +508,8 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
-     * @return void
      */
-    public static function createDatabase();
+    public static function createDatabase(): void;
 
     /**
      * Drops the configured database.
@@ -523,7 +517,6 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 2.0
-     * @return void
      */
-    public static function dropDatabase();
+    public static function dropDatabase(): void;
 }

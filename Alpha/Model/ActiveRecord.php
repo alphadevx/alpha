@@ -228,13 +228,11 @@ abstract class ActiveRecord
      *
      * @param string $sqlQuery
      *
-     * @return array
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\CustomQueryException
      */
-    public function query($sqlQuery)
+    public function query($sqlQuery): array
     {
         self::$logger->debug('>>query(sqlQuery=['.$sqlQuery.'])');
 
@@ -2670,11 +2668,9 @@ abstract class ActiveRecord
     /**
      * Check to see if the configured database exists.
      *
-     * @return bool
-     *
      * @since 2.0
      */
-    public static function checkDatabaseExists()
+    public static function checkDatabaseExists(): bool
     {
         $config = ConfigProvider::getInstance();
 
@@ -2691,7 +2687,7 @@ abstract class ActiveRecord
      *
      * @since 2.0
      */
-    public static function createDatabase()
+    public static function createDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2707,7 +2703,7 @@ abstract class ActiveRecord
      *
      * @since 2.0
      */
-    public static function dropDatabase()
+    public static function dropDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2725,7 +2721,7 @@ abstract class ActiveRecord
      *
      * @since 3.0
      */
-    public static function backupDatabase($targetFile)
+    public static function backupDatabase($targetFile): void
     {
         $config = ConfigProvider::getInstance();
 
