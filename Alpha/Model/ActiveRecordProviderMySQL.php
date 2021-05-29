@@ -2276,11 +2276,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * @param array Optional array of Record attributes.
      * @param array Optional array of Record values.
      *
-     * @return \mysqli_stmt
-     *
      * @since 1.1
      */
-    private function bindParams($stmt, $attributes = array(), $values = array())
+    private function bindParams($stmt, $attributes = array(), $values = array()): \mysqli_stmt
     {
         self::$logger->debug('>>bindParams(stmt=['.var_export($stmt, true).'])');
 
@@ -2372,11 +2370,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @param \mysqli_stmt $stmt
      *
-     * @return array A 2D array containing the query result.
-     *
      * @since 1.1
      */
-    private function bindResult($stmt)
+    private function bindResult($stmt): array
     {
         $result = array();
 
@@ -2410,11 +2406,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     /**
      * Parses a MySQL error for the value that violated a unique constraint.
      *
-     * @param string $error The MySQL error string.
-     *
      * @since 1.1
      */
-    private function findOffendingValue($error)
+    private function findOffendingValue($error): string
     {
         self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
 
