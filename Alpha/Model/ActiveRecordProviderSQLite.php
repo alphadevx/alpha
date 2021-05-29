@@ -2093,7 +2093,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::reload()
      */
-    public function reload()
+    public function reload(): void
     {
         self::$logger->debug('>>reload()');
 
@@ -2111,7 +2111,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordExists()
      */
-    public function checkRecordExists($ID)
+    public function checkRecordExists($ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
@@ -2149,7 +2149,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::isTableOverloaded()
      */
-    public function isTableOverloaded()
+    public function isTableOverloaded(): bool
     {
         self::$logger->debug('>>isTableOverloaded()');
 
@@ -2213,7 +2213,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::begin()
      */
-    public static function begin()
+    public static function begin(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -2232,7 +2232,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::commit()
      */
-    public static function commit()
+    public static function commit(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -2251,7 +2251,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rollback()
      */
-    public static function rollback()
+    public static function rollback(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');

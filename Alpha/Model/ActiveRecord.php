@@ -2156,7 +2156,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function reload()
+    public function reload(): void
     {
         self::$logger->debug('>>reload()');
 
@@ -2179,7 +2179,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($ID)
+    public function checkRecordExists($ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
@@ -2207,13 +2207,11 @@ abstract class ActiveRecord
      * name matches the classname name of another record, i.e. the table is used to store
      * multiple types of records.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\BadTableNameException
      */
-    public function isTableOverloaded()
+    public function isTableOverloaded(): bool
     {
         self::$logger->debug('>>isTableOverloaded()');
 
@@ -2237,7 +2235,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin($record = null)
+    public static function begin($record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2272,7 +2270,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit($record = null)
+    public static function commit($record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2307,7 +2305,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback($record = null)
+    public static function rollback($record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');

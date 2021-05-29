@@ -422,35 +422,30 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public function reload();
+    public function reload(): void;
 
     /**
      * Checks that a record exists for the Record in the database.
      *
      * @param int $ID The Object ID of the object we want to see whether it exists or not.
      *
-     * @return bool
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($ID);
+    public function checkRecordExists($ID): bool;
 
     /**
      * Checks to see if the table name matches the classname, and if not if the table
      * name matches the classname name of another record, i.e. the table is used to store
      * multiple types of records.
      *
-     * @return bool
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\BadTableNameException
      */
-    public function isTableOverloaded();
+    public function isTableOverloaded(): bool;
 
     /**
      * Starts a new database transaction.
@@ -458,9 +453,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public static function begin();
+    public static function begin(): void;
 
     /**
      * Commits the current database transaction.
@@ -468,9 +462,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\FailedSaveException
-     * @return void
      */
-    public static function commit();
+    public static function commit(): void;
 
     /**
      * Aborts the current database transaction.
@@ -478,9 +471,8 @@ interface ActiveRecordProviderInterface
      * @since 1.1
      *
      * @throws \Alpha\Exception\AlphaException
-     * @return void
      */
-    public static function rollback();
+    public static function rollback(): void;
 
     /**
      * Provide the Record that we are going to map the data to from this provider.
