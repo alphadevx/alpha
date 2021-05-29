@@ -20,7 +20,7 @@ use Alpha\Model\Type\SmallText;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -89,11 +89,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -113,11 +111,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -144,11 +140,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     /**
      * Renders the HTML form for generating secure URLs.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    private function renderForm()
+    private function renderForm(): string
     {
         $config = ConfigProvider::getInstance();
 

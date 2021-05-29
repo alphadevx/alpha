@@ -18,7 +18,7 @@ use Alpha\Model\Type\Boolean;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -87,14 +87,12 @@ class ImageController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\ResourceNotAllowedException
      */
-    public function doGet($request)
+    public function doGet($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
 
@@ -107,7 +105,7 @@ class ImageController extends Controller implements ControllerInterface
             $imgWidth = $params['width'];
             $imgHeight = $params['height'];
             $imgType = $params['type'];
-            $imgQuality = (double)$params['quality'];
+            $imgQuality = (float)$params['quality'];
             $imgScale = new Boolean($params['scale']);
             $imgSecure = new Boolean($params['secure']);
         } catch (\Exception $e) {

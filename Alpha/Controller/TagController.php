@@ -30,7 +30,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -102,14 +102,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FileNotFoundException
      *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -236,14 +234,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -360,14 +356,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
-    public function doDELETE($request)
+    public function doDELETE($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
@@ -390,7 +384,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 1.0
      */
-    private function regenerateTagsOnRecords($records)
+    private function regenerateTagsOnRecords($records): void
     {
         foreach ($records as $record) {
             foreach ($record->get('taggedAttributes') as $tagged) {

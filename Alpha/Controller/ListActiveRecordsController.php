@@ -18,7 +18,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -93,11 +93,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
      *
      * @param alpha\Util\Http\Request $request
      *
-     * @return alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -117,11 +115,9 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
      *
      * @param alpha\Util\Http\Request $request
      *
-     * @return alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -221,10 +217,8 @@ class ListActiveRecordsController extends Controller implements ControllerInterf
      * Private method to generate the main body HTML for this page.
      *
      * @since 1.0
-     *
-     * @return string
      */
-    private function displayBodyContent()
+    private function displayBodyContent(): string
     {
         $classNames = ActiveRecord::getRecordClassNames();
 

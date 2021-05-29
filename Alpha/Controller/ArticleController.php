@@ -33,7 +33,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -107,15 +107,13 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Handle GET requests.
      *
-     * @param \Alpha\Util\Http\Request
-     *
-     * @return \Alpha\Util\Http\Response
+     * @param \Alpha\Util\Http\Request $request
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -131,7 +129,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
 
                 if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                    $record = new $params['ActiveRecordType'];
+                    $record = new $params['ActiveRecordType']();
                 } else {
                     $record = new Article();
                 }
@@ -167,7 +165,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         // view edit article requests
         if ((isset($params['view']) && $params['view'] == 'edit') && (isset($params['title']) || isset($params['ActiveRecordID']))) {
             if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                $record = new $params['ActiveRecordType'];
+                $record = new $params['ActiveRecordType']();
             } else {
                 $record = new Article();
             }
@@ -216,7 +214,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         if (isset($params['title']) || isset($params['ActiveRecordID'])) {
             $KDP = new KPI('viewarticle');
             if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                $record = new $params['ActiveRecordType'];
+                $record = new $params['ActiveRecordType']();
             } else {
                 $record = new Article();
             }
@@ -331,13 +329,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method to handle PUT requests.
      *
-     * @param \Alpha\Util\Http\Request
-     *
-     * @return \Alpha\Util\Http\Response
+     * @param \Alpha\Util\Http\Request $request
      *
      * @since 1.0
      */
-    public function doPUT($request)
+    public function doPUT($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
 
@@ -353,11 +349,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $request->addParams(array('ActiveRecordID' => $params['ActiveRecordID']));
         }
-        
+
         if (!isset($params['ActiveRecordType'])) {
             $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
         }
-        
+
         $response = parent::doPUT($request);
 
         if ($this->getNextJob() != '') {
@@ -381,11 +377,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @param \Alpha\Util\Http\Request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 2.0
      */
-    public function doDELETE($request)
+    public function doDELETE($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
@@ -399,11 +393,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Renders custom HTML header content.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function during_displayPageHead_callback()
+    public function during_displayPageHead_callback(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -439,11 +431,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Callback that inserts the CMS level header.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function insert_CMSDisplayStandardHeader_callback()
+    public function insert_CMSDisplayStandardHeader_callback(): string
     {
         if ($this->request->getParam('token') != null) {
             return '';
@@ -473,11 +463,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      * Callback used to render footer content, including comments, votes and print/PDF buttons when
      * enabled to do so.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback()
+    public function before_displayPageFoot_callback(): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -550,11 +538,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method for displaying the user comments for the article.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    private function renderComments()
+    private function renderComments(): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -592,11 +578,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method for displaying the tags for the article.
      *
-     * @return string
-     *
      * @since 3.0
      */
-    private function renderTags()
+    private function renderTags(): string
     {
         $config = ConfigProvider::getInstance();
         $relation = $this->record->getPropObject('tags');
@@ -622,11 +606,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method for displaying the votes for the article.
      *
-     * @return string
-     *
      * @since 3.0
      */
-    private function renderVotes()
+    private function renderVotes(): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -670,11 +652,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     /**
      * Method for displaying the standard CMS footer for the article.
      *
-     * @return string
-     *
      * @since 3.0
      */
-    private function renderStandardFooter()
+    private function renderStandardFooter(): string
     {
         $html = '<p>Article URL: <a href="'.$this->record->get('URL').'">'.$this->record->get('URL').'</a><br>';
         $html .= 'Title: '.$this->record->get('title').'<br>';

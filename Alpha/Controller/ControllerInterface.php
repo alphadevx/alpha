@@ -10,7 +10,7 @@ namespace Alpha\Controller;
  * @author John Collins <dev@alphaframework.org>
  *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,78 +52,70 @@ interface ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doHEAD($request);
+    public function doHEAD($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles GET HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doGET($request);
+    public function doGET($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles POST HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPOST($request);
+    public function doPOST($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles PUT HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPUT($request);
+    public function doPUT($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles PATCH HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doPATCH($request);
+    public function doPATCH($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles DELETE HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doDELETE($request);
+    public function doDELETE($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles OPTIONS HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 1.0
      */
-    public function doOPTIONS($request);
+    public function doOPTIONS($request): \Alpha\Util\Http\Response;
 
     /**
      * Handles TRACE HTTP requests.
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @since Alpha\Util\Http\Response
      * @since 2.0.2
      */
-    public function doTRACE($request);
+    public function doTRACE($request): \Alpha\Util\Http\Response;
 }

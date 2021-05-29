@@ -25,7 +25,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -121,13 +121,11 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -157,13 +155,11 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -295,11 +291,9 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\ValidationException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    protected function doLoginAndRedirect($password)
+    protected function doLoginAndRedirect($password): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doLoginAndRedirect(password=['.$password.'])');
 
@@ -336,11 +330,9 @@ class LoginController extends Controller implements ControllerInterface
     /**
      * Displays the application version number on the login screen.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback()
+    public function before_displayPageFoot_callback(): string
     {
         $config = ConfigProvider::getInstance();
 

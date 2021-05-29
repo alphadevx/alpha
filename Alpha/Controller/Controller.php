@@ -30,7 +30,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -297,11 +297,9 @@ abstract class Controller
     /**
      * Get the record for this controller (if any).
      *
-     * @return ActiveRecord
-     *
      * @since 1.0
      */
-    public function getRecord()
+    public function getRecord(): \Alpha\Model\ActiveRecord|null
     {
         self::$logger->debug('>>getRecord()');
         self::$logger->debug('<<getRecord ['.var_export($this->record, true).']');
@@ -316,7 +314,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setRecord($record)
+    public function setRecord($record): void
     {
         self::$logger->debug('>>setRecord(record=['.var_export($record, true).'])');
         $this->record = $record;
@@ -342,11 +340,9 @@ abstract class Controller
     /**
      * Get the name of the unit of work job.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getName()
+    public function getName(): string
     {
         self::$logger->debug('>>getName()');
         self::$logger->debug('<<getName ['.$this->name.']');
@@ -361,7 +357,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setName($name)
+    public function setName($name): void
     {
         self::$logger->debug('>>setName(name=['.$name.'])');
         $this->name = $name;
@@ -371,11 +367,9 @@ abstract class Controller
     /**
      * Get the name of the rights group that has access to this controller.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getVisibility()
+    public function getVisibility(): string
     {
         self::$logger->debug('>>getVisibility()');
         self::$logger->debug('<<getVisibility ['.$this->visibility.']');
@@ -390,7 +384,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setVisibility($visibility)
+    public function setVisibility($visibility): void
     {
         self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
         $this->visibility = $visibility;
@@ -398,13 +392,11 @@ abstract class Controller
     }
 
     /**
-     * Gets the name of the first job in this unit of work.
-     *
-     * @return string The fully-qualified controller class name, or an absolute URL.
+     * Gets the name of the first job in this unit of work. Returns the fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
-    public function getFirstJob()
+    public function getFirstJob(): string|null
     {
         self::$logger->debug('>>getFirstJob()');
         self::$logger->debug('<<getFirstJob ['.$this->firstJob.']');
@@ -413,13 +405,11 @@ abstract class Controller
     }
 
     /**
-     * Gets the name of the next job in this unit of work.
-     *
-     * @return string The fully-qualified controller class name, or an absolute URL.
+     * Gets the name of the next job in this unit of work. Returns the fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
-    public function getNextJob()
+    public function getNextJob(): string|null
     {
         self::$logger->debug('>>getNextJob()');
         self::$logger->debug('<<getNextJob ['.$this->nextJob.']');
@@ -428,13 +418,11 @@ abstract class Controller
     }
 
     /**
-     * Gets the name of the previous job in this unit of work.
-     *
-     * @return string The fully-qualified controller class name, or an absolute URL.
+     * Gets the name of the previous job in this unit of work. Returns the fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
-    public function getPreviousJob()
+    public function getPreviousJob(): string|null
     {
         self::$logger->debug('>>getPreviousJob()');
         self::$logger->debug('<<getPreviousJob ['.$this->previousJob.']');
@@ -443,13 +431,11 @@ abstract class Controller
     }
 
     /**
-     * Gets the name of the last job in this unit of work.
-     *
-     * @return string The fully-qualified controller class name, or an absolute URL.
+     * Gets the name of the last job in this unit of work. Returns the fully-qualified controller class name, or an absolute URL.
      *
      * @since 1.0
      */
-    public function getLastJob()
+    public function getLastJob(): string|null
     {
         self::$logger->debug('>>getLastJob()');
         self::$logger->debug('<<getLastJob ['.$this->lastJob.']');
@@ -467,7 +453,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitOfWork($jobs)
+    public function setUnitOfWork($jobs): void
     {
         self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
 
@@ -546,11 +532,9 @@ abstract class Controller
     /**
      * Getter for the unit start time.
      *
-     * @return Timestamp
-     *
      * @since 1.0
      */
-    public function getStartTime()
+    public function getStartTime(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getStartTime()');
         self::$logger->debug('<<getStartTime ['.$this->unitStartTime.']');
@@ -570,7 +554,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitStartTime($year, $month, $day, $hour, $minute, $second)
+    public function setUnitStartTime($year, $month, $day, $hour, $minute, $second): void
     {
         self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
             second=['.$second.'])');
@@ -588,11 +572,9 @@ abstract class Controller
     /**
      * Getter for the unit end time.
      *
-     * @return \Alpha\Model\Type\Timestamp
-     *
      * @since 1.0
      */
-    public function getEndTime()
+    public function getEndTime(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getEndTime()');
         self::$logger->debug('<<getEndTime ['.$this->unitEndTime.']');
@@ -612,7 +594,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitEndTime($year, $month, $day, $hour, $minute, $second)
+    public function setUnitEndTime($year, $month, $day, $hour, $minute, $second): void
     {
         self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
          second=['.$second.'])');
@@ -630,11 +612,9 @@ abstract class Controller
     /**
      * Getter for the unit of work MAX duration.
      *
-     * @return Integer
-     *
      * @since 1.0
      */
-    public function getMAXDuration()
+    public function getMAXDuration(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getMAXDuration()');
         self::$logger->debug('<<getMAXDuration ['.$this->unitMAXDuration.']');
@@ -649,7 +629,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitMAXDuration($duration)
+    public function setUnitMAXDuration($duration): void
     {
         self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
         $this->unitMAXDuration->setValue($duration);
@@ -659,11 +639,9 @@ abstract class Controller
     /**
      * Calculates and returns the unit of work current duration in seconds.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getUnitDuration()
+    public function getUnitDuration(): int
     {
         self::$logger->debug('>>getUnitDuration()');
 
@@ -674,7 +652,7 @@ abstract class Controller
             intval($this->unitStartTime->getMonth()),
             intval($this->unitStartTime->getDay()),
             intval($this->unitStartTime->getYear())
-            );
+        );
 
         $intEndTime = mktime(
             intval($this->unitEndTime->getHour()),
@@ -683,7 +661,7 @@ abstract class Controller
             intval($this->unitEndTime->getMonth()),
             intval($this->unitEndTime->getDay()),
             intval($this->unitEndTime->getYear())
-            );
+        );
 
         self::$logger->debug('<<getUnitDuration ['.($intEndTime-$intStartTime).']');
 
@@ -697,7 +675,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function markDirty($object)
+    public function markDirty($object): void
     {
         self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
 
@@ -723,11 +701,9 @@ abstract class Controller
     /**
      * Getter for the dirty objects array.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getDirtyObjects()
+    public function getDirtyObjects(): array
     {
         self::$logger->debug('>>getDirtyObjects()');
         self::$logger->debug('<<getDirtyObjects ['.var_export($this->dirtyObjects, true).']');
@@ -742,7 +718,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function markNew($object)
+    public function markNew($object): void
     {
         self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
 
@@ -768,11 +744,9 @@ abstract class Controller
     /**
      * Getter for the new objects array.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getNewObjects()
+    public function getNewObjects(): array
     {
         self::$logger->debug('>>getNewObjects()');
         self::$logger->debug('<<getNewObjects ['.var_export($this->newObjects, true).']');
@@ -787,7 +761,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function commit()
+    public function commit(): void
     {
         self::$logger->debug('>>commit()');
 
@@ -860,7 +834,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function abort()
+    public function abort(): void
     {
         self::$logger->debug('>>abort()');
 
@@ -889,7 +863,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function clearUnitOfWorkAttributes()
+    public function clearUnitOfWorkAttributes(): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -906,11 +880,9 @@ abstract class Controller
     /**
      * Getter for the page title.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         self::$logger->debug('>>getTitle()');
         self::$logger->debug('<<getTitle ['.$this->title.']');
@@ -925,7 +897,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         self::$logger->debug('>>setTitle(title=['.$title.'])');
         self::$logger->debug('<<setTitle');
@@ -935,11 +907,9 @@ abstract class Controller
     /**
      * Getter for the page description.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDescription()
+    public function getDescription(): string|null
     {
         self::$logger->debug('>>getDescription()');
         self::$logger->debug('<<getDescription ['.$this->description.']');
@@ -954,7 +924,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setDescription($description)
+    public function setDescription($description): void
     {
         self::$logger->debug('>>setDescription(description=['.$description.'])');
         self::$logger->debug('<<setDescription');
@@ -964,11 +934,9 @@ abstract class Controller
     /**
      * Getter for the page keywords.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getKeywords()
+    public function getKeywords(): string|null
     {
         self::$logger->debug('>>getKeywords()');
         self::$logger->debug('<<getKeywords ['.$this->keywords.']');
@@ -983,7 +951,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setKeywords($keywords)
+    public function setKeywords($keywords): void
     {
         self::$logger->debug('>>setKeywords(keywords=['.$keywords.'])');
         self::$logger->debug('<<setKeywords');
@@ -993,11 +961,9 @@ abstract class Controller
     /**
      * Method to return an access error for trespassing users.  HTTP response header code will be 403.
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function accessError()
+    public function accessError(): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>accessError()');
 
@@ -1033,11 +999,9 @@ abstract class Controller
      * visibility set for this controller.  Will return false if the user has
      * not got the correct rights.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function checkRights()
+    public function checkRights(): bool
     {
         self::$logger->debug('>>checkRights()');
 
@@ -1118,11 +1082,9 @@ abstract class Controller
      * fields which aim to ensure that a post to the controller is being sent from
      * the same server that is hosting it.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function checkSecurityFields()
+    public function checkSecurityFields(): bool
     {
         self::$logger->debug('>>checkSecurityFields()');
 
@@ -1171,13 +1133,11 @@ abstract class Controller
     }
 
     /**
-     * Generates the two security fields to prevent remote form processing.
-     *
-     * @return string[] An array containing the two fields
+     * Generates the two security fields to prevent remote form processing, returned as an array.
      *
      * @since 1.0
      */
-    public static function generateSecurityFields()
+    public static function generateSecurityFields(): array
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1204,11 +1164,9 @@ abstract class Controller
      *
      * @param string $ActiveRecordType The classname of the active record
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function getCustomControllerName($ActiveRecordType)
+    public static function getCustomControllerName($ActiveRecordType): string|null
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1223,7 +1181,7 @@ abstract class Controller
         } catch (Exception $e) {
             self::$logger->warn('Bad active record name ['.$ActiveRecordType.'] passed to getCustomControllerName()');
 
-            return;
+            return null;
         }
 
         self::$logger->debug('Custom controller name is ['.$controllerName.']');
@@ -1241,7 +1199,7 @@ abstract class Controller
         } else {
             self::$logger->debug('<<getCustomControllerName');
 
-            return;
+            return null;
         }
     }
 
@@ -1252,7 +1210,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setStatusMessage($message)
+    public function setStatusMessage($message): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -1267,11 +1225,9 @@ abstract class Controller
      * status message, you clear out the value stored in the session so this method can only be used
      * to get the status message once for display purposes.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getStatusMessage()
+    public function getStatusMessage(): string|null
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -1288,12 +1244,10 @@ abstract class Controller
      *
      * @param string $controllerName
      *
-     * @return bool
-     *
      * @since 1.0
      * @deprecated
      */
-    public static function checkControllerDefExists($controllerName)
+    public static function checkControllerDefExists($controllerName): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1328,7 +1282,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public static function loadControllerDef($controllerName)
+    public static function loadControllerDef($controllerName): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1351,11 +1305,9 @@ abstract class Controller
     /**
      * Method for determining if the current request URL is a secure one (has a tk string or not).
      *
-     * @return bool True if the current URL contains a tk value, false otherwise
-     *
      * @since 1.0
      */
-    public function checkIfAccessingFromSecureURL()
+    public function checkIfAccessingFromSecureURL(): bool
     {
         if ($this->request->getParam('tk') != null || mb_strpos($this->request->getURI(), '/tk/') !== false) {
             return true;
@@ -1369,11 +1321,9 @@ abstract class Controller
      *
      * @param $params array
      *
-     * @return array
-     *
      * @since 1.2.2
      */
-    private function decryptFieldNames($params)
+    private function decryptFieldNames($params): array
     {
         $decrypted = array();
 
@@ -1396,11 +1346,9 @@ abstract class Controller
      * @param array  $filter      An optional array of charactors to filter out
      * @param bool   $crc32Prefix Set to true if you want to prefix the slug with the CRC32 hash of the URLPart supplied
      *
-     * @return string A URL slug
-     *
      * @since 1.2.4
      */
-    public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false)
+    public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false): string
     {
         $URLPart = trim($URLPart);
 
@@ -1428,7 +1376,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doHEAD($request)
+    public function doHEAD($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doHEAD() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The HEAD method is not supported by this controller');
@@ -1442,7 +1390,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doGET() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The GET method is not supported by this controller');
@@ -1456,7 +1404,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPOST($request)
+    public function doPOST($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPOST() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The POST method is not supported by this controller');
@@ -1470,7 +1418,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPUT($request)
+    public function doPUT($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPUT() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PUT method is not supported by this controller');
@@ -1484,7 +1432,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPATCH($request)
+    public function doPATCH($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPATCH() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PATCH method is not supported by this controller');
@@ -1498,7 +1446,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doDELETE($request)
+    public function doDELETE($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doDELETE() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The DELETE method is not supported by this controller');
@@ -1510,7 +1458,7 @@ abstract class Controller
      * @since 2.0
      * @param Request $request
      */
-    public function doOPTIONS($request)
+    public function doOPTIONS($request): \Alpha\Util\Http\Response
     {
         $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
         $supported = array();
@@ -1538,7 +1486,7 @@ abstract class Controller
      * @since 2.0.2
      * @param Request $request
      */
-    public function doTRACE($request)
+    public function doTRACE($request): \Alpha\Util\Http\Response
     {
         $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
         $supported = array();
@@ -1566,11 +1514,9 @@ abstract class Controller
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 2.0
      */
-    public function process($request)
+    public function process($request): \Alpha\Util\Http\Response
     {
         if (!$request instanceof Request) {
             throw new IllegalArguementException('The request passed to process is not a valid Request object');
@@ -1640,11 +1586,9 @@ abstract class Controller
     /**
      * Get the request this controller is processing (if any).
      *
-     * @return \Alpha\Util\Http\Request
-     *
      * @since 2.0
      */
-    public function getRequest()
+    public function getRequest(): \Alpha\Util\Http\Request
     {
         return $this->request;
     }
@@ -1656,7 +1600,7 @@ abstract class Controller
      *
      * @since 2.0
      */
-    public function setRequest($request)
+    public function setRequest($request): void
     {
         if ($request instanceof Request) {
             $this->request = $request;
@@ -1668,11 +1612,9 @@ abstract class Controller
     /**
      * Use this callback to inject in the admin menu template fragment.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function after_displayPageHead_callback()
+    public function after_displayPageHead_callback(): string
     {
         $accept = $this->request->getAccept();
 

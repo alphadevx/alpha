@@ -20,7 +20,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -116,13 +116,11 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -189,10 +187,8 @@ class SearchController extends Controller implements ControllerInterface
      * @param bool   $showTags
      *
      * @since 1.0
-     *
-     * @return string
      */
-    protected function renderResultList($results, $query = '', $showTags = true)
+    protected function renderResultList($results, $query = '', $showTags = true): string
     {
         $body = '';
 
@@ -232,11 +228,9 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Displays a search form on the top of the page.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function after_displayPageHead_callback()
+    public function after_displayPageHead_callback(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -254,11 +248,9 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Method to display the page footer with pageination links.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback()
+    public function before_displayPageFoot_callback(): string
     {
         $body = $this->renderPageLinks();
 
@@ -270,11 +262,9 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Method for rendering the pagination links.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    protected function renderPageLinks()
+    protected function renderPageLinks(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -346,11 +336,9 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Get the search result count.
      *
-     * @return int
-     *
      * @since 1.2.4
      */
-    public function getResultCount()
+    public function getResultCount(): int
     {
         return $this->resultCount;
     }
@@ -362,7 +350,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.2.4
      */
-    protected function setResultCount($resultCount)
+    protected function setResultCount($resultCount): void
     {
         $this->resultCount = $resultCount;
     }
@@ -370,11 +358,9 @@ class SearchController extends Controller implements ControllerInterface
     /**
      * Get the search query.
      *
-     * @return string
-     *
      * @since 1.2.4
      */
-    public function getSearchQuery()
+    public function getSearchQuery(): string
     {
         return $this->query;
     }
@@ -386,7 +372,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.2.4
      */
-    protected function setSearchQuery($query)
+    protected function setSearchQuery($query): void
     {
         $this->query = $query;
     }

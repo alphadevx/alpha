@@ -23,7 +23,7 @@ use Alpha\View\View;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -94,11 +94,9 @@ class InstallController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET($request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -307,11 +305,9 @@ class InstallController extends Controller implements ControllerInterface
     /**
      * Create the directories required by the application.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function createApplicationDirs()
+    public function createApplicationDirs(): string
     {
         self::$logger->debug('>>createApplicationDirs()');
 
@@ -437,11 +433,9 @@ class InstallController extends Controller implements ControllerInterface
      * Custom version of the check rights method that only checks for a session for the config admin username/password,
      * when the system database is not set-up.
      *
-     * @return boolean|null
-     *
      * @since 1.0
      */
-    public function checkRights()
+    public function checkRights(): bool
     {
         self::$logger->debug('>>checkRights()');
 
