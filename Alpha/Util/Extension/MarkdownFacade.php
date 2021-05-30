@@ -14,7 +14,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -152,7 +152,7 @@ class MarkdownFacade
                     $type = 'png';
                 }
 
-                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('cms.images.widget.secure'));
+                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (bool)$config->get('cms.images.widget.secure'));
 
                 $this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
             } else {
@@ -167,11 +167,9 @@ class MarkdownFacade
     /**
      * Facade method which will invoke our custom markdown class rather than the standard one.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function markdown($text)
+    public function markdown($text): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -194,11 +192,9 @@ class MarkdownFacade
     /**
      * Getter for the content.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }

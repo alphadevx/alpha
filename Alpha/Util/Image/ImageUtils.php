@@ -11,7 +11,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -59,7 +59,7 @@ class ImageUtils
      *
      * @since 1.1
      */
-    public static function generateSquareThumbnail($original, $thumbnail, $dimensions)
+    public static function generateSquareThumbnail($original, $thumbnail, $dimensions): void
     {
         if ($dimensions <= 0) {
             throw new IllegalArguementException('Illegal dimensions value provided ['.$dimensions.'], should be greater than zero');
@@ -103,7 +103,7 @@ class ImageUtils
 
         imagecopyresampled($newImage, $originalImage, 0, 0, $originalX, 0, $dimensions, $dimensions, $sourceWidth, $sourceHeight);
 
-        return self::saveImage($newImage, $type, $thumbnail);
+        self::saveImage($newImage, $type, $thumbnail);
     }
 
     /**
@@ -117,7 +117,7 @@ class ImageUtils
      *
      * @since 1.1
      */
-    public static function saveImage($imageResource, $type, $destination)
+    public static function saveImage($imageResource, $type, $destination): void
     {
         if (!in_array($type, array('jpg', 'png', 'gif'))) {
             throw new IllegalArguementException('Illegal image type ['.$type.'], cannot create file');

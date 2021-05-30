@@ -17,7 +17,7 @@ use Alpha\Model\Tag;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -85,7 +85,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0)
+    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -169,7 +169,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '')
+    public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = ''): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -270,7 +270,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function index($sourceObject)
+    public function index($sourceObject): void
     {
         $taggedAttributes = $sourceObject->getTaggedAttributes();
 
@@ -293,7 +293,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($sourceObject)
+    public function delete($sourceObject): void
     {
         $tags = $sourceObject->getPropObject('tags')->getRelated();
 
@@ -305,7 +305,7 @@ class SearchProviderTags implements SearchProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getNumberFound()
+    public function getNumberFound(): int
     {
         return $this->numberFound;
     }
@@ -315,7 +315,7 @@ class SearchProviderTags implements SearchProviderInterface
      *
      * @since 1.2.4
      */
-    private function loadFromCache($key)
+    private function loadFromCache($key): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -345,7 +345,7 @@ class SearchProviderTags implements SearchProviderInterface
      *
      * @since 1.2.4
      */
-    public function addToCache($key, $matches)
+    public function addToCache($key, $matches): void
     {
         $config = ConfigProvider::getInstance();
 

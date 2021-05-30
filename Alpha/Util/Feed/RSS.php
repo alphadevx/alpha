@@ -9,7 +9,7 @@ namespace Alpha\Util\Feed;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -80,7 +80,7 @@ class RSS extends Feed
      *
      * @since 1.0
      */
-    private function addToItems($url)
+    private function addToItems($url): void
     {
         if ($this->items == null) {
             $container = $this->createFeedElement('items');
@@ -97,7 +97,7 @@ class RSS extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function addItem($title, $link, $description = null, $pubDate = null, $id = null)
+    protected function addItem($title, $link, $description = null, $pubDate = null, $id = null): void
     {
         parent::addItem($title, $link, $description, $pubDate, $id);
         $this->addToItems($link);
@@ -106,7 +106,7 @@ class RSS extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null)
+    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null): void
     {
         $parent->setAttributeNS($this->rdfns, 'rdf:about', $url);
         parent::createRSSNode($type, $parent, $title, $url, $description, $pubDate);

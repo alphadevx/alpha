@@ -12,7 +12,7 @@ use Alpha\Util\File\FileUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -95,7 +95,7 @@ class LogProviderFile implements LogProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function writeLine($line)
+    public function writeLine($line): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -131,11 +131,9 @@ class LogProviderFile implements LogProviderInterface
     /**
      * Returns the size in megabytes of the log file on disc.
      *
-     * @return integer
-     *
      * @since 1.0
      */
-    private function checkFileSize()
+    private function checkFileSize(): int
     {
         clearstatcache();
         $size = filesize($this->path);
@@ -149,7 +147,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 1.0
      */
-    private function backupFile()
+    private function backupFile(): void
     {
         // generate the name of the backup file name to contain a timestampe
         $backName = str_replace('.log', '-backup-'.date('y-m-d').'.log', $this->path);
@@ -170,7 +168,7 @@ class LogProviderFile implements LogProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderLog($cols)
+    public function renderLog($cols): string
     {
         // render the start of the table
         $body = '<table class="table">';

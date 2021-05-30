@@ -12,7 +12,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -54,7 +54,7 @@ class ErrorHandlers
      *
      * @param Exception $e
      */
-    public static function catchException($e)
+    public static function catchException($e): void
     {
         $logger = new Logger(get_class($e));
         $logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());
@@ -70,7 +70,7 @@ class ErrorHandlers
      *
      * @throws PHPException
      */
-    public static function catchError($error_no, $msg, $file, $line)
+    public static function catchError($error_no, $msg, $file, $line): void
     {
         $e = new PHPException();
         $e->setMessage('[PHP error '.$error_no.'] on line ['.$line.'] of file ['.$file.']: '.$msg);

@@ -63,11 +63,9 @@ class SecurityUtils
      * @param string $data
      * @param string $key  Optional, if provided use this as the key rather than the security.encryption.key setting.
      *
-     * @return string
-     *
      * @since 1.2.2
      */
-    public static function encrypt($data, $key = '')
+    public static function encrypt($data, $key = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -88,11 +86,9 @@ class SecurityUtils
      * @param string $data
      * @param string $key  Optional, if provided use this as the key rather than the security.encryption.key setting.
      *
-     * @return string
-     *
      * @since 1.2.2
      */
-    public static function decrypt($data, $key = '')
+    public static function decrypt($data, $key = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -112,11 +108,9 @@ class SecurityUtils
      *
      * @param string $password The encrypted admin password stored in the database.
      *
-     * @return boolean
-     *
      * @since 2.0.2
      */
-    public static function checkAdminPasswordIsDefault($password)
+    public static function checkAdminPasswordIsDefault($password): bool
     {
         $config = ConfigProvider::getInstance();
 

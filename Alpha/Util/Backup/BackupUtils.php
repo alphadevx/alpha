@@ -13,7 +13,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -57,7 +57,7 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backupAttachmentsAndLogs($backupDir)
+    public static function backupAttachmentsAndLogs($backupDir): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -72,7 +72,7 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backupDatabase($backupDir)
+    public static function backupDatabase($backupDir): void
     {
         $config = ConfigProvider::getInstance();
 

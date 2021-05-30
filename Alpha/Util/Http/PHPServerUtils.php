@@ -11,7 +11,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -56,11 +56,9 @@ class PHPServerUtils
      * @param int    $port    The port number to use
      * @param string $docRoot The file path to directory containing the documents we want to serve
      *
-     * @return int The PID of the new server
-     *
      * @throws \AlphaException
      */
-    public static function start($host, $port, $docRoot)
+    public static function start($host, $port, $docRoot): int
     {
         // we are on Windows
         if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -112,7 +110,7 @@ class PHPServerUtils
      *
      * @param int $PID The PID of the running server we want to stop
      */
-    public static function stop($PID)
+    public static function stop($PID): void
     {
         // we are on Windows
         if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -126,10 +124,8 @@ class PHPServerUtils
      * Checks to see if there is a server running locally under the process ID (PID) provided.
      *
      * @param int $PID The PID of the running server we want to check
-     *
-     * @return bool True if there is a server process running under the PID, false otherwise
      */
-    public static function status($PID)
+    public static function status($PID): bool
     {
         $output = array();
         // we are on Windows

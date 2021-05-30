@@ -12,7 +12,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -72,7 +72,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function init(): void
     {
         if (session_id() == '' && !headers_sent()) {
             $config = ConfigProvider::getInstance();
@@ -86,7 +86,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy()
+    public function destroy(): void
     {
         $_SESSION = array();
         if (session_id() != '') {
@@ -97,7 +97,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): mixed
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
@@ -113,7 +113,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         self::$logger->debug('Setting value for key ['.$key.']');
 
@@ -123,7 +123,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($key)
+    public function delete($key): void
     {
         self::$logger->debug('Removing value for key ['.$key.']');
 
@@ -133,7 +133,7 @@ class SessionProviderPHP implements SessionProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getID()
+    public function getID(): string
     {
         return session_id();
     }

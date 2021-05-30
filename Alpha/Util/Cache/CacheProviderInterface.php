@@ -10,7 +10,7 @@ namespace Alpha\Util\Cache;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,10 +53,8 @@ interface CacheProviderInterface
      * @param $key
      *
      * @since 1.1
-     *
-     * @return mixed The expected value from the cache, boolean false otherwise
      */
-    public function get($key);
+    public function get($key): mixed;
 
     /**
      * Attempt to set the value in the cache for the given $key.  Old values on the same
@@ -68,7 +66,7 @@ interface CacheProviderInterface
      *
      * @since 1.1
      */
-    public function set($key, $value, $expiry = 0);
+    public function set($key, $value, $expiry = 0): void;
 
     /**
      * Attempt to delete the value from the cache for the given $key.
@@ -77,5 +75,5 @@ interface CacheProviderInterface
      *
      * @since 1.1
      */
-    public function delete($key);
+    public function delete($key): void;
 }

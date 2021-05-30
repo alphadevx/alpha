@@ -15,7 +15,7 @@ use DOMElement;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -200,7 +200,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    public function loadRecords($limit, $sortBy)
+    public function loadRecords($limit, $sortBy): void
     {
         $Records = $this->record->loadAll(0, $limit, $sortBy, 'DESC');
 
@@ -214,28 +214,28 @@ abstract class Feed
     /**
      * Method for adding a Record to the current feed.
      *
-     * @param \Alpha\Model\ActiveRecord $Record
+     * @param \Alpha\Model\ActiveRecord $record
      */
-    public function addRecord($Record)
+    public function addRecord($record): void
     {
-        $title = $Record->get($this->fieldNameMappings['title']);
-        $url = $Record->get($this->fieldNameMappings['url']);
+        $title = $record->get($this->fieldNameMappings['title']);
+        $url = $record->get($this->fieldNameMappings['url']);
 
         if (isset($this->fieldNameMappings['description'])) {
-            $description = $Record->get($this->fieldNameMappings['description']);
+            $description = $record->get($this->fieldNameMappings['description']);
         } else {
             $description = '';
         }
 
         if (isset($this->fieldNameMappings['pubDate'])) {
-            $dateTS = strtotime($Record->get($this->fieldNameMappings['pubDate']));
+            $dateTS = strtotime($record->get($this->fieldNameMappings['pubDate']));
             $pubDate = date(DATE_ATOM, $dateTS);
         } else {
             $pubDate = '';
         }
 
         if (isset($this->fieldNameMappings['id'])) {
-            $id = $Record->get($this->fieldNameMappings['id']);
+            $id = $record->get($this->fieldNameMappings['id']);
         } else {
             $id = '';
         }
@@ -254,7 +254,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    public function setFieldMappings($title, $url, $description = null, $pubDate = null, $id = null)
+    public function setFieldMappings($title, $url, $description = null, $pubDate = null, $id = null): void
     {
         $this->fieldNameMappings = array(
             'title' => $title,
@@ -280,11 +280,9 @@ abstract class Feed
      * @param string $name  The name of the element.
      * @param string $value The value of the element.
      *
-     * @return DOMElement
-     *
      * @since 1.0
      */
-    protected function createFeedElement($name, $value = null)
+    protected function createFeedElement($name, $value = null): \DOMElement
     {
         $value = htmlspecialchars($value);
 
@@ -303,7 +301,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    protected function createLink($parent, $url)
+    protected function createLink($parent, $url): void
     {
         $link = $this->createFeedElement('link', $url);
         $parent->appendChild($link);
@@ -324,7 +322,7 @@ abstract class Feed
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null)
+    protected function createRSSNode($type, $parent, $title, $url, $description, $pubDate = null, $id = null): void
     {
         $this->createLink($parent, $url);
         $title = $this->createFeedElement('title', $title);
@@ -364,7 +362,7 @@ abstract class Feed
      *
      * @since 1.0
      */
-    protected function addItem($title, $url, $description = null, $pubDate = null, $id = null)
+    protected function addItem($title, $url, $description = null, $pubDate = null, $id = null): void
     {
         $item = $this->createFeedElement($this->tagMap['item']);
 
@@ -376,11 +374,9 @@ abstract class Feed
     /**
      * Returns the formatted XML for the feed as a string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render()
+    public function render(): string
     {
         if ($this->rssDoc) {
             $this->rssDoc->formatOutput = true;

@@ -11,7 +11,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -88,11 +88,9 @@ class ActiveRecord2Excel
      *
      * @param bool $renderHeaders Set to false to supress headers in the spreadsheet (defaults to true).
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($renderHeaders = true)
+    public function render($renderHeaders = true): string
     {
         self::$logger->debug('>>render()');
 

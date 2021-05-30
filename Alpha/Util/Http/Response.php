@@ -177,11 +177,9 @@ class Response
     /**
      * Get the response body.
      *
-     * @return string|null
-     *
      * @since 2.0
      */
-    public function getBody()
+    public function getBody(): string|null
     {
         return $this->body;
     }
@@ -193,7 +191,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setBody($body)
+    public function setBody($body): void
     {
         $this->body = $body;
     }
@@ -201,21 +199,17 @@ class Response
     /**
      * Get the status code of the response.
      *
-     * @return int
-     *
      * @since 2.0
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
 
     /**
      * Get the status message of the response.
-     *
-     * @return string
      */
-    public function getStatusMessage()
+    public function getStatusMessage(): string
     {
         return $this->HTTPStatusCodes[$this->status];
     }
@@ -229,7 +223,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         if (array_key_exists($status, $this->HTTPStatusCodes)) {
             $this->status = $status;
@@ -246,7 +240,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setHeader($header, $value)
+    public function setHeader($header, $value): void
     {
         $this->headers[$header] = $value;
     }
@@ -254,11 +248,9 @@ class Response
     /**
      * Get all of the headers for the response.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -269,11 +261,9 @@ class Response
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
-     *
      * @since 2.0
      */
-    public function getHeader($key, $default = null)
+    public function getHeader($key, $default = null): mixed
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -290,7 +280,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setCookie($cookie, $value)
+    public function setCookie($cookie, $value): void
     {
         $this->cookies[$cookie] = $value;
     }
@@ -298,11 +288,9 @@ class Response
     /**
      * Get all of the cookies for the response.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getCookies()
+    public function getCookies(): array
     {
         return $this->cookies;
     }
@@ -313,11 +301,9 @@ class Response
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
-     *
      * @since 2.0
      */
-    public function getCookie($key, $default = null)
+    public function getCookie($key, $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
@@ -329,11 +315,9 @@ class Response
     /**
      * Get the content length of the response.
      *
-     * @return int
-     *
      * @since 2.0
      */
-    public function getContentLength()
+    public function getContentLength(): int
     {
         return strlen($this->body);
     }
@@ -347,7 +331,7 @@ class Response
      *
      * @since 2.0
      */
-    public function redirect($URL)
+    public function redirect($URL): void
     {
         if (Validator::isURL($URL)) {
             $this->headers = array();
@@ -362,7 +346,7 @@ class Response
      *
      * @since 2.0
      */
-    public function send()
+    public function send(): void
     {
         http_response_code($this->status);
 

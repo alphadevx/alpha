@@ -12,7 +12,7 @@ use Alpha\Exception\PHPException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -118,13 +118,11 @@ class ConfigProvider
      *
      * @param string $key string
      *
-     * @return string
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function get($key)
+    public function get($key): string
     {
         if (array_key_exists($key, $this->configVars)) {
             return $this->configVars[$key];
@@ -141,7 +139,7 @@ class ConfigProvider
      *
      * @since 1.0
      */
-    public function set($key, $val)
+    public function set($key, $val): void
     {
         /*
          * If you need to alter a config option after it has been set in the .ini
@@ -159,7 +157,7 @@ class ConfigProvider
      *
      * @since 1.0
      */
-    private function setRootPath()
+    private function setRootPath(): void
     {
         if (strpos(__DIR__, 'vendor/alphadevx/alpha/Alpha/Util/Config') !== false) {
             $this->set('rootPath', str_replace('vendor/alphadevx/alpha/Alpha/Util/Config', '', __DIR__));
@@ -174,7 +172,7 @@ class ConfigProvider
      *
      * @since 2.0.1
      */
-    public function reloadConfig()
+    public function reloadConfig(): void
     {
         $this->setRootPath();
         $this->loadConfig();
@@ -188,7 +186,7 @@ class ConfigProvider
      *
      * @since 1.0
      */
-    private function loadConfig()
+    private function loadConfig(): void
     {
         $rootPath = $this->get('rootPath');
 
@@ -249,11 +247,9 @@ class ConfigProvider
     /**
      * Get the configuration environment for this application.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getEnvironment()
+    public function getEnvironment(): string
     {
         return $this->environment;
     }
