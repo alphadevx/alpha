@@ -61,7 +61,7 @@ class BackupTask implements TaskInterface
     /**
      * {@inheritdoc}
      */
-    public function doTask()
+    public function doTask(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -118,7 +118,7 @@ class BackupTask implements TaskInterface
     /**
      * {@inheritdoc}
      */
-    public function getMaxRunTime()
+    public function getMaxRunTime(): int
     {
         return 600;
     }

@@ -17,7 +17,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -108,11 +108,9 @@ class CronManager
      * Loops over the /tasks directory and builds an array of all of the task
      * class names in the system.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public static function getTaskClassNames()
+    public static function getTaskClassNames(): array
     {
         $config = ConfigProvider::getInstance();
 
