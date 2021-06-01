@@ -305,7 +305,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_loadByAttribute_callback(): void
+    protected function afterLoadByAttribute(): void
     {
         $this->{'after_load_callback'}();
     }

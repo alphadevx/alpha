@@ -347,8 +347,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_loadByAttribute_callback')) {
-            $this->{'after_loadByAttribute_callback'}();
+        if (method_exists($this, 'afterLoadByAttribute')) {
+            $this->{'afterLoadByAttribute'}();
         }
 
         self::$logger->debug('<<loadByAttribute');
