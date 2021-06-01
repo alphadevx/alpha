@@ -332,7 +332,7 @@ class LoginController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback(): string
+    public function beforeDisplayPageFoot(): string
     {
         $config = ConfigProvider::getInstance();
 

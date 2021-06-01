@@ -385,8 +385,8 @@ class View
 
         $footer = '';
 
-        if (method_exists($controller, 'before_displayPageFoot_callback')) {
-            $footer .= $controller->before_displayPageFoot_callback();
+        if (method_exists($controller, 'beforeDisplayPageFoot')) {
+            $footer .= $controller->beforeDisplayPageFoot();
         }
 
         if (!self::$provider instanceof RendererProviderInterface) {

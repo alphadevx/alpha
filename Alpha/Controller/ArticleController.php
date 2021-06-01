@@ -465,7 +465,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback(): string
+    public function beforeDisplayPageFoot(): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');

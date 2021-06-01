@@ -250,7 +250,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function before_displayPageFoot_callback(): string
+    public function beforeDisplayPageFoot(): string
     {
         $body = $this->renderPageLinks();
 
