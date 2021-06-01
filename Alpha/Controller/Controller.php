@@ -1614,7 +1614,7 @@ abstract class Controller
      *
      * @since 1.2
      */
-    public function after_displayPageHead_callback(): string
+    public function afterDisplayPageHead(): string
     {
         $accept = $this->request->getAccept();
 

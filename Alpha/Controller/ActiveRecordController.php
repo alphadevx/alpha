@@ -507,9 +507,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function after_displayPageHead_callback(): string
+    public function afterDisplayPageHead(): string
     {
-        $body = parent::after_displayPageHead_callback();
+        $body = parent::afterDisplayPageHead();
 
         // set the start point for the list pagination
         if ($this->request->getParam('start') != null) {

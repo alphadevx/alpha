@@ -357,8 +357,8 @@ class View
         $provider = self::$provider;
         $header = $provider::displayPageHead($controller);
 
-        if (method_exists($controller, 'after_displayPageHead_callback')) {
-            $header .= $controller->{'after_displayPageHead_callback'}();
+        if (method_exists($controller, 'afterDisplayPageHead')) {
+            $header .= $controller->{'afterDisplayPageHead'}();
         }
 
         self::$logger->debug('<<displayPageHead ['.$header.']');

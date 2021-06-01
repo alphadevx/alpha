@@ -230,11 +230,11 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function after_displayPageHead_callback(): string
+    public function afterDisplayPageHead(): string
     {
         $config = ConfigProvider::getInstance();
 
-        $body = parent::after_displayPageHead_callback();
+        $body = parent::afterDisplayPageHead();
 
         $body .= '<div align="center" class="form-group"><form class="form-inline" method="GET" id="search_form" onsubmit="document.location = \''.$config->get('app.url').'search/\'+document.getElementById(\'q\').value; return false;">';
         $body .= '<label for="q">Search for</label><input type="text" name="q" id="q" class="form-control" style="width:50%; margin:10px;"/>';
