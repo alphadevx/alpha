@@ -505,8 +505,8 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         $cmsCallbackOutput = '';
-        if (method_exists($controller, 'insert_CMSDisplayStandardHeader_callback')) {
-            $cmsCallbackOutput = $controller->{'insert_CMSDisplayStandardHeader_callback'}();
+        if (method_exists($controller, 'insertCMSDisplayStandardHeader')) {
+            $cmsCallbackOutput = $controller->{'insertCMSDisplayStandardHeader'}();
         }
 
         $html = View::loadTemplateFragment('html', 'head.phtml', array('title' => $controller->getTitle(), 'description' => $controller->getDescription(), 'allowCSSOverrides' => $allowCSSOverrides, 'duringCallbackOutput' => $duringCallbackOutput, 'cmsCallbackOutput' => $cmsCallbackOutput, 'onloadEvent' => $onloadEvent));

@@ -433,7 +433,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function insert_CMSDisplayStandardHeader_callback(): string
+    public function insertCMSDisplayStandardHeader(): string
     {
         if ($this->request->getParam('token') != null) {
             return '';
