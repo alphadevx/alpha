@@ -495,8 +495,8 @@ class RendererProviderHTML implements RendererProviderInterface
         }
 
         $duringCallbackOutput = '';
-        if (method_exists($controller, 'during_displayPageHead_callback')) {
-            $duringCallbackOutput = $controller->{'during_displayPageHead_callback'}();
+        if (method_exists($controller, 'duringDisplayPageHead')) {
+            $duringCallbackOutput = $controller->{'duringDisplayPageHead'}();
         }
 
         $onloadEvent = '';

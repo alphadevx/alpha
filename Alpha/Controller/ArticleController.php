@@ -395,7 +395,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function during_displayPageHead_callback(): string
+    public function duringDisplayPageHead(): string
     {
         $config = ConfigProvider::getInstance();
 
