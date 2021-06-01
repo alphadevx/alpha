@@ -141,7 +141,7 @@ class Rights extends ActiveRecord
      *
      * @since 1.2.1
      */
-    protected function after_save_callback(): void
+    protected function afterSave(): void
     {
         $this->setupRels();
     }

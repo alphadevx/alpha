@@ -301,7 +301,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.2.4
      */
-    protected function after_save_callback(): void
+    protected function afterSave(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -323,6 +323,6 @@ class Tag extends ActiveRecord
      */
     protected function before_delete_callback(): void
     {
-        $this->{'after_save_callback'}();
+        $this->{'afterSave'}();
     }
 }

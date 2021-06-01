@@ -161,7 +161,7 @@ class SearchProviderTagsTest extends TestCase
         $this->article->save();
         $tags = $this->article->getPropObject('tags')->getRelated();
 
-        $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::after_save_callback())');
+        $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::afterSave())');
 
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->delete($this->article);

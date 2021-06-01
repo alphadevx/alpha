@@ -225,7 +225,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_save_callback(): void
+    protected function afterSave(): void
     {
         if ($this->getVersionNumber()->getValue() == 1) {
             $standardGroup = new Rights();

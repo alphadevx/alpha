@@ -276,7 +276,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_save_callback(): void
+    protected function afterSave(): void
     {
         if ($this->getVersion() == 1 && $this->tags instanceof \Alpha\Model\Type\Relation) {
             // update the empty tags values to reference this ID

@@ -586,8 +586,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_save_callback')) {
-            $this->{'after_save_callback'}();
+        if (method_exists($this, 'afterSave')) {
+            $this->{'afterSave'}();
         }
     }
 

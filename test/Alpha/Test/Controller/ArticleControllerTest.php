@@ -168,10 +168,10 @@ Content Cell  | Content Cell
         $person = $this->createPersonObject('test');
         $person->save();
         $session->set('currentUser', $person);
-        
+
         $article = $this->createArticleObject('test article');
         $article->save();
-        
+
         $comment = new ArticleComment();
         $comment->set('content', 'Test comment');
         $comment->set('articleID', $article->getID());
@@ -200,7 +200,7 @@ Content Cell  | Content Cell
 
         $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/a', 'params' => array('file' => 'Markdown_Help.text')));
+        $request = new Request(array('method' => 'GET', 'URI' => '/a', 'params' => array('file' => getcwd().'/README.md')));
 
         $response = $front->process($request);
 
