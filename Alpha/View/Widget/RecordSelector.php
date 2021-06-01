@@ -19,7 +19,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -146,11 +146,9 @@ class RecordSelector
      * @param bool $expanded Render the related fields in expanded format or not (optional)
      * @param bool $buttons  Render buttons for expanding/contacting the related fields (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($expanded = false, $buttons = true)
+    public function render($expanded = false, $buttons = true): string
     {
         self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -384,10 +382,8 @@ class RecordSelector
      * @param array  $lookupIDs An optional array of related look-up IDs, only required for rendering MANY-TO-MANY rels
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function renderSelector($fieldname, $lookupIDs = array())
+    public function renderSelector($fieldname, $lookupIDs = array()): string
     {
         self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupIDs=['.var_export($lookupIDs, true).'])');
 

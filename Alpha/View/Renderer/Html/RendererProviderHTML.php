@@ -37,7 +37,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -108,7 +108,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecord($record)
+    public function setRecord($record): void
     {
         $this->record = $record;
     }
@@ -116,7 +116,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function createView($fields = array())
+    public function createView($fields = array()): string
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
@@ -148,7 +148,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function editView($fields = array())
+    public function editView($fields = array()): string
     {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
@@ -165,7 +165,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $fields['saveButton'] = $button->render();
 
         $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
-            
+
         $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
         $button = new Button($js, 'Delete', 'deleteBut');
@@ -195,7 +195,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function listView($fields = array())
+    public function listView($fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
@@ -299,7 +299,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= '&nbsp;&nbsp;';
 
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
-            
+
             $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
             $button = new Button($js, 'Delete', 'delete'.$this->record->getID().'But');
@@ -318,7 +318,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function detailedView($fields = array())
+    public function detailedView($fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
@@ -349,7 +349,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= $button->render();
 
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
-            
+
             $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
             $button = new Button($js, 'Delete', 'deleteBut');
@@ -365,7 +365,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function adminView($fields = array())
+    public function adminView($fields = array()): string
     {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
@@ -434,7 +434,7 @@ class RendererProviderHTML implements RendererProviderInterface
         $html = '';
         if ($this->record->checkTableNeedsUpdate() && $this->record->checkTableExists()) {
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
-            
+
             $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to recreate this class table (all data will be lost)?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'recreateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Recreate Table', 'recreateTableBut');
@@ -444,7 +444,7 @@ class RendererProviderHTML implements RendererProviderInterface
             $html .= '&nbsp;&nbsp;';
 
             $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('admin_'.stripslashes(get_class($this->record)).'_button_pressed')) : 'admin_'.stripslashes(get_class($this->record)).'_button_pressed');
-            
+
             $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to attempt to modify this class table by adding new attributes?', 'formFieldId' => $formFieldId, 'formFieldValue' => 'updateTableBut', 'formId' => 'admin_'.stripslashes(get_class($this->record))));
 
             $button = new Button($js, 'Update Table', 'updateTableBut');
@@ -470,7 +470,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayPageHead($controller)
+    public static function displayPageHead($controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -519,7 +519,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayPageFoot($controller)
+    public static function displayPageFoot($controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -537,7 +537,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayUpdateMessage($message)
+    public static function displayUpdateMessage($message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -554,7 +554,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayErrorMessage($message)
+    public static function displayErrorMessage($message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -571,7 +571,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderErrorPage($code, $message)
+    public static function renderErrorPage($code, $message): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -589,7 +589,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderDeleteForm($URI)
+    public static function renderDeleteForm($URI): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -614,7 +614,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderSecurityFields()
+    public static function renderSecurityFields(): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('RendererProviderHTML');
@@ -652,7 +652,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderIntegerField($name, $label, $mode, $value = '')
+    public function renderIntegerField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -687,7 +687,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDoubleField($name, $label, $mode, $value = '')
+    public function renderDoubleField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -722,7 +722,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderBooleanField($name, $label, $mode, $value = '')
+    public function renderBooleanField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -760,7 +760,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = '')
+    public function renderEnumField($name, $label, $mode, $options, $value = ''): string
     {
         self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -805,7 +805,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = '')
+    public function renderDEnumField($name, $label, $mode, $options, $value = ''): string
     {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -850,7 +850,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDefaultField($name, $label, $mode, $value = '')
+    public function renderDefaultField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -886,7 +886,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderTextField($name, $label, $mode, $value = '')
+    public function renderTextField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -910,7 +910,7 @@ class RendererProviderHTML implements RendererProviderInterface
                 if ($viewState->get('markdownTextBoxRows') == '') {
                     $text = new TextBox($this->record->getPropObject($name), $label, $name, 10);
                 } else {
-                    $text = new TextBox($this->record->getPropObject($name), $label, $name, (integer)$viewState->get('markdownTextBoxRows'));
+                    $text = new TextBox($this->record->getPropObject($name), $label, $name, (int)$viewState->get('markdownTextBoxRows'));
                 }
 
                 $html .= $text->render();
@@ -948,7 +948,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderStringField($name, $label, $mode, $value = '')
+    public function renderStringField($name, $label, $mode, $value = ''): string
     {
         self::$logger->debug('>>renderStringField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -971,7 +971,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
+    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true): string
     {
         self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -1023,7 +1023,7 @@ class RendererProviderHTML implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array()): string
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 

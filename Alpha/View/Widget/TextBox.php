@@ -17,7 +17,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -136,11 +136,9 @@ class TextBox
     /**
      * Renders the HTML and javascript for the text box.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render()
+    public function render(): string
     {
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
@@ -174,7 +172,7 @@ class TextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTextObject($text)
+    public function setTextObject($text): void
     {
         if ($text instanceof Text) {
             $this->textObject = $text;
@@ -186,11 +184,9 @@ class TextBox
     /**
      * Getter for text object.
      *
-     * @return \Alpha\Model\Type\Text
-     *
      * @since 1.0
      */
-    public function getTextObject()
+    public function getTextObject(): \Alpha\Model\Type\Text
     {
         return $this->textObject;
     }

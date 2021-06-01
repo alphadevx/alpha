@@ -21,7 +21,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -201,11 +201,9 @@ class Image
      *
      * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderHTMLLink($altText = '')
+    public function renderHTMLLink($altText = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -229,7 +227,7 @@ class Image
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    private function setFilename()
+    private function setFilename(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -271,7 +269,7 @@ class Image
      *
      * @since 1.0
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -281,7 +279,7 @@ class Image
      *
      * @since 1.0
      */
-    public function renderImage()
+    public function renderImage(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -359,7 +357,7 @@ class Image
      *
      * @since 1.0
      */
-    private function cache($image)
+    private function cache($image): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -373,11 +371,9 @@ class Image
     /**
      * Used to check the image cache for the image jpeg cache file.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    private function checkCache()
+    private function checkCache(): bool
     {
         return file_exists($this->filename);
     }
@@ -387,22 +383,20 @@ class Image
      *
      * @since 1.0
      */
-    private function loadCache()
+    private function loadCache(): void
     {
         readfile($this->filename);
     }
 
     /**
      * Converts a URL for an image to a relative file system path for the image, assuming it is
-     * hosted on the same server as the application.
+     * hosted on the same server as the application. Returns the path of the image.
      *
      * @param string $imgURL
      *
-     * @return string the path of the image
-     *
      * @since 1.0
      */
-    public static function convertImageURLToPath($imgURL)
+    public static function convertImageURLToPath($imgURL): string
     {
         $config = ConfigProvider::getInstance();
 

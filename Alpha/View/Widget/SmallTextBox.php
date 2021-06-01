@@ -15,7 +15,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -125,11 +125,9 @@ class SmallTextBox
      *
      * @param bool $readOnly set to true to make the text box readonly (defaults to false)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($readOnly = false)
+    public function render($readOnly = false): string
     {
         $request = new Request(array('method' => 'GET'));
 
@@ -155,7 +153,7 @@ class SmallTextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setStringObject($string)
+    public function setStringObject($string): void
     {
         if ($string instanceof SmallText) {
             $this->stringObject = $string;
@@ -167,11 +165,9 @@ class SmallTextBox
     /**
      * Getter for string object.
      *
-     * @return \Alpha\Model\Type\SmallText
-     *
      * @since 1.0
      */
-    public function getStringObject()
+    public function getStringObject(): \Alpha\Model\Type\SmallText
     {
         return $this->stringObject;
     }

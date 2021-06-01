@@ -15,7 +15,7 @@ use Alpha\Model\Tag;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -111,11 +111,9 @@ class TagCloud
      * @param $maxLinkSize The maximum font size for any tag link, in points.
      * @param $target The target attribute for the links
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($minLinkSize = 8, $maxLinkSize = 20, $target = '')
+    public function render($minLinkSize = 8, $maxLinkSize = 20, $target = ''): string
     {
         $config = ConfigProvider::getInstance();
         $html = '<p>';
@@ -137,11 +135,9 @@ class TagCloud
     /**
      * Get the array of popular tags.
      *
-     * @return array
-     *
      * @since 2.0.1
      */
-    public function getPopTags()
+    public function getPopTags(): array
     {
         return $this->popTags;
     }

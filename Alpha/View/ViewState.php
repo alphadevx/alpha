@@ -14,7 +14,7 @@ use ReflectionProperty;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -109,11 +109,9 @@ class ViewState
      * Get the ViewState instance.  Loads from $_SESSION if its not already in memory, otherwise
      * a new instance will be returned with empty properties.
      *
-     * @return \Alpha\View\ViewState
-     *
      * @since 1.0
      */
-    public static function getInstance()
+    public static function getInstance(): \Alpha\View\ViewState
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -141,11 +139,9 @@ class ViewState
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function get($key)
+    public function get($key): string|null
     {
         $attribute = new ReflectionProperty(get_class($this), $key);
 
@@ -166,7 +162,7 @@ class ViewState
      *
      * @since 1.0
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');

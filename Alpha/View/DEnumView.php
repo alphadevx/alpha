@@ -18,7 +18,7 @@ use Alpha\Model\Type\SmallText;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,11 +58,9 @@ class DEnumView extends View
     /**
      * Custom list view.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function listView($fields = array())
+    public function listView($fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -130,11 +128,9 @@ class DEnumView extends View
     /**
      * Custom edit view.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function editView($fields = array())
+    public function editView($fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 

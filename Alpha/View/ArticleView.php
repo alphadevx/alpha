@@ -15,7 +15,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,10 +58,8 @@ class ArticleView extends View
      * @param array $fields Hash array of HTML fields to pass to the template.
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function markdownView($fields = array())
+    public function markdownView($fields = array()): string
     {
         $markdown = new MarkdownFacade($this->record);
 
@@ -73,11 +71,9 @@ class ArticleView extends View
     /**
      * Adds a note to the create article screen.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    protected function after_createView_callback()
+    protected function after_createView_callback(): string
     {
         return '<p><strong>Please note</strong> that you will only be able to attach files to the article once it has been created.</p><br>';
     }
@@ -88,10 +84,8 @@ class ArticleView extends View
      * @param array $fields hash array of HTML fields to pass to the template
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function listView($fields = array())
+    public function listView($fields = array()): string
     {
         $fields['dateAdded'] = $this->record->getCreateTS()->getDate();
         $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
@@ -104,11 +98,9 @@ class ArticleView extends View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 2.0.1
      */
-    public function adminView($fields = array())
+    public function adminView($fields = array()): string
     {
         $fields['createButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&view=create');
 
@@ -120,11 +112,9 @@ class ArticleView extends View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 2.0.1
      */
-    public function detailedView($fields = array())
+    public function detailedView($fields = array()): string
     {
         $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
 
@@ -137,10 +127,8 @@ class ArticleView extends View
      * @param array $fields hash array of HTML fields to pass to the template
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function editView($fields = array())
+    public function editView($fields = array()): string
     {
         if (method_exists($this, 'before_editView_callback')) {
             $this->{'before_editView_callback'}();
@@ -164,7 +152,7 @@ class ArticleView extends View
         $fields['saveButton'] = $button->render();
 
         $formFieldId = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
-            
+
         $js = View::loadTemplateFragment('html', 'bootstrapconfirmokay.phtml', array('prompt' => 'Are you sure you wish to delete this item?', 'formFieldId' => $formFieldId, 'formFieldValue' => $this->record->getID(), 'formId' => 'deleteForm'));
 
         $button = new Button($js, 'Delete', 'deleteBut');
@@ -203,11 +191,9 @@ class ArticleView extends View
     /**
      * Renders the HTML for the file upload section.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    protected function renderFileUploadSection()
+    protected function renderFileUploadSection(): string
     {
         $config = ConfigProvider::getInstance();
 

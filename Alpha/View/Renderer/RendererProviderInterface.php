@@ -11,7 +11,7 @@ namespace Alpha\View\Renderer;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -55,108 +55,90 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function setRecord($Record);
+    public function setRecord($Record): void;
 
     /**
      * Renders the create view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function createView($fields = array());
+    public function createView($fields = array()): string;
 
     /**
      * Renders the edit view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function editView($fields = array());
+    public function editView($fields = array()): string;
 
     /**
      * Renders the list view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function listView($fields = array());
+    public function listView($fields = array()): string;
 
     /**
      * Renders the detailed read-only view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function detailedView($fields = array());
+    public function detailedView($fields = array()): string;
 
     /**
      * Renders the admin view for the Record using the selected renderer.
      *
      * @param array $fields Hash array of fields to pass to the template.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function adminView($fields = array());
+    public function adminView($fields = array()): string;
 
     /**
      * Renders the header content using the given renderer.
      *
      * @param \Alpha\Controller\Controller $controller
      *
-     * @return string
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.2
      */
-    public static function displayPageHead($controller);
+    public static function displayPageHead($controller): string;
 
     /**
      * Renders the footer content using the given renderer.
      *
      * @param \Alpha\Controller\Controller $controller
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function displayPageFoot($controller);
+    public static function displayPageFoot($controller): string;
 
     /**
      * Renders an update (e.g. successful save) message.
      *
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function displayUpdateMessage($message);
+    public static function displayUpdateMessage($message): string;
 
     /**
      * Renders an error (e.g. save failed) message.
      *
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function displayErrorMessage($message);
+    public static function displayErrorMessage($message): string;
 
     /**
      * Renders an error page with the supplied HTTP error code and a message.
@@ -164,33 +146,27 @@ interface RendererProviderInterface
      * @param string $code
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function renderErrorPage($code, $message);
+    public static function renderErrorPage($code, $message): string;
 
     /**
      * Method to render a hidden HTML form for posting the ID of an object to be deleted.
      *
      * @param string $URI The URI that the form will point to
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function renderDeleteForm($URI);
+    public static function renderDeleteForm($URI): string;
 
     /**
      * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as
      * a check to ensure that a post to the controller is being sent from the same server
      * as hosting it.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public static function renderSecurityFields();
+    public static function renderSecurityFields(): string;
 
     /**
      * Renders an Integer field value.
@@ -200,11 +176,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderIntegerField($name, $label, $mode, $value = '');
+    public function renderIntegerField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders an Double field value.
@@ -214,11 +188,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderDoubleField($name, $label, $mode, $value = '');
+    public function renderDoubleField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders an Boolean field value.
@@ -228,11 +200,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderBooleanField($name, $label, $mode, $value = '');
+    public function renderBooleanField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders an Enum field value.
@@ -243,11 +213,9 @@ interface RendererProviderInterface
      * @param array  $options The Enum options
      * @param string $value   The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = '');
+    public function renderEnumField($name, $label, $mode, $options, $value = ''): string;
 
     /**
      * Renders an DEnum field value.
@@ -258,11 +226,9 @@ interface RendererProviderInterface
      * @param array  $options The DEnum options
      * @param string $value   The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = '');
+    public function renderDEnumField($name, $label, $mode, $options, $value = ''): string;
 
     /**
      * Method to render a field when type is not known.
@@ -272,11 +238,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderDefaultField($name, $label, $mode, $value = '');
+    public function renderDefaultField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders a Text field value.
@@ -286,11 +250,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value = '');
+    public function renderTextField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders a String field value.
@@ -300,11 +262,9 @@ interface RendererProviderInterface
      * @param string $mode  The field mode (create/edit/view)
      * @param string $value The field value (optional)
      *
-     * @return string
-     *
      * @since 1.2.2
      */
-    public function renderStringField($name, $label, $mode, $value = '');
+    public function renderStringField($name, $label, $mode, $value = ''): string;
 
     /**
      * Renders a Relation field value.
@@ -316,11 +276,9 @@ interface RendererProviderInterface
      * @param bool   $expanded Render the related fields in expanded format or not (optional)
      * @param bool   $buttons  Render buttons for expanding/contacting the related fields (optional)
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true);
+    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true): string;
 
     /**
      * Convenience method that renders all fields for the current Record in edit/create/view mode.
@@ -329,9 +287,7 @@ interface RendererProviderInterface
      * @param array  $filterFields   Optional list of field names to exclude from rendering.
      * @param array  $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode.
      *
-     * @return string
-     *
      * @since 1.2
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array());
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array()): string;
 }
