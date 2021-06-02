@@ -522,8 +522,8 @@ abstract class Controller
 
         $session->set('unitOfWork', $jobs);
 
-        if (method_exists($this, 'after_setUnitOfWork_callback')) {
-            $this->{'after_setUnitOfWork_callback'}();
+        if (method_exists($this, 'afterSetUnitOfWork')) {
+            $this->{'afterSetUnitOfWork'}();
         }
 
         self::$logger->debug('<<setUnitOfWork');
