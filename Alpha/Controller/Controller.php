@@ -679,8 +679,8 @@ abstract class Controller
     {
         self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
 
-        if (method_exists($this, 'before_markDirty_callback')) {
-            $this->{'before_markDirty_callback'}();
+        if (method_exists($this, 'beforeMarkDirty')) {
+            $this->{'beforeMarkDirty'}();
         }
 
         $this->dirtyObjects[count($this->dirtyObjects)] = $object;
