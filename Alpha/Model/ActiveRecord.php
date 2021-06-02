@@ -331,8 +331,8 @@ abstract class ActiveRecord
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
             loadAttributes=['.var_export($loadAttributes, true).'])');
 
-        if (method_exists($this, 'before_loadByAttribute_callback')) {
-            $this->{'before_loadByAttribute_callback'}();
+        if (method_exists($this, 'beforeLoadByAttribute')) {
+            $this->{'beforeLoadByAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
