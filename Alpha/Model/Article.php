@@ -307,7 +307,7 @@ class Article extends ActiveRecord
      */
     protected function afterLoadByAttribute(): void
     {
-        $this->{'after_load_callback'}();
+        $this->{'afterLoad'}();
     }
 
     /**
@@ -315,7 +315,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_load_callback(): void
+    protected function afterLoad(): void
     {
         $config = ConfigProvider::getInstance();
 
