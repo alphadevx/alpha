@@ -321,7 +321,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.2.4
      */
-    protected function before_delete_callback(): void
+    protected function beforeDelete(): void
     {
         $this->{'afterSave'}();
     }

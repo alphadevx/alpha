@@ -791,8 +791,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>delete()');
 
-        if (method_exists($this, 'before_delete_callback')) {
-            $this->{'before_delete_callback'}();
+        if (method_exists($this, 'beforeDelete')) {
+            $this->{'beforeDelete'}();
         }
 
         $config = ConfigProvider::getInstance();
