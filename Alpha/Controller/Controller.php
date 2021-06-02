@@ -847,8 +847,8 @@ abstract class Controller
 
             $this->clearUnitOfWorkAttributes();
 
-            if (method_exists($this, 'after_abort_callback')) {
-                $this->{'after_abort_callback'}();
+            if (method_exists($this, 'afterAbort')) {
+                $this->{'afterAbort'}();
             }
 
             self::$logger->debug('<<abort');
