@@ -261,8 +261,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
-        if (method_exists($this, 'before_load_callback')) {
-            $this->{'before_load_callback'}();
+        if (method_exists($this, 'beforeLoad')) {
+            $this->{'beforeLoad'}();
         }
 
         $config = ConfigProvider::getInstance();
