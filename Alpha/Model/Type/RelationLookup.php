@@ -225,8 +225,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
 
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
-        if (method_exists($this, 'before_loadAllByAttribute_callback')) {
-            $this->{'before_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'beforeLoadAllByAttribute')) {
+            $this->{'beforeLoadAllByAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
