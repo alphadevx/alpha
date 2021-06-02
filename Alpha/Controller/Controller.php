@@ -457,8 +457,8 @@ abstract class Controller
     {
         self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
 
-        if (method_exists($this, 'before_setUnitOfWork_callback')) {
-            $this->{'before_setUnitOfWork_callback'}();
+        if (method_exists($this, 'beforeSetUnitOfWork')) {
+            $this->{'beforeSetUnitOfWork'}();
         }
 
         if (!is_array($jobs)) {
