@@ -493,8 +493,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-        if (method_exists($this, 'before_loadAllByDayUpdated_callback')) {
-            $this->{'before_loadAllByDayUpdated_callback'}();
+        if (method_exists($this, 'beforeLoadAllByDayUpdated')) {
+            $this->{'beforeLoadAllByDayUpdated'}();
         }
 
         $config = ConfigProvider::getInstance();
