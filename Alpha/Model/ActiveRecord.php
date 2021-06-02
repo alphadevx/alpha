@@ -371,8 +371,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-        if (method_exists($this, 'before_loadAll_callback')) {
-            $this->{'before_loadAll_callback'}();
+        if (method_exists($this, 'beforeLoadAll')) {
+            $this->{'beforeLoadAll'}();
         }
 
         $config = ConfigProvider::getInstance();
