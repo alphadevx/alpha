@@ -466,8 +466,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAllByAttributes_callback')) {
-            $this->{'after_loadAllByAttributes_callback'}();
+        if (method_exists($this, 'afterLoadAllByAttributes')) {
+            $this->{'afterLoadAllByAttributes'}();
         }
 
         self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
