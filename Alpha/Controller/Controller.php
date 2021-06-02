@@ -765,8 +765,8 @@ abstract class Controller
     {
         self::$logger->debug('>>commit()');
 
-        if (method_exists($this, 'before_commit_callback')) {
-            $this->{'before_commit_callback'}();
+        if (method_exists($this, 'beforeCommit')) {
+            $this->{'beforeCommit'}();
         }
 
         ActiveRecord::begin();
