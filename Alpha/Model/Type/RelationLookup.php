@@ -235,8 +235,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         $provider->setRecord($this);
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
-        if (method_exists($this, 'after_loadAllByAttribute_callback')) {
-            $this->{'after_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'afterLoadAllByAttribute')) {
+            $this->{'afterLoadAllByAttribute'}();
         }
 
         self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
