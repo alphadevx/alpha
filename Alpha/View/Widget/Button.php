@@ -125,7 +125,7 @@ class Button
      *
      * @since 1.0
      */
-    public function __construct($action, $title, $id, $imgURL = '', $glyphIcon = '', $tooltip = '', $tooltipPosition = '')
+    public function __construct(string $action, string $title, string $id, string $imgURL = '', string $glyphIcon = '', string $tooltip = '', string $tooltipPosition = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -146,7 +146,7 @@ class Button
      *
      * @since 1.0
      */
-    public function render($width = 0, $cssClasses = ''): string
+    public function render(int $width = 0, string $cssClasses = ''): string
     {
         $html = '';
         $tooltip = '';

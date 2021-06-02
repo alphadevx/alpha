@@ -123,7 +123,7 @@ class RecordSelector
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($relation, $label = '', $name = '', $accessingClassName = '')
+    public function __construct(\Alpha\Model\Type\Relation $relation, string $label = '', string $name = '', string $accessingClassName = '')
     {
         self::$logger = new Logger('RecordSelector');
         self::$logger->debug('>>__construct(relation=['.$relation.'], label=['.$label.'], name=['.$name.'], accessingClassName=['.$accessingClassName.'])');
@@ -148,7 +148,7 @@ class RecordSelector
      *
      * @since 1.0
      */
-    public function render($expanded = false, $buttons = true): string
+    public function render(bool $expanded = false, bool $buttons = true): string
     {
         self::$logger->debug('>>render(expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -383,7 +383,7 @@ class RecordSelector
      *
      * @since 1.0
      */
-    public function renderSelector($fieldname, $lookupIDs = array()): string
+    public function renderSelector(string $fieldname, array $lookupIDs = array()): string
     {
         self::$logger->debug('>>renderSelector(fieldname=['.$fieldname.'], lookupIDs=['.var_export($lookupIDs, true).'])');
 
@@ -467,7 +467,7 @@ class RecordSelector
                 $html .= '</td>';
                 $html .= '<td width="20%">';
 
-                if (in_array($obj->getID(), $lookupIDs)) {
+                if (in_array($obj->getID(), $lookupIDs, true)) {
                     $this->onloadJS .= 'toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',true);';
                     $html .= '<input name = "'.$obj->getID().'" type="checkbox" checked onclick="toggelOID(\''.$obj->getID().'\',\''.$obj->get($fieldName).'\',this.checked);"/>';
                 } else {

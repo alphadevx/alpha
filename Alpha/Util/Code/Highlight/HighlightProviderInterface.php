@@ -56,5 +56,5 @@ interface HighlightProviderInterface
      *
      * @since 1.2
      */
-    public function highlight($source, $language): string;
+    public function highlight(string $source, string $language): string;
 }

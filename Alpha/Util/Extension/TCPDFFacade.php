@@ -115,7 +115,7 @@ class TCPDFFacade
      *
      * @since 1.0
      */
-    public function __construct($article)
+    public function __construct(\Alpha\Model\ActiveRecord $article)
     {
         self::$logger = new Logger('TCPDFFacade');
         self::$logger->debug('>>__construct()');

@@ -156,7 +156,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    public function __construct($rowSpace = 40, $colSpace = 40, $branchSpace = 80)
+    public function __construct(int $rowSpace = 40, int $colSpace = 40, int $branchSpace = 80)
     {
         self::$logger = new Logger('TreeGraph');
 
@@ -180,7 +180,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    public function add($id, $pid, $message, $w, $h, $nodeColour, $URL): void
+    public function add(int $id, int $pid, string $message, int $w, int $h, array $nodeColour, string $URL): void
     {
         $node = new GraphNode($id, $w, $h, $message, $nodeColour, $URL);
 
@@ -204,7 +204,7 @@ class TreeGraph
      *
      * @since 2.0.1
      */
-    public function get($id): \Alpha\Util\Graph\GraphNode
+    public function get(int $id): \Alpha\Util\Graph\GraphNode
     {
         if (isset($this->nodes[$id])) {
             return $this->nodes[$id];
@@ -221,7 +221,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    private function firstPass($node, $level): void
+    private function firstPass(\Alpha\Util\Graph\GraphNode $node, int $level): void
     {
         $this->setNeighbours($node, $level);
 
@@ -267,7 +267,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    private function secondPass($node, $level, $x = 0, $y = 0): void
+    private function secondPass(\Alpha\Util\Graph\GraphNode $node, int $level, int $x = 0, int $y = 0): void
     {
         $nodeX = $node->getOffset()+$x;
         $nodeY = $y;
@@ -299,7 +299,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    private function layout($node, $level): void
+    private function layout(\Alpha\Util\Graph\GraphNode $node, int $level): void
     {
         $firstChild = $node->getChildAt(0);
         $firstChildLeftNeighbour = $firstChild->getLeftSibling();
@@ -362,7 +362,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    private function setNeighbours($node, $level): void
+    private function setNeighbours(\Alpha\Util\Graph\GraphNode $node, int $level): void
     {
         if (isset($this->previousLevelNodes[$level])) {
             $node->setLeftSibling($this->previousLevelNodes[$level]);
@@ -383,7 +383,7 @@ class TreeGraph
      *
      * @since 1.0
      */
-    private function getLeftmost($node, $level, $maxlevel): \Alpha\Util\Graph\GraphNode|null
+    private function getLeftmost(\Alpha\Util\Graph\GraphNode $node, int $level, int $maxlevel): \Alpha\Util\Graph\GraphNode|null
     {
         if ($level >= $maxlevel) {
             return $node;

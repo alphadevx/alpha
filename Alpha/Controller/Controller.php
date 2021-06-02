@@ -253,7 +253,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Public')
+    public function __construct(string $visibility = 'Public')
     {
         self::$logger = new Logger('Controller');
         self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
@@ -314,7 +314,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setRecord($record): void
+    public function setRecord(\Alpha\Model\ActiveRecord $record): void
     {
         self::$logger->debug('>>setRecord(record=['.var_export($record, true).'])');
         $this->record = $record;
@@ -357,7 +357,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         self::$logger->debug('>>setName(name=['.$name.'])');
         $this->name = $name;
@@ -384,7 +384,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setVisibility($visibility): void
+    public function setVisibility(string $visibility): void
     {
         self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
         $this->visibility = $visibility;
@@ -453,7 +453,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitOfWork($jobs): void
+    public function setUnitOfWork(array $jobs): void
     {
         self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
 
@@ -554,7 +554,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitStartTime($year, $month, $day, $hour, $minute, $second): void
+    public function setUnitStartTime(int $year, int $month, int $day, int $hour, int $minute, int $second): void
     {
         self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
             second=['.$second.'])');
@@ -594,7 +594,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitEndTime($year, $month, $day, $hour, $minute, $second): void
+    public function setUnitEndTime(int $year, int $month, int $day, int $hour, int $minute, int $second): void
     {
         self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
          second=['.$second.'])');
@@ -629,7 +629,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitMAXDuration($duration): void
+    public function setUnitMAXDuration(int $duration): void
     {
         self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
         $this->unitMAXDuration->setValue($duration);
@@ -675,7 +675,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function markDirty($object): void
+    public function markDirty(\Alpha\Model\ActiveRecord $object): void
     {
         self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
 
@@ -718,7 +718,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function markNew($object): void
+    public function markNew(\Alpha\Model\ActiveRecord $object): void
     {
         self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
 
@@ -897,7 +897,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
         self::$logger->debug('>>setTitle(title=['.$title.'])');
         self::$logger->debug('<<setTitle');
@@ -924,7 +924,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setDescription($description): void
+    public function setDescription(string $description): void
     {
         self::$logger->debug('>>setDescription(description=['.$description.'])');
         self::$logger->debug('<<setDescription');
@@ -951,7 +951,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setKeywords($keywords): void
+    public function setKeywords(string $keywords): void
     {
         self::$logger->debug('>>setKeywords(keywords=['.$keywords.'])');
         self::$logger->debug('<<setKeywords');
@@ -1166,7 +1166,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public static function getCustomControllerName($ActiveRecordType): string|null
+    public static function getCustomControllerName(string $ActiveRecordType): string|null
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1210,7 +1210,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setStatusMessage($message): void
+    public function setStatusMessage(string $message): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -1247,7 +1247,7 @@ abstract class Controller
      * @since 1.0
      * @deprecated
      */
-    public static function checkControllerDefExists($controllerName): bool
+    public static function checkControllerDefExists(string $controllerName): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1282,7 +1282,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public static function loadControllerDef($controllerName): void
+    public static function loadControllerDef(string $controllerName): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Controller');
@@ -1331,7 +1331,7 @@ abstract class Controller
 
             // set request params where fieldnames provided are based64 encoded and encrypted
             if (Validator::isBase64($fieldname)) {
-                $decrypted[SecurityUtils::decrypt(base64_decode($fieldname))] = $params[$fieldname];
+                $decrypted[SecurityUtils::decrypt(base64_decode($fieldname, true))] = $params[$fieldname];
             }
         }
 
@@ -1348,7 +1348,7 @@ abstract class Controller
      *
      * @since 1.2.4
      */
-    public static function generateURLSlug($URLPart, $seperator = '-', $filter = array(), $crc32Prefix = false): string
+    public static function generateURLSlug(string $URLPart, string $seperator = '-', array $filter = array(), bool $crc32Prefix = false): string
     {
         $URLPart = trim($URLPart);
 
@@ -1376,7 +1376,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doHEAD($request): \Alpha\Util\Http\Response
+    public function doHEAD(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doHEAD() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The HEAD method is not supported by this controller');
@@ -1390,7 +1390,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doGET() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The GET method is not supported by this controller');
@@ -1404,7 +1404,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPOST($request): \Alpha\Util\Http\Response
+    public function doPOST(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPOST() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The POST method is not supported by this controller');
@@ -1418,7 +1418,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPUT($request): \Alpha\Util\Http\Response
+    public function doPUT(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPUT() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PUT method is not supported by this controller');
@@ -1432,7 +1432,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doPATCH($request): \Alpha\Util\Http\Response
+    public function doPATCH(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doPATCH() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The PATCH method is not supported by this controller');
@@ -1446,7 +1446,7 @@ abstract class Controller
      * @throws \Alpha\Exception\NotImplementedException
      * @param Request $request
      */
-    public function doDELETE($request): \Alpha\Util\Http\Response
+    public function doDELETE(Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('doDELETE() called but not implement in child class, request URI ['.$request->getURI().']');
         throw new NotImplementedException('The DELETE method is not supported by this controller');
@@ -1458,7 +1458,7 @@ abstract class Controller
      * @since 2.0
      * @param Request $request
      */
-    public function doOPTIONS($request): \Alpha\Util\Http\Response
+    public function doOPTIONS(Request $request): \Alpha\Util\Http\Response
     {
         $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
         $supported = array();
@@ -1486,7 +1486,7 @@ abstract class Controller
      * @since 2.0.2
      * @param Request $request
      */
-    public function doTRACE($request): \Alpha\Util\Http\Response
+    public function doTRACE(Request $request): \Alpha\Util\Http\Response
     {
         $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
         $supported = array();
@@ -1516,7 +1516,7 @@ abstract class Controller
      *
      * @since 2.0
      */
-    public function process($request): \Alpha\Util\Http\Response
+    public function process(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         if (!$request instanceof Request) {
             throw new IllegalArguementException('The request passed to process is not a valid Request object');
@@ -1526,7 +1526,7 @@ abstract class Controller
 
         $method = $request->getMethod();
 
-        if (in_array($method, array('POST', 'PUT', 'PATCH'))) {
+        if (in_array($method, array('POST', 'PUT', 'PATCH'), true)) {
             if ($config->get('security.encrypt.http.fieldnames')) {
                 $decryptedParams = $this->decryptFieldNames($request->getParams());
                 $request->addParams($decryptedParams);
@@ -1600,7 +1600,7 @@ abstract class Controller
      *
      * @since 2.0
      */
-    public function setRequest($request): void
+    public function setRequest(\Alpha\Util\Http\Request $request): void
     {
         if ($request instanceof Request) {
             $this->request = $request;

@@ -54,7 +54,7 @@ class InputFilter
      *
      * @since 1.0
      */
-    public static function encode($text, $allowHTML = false): string
+    public static function encode(string $text, bool $allowHTML = false): string
     {
         if ($allowHTML) {
             return $text;
@@ -71,7 +71,7 @@ class InputFilter
      *
      * @since 1.0
      */
-    public static function decode($text, $allowHTML = false): string
+    public static function decode(string $text, bool $allowHTML = false): string
     {
         if ($allowHTML) {
             return $text;

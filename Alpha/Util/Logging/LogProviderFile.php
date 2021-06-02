@@ -75,7 +75,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 2.0
      */
-    public function setPath($path)
+    public function setPath(string $path)
     {
         $this->path = $path;
     }
@@ -87,7 +87,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 1.0
      */
-    public function setMaxSize($maxSize)
+    public function setMaxSize(int $maxSize)
     {
         $this->maxSize = $maxSize;
     }

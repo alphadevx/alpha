@@ -62,7 +62,7 @@ class ArticleCommentView extends View
      *
      * @since 1.0
      */
-    public function markdownView($fields = array()): string
+    public function markdownView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -105,7 +105,7 @@ class ArticleCommentView extends View
      *
      * @since 1.0
      */
-    public function createView($fields = array()): string
+    public function createView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -114,7 +114,7 @@ class ArticleCommentView extends View
         $html .= '<table cols="2" class="create_view">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 10);
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', 10);
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
@@ -144,7 +144,7 @@ class ArticleCommentView extends View
      *
      * @since 1.0
      */
-    public function editView($fields = array()): string
+    public function editView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -153,7 +153,7 @@ class ArticleCommentView extends View
         $html = '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 5, $this->record->getID());
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', 5, $this->record->getID());
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');

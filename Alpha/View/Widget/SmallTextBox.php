@@ -100,7 +100,7 @@ class SmallTextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($string, $label, $name, $size = 0)
+    public function __construct(\Alpha\Model\Type\SmallText $string, string $label, string $name, int $size = 0)
     {
         $config = ConfigProvider::getInstance();
 
@@ -127,7 +127,7 @@ class SmallTextBox
      *
      * @since 1.0
      */
-    public function render($readOnly = false): string
+    public function render(bool $readOnly = false): string
     {
         $request = new Request(array('method' => 'GET'));
 
@@ -153,7 +153,7 @@ class SmallTextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setStringObject($string): void
+    public function setStringObject(\Alpha\Model\Type\SmallText $string): void
     {
         if ($string instanceof SmallText) {
             $this->stringObject = $string;

@@ -58,7 +58,7 @@ class PHPServerUtils
      *
      * @throws \AlphaException
      */
-    public static function start($host, $port, $docRoot): int
+    public static function start(string $host, int $port, string $docRoot): int
     {
         // we are on Windows
         if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -110,7 +110,7 @@ class PHPServerUtils
      *
      * @param int $PID The PID of the running server we want to stop
      */
-    public static function stop($PID): void
+    public static function stop(int $PID): void
     {
         // we are on Windows
         if (mb_strtoupper(mb_substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -125,7 +125,7 @@ class PHPServerUtils
      *
      * @param int $PID The PID of the running server we want to check
      */
-    public static function status($PID): bool
+    public static function status(int $PID): bool
     {
         $output = array();
         // we are on Windows

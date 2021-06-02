@@ -261,7 +261,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper): void
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }
@@ -280,13 +280,13 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Used to set the IDs of the related objects.  Pass a two-item array of IDs, the first
      * one being the left object ID, the second being the right.
      *
-     * @param array $IDs
+     * @param mixed $IDs
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($IDs): void
+    public function setValue(mixed $IDs): void
     {
         try {
             $this->leftID->setValue($IDs[0]);

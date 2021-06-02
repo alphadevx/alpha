@@ -100,7 +100,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Public')
+    public function __construct(string $visibility = 'Public')
     {
         self::$logger = new Logger('SearchController');
         self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
@@ -120,7 +120,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -188,7 +188,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    protected function renderResultList($results, $query = '', $showTags = true): string
+    protected function renderResultList(array $results, string $query = '', bool $showTags = true): string
     {
         $body = '';
 
@@ -213,7 +213,7 @@ class SearchController extends Controller implements ControllerInterface
                         $queryTerms = explode(' ', mb_strtolower($query));
 
                         foreach ($tags as $tag) {
-                            $body .= (in_array($tag->get('content'), $queryTerms) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
+                            $body .= (in_array($tag->get('content'), $queryTerms, true) ? '<strong>'.$tag->get('content').' </strong>' : $tag->get('content').' ');
                         }
 
                         $body .= '</p>';
@@ -350,7 +350,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.2.4
      */
-    protected function setResultCount($resultCount): void
+    protected function setResultCount(int $resultCount): void
     {
         $this->resultCount = $resultCount;
     }
@@ -372,7 +372,7 @@ class SearchController extends Controller implements ControllerInterface
      *
      * @since 1.2.4
      */
-    protected function setSearchQuery($query): void
+    protected function setSearchQuery(string $query): void
     {
         $this->query = $query;
     }

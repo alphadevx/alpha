@@ -103,7 +103,7 @@ class Integer extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = 0)
+    public function __construct(int $val = 0)
     {
         $this->validationRule = Validator::REQUIRED_INTEGER;
 
@@ -121,13 +121,13 @@ class Integer extends Type implements TypeInterface
     /**
      * Setter for the Integer value.
      *
-     * @param int $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (!Validator::isInteger($val)) {
             throw new IllegalArguementException($this->helper);
@@ -169,7 +169,7 @@ class Integer extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size): void
+    public function setSize(int $size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -196,7 +196,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public static function zeroPad($val): string
+    public static function zeroPad(int $val): string
     {
         return str_pad($val, self::MAX_SIZE, '0', STR_PAD_LEFT);
     }

@@ -90,7 +90,7 @@ class DateBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($object, $label = '', $name = '')
+    public function __construct($object, string $label = '', string $name = '')
     {
         $config = ConfigProvider::getInstance();
 

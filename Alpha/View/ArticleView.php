@@ -59,7 +59,7 @@ class ArticleView extends View
      *
      * @since 1.0
      */
-    public function markdownView($fields = array()): string
+    public function markdownView(array $fields = array()): string
     {
         $markdown = new MarkdownFacade($this->record);
 
@@ -85,7 +85,7 @@ class ArticleView extends View
      *
      * @since 1.0
      */
-    public function listView($fields = array()): string
+    public function listView(array $fields = array()): string
     {
         $fields['dateAdded'] = $this->record->getCreateTS()->getDate();
         $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
@@ -100,7 +100,7 @@ class ArticleView extends View
      *
      * @since 2.0.1
      */
-    public function adminView($fields = array()): string
+    public function adminView(array $fields = array()): string
     {
         $fields['createButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&view=create');
 
@@ -114,7 +114,7 @@ class ArticleView extends View
      *
      * @since 2.0.1
      */
-    public function detailedView($fields = array()): string
+    public function detailedView(array $fields = array()): string
     {
         $fields['editButtonURL'] = FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&ActiveRecordType='.get_class($this->record).'&ActiveRecordID='.$this->record->getID().'&view=edit');
 
@@ -128,7 +128,7 @@ class ArticleView extends View
      *
      * @since 1.0
      */
-    public function editView($fields = array()): string
+    public function editView(array $fields = array()): string
     {
         if (method_exists($this, 'before_editView_callback')) {
             $this->{'before_editView_callback'}();

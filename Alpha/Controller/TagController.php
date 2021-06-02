@@ -107,7 +107,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -185,7 +185,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 foreach ($tags as $tag) {
                     $labels = $tag->getDataLabels();
 
-                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID());
                     $fields['contentSmallTextBox'] = $temp->render(false);
                     $fields['fieldname'] = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
                     $fields['tagID'] = $tag->getID();
@@ -194,7 +194,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     $tagsHTML .= View::loadTemplateFragment('html', 'tagsadmin.phtml', $fields);
                 }
 
-                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue', '');
+                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue');
                 $fields['newTagValueTextBox'] = $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');
@@ -239,7 +239,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 1.0
      */
-    public function doPOST($request): \Alpha\Util\Http\Response
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -361,7 +361,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 2.0
      */
-    public function doDELETE($request): \Alpha\Util\Http\Response
+    public function doDELETE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
@@ -384,7 +384,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 1.0
      */
-    private function regenerateTagsOnRecords($records): void
+    private function regenerateTagsOnRecords(array $records): void
     {
         foreach ($records as $record) {
             foreach ($record->get('taggedAttributes') as $tagged) {

@@ -139,24 +139,6 @@ class FrontControllerTest extends TestCase
     }
 
     /**
-     * Testing the registerFilter method with a bad filter object.
-     *
-     * @since 1.0
-     */
-    public function testRegisterFilterBad()
-    {
-        try {
-            $_SERVER['REQUEST_URI'] = '/';
-            $front = new FrontController();
-            $front->registerFilter(new FrontController());
-
-            $this->fail('testing the registerFilter method with a bad filter object');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Supplied filter object is not a valid FilterInterface instance!', $e->getMessage(), 'testing the registerFilter method with a bad filter object');
-        }
-    }
-
-    /**
      * Testing the generateSecureURL method.
      *
      * @since 1.2.1
@@ -182,7 +164,7 @@ class FrontControllerTest extends TestCase
     }
 
     /**
-     * Testing adding good and bad routes with callbacks.
+     * Testing adding good routes with callbacks.
      */
     public function testAddRoute()
     {
@@ -194,13 +176,6 @@ class FrontControllerTest extends TestCase
 
         $this->assertTrue(is_callable($front->getRouteCallback('/hello')), 'Testing adding good and bad routes with callbacks');
         $this->assertEquals('hello', call_user_func($front->getRouteCallback('/hello'))->getBody(), 'Testing adding good and bad routes with callbacks');
-
-        try {
-            $front->addRoute('/hello', 'not_a_callable');
-            $this->fail('Testing adding good and bad routes with callbacks');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Callback provided for route [/hello] is not callable', $e->getMessage());
-        }
 
         try {
             $front->getRouteCallback('/not_there');

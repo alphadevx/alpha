@@ -71,7 +71,7 @@ class ImageController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Public')
+    public function __construct(string $visibility = 'Public')
     {
         self::$logger = new Logger('ImageController');
         self::$logger->debug('>>__construct()');
@@ -92,7 +92,7 @@ class ImageController extends Controller implements ControllerInterface
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\ResourceNotAllowedException
      */
-    public function doGet($request): \Alpha\Util\Http\Response
+    public function doGet(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
 

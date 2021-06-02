@@ -85,7 +85,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = true)
+    public function __construct(bool $val = true)
     {
         if (!Validator::isBoolean($val)) {
             throw new IllegalArguementException($this->helper);
@@ -109,7 +109,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (!Validator::isBoolean($val)) {
             throw new IllegalArguementException($this->helper);

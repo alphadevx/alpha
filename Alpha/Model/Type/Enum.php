@@ -84,7 +84,7 @@ class Enum extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($opts = array(''))
+    public function __construct(array $opts = array(''))
     {
         if (is_array($opts)) {
             $this->options = $opts;
@@ -102,7 +102,7 @@ class Enum extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setOptions($opts): void
+    public function setOptions(array $opts): void
     {
         if (is_array($opts)) {
             $this->options = $opts;
@@ -118,7 +118,7 @@ class Enum extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function getOptions($alphaSort = false): array
+    public function getOptions(bool $alphaSort = false): array
     {
         if ($alphaSort) {
             sort($this->options, SORT_STRING);
@@ -140,15 +140,15 @@ class Enum extends Type implements TypeInterface
     /**
      * Used to select the current enum item.
      *
-     * @param string $item The item to set as selected in the Enum
+     * @param mixed $item The item to set as selected in the Enum
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($item): void
+    public function setValue(mixed $item): void
     {
-        if (in_array($item, $this->options)) {
+        if (in_array($item, $this->options, true)) {
             $this->value = $item;
         } else {
             throw new IllegalArguementException($this->getHelper());

@@ -58,7 +58,7 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0): array;
+    public function search(string $query, string $returnType = 'all', int $start = 0, int $limit = 10, int $createdBy = 0): array;
 
     /**
      * Gets a list of documents related to the business objects matching the object provided.  An array
@@ -72,7 +72,7 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = ''): array;
+    public function getRelated(\Alpha\Model\ActiveRecord $sourceObject, string $returnType = 'all', int $start = 0, int $limit = 10, string $distinct = ''): array;
 
     /**
      * Adds/updates the business object provided to the search engine index.
@@ -83,7 +83,7 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function index($sourceObject): void;
+    public function index(\Alpha\Model\ActiveRecord $sourceObject): void;
 
     /**
      * Deletes the business object provided from the search engine index.
@@ -94,7 +94,7 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function delete($sourceObject): void;
+    public function delete(\Alpha\Model\ActiveRecord $sourceObject): void;
 
     /**
      * Returns the number of matching objects found in the previous search carried out by this provider.

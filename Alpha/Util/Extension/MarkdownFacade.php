@@ -86,7 +86,7 @@ class MarkdownFacade
      *
      * @since 1.0
      */
-    public function __construct($record, $useCache = true)
+    public function __construct(\Alpha\Model\ActiveRecord $record, bool $useCache = true)
     {
         $config = ConfigProvider::getInstance();
         $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');

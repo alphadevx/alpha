@@ -159,7 +159,7 @@ class Response
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($status, $body = null, $headers = array())
+    public function __construct(int $status, string $body = null, array $headers = array())
     {
         $this->headers = $headers;
 
@@ -191,7 +191,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setBody($body): void
+    public function setBody(string $body): void
     {
         $this->body = $body;
     }
@@ -223,7 +223,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setStatus($status): void
+    public function setStatus(int $status): void
     {
         if (array_key_exists($status, $this->HTTPStatusCodes)) {
             $this->status = $status;
@@ -240,7 +240,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setHeader($header, $value): void
+    public function setHeader(string $header, string $value): void
     {
         $this->headers[$header] = $value;
     }
@@ -263,7 +263,7 @@ class Response
      *
      * @since 2.0
      */
-    public function getHeader($key, $default = null): mixed
+    public function getHeader(string $key, $default = null): mixed
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -280,7 +280,7 @@ class Response
      *
      * @since 2.0
      */
-    public function setCookie($cookie, $value): void
+    public function setCookie(string $cookie, string $value): void
     {
         $this->cookies[$cookie] = $value;
     }
@@ -303,7 +303,7 @@ class Response
      *
      * @since 2.0
      */
-    public function getCookie($key, $default = null): mixed
+    public function getCookie(string $key, $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
@@ -331,7 +331,7 @@ class Response
      *
      * @since 2.0
      */
-    public function redirect($URL): void
+    public function redirect(string $URL): void
     {
         if (Validator::isURL($URL)) {
             $this->headers = array();

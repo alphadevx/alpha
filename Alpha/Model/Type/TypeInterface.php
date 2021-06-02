@@ -53,7 +53,7 @@ interface TypeInterface
      *
      * @since 1.0
      */
-    public function setValue($val): void;
+    public function setValue(mixed $val): void;
 
     /**
      * Get the value.
@@ -69,7 +69,7 @@ interface TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper): void;
+    public function setHelper(string $helper): void;
 
     /**
      * Get the validation helper text.

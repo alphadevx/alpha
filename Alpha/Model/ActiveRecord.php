@@ -232,7 +232,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\CustomQueryException
      */
-    public function query($sqlQuery): array
+    public function query(string $sqlQuery): array
     {
         self::$logger->debug('>>query(sqlQuery=['.$sqlQuery.'])');
 
@@ -257,7 +257,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function load($ID, $version = 0): void
+    public function load(int $ID, int $version = 0): void
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
@@ -299,7 +299,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($ID): array
+    public function loadAllOldVersions(int $ID): array
     {
         self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
@@ -326,7 +326,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void
+    public function loadByAttribute(string $attribute, string $value, bool $ignoreClassType = false, array $loadAttributes = array()): void
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
             loadAttributes=['.var_export($loadAttributes, true).'])');
@@ -367,7 +367,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
+    public function loadAll(int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -407,7 +407,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
+    public function loadAllByAttribute(string $attribute, string $value, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false, array $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -446,7 +446,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
+    public function loadAllByAttributes(array $attributes = array(), array $values = array(), int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
@@ -489,7 +489,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
+    public function loadAllByDayUpdated(string $date, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -526,7 +526,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array
+    public function loadAllFieldValuesByAttribute(string $attribute, string $value, string $returnAttribute, string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -677,7 +677,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveAttribute($attribute, $value): void
+    public function saveAttribute(string $attribute, $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -758,7 +758,7 @@ abstract class ActiveRecord
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->defaultAttributes, true) && !in_array($propName, $this->transientAttributes, true)) {
                 $propClass = new ReflectionClass($this->getPropObject($propName));
                 $propClass = $propClass->getShortname();
                 if (mb_strtoupper($propClass) != 'ENUM' &&
@@ -882,7 +882,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedDeleteException
      */
-    public function deleteAllByAttribute($attribute, $value): int
+    public function deleteAllByAttribute(string $attribute, $value): int
     {
         self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -1044,7 +1044,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function dropTable($tableName = null): void
+    public function dropTable(string $tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1075,7 +1075,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function addProperty($propName): void
+    public function addProperty(string $propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 
@@ -1103,7 +1103,7 @@ abstract class ActiveRecord
      *
      * @since 1.2.1
      */
-    public function populateFromArray($hashArray): void
+    public function populateFromArray(array $hashArray): void
     {
         self::$logger->debug('>>populateFromArray(hashArray=['.print_r($hashArray, true).'])');
 
@@ -1181,7 +1181,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getCount($attributes = array(), $values = array()): int
+    public function getCount(array $attributes = array(), array $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
@@ -1310,7 +1310,7 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\AlphaException
      */
-    public function get($prop, $noChildMethods = false): mixed
+    public function get(string $prop, bool $noChildMethods = false): mixed
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1377,7 +1377,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function set($prop, $value, $noChildMethods = false): void
+    public function set(string $prop, $value, bool $noChildMethods = false): void
     {
         self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
@@ -1430,7 +1430,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getPropObject($prop): mixed
+    public function getPropObject(string $prop): mixed
     {
         self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
 
@@ -1482,7 +1482,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableExists($checkHistoryTable = false): bool
+    public function checkTableExists(bool $checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists()');
 
@@ -1516,7 +1516,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function checkRecordTableExists($recordClassName, $checkHistoryTable = false): bool
+    public static function checkRecordTableExists(string $recordClassName, bool $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1687,7 +1687,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markTransient($attributeName): void
+    public function markTransient(string $attributeName): void
     {
         self::$logger->debug('>>markTransient(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markTransient');
@@ -1702,7 +1702,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markPersistent($attributeName): void
+    public function markPersistent(string $attributeName): void
     {
         self::$logger->debug('>>markPersistent(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markPersistent');
@@ -1718,7 +1718,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected function markUnique($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
+    protected function markUnique(string $attribute1Name, string $attribute2Name = '', string $attribute3Name = ''): void
     {
         self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -1785,7 +1785,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
+    public function createForeignIndex(string $attributeName, string $relatedClass, string $relatedClassAttribute, string $indexName = null): void
     {
         self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
@@ -1827,7 +1827,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
+    public function createUniqueIndex(string $attribute1Name, string $attribute2Name = '', string $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -1870,7 +1870,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setDataLabels($labels): void
+    public function setDataLabels(array $labels): void
     {
         self::$logger->debug('>>setDataLabels(labels=['.print_r($labels, true).'])');
 
@@ -1896,7 +1896,7 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getDataLabel(att=['.$att.'])');
 
-        if (in_array($att, array_keys($this->dataLabels))) {
+        if (in_array($att, array_keys($this->dataLabels), true)) {
             self::$logger->debug('<<getDataLabel ['.$this->dataLabels[$att].'])');
 
             return $this->dataLabels[$att];
@@ -2007,7 +2007,7 @@ abstract class ActiveRecord
             $propName = $propObj->name;
 
             // filter transient attributes
-            if (!in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->transientAttributes, true)) {
                 array_push($attributes, $propName);
             }
         }
@@ -2024,7 +2024,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function setID($ID): void
+    public function setID(int $ID): void
     {
         self::$logger->debug('>>setID(ID=['.$ID.'])');
         self::$logger->debug('<<setID');
@@ -2115,7 +2115,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($ID): bool
+    public function checkRecordExists(int $ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
@@ -2171,7 +2171,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin($record = null): void
+    public static function begin(ActiveRecord $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2206,7 +2206,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit($record = null): void
+    public static function commit(ActiveRecord $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2241,7 +2241,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback($record = null): void
+    public static function rollback(ActiveRecord $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2331,7 +2331,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    private function setVersion($versionNumber): void
+    private function setVersion(int $versionNumber): void
     {
         $this->version_num->setValue($versionNumber);
     }
@@ -2346,7 +2346,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function cast($targetClassName, $originalRecord): \Alpha\Model\ActiveRecord
+    public function cast(string $targetClassName, \Alpha\Model\ActiveRecord $originalRecord): \Alpha\Model\ActiveRecord
     {
         $record = new $targetClassName();
         $record->setID($originalRecord->getID());
@@ -2364,7 +2364,7 @@ abstract class ActiveRecord
             // the original Record is smaller, so loop over its properties
             foreach ($originalRecordproperties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->transientAttributes)) {
+                if (!in_array($propName, $this->transientAttributes, true)) {
                     $record->set($propName, $originalRecord->get($propName));
                 }
             }
@@ -2372,7 +2372,7 @@ abstract class ActiveRecord
             // the new Record is smaller, so loop over its properties
             foreach ($newRecordproperties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->transientAttributes)) {
+                if (!in_array($propName, $this->transientAttributes, true)) {
                     $record->set($propName, $originalRecord->get($propName));
                 }
             }
@@ -2400,7 +2400,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function hasAttribute($attribute): bool
+    public function hasAttribute(string $attribute): bool
     {
         return property_exists($this, $attribute);
     }
@@ -2475,7 +2475,7 @@ abstract class ActiveRecord
                     $propName = $propObj->name;
 
                     // filter transient attributes
-                    if (!in_array($propName, $this->transientAttributes)) {
+                    if (!in_array($propName, $this->transientAttributes, true)) {
                         $this->set($propName, $record->get($propName, true));
                     } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
                         $prop = $this->getPropObject($propName);
@@ -2508,7 +2508,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function setLastQuery($query): void
+    public function setLastQuery(string $query): void
     {
         self::$logger->sql($query);
         $this->lastQuery = $query;
@@ -2536,7 +2536,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setMaintainHistory($maintainHistory): void
+    public function setMaintainHistory(bool $maintainHistory): void
     {
         if (!is_bool($maintainHistory)) {
             throw new IllegalArguementException('Non-boolean value ['.$maintainHistory.'] passed to setMaintainHistory method!');
@@ -2571,7 +2571,7 @@ abstract class ActiveRecord
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->transientAttributes, true)) {
                 $val = $this->get($propName);
 
                 if (is_object($val)) {
@@ -2641,7 +2641,7 @@ abstract class ActiveRecord
      *
      * @since 3.0
      */
-    public static function backupDatabase($targetFile): void
+    public static function backupDatabase(string $targetFile): void
     {
         $config = ConfigProvider::getInstance();
 

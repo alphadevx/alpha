@@ -70,7 +70,7 @@ class IndexController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Public')
+    public function __construct(string $visibility = 'Public')
     {
         self::$logger = new Logger('IndexController');
         self::$logger->debug('>>__construct()');
@@ -88,7 +88,7 @@ class IndexController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
 

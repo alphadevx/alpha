@@ -78,7 +78,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function load($ID, $version = 0): void;
+    public function load(int $ID, int $version = 0): void;
 
     /**
      * Load all old versions (if any) of this record from the [tablename]_history table.
@@ -89,7 +89,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($ID): array;
+    public function loadAllOldVersions(int $ID): array;
 
     /**
      * Populates the record object from the database table by the given attribute value.
@@ -103,7 +103,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void;
+    public function loadByAttribute(string $attribute, string $value, bool $ignoreClassType = false, array $loadAttributes = array()): void;
 
     /**
      * Loads all of the record objects of this class into an array which is returned.
@@ -118,7 +118,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array;
+    public function loadAll(int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array;
 
     /**
      * Loads all of the objects of this class by the specified attribute into an array which is returned.
@@ -137,7 +137,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array;
+    public function loadAllByAttribute(string $attribute, string $value, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false, array $constructorArgs = array()): array;
 
     /**
      * Loads all of the record objects of this class by the specified attributes into an array which is returned.
@@ -156,7 +156,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\RecordFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array;
+    public function loadAllByAttributes(array $attributes = array(), array $values = array(), int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false, array $constructorArgs = array()): array;
 
     /**
      * Loads all of the record objects of this class that where updated (updated_ts value) on the date indicated.
@@ -172,7 +172,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array;
+    public function loadAllByDayUpdated(string $date, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array;
 
     /**
      * Loads all of the specified attribute values of this class by the specified attribute into an
@@ -188,7 +188,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array;
+    public function loadAllFieldValuesByAttribute(string $attribute, string $value, string $returnAttribute, string $order = 'ASC', bool $ignoreClassType = false): array;
 
     /**
      * Saves the record.  If $this->ID is empty or null it will INSERT, otherwise UPDATE.
@@ -214,7 +214,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\FailedSaveException
      * @throws \Alpha\Exception\LockingException
      */
-    public function saveAttribute($attribute, $value): void;
+    public function saveAttribute(string $attribute, $value): void;
 
     /**
      * Saves the object history to the [tablename]_history table. It always does an INSERT.
@@ -252,7 +252,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeTable($checkIndexes = true): void;
+    public function makeTable(bool $checkIndexes = true): void;
 
     /**
      * Builds a new database table for the Record class to store it's history.
@@ -281,7 +281,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function dropTable($tableName = null): void;
+    public function dropTable(string $tableName = null): void;
 
     /**
      * Adds in a new class property without loosing existing data (does an ALTER TABLE query on the
@@ -293,7 +293,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function addProperty($propName): void;
+    public function addProperty(string $propName): void;
 
     /**
      * Gets the maximum ID value from the database for this class type.
@@ -314,7 +314,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getCount($attributes = array(), $values = array()): int;
+    public function getCount(array $attributes = array(), array $values = array()): int;
 
     /**
      * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
@@ -344,7 +344,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableExists($checkHistoryTable = false): bool;
+    public function checkTableExists(bool $checkHistoryTable = false): bool;
 
     /**
      * Static method to check the database and see if the table for the indicated Record class name
@@ -358,7 +358,7 @@ interface ActiveRecordProviderInterface
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool;
+    public static function checkRecordTableExists(string $RecordClassName, bool $checkHistoryTable = false): bool;
 
     /**
      * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
@@ -401,7 +401,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void;
+    public function createForeignIndex(string $attributeName, string $relatedClass, string $relatedClassAttribute, string $indexName = null): void;
 
     /**
      * Creates a unique index in the database on the given attribute(s).
@@ -414,7 +414,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void;
+    public function createUniqueIndex(string $attribute1Name, string $attribute2Name = '', string $attribute3Name = ''): void;
 
     /**
      * Reloads the object from the database, overwritting any attribute values in memory.
@@ -434,7 +434,7 @@ interface ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($ID): bool;
+    public function checkRecordExists(int $ID): bool;
 
     /**
      * Checks to see if the table name matches the classname, and if not if the table
@@ -481,7 +481,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    public function setRecord($record): void;
+    public function setRecord(\Alpha\Model\ActiveRecord $record): void;
 
     /**
      * Returns a 2d array, where each element in the array is another array
@@ -493,7 +493,7 @@ interface ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    public function query($sqlQuery): array;
+    public function query(string $sqlQuery): array;
 
     /**
      * Check to see if the configured database exists.

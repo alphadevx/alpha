@@ -67,7 +67,7 @@ interface SessionProviderInterface
      *
      * @since 2.0
      */
-    public function get($key): mixed;
+    public function get(string $key): mixed;
 
     /**
      * Stores the value provided at that key in the session.
@@ -77,7 +77,7 @@ interface SessionProviderInterface
      *
      * @since 2.0
      */
-    public function set($key, $value): void;
+    public function set(string $key, $value): void;
 
     /**
      * Deletes the value provided at that key in the session.
@@ -86,7 +86,7 @@ interface SessionProviderInterface
      *
      * @since 2.0
      */
-    public function delete($key): void;
+    public function delete(string $key): void;
 
     /**
      * Get the current session ID if available.

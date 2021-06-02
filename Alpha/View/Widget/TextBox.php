@@ -112,7 +112,7 @@ class TextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($text, $label, $name, $rows = 5, $identifier = 0)
+    public function __construct(\Alpha\Model\Type\Text $text, string $label, string $name, int $rows = 5, int $identifier = 0)
     {
         $config = ConfigProvider::getInstance();
 
@@ -172,7 +172,7 @@ class TextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTextObject($text): void
+    public function setTextObject(\Alpha\Model\Type\Text $text): void
     {
         if ($text instanceof Text) {
             $this->textObject = $text;

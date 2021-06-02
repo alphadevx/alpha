@@ -65,7 +65,7 @@ class SecurityUtils
      *
      * @since 1.2.2
      */
-    public static function encrypt($data, $key = ''): string
+    public static function encrypt(string $data, string $key = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -88,7 +88,7 @@ class SecurityUtils
      *
      * @since 1.2.2
      */
-    public static function decrypt($data, $key = ''): string
+    public static function decrypt(string $data, string $key = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -110,7 +110,7 @@ class SecurityUtils
      *
      * @since 2.0.2
      */
-    public static function checkAdminPasswordIsDefault($password): bool
+    public static function checkAdminPasswordIsDefault(string $password): bool
     {
         $config = ConfigProvider::getInstance();
 

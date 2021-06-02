@@ -193,7 +193,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper): void
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }
@@ -216,13 +216,13 @@ class Sequence extends ActiveRecord implements TypeInterface
      * Accepts a string to set the Sequence prefix/sequence values to, in the
      * format PREFIX-00000000000.
      *
-     * @param string $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (!empty($val)) {

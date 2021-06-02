@@ -90,7 +90,7 @@ class AttachmentController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -143,7 +143,7 @@ class AttachmentController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      */
-    public function doPUT($request): \Alpha\Util\Http\Response
+    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
 

@@ -173,11 +173,11 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Accepts a full date/time string in YYYY-mm-dd hh:ii:ss format.
      *
-     * @param string $dateTime
+     * @param mixed $dateTime
      *
      * @since 1.0
      */
-    public function setValue($dateTime): void
+    public function setValue(mixed $dateTime): void
     {
         $this->populateFromString($dateTime);
     }
@@ -196,7 +196,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTimestampValue($year, $month, $day, $hour, $minute, $second): void
+    public function setTimestampValue(int $year, int $month, int $day, int $hour, int $minute, int $second): void
     {
         $valid = null;
 
@@ -287,7 +287,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setDate($year, $month, $day): void
+    public function setDate(int $year, int $month, int $day): void
     {
         $valid = null;
 
@@ -406,7 +406,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTime($hour, $minute, $second): void
+    public function setTime(int $hour, int $minute, int $second): void
     {
         $valid = null;
 
@@ -438,7 +438,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function populateFromString($dateTime): void
+    public function populateFromString(string $dateTime): void
     {
         $valid = null;
 
@@ -558,7 +558,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule): void
+    public function setRule(string $rule): void
     {
         $this->validationRule = $rule;
     }
@@ -580,7 +580,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper): void
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }

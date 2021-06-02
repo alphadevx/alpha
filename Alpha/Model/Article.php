@@ -336,7 +336,7 @@ class Article extends ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function loadRecentWithLimit($limit): array
+    public function loadRecentWithLimit(int $limit): array
     {
         $sqlQuery = 'SELECT ID FROM '.$this->getTableName()." WHERE published='1' ORDER BY created_ts DESC LIMIT 0, $limit;";
 
@@ -382,7 +382,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    public function getAttachmentSecureURL($filename): string
+    public function getAttachmentSecureURL(string $filename): string
     {
         return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleID='.$this->getID().'&filename='.$filename);
     }
@@ -506,7 +506,7 @@ class Article extends ActiveRecord
      *
      * @throws \Alpha\Exception\FileNotFoundException
      */
-    public function loadContentFromFile($filePath): void
+    public function loadContentFromFile(string $filePath): void
     {
         try {
             $this->content->setValue(file_get_contents($filePath));

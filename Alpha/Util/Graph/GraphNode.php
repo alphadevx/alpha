@@ -193,7 +193,7 @@ class GraphNode
      * @param array  $nodeColour
      * @param string $URL
      */
-    public function __construct($id, $width, $height, $message = '', $nodeColour = array(), $URL = null)
+    public function __construct(int $id, int $width, int $height, string $message = '', array $nodeColour = array(), string $URL = null)
     {
         $this->id = $id;
         $this->width = $width;
@@ -222,7 +222,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setNodeColour($nodeColour): void
+    public function setNodeColour(array $nodeColour): void
     {
         if (is_array($nodeColour) && count($nodeColour) == 3) {
             $this->nodeColour = $nodeColour;
@@ -248,7 +248,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setURL($URL): void
+    public function setURL(string $URL): void
     {
         $this->URL = $URL;
     }
@@ -270,7 +270,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setMessage($message): void
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
@@ -292,7 +292,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setOffset($offset): void
+    public function setOffset(int $offset): void
     {
         $this->offset = $offset;
     }
@@ -314,7 +314,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setModifier($modifier): void
+    public function setModifier(int $modifier): void
     {
         $this->modifier = $modifier;
     }
@@ -342,13 +342,13 @@ class GraphNode
     /**
      * Set the parent node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setParentNode($node): void
+    public function setParentNode(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->parentNode = $node;
@@ -374,13 +374,13 @@ class GraphNode
     /**
      * Sets the node to the left of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setLeftSibling($node): void
+    public function setLeftSibling(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->leftNode = $node;
@@ -406,13 +406,13 @@ class GraphNode
     /**
      * Sets the node to the right of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setRightSibling($node): void
+    public function setRightSibling(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->rightNode = $node;
@@ -428,7 +428,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function getChildAt($i): mixed
+    public function getChildAt(int $i): mixed
     {
         if (isset($this->children[$i])) {
             return $this->children[$i];
@@ -463,13 +463,13 @@ class GraphNode
     /**
      * Add a new node to the children array of this node.
      *
-     * @param GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws ALpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function addChild($node): void
+    public function addChild(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             array_push($this->children, $node);
@@ -561,7 +561,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setX($x): void
+    public function setX(int $x): void
     {
         $this->x = $x;
     }
@@ -573,7 +573,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setY($y): void
+    public function setY(int $y): void
     {
         $this->y = $y;
     }

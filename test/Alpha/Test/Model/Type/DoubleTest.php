@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -104,26 +104,6 @@ class DoubleTest extends TestCase
         $this->dbl1 = new Double(5.77);
 
         $this->assertEquals(5.77, $this->dbl1->getValue(), 'testing the Double constructor for pass');
-    }
-
-    /**
-     * Testing the Double constructor for rejection of bad data.
-     */
-    public function testConstructorFail()
-    {
-        try {
-            $this->dbl1 = new Double('blah');
-            $this->fail('testing the Double constructor for rejection of bad data');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid double value!', $e->getMessage());
-        }
-
-        try {
-            $this->dbl1 = new Double(123451234512345);
-            $this->fail('testing the Double constructor for rejection of bad data');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid double value!', $e->getMessage());
-        }
     }
 
     /**

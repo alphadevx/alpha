@@ -62,7 +62,7 @@ class PersonView extends View
      *
      * @since 1.0
      */
-    public function displayLoginForm($fields = array()): string
+    public function displayLoginForm(array $fields = array()): string
     {
         $fields['formAction'] = FrontController::generateSecureURL('act=Alpha\Controller\LoginController');
 
@@ -97,7 +97,7 @@ class PersonView extends View
      *
      * @since 1.0
      */
-    public function displayResetForm($fields = array()): string
+    public function displayResetForm(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -129,7 +129,7 @@ class PersonView extends View
      *
      * @since 1.0
      */
-    public function displayRegisterForm($fields = array()): string
+    public function displayRegisterForm(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 

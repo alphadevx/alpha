@@ -219,7 +219,7 @@ class SearchProviderTags implements SearchProviderInterface
                                     continue;
                                 }
 
-                                if (!in_array($Record->get($distinct), $distinctValues)) {
+                                if (!in_array($Record->get($distinct), $distinctValues, true)) {
                                     $distinctValues[] = $Record->get($distinct);
                                 } else {
                                     continue;

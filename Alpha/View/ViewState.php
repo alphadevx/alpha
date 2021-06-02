@@ -141,7 +141,7 @@ class ViewState
      *
      * @since 1.0
      */
-    public function get($key): string|null
+    public function get(string $key): string|null
     {
         $attribute = new ReflectionProperty(get_class($this), $key);
 
@@ -162,7 +162,7 @@ class ViewState
      *
      * @since 1.0
      */
-    public function set($key, $value): void
+    public function set(string $key, string $value): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');

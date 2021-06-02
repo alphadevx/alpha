@@ -107,7 +107,7 @@ class Atom extends Feed
      *
      * @since 1.0
      */
-    public function __construct($title, $url, $description, $pubDate = null, $id = null)
+    public function __construct(string $title, string $url, string $description, string $pubDate = null, int $id = null)
     {
         if (empty($id)) {
             $id = $url;
@@ -125,7 +125,7 @@ class Atom extends Feed
      *
      * @since 1.0
      */
-    public function addAuthor($name): void
+    public function addAuthor(string $name): void
     {
         $author = $this->rssDoc->createElementNS($this->nameSpace, 'author');
 

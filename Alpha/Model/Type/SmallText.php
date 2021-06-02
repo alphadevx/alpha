@@ -106,13 +106,13 @@ class SmallText extends Type implements TypeInterface
     /**
      * Constructor.
      *
-     * @param string $val
+     * @param string|null $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = '')
+    public function __construct(string|null $val = '')
     {
         $this->validationRule = Validator::ALLOW_ALL;
 
@@ -130,13 +130,13 @@ class SmallText extends Type implements TypeInterface
     /**
      * Setter for the value.
      *
-     * @param string $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
@@ -166,7 +166,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule): void
+    public function setRule(string $rule): void
     {
         $this->validationRule = $rule;
     }
@@ -190,7 +190,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size): void
+    public function setSize(int $size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -216,7 +216,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function isRequired($req = true): void
+    public function isRequired(bool $req = true): void
     {
         if ($req) {
             $this->validationRule = Validator::REQUIRED_STRING;
@@ -231,7 +231,7 @@ class SmallText extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function isPassword($pass = true): void
+    public function isPassword(bool $pass = true): void
     {
         $this->password = $pass;
 

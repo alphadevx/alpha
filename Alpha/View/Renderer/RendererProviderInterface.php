@@ -55,7 +55,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function setRecord($Record): void;
+    public function setRecord(\Alpha\Model\ActiveRecord $Record): void;
 
     /**
      * Renders the create view for the Record using the selected renderer.
@@ -64,7 +64,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function createView($fields = array()): string;
+    public function createView(array $fields = array()): string;
 
     /**
      * Renders the edit view for the Record using the selected renderer.
@@ -73,7 +73,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function editView($fields = array()): string;
+    public function editView(array $fields = array()): string;
 
     /**
      * Renders the list view for the Record using the selected renderer.
@@ -82,7 +82,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function listView($fields = array()): string;
+    public function listView(array $fields = array()): string;
 
     /**
      * Renders the detailed read-only view for the Record using the selected renderer.
@@ -91,7 +91,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function detailedView($fields = array()): string;
+    public function detailedView(array $fields = array()): string;
 
     /**
      * Renders the admin view for the Record using the selected renderer.
@@ -100,7 +100,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function adminView($fields = array()): string;
+    public function adminView(array $fields = array()): string;
 
     /**
      * Renders the header content using the given renderer.
@@ -111,7 +111,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function displayPageHead($controller): string;
+    public static function displayPageHead(\Alpha\Controller\Controller $controller): string;
 
     /**
      * Renders the footer content using the given renderer.
@@ -120,7 +120,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function displayPageFoot($controller): string;
+    public static function displayPageFoot(\Alpha\Controller\Controller $controller): string;
 
     /**
      * Renders an update (e.g. successful save) message.
@@ -129,7 +129,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function displayUpdateMessage($message): string;
+    public static function displayUpdateMessage(string $message): string;
 
     /**
      * Renders an error (e.g. save failed) message.
@@ -138,7 +138,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function displayErrorMessage($message): string;
+    public static function displayErrorMessage(string $message): string;
 
     /**
      * Renders an error page with the supplied HTTP error code and a message.
@@ -148,7 +148,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function renderErrorPage($code, $message): string;
+    public static function renderErrorPage(string $code, string $message): string;
 
     /**
      * Method to render a hidden HTML form for posting the ID of an object to be deleted.
@@ -157,7 +157,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public static function renderDeleteForm($URI): string;
+    public static function renderDeleteForm(string $URI): string;
 
     /**
      * Method to render a HTML form with two hidden, hashed (MD5) form fields to be used as
@@ -178,7 +178,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderIntegerField($name, $label, $mode, $value = ''): string;
+    public function renderIntegerField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders an Double field value.
@@ -190,7 +190,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderDoubleField($name, $label, $mode, $value = ''): string;
+    public function renderDoubleField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders an Boolean field value.
@@ -202,7 +202,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderBooleanField($name, $label, $mode, $value = ''): string;
+    public function renderBooleanField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders an Enum field value.
@@ -215,7 +215,7 @@ interface RendererProviderInterface
      *
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = ''): string;
+    public function renderEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string;
 
     /**
      * Renders an DEnum field value.
@@ -228,7 +228,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = ''): string;
+    public function renderDEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string;
 
     /**
      * Method to render a field when type is not known.
@@ -240,7 +240,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderDefaultField($name, $label, $mode, $value = ''): string;
+    public function renderDefaultField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders a Text field value.
@@ -252,7 +252,7 @@ interface RendererProviderInterface
      *
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value = ''): string;
+    public function renderTextField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders a String field value.
@@ -264,7 +264,7 @@ interface RendererProviderInterface
      *
      * @since 1.2.2
      */
-    public function renderStringField($name, $label, $mode, $value = ''): string;
+    public function renderStringField(string $name, string $label, string $mode, string $value = ''): string;
 
     /**
      * Renders a Relation field value.
@@ -278,7 +278,7 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true): string;
+    public function renderRelationField(string $name, string $label, string $mode, string $value = '', bool $expanded = false, bool $buttons = true): string;
 
     /**
      * Convenience method that renders all fields for the current Record in edit/create/view mode.
@@ -289,5 +289,5 @@ interface RendererProviderInterface
      *
      * @since 1.2
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array()): string;
+    public function renderAllFields(string $mode, array $filterFields = array(), array $readOnlyFields = array()): string;
 }

@@ -55,5 +55,5 @@ interface FilterInterface
      *
      * @since 1.0
      */
-    public function process($request): void;
+    public function process(\Alpha\Util\Http\Request $request): void;
 }

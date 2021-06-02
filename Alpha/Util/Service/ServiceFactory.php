@@ -80,7 +80,7 @@ class ServiceFactory
      *
      * @since 3.0
      */
-    public static function getInstance($serviceName, $serviceInterface, $isSingleton = false): mixed
+    public static function getInstance(string $serviceName, string $serviceInterface, bool $isSingleton = false): mixed
     {
         // as the LogProviderInterface is itself a service, we don't call it's constructor again during instantiation
         if (self::$logger === null && $serviceInterface != 'Alpha\Util\Logging\LogProviderInterface') {
@@ -92,7 +92,7 @@ class ServiceFactory
         }
 
         if (class_exists($serviceName)) {
-            if ($isSingleton && in_array($serviceName, self::$singletons)) {
+            if ($isSingleton && in_array($serviceName, self::$singletons, true)) {
                 return self::$singletons[$serviceName];
             }
 
@@ -102,7 +102,7 @@ class ServiceFactory
                 throw new IllegalArguementException('The class ['.$serviceName.'] does not implement the expected ['.$serviceInterface.'] interface!');
             }
 
-            if ($isSingleton && !in_array($serviceName, self::$singletons)) {
+            if ($isSingleton && !in_array($serviceName, self::$singletons, true)) {
                 self::$singletons[$serviceName] = $instance;
             }
 

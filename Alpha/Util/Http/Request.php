@@ -158,7 +158,7 @@ class Request
      *
      * @since 2.0
      */
-    public function __construct($overrides = array())
+    public function __construct(array $overrides = array())
     {
         // set HTTP headers
         if (isset($overrides['headers']) && is_array($overrides['headers'])) {
@@ -168,22 +168,22 @@ class Request
         }
 
         // set HTTP method
-        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods)) {
+        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods, true)) {
             $this->method = $overrides['method'];
         } else {
             $method = $this->getGlobalServerValue('REQUEST_METHOD');
-            if (in_array($method, $this->HTTPMethods)) {
+            if (in_array($method, $this->HTTPMethods, true)) {
                 $this->method = $method;
             }
         }
 
         // allow the POST param _METHOD to override the HTTP method
-        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods)) {
+        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods, true)) {
             $this->method = $_POST['_METHOD'];
         }
 
         // allow the POST param X-HTTP-Method-Override to override the HTTP method
-        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods)) {
+        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods, true)) {
             $this->method = $this->headers['X-HTTP-Method-Override'];
         }
 
@@ -259,7 +259,7 @@ class Request
      *
      * @since 3.0
      */
-    private function getGlobalServerValue($param): string
+    private function getGlobalServerValue(string $param): string
     {
         $server = $_SERVER;
 
@@ -289,9 +289,9 @@ class Request
      *
      * @since 2.0
      */
-    public function setMethod($method): void
+    public function setMethod(string $method): void
     {
-        if (in_array($method, $this->HTTPMethods)) {
+        if (in_array($method, $this->HTTPMethods, true)) {
             $this->method = $method;
         } else {
             throw new IllegalArguementException('The method provided ['.$method.'] is not valid!');
@@ -316,7 +316,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getHeader($key, $default = null): string|null
+    public function getHeader(string $key, $default = null): string|null
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -370,7 +370,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getCookie($key, $default = null): mixed
+    public function getCookie(string $key, $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
@@ -397,7 +397,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getParam($key, $default = null): string|null
+    public function getParam(string $key, $default = null): string|null
     {
         if (array_key_exists($key, $this->params)) {
             return $this->params[$key];
@@ -452,7 +452,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getFile($key, $default = null): mixed
+    public function getFile(string $key, $default = null): mixed
     {
         if (array_key_exists($key, $this->files)) {
             return $this->files[$key];
@@ -595,7 +595,7 @@ class Request
      *
      * @since 2.0
      */
-    public function parseParamsFromRoute($route, $defaultParams = array()): void
+    public function parseParamsFromRoute(string $route, array $defaultParams = array()): void
     {
         // if the URI has a query-string, we will ignore it for now
         if (mb_strpos($this->URI, '?') !== false) {

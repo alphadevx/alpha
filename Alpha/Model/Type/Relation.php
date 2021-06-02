@@ -238,9 +238,9 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClass($RC, $side = ''): void
+    public function setRelatedClass(string $RC, string $side = ''): void
     {
-        if (in_array($RC, ActiveRecord::getRecordClassNames())) {
+        if (in_array($RC, ActiveRecord::getRecordClassNames(), true)) {
             switch ($side) {
                 case '':
                     $this->relatedClass = $RC;
@@ -268,7 +268,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClass($side = ''): string
+    public function getRelatedClass(string $side = ''): string
     {
         switch ($side) {
             case '':
@@ -294,7 +294,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClassField($RCF): void
+    public function setRelatedClassField(string $RCF): void
     {
         // use reflection to sure the related class has the field $RCF
         $reflection = new ReflectionClass($this->relatedClass);
@@ -333,7 +333,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRelatedClassHeaderFields($fieldNames): void
+    public function setRelatedClassHeaderFields(array $fieldNames): void
     {
         $this->relatedClassHeaderFields = $fieldNames;
     }
@@ -358,7 +358,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedClassDisplayField($RCDF, $side = ''): void
+    public function setRelatedClassDisplayField(string $RCDF, string $side = ''): void
     {
         switch ($side) {
             case '':
@@ -384,7 +384,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClassDisplayField($side = ''): string
+    public function getRelatedClassDisplayField(string $side = ''): string
     {
         switch ($side) {
             case '':
@@ -411,9 +411,9 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRelationType($RT): void
+    public function setRelationType(string $RT): void
     {
-        if (in_array($RT, $this->allowableRelationTypes)) {
+        if (in_array($RT, $this->allowableRelationTypes, true)) {
             $this->relationType = $RT;
             if ($RT == 'MANY-TO-MANY') {
                 try {
@@ -442,13 +442,13 @@ class Relation extends Type implements TypeInterface
     /**
      * Setter for the value ID of this relation.
      *
-     * @param int $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (empty($val)) {
             $this->value = null;
@@ -484,7 +484,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setRelatedIDs($IDs): void
+    public function setRelatedIDs(array $IDs): void
     {
         if (is_array($IDs)) {
             $this->IDs = $IDs;
@@ -520,7 +520,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule): void
+    public function setRule(string $rule): void
     {
         $this->validationRule = $rule;
     }
@@ -535,7 +535,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getRelatedClassDisplayFieldValue($accessingClassName = ''): string
+    public function getRelatedClassDisplayFieldValue(string $accessingClassName = ''): string
     {
         if ($this->relationType == 'MANY-TO-MANY') {
             /*
@@ -698,7 +698,7 @@ class Relation extends Type implements TypeInterface
      *
      * @throws \Alpha\Model\Type\IllegalArguementException
      */
-    public function getSide($RecordClassname): string
+    public function getSide(string $RecordClassname): string
     {
         if ($RecordClassname == $this->relatedClassLeft) {
             return 'left';
@@ -717,7 +717,7 @@ class Relation extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setTaggedClass($taggedClass): void
+    public function setTaggedClass(string $taggedClass): void
     {
         $this->taggedClass = $taggedClass;
     }

@@ -122,7 +122,7 @@ class ConfigProvider
      *
      * @since 1.0
      */
-    public function get($key): string
+    public function get(string $key): string
     {
         if (array_key_exists($key, $this->configVars)) {
             return $this->configVars[$key];
@@ -213,7 +213,7 @@ class ConfigProvider
             foreach ($envs as $env => $serversList) {
                 $servers = explode(',', $serversList);
 
-                if (in_array($server, $servers)) {
+                if (in_array($server, $servers, true)) {
                     $environment = $env;
                 }
             }

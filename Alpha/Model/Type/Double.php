@@ -103,7 +103,7 @@ class Double extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = 0.0)
+    public function __construct(float $val = 0.0)
     {
         $this->validationRule = Validator::REQUIRED_DOUBLE;
 
@@ -121,13 +121,13 @@ class Double extends Type implements TypeInterface
     /**
      * Setter for the Double value.
      *
-     * @param float $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (!Validator::isDouble($val)) {
             throw new IllegalArguementException($this->helper);
@@ -169,7 +169,7 @@ class Double extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size): void
+    public function setSize(int $size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -185,7 +185,7 @@ class Double extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function getSize($databaseDimension = false): mixed
+    public function getSize(bool $databaseDimension = false): mixed
     {
         if ($databaseDimension) {
             return $this->size.',2';

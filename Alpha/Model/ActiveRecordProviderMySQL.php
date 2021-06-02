@@ -260,7 +260,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 $propName = $propObj->name;
 
                 // filter transient attributes
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $this->record->set($propName, $row[$propName]);
                 } elseif (!$propObj->isPrivate() && $this->record->getPropObject($propName) instanceof Relation) {
                     $prop = $this->record->getPropObject($propName);
@@ -429,7 +429,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                 if (isset($row[$propName])) {
                     // filter transient attributes
-                    if (!in_array($propName, $this->record->getTransientAttributes())) {
+                    if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                         $this->record->set($propName, $row[$propName]);
                     } elseif (!$propObj->isPrivate() && $this->record->get($propName) != '' && $this->record->getPropObject($propName) instanceof Relation) {
                         $prop = $this->record->getPropObject($propName);
@@ -847,7 +847,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName,";
@@ -897,7 +897,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName = ?,";
@@ -1038,7 +1038,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $sqlQuery .= "$propName,";
                 $attributeNames[] = $propName;
                 $attributeValues[] = $this->record->get($propName);
@@ -1172,7 +1172,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1257,7 +1257,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1389,7 +1389,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         if ($this->isTableOverloaded() && $propName == 'classname') {
             $sqlQuery .= 'classname VARCHAR(100)';
         } else {
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1578,7 +1578,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $propClass = get_class($this->record->getPropObject($propName));
                 if ($propClass == 'Alpha\Model\Type\Enum') {
                     $sqlQuery = 'SHOW COLUMNS FROM '.$this->record->getTableName()." LIKE '$propName'";
@@ -1714,7 +1714,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $foundMatch = false;
 
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -1792,7 +1792,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                     if ($propName == $row['Field']) {
                         ++$matchCount;
@@ -2278,7 +2278,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    private function bindParams($stmt, $attributes = array(), $values = array()): \mysqli_stmt
+    private function bindParams(\mysqli_stmt $stmt, $attributes = array(), $values = array()): \mysqli_stmt
     {
         self::$logger->debug('>>bindParams(stmt=['.var_export($stmt, true).'])');
 
@@ -2310,7 +2310,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         if ($this->record->getPropObject($propName) instanceof Integer) {
@@ -2372,7 +2372,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    private function bindResult($stmt): array
+    private function bindResult(\mysqli_stmt $stmt): array
     {
         $result = array();
 

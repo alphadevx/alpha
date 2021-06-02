@@ -523,7 +523,7 @@ class FileUtils
      *
      * @since 1.0
      */
-    public static function getMIMETypeByExtension($ext): string
+    public static function getMIMETypeByExtension(string $ext): string
     {
         $ext = mb_strtolower($ext);
         if (!isset(self::$extensionToMIMEMappings[$ext])) {
@@ -545,14 +545,14 @@ class FileUtils
      *
      * @since 1.0
      */
-    public static function listDirectoryContents($sourceDir, &$fileList, $fileCount = 0, $excludeFiles = array()): int
+    public static function listDirectoryContents(string $sourceDir, string &$fileList, int $fileCount = 0, array $excludeFiles = array()): int
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
             $fileCount = 0;
 
             foreach ($dir as $file) {
-                if (!in_array($file->getFilename(), $excludeFiles)) {
+                if (!in_array($file->getFilename(), $excludeFiles, true)) {
                     if ($file->isDir() && !$file->isDot()) {
                         $fileList .= '<em>'.$file->getPathname().'</em><br>';
                         $fileCount += self::listDirectoryContents($file->getPathname(), $fileList, $fileCount, $excludeFiles);
@@ -580,7 +580,7 @@ class FileUtils
      *
      * @since 3.0
      */
-    public static function getDirectoryContents($sourceDir, &$fileList = array()): array
+    public static function getDirectoryContents(string $sourceDir, array &$fileList = array()): array
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
@@ -610,19 +610,19 @@ class FileUtils
      *
      * @since 1.0
      */
-    public static function deleteDirectoryContents($sourceDir, $excludeFiles = array(), $deleteSourceDir = false): void
+    public static function deleteDirectoryContents(string $sourceDir, array $excludeFiles = array(), bool $deleteSourceDir = false): void
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
 
             foreach ($dir as $file) {
                 if ($file->isDir() && !$file->isDot()) {
-                    if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles)) { // remove an empty directory
+                    if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles, true)) { // remove an empty directory
                         rmdir($file->getPathname());
                     } else {
                         self::deleteDirectoryContents($file->getPathname(), $excludeFiles, true);
                     }
-                } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles)) {
+                } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles, true)) {
                     unlink($file->getPathname());
                 }
             }
@@ -645,7 +645,7 @@ class FileUtils
      *
      * @since 1.1
      */
-    public static function copy($source, $dest): void
+    public static function copy(string $source, string $dest): void
     {
         if (is_file($source)) {
             if (!copy($source, $dest)) {
@@ -686,7 +686,7 @@ class FileUtils
      *
      * @since 1.1
      */
-    public static function zip($source, $dest): void
+    public static function zip(string $source, string $dest): void
     {
         if (extension_loaded('zip') === true) {
             if (file_exists($source) === true) {

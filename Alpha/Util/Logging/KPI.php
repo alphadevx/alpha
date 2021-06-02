@@ -115,7 +115,7 @@ class KPI
      *
      * @since 1.1
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $config = ConfigProvider::getInstance();
 

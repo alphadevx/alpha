@@ -89,7 +89,7 @@ class ExcelController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function doGet($request): \Alpha\Util\Http\Response
+    public function doGet(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
 

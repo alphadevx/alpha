@@ -113,7 +113,7 @@ class Text extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = '')
+    public function __construct(string $val = '')
     {
         $this->validationRule = Validator::ALLOW_ALL;
 
@@ -131,13 +131,13 @@ class Text extends Type implements TypeInterface
     /**
      * Setter for the value.
      *
-     * @param string $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val): void
+    public function setValue(mixed $val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
@@ -167,7 +167,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule): void
+    public function setRule(string $rule): void
     {
         $this->validationRule = $rule;
     }
@@ -191,7 +191,7 @@ class Text extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size): void
+    public function setSize(int $size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -217,7 +217,7 @@ class Text extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setAllowHTML($allowHTML): void
+    public function setAllowHTML(bool $allowHTML): void
     {
         $this->allowHTML = $allowHTML;
     }

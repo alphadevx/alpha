@@ -292,7 +292,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    public function setUsername($username): void
+    public function setUsername(string $username): void
     {
         $this->username->setValue($username);
     }
@@ -314,7 +314,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    public function inGroup($groupName): bool
+    public function inGroup(string $groupName): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Person');
@@ -367,7 +367,7 @@ class Person extends ActiveRecord
      *
      * @since 2.0
      */
-    public function addToGroup($groupName): void
+    public function addToGroup(string $groupName): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Person');
@@ -394,7 +394,7 @@ class Person extends ActiveRecord
      *
      * @throws \Alpha\Exception\MailNotSentException
      */
-    public function sendMail($message, $subject): void
+    public function sendMail(string $message, string $subject): void
     {
         $config = ConfigProvider::getInstance();
 

@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  * @author John Collins <dev@alphaframework.org>
  *
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -103,62 +103,6 @@ class TimestampTest extends TestCase
         $this->timestamp1->setTimestampValue(2000, 1, 1, 23, 33, 5);
 
         $this->assertEquals('2000-01-01 23:33:05', $this->timestamp1->getValue(), 'testing the setValue method');
-    }
-
-    /**
-     * Testing the setValue method.
-     *
-     */
-    public function testSetValueFail()
-    {
-        try {
-            $this->timestamp1->setTimestampValue('bad', 1, 1, 23, 33, 5);
-            $this->fail('testing the setTimestampValue method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The year value bad provided is invalid!', $e->getMessage(), 'testing the setTimestampValue method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setTimestampValue(2000, 1, 'bad', 23, 33, 5);
-            $this->fail('testing the setTimestampValue method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The day value bad provided is invalid!', $e->getMessage(), 'testing the setTimestampValue method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setTimestampValue(2000, 1, 1, 'bad', 33, 5);
-            $this->fail('testing the setTimestampValue method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The hour value bad provided is invalid!', $e->getMessage(), 'testing the setTimestampValue method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setTimestampValue(2000, 1, 1, 23, 'bad', 5);
-            $this->fail('testing the setTimestampValue method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The minute value bad provided is invalid!', $e->getMessage(), 'testing the setTimestampValue method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setTimestampValue(2000, 1, 1, 23, 33, 'bad');
-            $this->fail('testing the setTimestampValue method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The second value bad provided is invalid!', $e->getMessage(), 'testing the setTimestampValue method with a bad value');
-        }
-    }
-
-    /**
-     * Testing the setValue method with a bad month.
-     *
-     */
-    public function testSetValueInvalidMonth()
-    {
-        try {
-            $this->timestamp1->setTimestampValue(2000, 'blah', 1, 0, 0, 0);
-            $this->fail('testing the setValue method with a bad month');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The month value blah provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad month');
-        }
     }
 
     /**
@@ -252,27 +196,6 @@ class TimestampTest extends TestCase
      */
     public function testSetDateFail()
     {
-        try {
-            $this->timestamp1->setDate('bad', 1, 1);
-            $this->fail('testing the setDate method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The year value bad provided is invalid!', $e->getMessage(), 'testing the setDate method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setDate(2000, 'bad', 1);
-            $this->fail('testing the setDate method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The month value bad provided is invalid!', $e->getMessage(), 'testing the setDate method with a bad value');
-        }
-
-        try {
-            $this->timestamp1->setDate(2000, 1, 'bad');
-            $this->fail('testing the setDate method with a bad value');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The day value bad provided is invalid!', $e->getMessage(), 'testing the setDate method with a bad value');
-        }
-
         try {
             $this->timestamp1->setDate(2000, 1, 99);
             $this->fail('testing the setDate method with a bad value');

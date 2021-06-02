@@ -254,7 +254,7 @@ class Tag extends ActiveRecord
             // we only want to create word tags
             if (Validator::isAlpha($tagContent)) {
                 // just making sure that we haven't added this one in already
-                if (!in_array($tagContent, $tagContents) && !empty($tagContent)) {
+                if (!in_array($tagContent, $tagContents, true) && !empty($tagContent)) {
                     $tag = new self();
                     $tag->set('content', trim(mb_strtolower($tagContent)));
                     if (!empty($taggedClass)) {

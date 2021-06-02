@@ -53,7 +53,7 @@ class AlphaException extends \Exception
      *
      * @since 1.0
      */
-    public function setMessage($message): void
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
@@ -65,7 +65,7 @@ class AlphaException extends \Exception
      *
      * @since 1.0
      */
-    public function setFile($file): void
+    public function setFile(string $file): void
     {
         $this->file = $file;
     }

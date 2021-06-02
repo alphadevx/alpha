@@ -146,7 +146,7 @@ class Inspector
      *
      * @since 1.0
      */
-    public function __construct($rootDir = '.')
+    public function __construct(string $rootDir = '.')
     {
         $this->rootDir = $rootDir;
         $this->files = FileUtils::getDirectoryContents($rootDir, $this->files);
@@ -163,7 +163,7 @@ class Inspector
             foreach ($fileArray as $file) {
                 $file = $dir.'/'.$file;
                 $fileType = mb_substr($file, mb_strrpos($file, '.'));
-                if (in_array($fileType, $this->includeFileTypes)) {
+                if (in_array($fileType, $this->includeFileTypes, true)) {
                     $exclude = false;
                     foreach ($this->excludeSubDirectories as $excludedDir) {
                         if (preg_match('/'.$excludedDir.'/i', $file)) {
@@ -224,7 +224,7 @@ class Inspector
      *
      * @since 1.0
      */
-    private function disregardCommentsLOC($sourceFile): int
+    private function disregardCommentsLOC(string $sourceFile): int
     {
         $file = file($sourceFile);
 

@@ -16,7 +16,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -163,21 +163,6 @@ class EnumTest extends ModelTestCase
         }
 
         $this->assertEquals('b', $enum->getValue(), 'testing the getValue method');
-    }
-
-    /**
-     * Test the constructor failing when a bad array is provided.
-     *
-     * @since 1.0
-     */
-    public function testConstructorFail()
-    {
-        try {
-            $enum = new Enum('blah');
-            $this->fail('test the constructor failing when a bad array is provided');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid enum option array!', $e->getMessage(), 'test the constructor failing when a bad array is provided');
-        }
     }
 
     /**

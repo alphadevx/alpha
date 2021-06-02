@@ -57,7 +57,7 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backupAttachmentsAndLogs($backupDir): void
+    public static function backupAttachmentsAndLogs(string $backupDir): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -72,7 +72,7 @@ class BackupUtils
      *
      * @since 1.1
      */
-    public static function backupDatabase($backupDir): void
+    public static function backupDatabase(string $backupDir): void
     {
         $config = ConfigProvider::getInstance();
 

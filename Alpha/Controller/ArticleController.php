@@ -113,7 +113,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -333,7 +333,7 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function doPUT($request): \Alpha\Util\Http\Response
+    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
 

@@ -71,7 +71,7 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    protected function __construct($Record)
+    protected function __construct(\Alpha\Model\ActiveRecord $Record)
     {
         self::$logger = new Logger('SequenceView');
         self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
@@ -88,7 +88,7 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    public function listView($fields = array()): string
+    public function listView(array $fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
@@ -116,7 +116,7 @@ class SequenceView extends View
             // skip over password fields
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
                 if ($propName == 'ID') {
@@ -138,7 +138,7 @@ class SequenceView extends View
 
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     if ($property instanceof Text) {
                         $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
@@ -188,7 +188,7 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    public function detailedView($fields = array()): string
+    public function detailedView(array $fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 

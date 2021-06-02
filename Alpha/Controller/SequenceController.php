@@ -90,7 +90,7 @@ class SequenceController extends ActiveRecordController implements ControllerInt
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 

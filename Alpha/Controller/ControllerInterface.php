@@ -54,7 +54,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doHEAD($request): \Alpha\Util\Http\Response;
+    public function doHEAD(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles GET HTTP requests.
@@ -63,7 +63,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response;
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles POST HTTP requests.
@@ -72,7 +72,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doPOST($request): \Alpha\Util\Http\Response;
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles PUT HTTP requests.
@@ -81,7 +81,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doPUT($request): \Alpha\Util\Http\Response;
+    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles PATCH HTTP requests.
@@ -90,7 +90,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doPATCH($request): \Alpha\Util\Http\Response;
+    public function doPATCH(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles DELETE HTTP requests.
@@ -99,7 +99,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doDELETE($request): \Alpha\Util\Http\Response;
+    public function doDELETE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles OPTIONS HTTP requests.
@@ -108,7 +108,7 @@ interface ControllerInterface
      *
      * @since 1.0
      */
-    public function doOPTIONS($request): \Alpha\Util\Http\Response;
+    public function doOPTIONS(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 
     /**
      * Handles TRACE HTTP requests.
@@ -117,5 +117,5 @@ interface ControllerInterface
      *
      * @since 2.0.2
      */
-    public function doTRACE($request): \Alpha\Util\Http\Response;
+    public function doTRACE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response;
 }

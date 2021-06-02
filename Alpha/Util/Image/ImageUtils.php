@@ -59,7 +59,7 @@ class ImageUtils
      *
      * @since 1.1
      */
-    public static function generateSquareThumbnail($original, $thumbnail, $dimensions): void
+    public static function generateSquareThumbnail(string $original, string $thumbnail, int $dimensions): void
     {
         if ($dimensions <= 0) {
             throw new IllegalArguementException('Illegal dimensions value provided ['.$dimensions.'], should be greater than zero');
@@ -117,9 +117,9 @@ class ImageUtils
      *
      * @since 1.1
      */
-    public static function saveImage($imageResource, $type, $destination): void
+    public static function saveImage($imageResource, string $type, string $destination): void
     {
-        if (!in_array($type, array('jpg', 'png', 'gif'))) {
+        if (!in_array($type, array('jpg', 'png', 'gif'), true)) {
             throw new IllegalArguementException('Illegal image type ['.$type.'], cannot create file');
         }
 

@@ -53,7 +53,7 @@ interface LogProviderInterface
      *
      * @since 2.0
      */
-    public function writeLine($line): void;
+    public function writeLine(array $line): void;
 
     /**
      * Renders a log as a HTML table.
@@ -62,5 +62,5 @@ interface LogProviderInterface
      *
      * @since 2.0
      */
-    public function renderLog($cols): string;
+    public function renderLog(array $cols): string;
 }

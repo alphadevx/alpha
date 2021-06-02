@@ -142,7 +142,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Admin')
+    public function __construct(string $visibility = 'Admin')
     {
         self::$logger = new Logger('ActiveRecordController');
         self::$logger->debug('>>__construct()');
@@ -163,7 +163,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
 
@@ -233,7 +233,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function doPOST($request): \Alpha\Util\Http\Response
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDPOST(request=['.var_export($request, true).'])');
 
@@ -326,7 +326,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function doPUT($request): \Alpha\Util\Http\Response
+    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPUT(request=['.var_export($request, true).'])');
 
@@ -421,7 +421,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function doDELETE($request): \Alpha\Util\Http\Response
+    public function doDELETE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE(request=['.var_export($request, true).'])');
 
@@ -562,14 +562,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * Load the requested record and render the HTML or JSON for it.
      *
      * @param array $params The request params
-     * @param string $accept The HTTP accept heard value
+     * @param string|null $accept The HTTP accept heard value
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 3.0
      */
-    private function renderRecord($params, $accept): string
+    private function renderRecord(array $params, string|null $accept): string
     {
         if (!Validator::isInteger($params['ActiveRecordID'])) {
             throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordID'].'] provided on the request!');
@@ -634,14 +634,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * Load all records of the type requested and render the HTML or JSON for them.
      *
      * @param array $params The request params
-     * @param string $accept The HTTP accept heard value
+     * @param string|null $accept The HTTP accept heard value
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 3.0
      */
-    private function renderRecords($params, $accept): string
+    private function renderRecords(array $params, string|null $accept): string
     {
         $ActiveRecordType = urldecode($params['ActiveRecordType']);
 

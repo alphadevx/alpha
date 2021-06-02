@@ -164,7 +164,7 @@ class Image
      *
      * @since 1.0
      */
-    public function __construct($source, $width, $height, $sourceType, $quality = 0.75, $scale = false, $secure = false)
+    public function __construct(string $source, $width, $height, $sourceType, $quality = 0.75, $scale = false, $secure = false)
     {
         self::$logger = new Logger('Image');
         self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
@@ -357,7 +357,7 @@ class Image
      *
      * @since 1.0
      */
-    private function cache($image): void
+    private function cache(image $image): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -396,7 +396,7 @@ class Image
      *
      * @since 1.0
      */
-    public static function convertImageURLToPath($imgURL): string
+    public static function convertImageURLToPath(string $imgURL): string
     {
         $config = ConfigProvider::getInstance();
 

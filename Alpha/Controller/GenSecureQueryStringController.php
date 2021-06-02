@@ -91,7 +91,7 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @since 1.0
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -113,7 +113,7 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @since 1.0
      */
-    public function doPOST($request): \Alpha\Util\Http\Response
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 

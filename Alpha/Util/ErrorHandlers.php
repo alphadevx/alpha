@@ -54,7 +54,7 @@ class ErrorHandlers
      *
      * @param Exception $e
      */
-    public static function catchException($e): void
+    public static function catchException(Exception $e): void
     {
         $logger = new Logger(get_class($e));
         $logger->error($e->getMessage()."\n [stacktrace]: \n".$e->getTraceAsString());

@@ -361,7 +361,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public function setEncrypt($encryptedQuery): void
+    public function setEncrypt(bool $encryptedQuery): void
     {
         $this->encryptedQuery = $encryptedQuery;
     }
@@ -373,7 +373,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public static function generateSecureURL($params): string
+    public static function generateSecureURL(string $params): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -391,7 +391,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public static function encodeQuery($queryString): string
+    public static function encodeQuery(string $queryString): string
     {
         $return = base64_encode(SecurityUtils::encrypt($queryString));
         // remove any characters that are likely to cause trouble on a URL
@@ -409,7 +409,7 @@ class FrontController
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
-        $token = base64_decode($token);
+        $token = base64_decode($token, true);
         $params = SecurityUtils::decrypt($token);
 
         return $params;
@@ -424,7 +424,7 @@ class FrontController
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
-        $token = base64_decode($token);
+        $token = base64_decode($token, true);
         $params = SecurityUtils::decrypt($token);
 
         $pairs = explode('&', $params);
@@ -458,7 +458,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public function registerFilter($filterObject): void
+    public function registerFilter(\Alpha\Util\Http\Filter\FilterInterface $filterObject): void
     {
         if ($filterObject instanceof FilterInterface) {
             array_push($this->filters, $filterObject);
@@ -488,7 +488,7 @@ class FrontController
      *
      * @since 2.0
      */
-    public function addRoute($URI, $callback): \Alpha\Controller\Front\FrontController
+    public function addRoute(string $URI, callable $callback): \Alpha\Controller\Front\FrontController
     {
         if (is_callable($callback)) {
             $this->routes[$URI] = $callback;
@@ -508,7 +508,7 @@ class FrontController
      *
      * @since 2.0
      */
-    public function value($param, $defaultValue): \Alpha\Controller\Front\FrontController
+    public function value(string $param, $defaultValue): \Alpha\Controller\Front\FrontController
     {
         $this->defaultParamValues[$this->currentRoute][$param] = $defaultValue;
 
@@ -524,7 +524,7 @@ class FrontController
      *
      * @since 2.0
      */
-    public function getRouteCallback($URI): callable
+    public function getRouteCallback(string $URI): callable
     {
         if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
             $this->currentRoute = $URI;
@@ -572,7 +572,7 @@ class FrontController
      *
      * @since 2.0
      */
-    public function process($request): \Alpha\Util\Http\Response
+    public function process(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         foreach ($this->filters as $filter) {
             $filter->process($request);

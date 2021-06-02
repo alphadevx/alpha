@@ -93,7 +93,7 @@ class View
      *
      * @since 1.0
      */
-    protected function __construct($record, $acceptHeader = null)
+    protected function __construct(ActiveRecord $record, string $acceptHeader = null)
     {
         self::$logger = new Logger('View');
         self::$logger->debug('>>__construct(Record=['.var_export($record, true).'], acceptHeader=['.$acceptHeader.'])');
@@ -122,7 +122,7 @@ class View
      *
      * @since 1.0
      */
-    public static function getInstance($record, $returnParent = false, $acceptHeader = null): mixed
+    public static function getInstance(ActiveRecord $record, bool $returnParent = false, string $acceptHeader = null): mixed
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -174,7 +174,7 @@ class View
      *
      * @since 1.0
      */
-    public function setRecord($record): void
+    public function setRecord(\Alpha\Model\ActiveRecord $record): void
     {
         self::$logger->debug('>>setRecord(Record=['.var_export($record, true).'])');
 
@@ -205,7 +205,7 @@ class View
      *
      * @since 1.0
      */
-    public function createView($fields = array()): string
+    public function createView(array $fields = array()): string
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
@@ -231,7 +231,7 @@ class View
      *
      * @since 1.0
      */
-    public function editView($fields = array()): string
+    public function editView(array $fields = array()): string
     {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
@@ -257,7 +257,7 @@ class View
      *
      * @since 1.0
      */
-    public function listView($fields = array()): string
+    public function listView(array $fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
@@ -283,7 +283,7 @@ class View
      *
      * @since 1.0
      */
-    public function detailedView($fields = array()): string
+    public function detailedView(array $fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
@@ -309,7 +309,7 @@ class View
      *
      * @since 1.0
      */
-    public function adminView($fields = array()): string
+    public function adminView(array $fields = array()): string
     {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
@@ -337,7 +337,7 @@ class View
      *
      * @since 1.0
      */
-    public static function displayPageHead($controller): string
+    public static function displayPageHead(\Alpha\Controller\Controller $controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -373,7 +373,7 @@ class View
      *
      * @since 1.0
      */
-    public static function displayPageFoot($controller): string
+    public static function displayPageFoot(\Alpha\Controller\Controller $controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -412,7 +412,7 @@ class View
      *
      * @since 3.0
      */
-    public static function displayPageLinks($controller): string
+    public static function displayPageLinks(\Alpha\Controller\Controller $controller): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -497,7 +497,7 @@ class View
      *
      * @since 1.0
      */
-    public static function displayUpdateMessage($message): string
+    public static function displayUpdateMessage(string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -525,7 +525,7 @@ class View
      *
      * @since 1.0
      */
-    public static function displayErrorMessage($message): string
+    public static function displayErrorMessage(string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -554,7 +554,7 @@ class View
      *
      * @since 1.0
      */
-    public static function renderErrorPage($code, $message): string
+    public static function renderErrorPage(string $code, string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -582,7 +582,7 @@ class View
      *
      * @since 1.0
      */
-    public static function renderDeleteForm($URI): string
+    public static function renderDeleteForm(string $URI): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -641,7 +641,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderIntegerField($name, $label, $mode, $value = ''): string
+    public function renderIntegerField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.']');
 
@@ -662,7 +662,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderDoubleField($name, $label, $mode, $value = ''): string
+    public function renderDoubleField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -683,7 +683,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderBooleanField($name, $label, $mode, $value = ''): string
+    public function renderBooleanField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -705,7 +705,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = ''): string
+    public function renderEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string
     {
         self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -727,7 +727,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = ''): string
+    public function renderDEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string
     {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -748,7 +748,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderDefaultField($name, $label, $mode, $value = ''): string
+    public function renderDefaultField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -769,7 +769,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value = ''): string
+    public function renderTextField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -792,7 +792,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true): string
+    public function renderRelationField(string $name, string $label, string $mode, string $value = '', bool $expanded = false, bool $buttons = true): string
     {
         self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -812,7 +812,7 @@ class View
      *
      * @since 1.0
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array()): string
+    public function renderAllFields(string $mode, array $filterFields = array(), array $readOnlyFields = array()): string
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 
@@ -835,7 +835,7 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($record, $mode, $fields = array()): string
+    public static function loadTemplate(\Alpha\Model\ActiveRecord $record, string $mode, array $fields = array()): string
     {
         self::$logger->debug('>>loadTemplate(Record=['.var_export($record, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
@@ -931,7 +931,7 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplateFragment($type, $fileName, $fields = array()): string
+    public static function loadTemplateFragment(string $type, string $fileName, array $fields = array()): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -991,7 +991,7 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function setProvider($ProviderClassName, $acceptHeader = null): void
+    public static function setProvider(string $ProviderClassName, string $acceptHeader = null): void
     {
         if ($ProviderClassName == 'auto') {
             $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';

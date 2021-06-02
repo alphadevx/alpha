@@ -87,7 +87,7 @@ class PhpinfoController extends Controller implements ControllerInterface
      *
      * @since 2.0.3
      */
-    public function doGET($request): \Alpha\Util\Http\Response
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 

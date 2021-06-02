@@ -126,7 +126,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function loadItems($EnumID): array
+    public function loadItems(int $EnumID): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -172,7 +172,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setValue($item): void
+    public function setValue(mixed $item): void
     {
         $this->value->setValue($item);
     }
@@ -194,7 +194,7 @@ class DEnumItem extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper): void
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }

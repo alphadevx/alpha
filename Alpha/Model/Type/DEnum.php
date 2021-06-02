@@ -124,7 +124,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @param string $name
      */
-    public function __construct($name = null)
+    public function __construct(string $name = null)
     {
         self::$logger = new Logger('DEnum');
 
@@ -172,7 +172,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setName($name): void
+    public function setName(string $name): void
     {
         $this->name->setValue($name);
     }
@@ -186,7 +186,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getOptions($alphaSort = false): array
+    public function getOptions(bool $alphaSort = false): array
     {
         try {
             $options = new self();
@@ -276,11 +276,11 @@ class DEnum extends ActiveRecord implements TypeInterface
     /**
      * Used to select the current DEnum item.
      *
-     * @param string $item
+     * @param mixed $item
      *
      * @since 1.0
      */
-    public function setValue($item): void
+    public function setValue(mixed $item): void
     {
         // check to see if the options have already been loaded from the DB
         if (empty($this->options)) {
@@ -288,7 +288,7 @@ class DEnum extends ActiveRecord implements TypeInterface
         }
 
         // confirm that the item ID provided is a valid key for the options array
-        if (in_array($item, array_keys($this->options))) {
+        if (in_array($item, array_keys($this->options), true)) {
             $this->value = $item;
         } else {
             throw new IllegalArguementException($this->getHelper());
@@ -329,7 +329,7 @@ class DEnum extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function getOptionID($optionName): int
+    public function getOptionID(string $optionName): int
     {
         $denumItem = new DEnumItem();
         $denumItem->loadByAttribute('value', $optionName);

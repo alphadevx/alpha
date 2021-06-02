@@ -220,7 +220,7 @@ class RendererProviderHTML implements RendererProviderInterface
             // skip over password fields
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
                 if ($propName == 'ID') {
@@ -242,7 +242,7 @@ class RendererProviderHTML implements RendererProviderInterface
 
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     if ($property instanceof Text) {
                         $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
@@ -1035,9 +1035,9 @@ class RendererProviderHTML implements RendererProviderInterface
         $orignalMode = $mode;
 
         foreach ($properties as $propName) {
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $filterFields)) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $filterFields, true)) {
                 // render readonly fields in the supplied array
-                if (in_array($propName, $readOnlyFields)) {
+                if (in_array($propName, $readOnlyFields, true)) {
                     $mode = 'view';
                 } else {
                     $mode = $orignalMode;
@@ -1051,7 +1051,7 @@ class RendererProviderHTML implements RendererProviderInterface
                 $propClass = $reflection->getShortName();
 
                 // exclude non-Relation transient attributes from create and edit screens
-                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->record->getTransientAttributes())) {
+                if ($propClass != 'Relation' && ($mode == 'edit' || $mode == 'create') && in_array($propName, $this->record->getTransientAttributes(), true)) {
                     continue;
                 }
 

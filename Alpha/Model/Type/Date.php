@@ -123,7 +123,7 @@ class Date extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($date = '')
+    public function __construct(string $date = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -153,13 +153,13 @@ class Date extends Type implements TypeInterface
     /**
      * Accepts a full date string in ISO YYYY-mm-dd format and populates relevent Date attributes.
      *
-     * @param string $date
+     * @param mixed $date
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($date): void
+    public function setValue(mixed $date): void
     {
         $this->populateFromString($date);
     }
@@ -175,7 +175,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setDateValue($year, $month, $day): void
+    public function setDateValue(int $year, int $month, int $day): void
     {
         $valid = null;
 
@@ -303,7 +303,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function populateFromString($date): void
+    public function populateFromString(string $date): void
     {
         $valid = null;
 
@@ -386,7 +386,7 @@ class Date extends Type implements TypeInterface
      *
      * @since 3.1.0
      */
-    public function increment($amount): void
+    public function increment(string $amount): void
     {
         $date = strtotime($amount, strtotime($this->getValue()));
         $this->setValue(date('Y-m-d', $date));

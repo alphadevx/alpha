@@ -115,7 +115,7 @@ class AgentUtils
      *
      * @since 1.0
      */
-    public static function isBot($userAgent): bool
+    public static function isBot(string $userAgent): bool
     {
         $isBot = false;
 
