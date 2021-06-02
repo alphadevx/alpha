@@ -554,8 +554,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>save()');
 
-        if (method_exists($this, 'before_save_callback')) {
-            $this->{'before_save_callback'}();
+        if (method_exists($this, 'beforeSave')) {
+            $this->{'beforeSave'}();
         }
 
         $config = ConfigProvider::getInstance();

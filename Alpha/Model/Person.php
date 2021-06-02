@@ -252,7 +252,7 @@ class Person extends ActiveRecord
      *
      * @since 2.0
      */
-    protected function before_save_callback(): void
+    protected function beforeSave(): void
     {
         if (password_needs_rehash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12])) {
             $this->set('password', password_hash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12]));
