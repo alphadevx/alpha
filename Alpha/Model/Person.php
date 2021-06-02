@@ -203,7 +203,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_load_callback(): void
+    protected function afterLoad(): void
     {
         $this->setupRels();
     }

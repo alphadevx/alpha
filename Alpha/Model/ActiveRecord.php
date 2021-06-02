@@ -283,8 +283,8 @@ abstract class ActiveRecord
 
         $this->setEnumOptions();
 
-        if (method_exists($this, 'after_load_callback')) {
-            $this->{'after_load_callback'}();
+        if (method_exists($this, 'afterLoad')) {
+            $this->{'afterLoad'}();
         }
 
         self::$logger->debug('<<load');
