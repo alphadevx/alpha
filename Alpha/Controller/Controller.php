@@ -985,8 +985,8 @@ abstract class Controller
         $response = new Response(403);
         $response->setBody(View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.'));
 
-        if (method_exists($this, 'after_accessError_callback')) {
-            $this->{'after_accessError_callback'}();
+        if (method_exists($this, 'afterAccessError')) {
+            $this->{'afterAccessError'}();
         }
 
         self::$logger->debug('<<accessError');
