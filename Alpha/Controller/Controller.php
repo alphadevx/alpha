@@ -967,8 +967,8 @@ abstract class Controller
     {
         self::$logger->debug('>>accessError()');
 
-        if (method_exists($this, 'before_accessError_callback')) {
-            $this->{'before_accessError_callback'}();
+        if (method_exists($this, 'beforeAccessError')) {
+            $this->{'beforeAccessError'}();
         }
 
         $config = ConfigProvider::getInstance();
