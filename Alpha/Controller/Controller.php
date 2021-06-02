@@ -722,8 +722,8 @@ abstract class Controller
     {
         self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
 
-        if (method_exists($this, 'before_markNew_callback')) {
-            $this->{'before_markNew_callback'}();
+        if (method_exists($this, 'beforeMarkNew')) {
+            $this->{'beforeMarkNew'}();
         }
 
         $this->newObjects[count($this->newObjects)] = $object;
