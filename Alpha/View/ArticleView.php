@@ -73,7 +73,7 @@ class ArticleView extends View
      *
      * @since 1.0
      */
-    protected function after_createView_callback(): string
+    protected function afterCreateView(): string
     {
         return '<p><strong>Please note</strong> that you will only be able to attach files to the article once it has been created.</p><br>';
     }

@@ -215,8 +215,8 @@ class View
 
         $body = self::$provider->createView($fields);
 
-        if (method_exists($this, 'after_createView_callback')) {
-            $this->{'after_createView_callback'}();
+        if (method_exists($this, 'afterCreateView')) {
+            $this->{'afterCreateView'}();
         }
 
         self::$logger->debug('<<createView');
