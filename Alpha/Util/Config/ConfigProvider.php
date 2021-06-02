@@ -145,8 +145,8 @@ class ConfigProvider
          * If you need to alter a config option after it has been set in the .ini
          * files, you can override this class and implement this callback method
          */
-        if (method_exists($this, 'before_set_callback')) {
-            $val = $this->{'before_set_callback('.$key.', '.$val.', '.$this->configVars.')'};
+        if (method_exists($this, 'beforeSet')) {
+            $val = $this->{'beforeSet('.$key.', '.$val.', '.$this->configVars.')'};
         }
 
         $this->configVars[$key] = $val;

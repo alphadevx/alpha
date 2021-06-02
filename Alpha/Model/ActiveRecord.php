@@ -1381,8 +1381,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
-        if (method_exists($this, 'before_set_callback')) {
-            $this->{'before_set_callback'}();
+        if (method_exists($this, 'beforeSet')) {
+            $this->{'beforeSet'}();
         }
 
         // handle attributes with a set.ucfirst($prop) method
