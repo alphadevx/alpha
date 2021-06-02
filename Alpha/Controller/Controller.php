@@ -691,8 +691,8 @@ abstract class Controller
 
         $session->set('dirtyObjects', $this->dirtyObjects);
 
-        if (method_exists($this, 'after_markDirty_callback')) {
-            $this->{'after_markDirty_callback'}();
+        if (method_exists($this, 'afterMarkDirty')) {
+            $this->{'afterMarkDirty'}();
         }
 
         self::$logger->debug('<<markDirty');
