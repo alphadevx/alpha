@@ -734,8 +734,8 @@ abstract class Controller
 
         $session->set('newObjects', $this->newObjects);
 
-        if (method_exists($this, 'after_markNew_callback')) {
-            $this->{'after_markNew_callback'}();
+        if (method_exists($this, 'afterMarkNew')) {
+            $this->{'afterMarkNew'}();
         }
 
         self::$logger->debug('<<markNew');
