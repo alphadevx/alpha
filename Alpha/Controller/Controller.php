@@ -838,8 +838,8 @@ abstract class Controller
     {
         self::$logger->debug('>>abort()');
 
-        if (method_exists($this, 'before_abort_callback')) {
-            $this->{'before_abort_callback'}();
+        if (method_exists($this, 'beforeAbort')) {
+            $this->{'beforeAbort'}();
         }
 
         try {
