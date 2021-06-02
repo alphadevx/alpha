@@ -1016,8 +1016,8 @@ abstract class Controller
 
         // firstly if the page is Public then there is no issue
         if ($this->getVisibility() == 'Public') {
-            if (method_exists($this, 'after_checkRights_callback')) {
-                $this->{'after_checkRights_callback'}();
+            if (method_exists($this, 'afterCheckRights')) {
+                $this->{'afterCheckRights'}();
             }
 
             self::$logger->debug('<<checkRights [true]');
@@ -1029,8 +1029,8 @@ abstract class Controller
 
                 // if the visibility is 'Session', just being logged in enough
                 if ($this->getVisibility() == 'Session') {
-                    if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->{'after_checkRights_callback'}();
+                    if (method_exists($this, 'afterCheckRights')) {
+                        $this->{'afterCheckRights'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
@@ -1040,16 +1040,16 @@ abstract class Controller
 
                 // checking for admins (can access everything)
                 if ($session->get('currentUser')->inGroup('Admin')) {
-                    if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->{'after_checkRights_callback'}();
+                    if (method_exists($this, 'afterCheckRights')) {
+                        $this->{'afterCheckRights'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
 
                     return true;
                 } elseif ($session->get('currentUser')->inGroup($this->getVisibility())) {
-                    if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->{'after_checkRights_callback'}();
+                    if (method_exists($this, 'afterCheckRights')) {
+                        $this->{'afterCheckRights'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
@@ -1057,8 +1057,8 @@ abstract class Controller
                     return true;
                 // the person is editing their own profile which is allowed
                 } elseif ((isset($this->record) && get_class($this->record) == 'Alpha\Model\Person') && $session->get('currentUser')->getUsername() == $this->record->getUsername()) {
-                    if (method_exists($this, 'after_checkRights_callback')) {
-                        $this->{'after_checkRights_callback'}();
+                    if (method_exists($this, 'afterCheckRights')) {
+                        $this->{'afterCheckRights'}();
                     }
 
                     self::$logger->debug('<<checkRights [true]');
