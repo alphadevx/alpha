@@ -1010,8 +1010,8 @@ abstract class Controller
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
-        if (method_exists($this, 'before_checkRights_callback')) {
-            $this->{'before_checkRights_callback'}();
+        if (method_exists($this, 'beforeCheckRights')) {
+            $this->{'beforeCheckRights'}();
         }
 
         // firstly if the page is Public then there is no issue
