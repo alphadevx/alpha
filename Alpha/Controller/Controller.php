@@ -816,8 +816,8 @@ abstract class Controller
 
             $this->clearUnitOfWorkAttributes();
 
-            if (method_exists($this, 'after_commit_callback')) {
-                $this->{'after_commit_callback'}();
+            if (method_exists($this, 'afterCommit')) {
+                $this->{'afterCommit'}();
             }
 
             self::$logger->debug('<<commit');
