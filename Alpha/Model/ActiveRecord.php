@@ -773,8 +773,8 @@ abstract class ActiveRecord
             }
         }
 
-        if (method_exists($this, 'after_validate_callback')) {
-            $this->{'after_validate_callback'}();
+        if (method_exists($this, 'afterValidate')) {
+            $this->{'afterValidate'}();
         }
 
         self::$logger->debug('<<validate');
