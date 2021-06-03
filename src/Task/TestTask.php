@@ -1,15 +1,15 @@
 <?php
 
-namespace Alpha\Test\Task;
+namespace Task;
 
-use Alpha\Task\BackupTask;
+use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
-use PHPUnit\Framework\TestCase;
+use Alpha\Task\TaskInterface;
 
 /**
- * Test cases for the BackupTask class.
+ * A dummy task used for unit tests (does nothing)
  *
- * @since 2.0
+ * @since 4.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -48,31 +48,33 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class BackupTaskTest extends TestCase
+class TestTask implements TaskInterface
 {
     /**
-     * Set up tests.
+     * Trace logger.
      *
-     * @since 2.0
+     * @var \Alpha\Util\Logging\Logger
      */
-    protected function setUp(): void
+    private static $logger = null;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function doTask(): void
     {
         $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
+        self::$logger = new Logger('BackupTask');
+        self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
+
+        self::$logger->debug('TestTask called');
     }
 
     /**
-     * Testing the doTask() method.
-     *
-     * @since 2.0
+     * {@inheritdoc}
      */
-    public function testDoTask()
+    public function getMaxRunTime(): int
     {
-        $config = ConfigProvider::getInstance();
-
-        $task = new BackupTask();
-        $task->doTask();
-
-        $this->assertTrue(file_exists($config->get('backup.dir').'/'.date('Y-m-d').'.zip'), 'Testing the doTask() method');
+        return 600;
     }
 }

@@ -2,14 +2,14 @@
 
 namespace Alpha\Test\Task;
 
-use Alpha\Task\BackupTask;
+use Alpha\Task\CronManager;
 use Alpha\Util\Config\ConfigProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test cases for the BackupTask class.
+ * Test cases for the CronManager class.
  *
- * @since 2.0
+ * @since 4.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
@@ -48,12 +48,12 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class BackupTaskTest extends TestCase
+class CronManagerTest extends TestCase
 {
     /**
      * Set up tests.
      *
-     * @since 2.0
+     * @since 4.0
      */
     protected function setUp(): void
     {
@@ -62,17 +62,32 @@ class BackupTaskTest extends TestCase
     }
 
     /**
-     * Testing the doTask() method.
+     * Testing the __construct() method.
      *
-     * @since 2.0
+     * @since 4.0
      */
-    public function testDoTask()
+    public function testConstruct()
     {
         $config = ConfigProvider::getInstance();
 
-        $task = new BackupTask();
-        $task->doTask();
+        $manager = new CronManager();
 
-        $this->assertTrue(file_exists($config->get('backup.dir').'/'.date('Y-m-d').'.zip'), 'Testing the doTask() method');
+        $this->assertTrue(file_exists($config->get('app.file.store.dir').'logs/tasks.log'), 'Testing the __construct() method');
+
+        $fileSize = filesize($config->get('app.file.store.dir').'logs/tasks.log');
+
+        $manager2 = new CronManager();
+
+        $this->assertTrue(filesize($config->get('app.file.store.dir').'logs/tasks.log') > $fileSize, 'Testing that running the CronManager again updates the task log file with output');
+    }
+
+    public function testGetTaskClassNames()
+    {
+        $config = ConfigProvider::getInstance();
+
+        $manager = new CronManager();
+        $tasks = $manager->getTaskClassNames();
+
+        $this->assertTrue(in_array('\Task\TestTask', $tasks, true), 'Testing the array of task class names is returned');
     }
 }
