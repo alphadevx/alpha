@@ -748,8 +748,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>validate()');
 
-        if (method_exists($this, 'before_validate_callback')) {
-            $this->{'before_validate_callback'}();
+        if (method_exists($this, 'beforeValidate')) {
+            $this->{'beforeValidate'}();
         }
 
         // get the class attributes
