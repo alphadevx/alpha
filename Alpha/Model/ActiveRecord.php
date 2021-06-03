@@ -722,8 +722,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>saveHistory()');
 
-        if (method_exists($this, 'before_saveHistory_callback')) {
-            $this->{'before_saveHistory_callback'}();
+        if (method_exists($this, 'beforeSaveHistory')) {
+            $this->{'beforeSaveHistory'}();
         }
 
         $config = ConfigProvider::getInstance();
