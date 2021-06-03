@@ -886,8 +886,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
-        if (method_exists($this, 'before_deleteAllByAttribute_callback')) {
-            $this->{'before_deleteAllByAttribute_callback'}();
+        if (method_exists($this, 'beforeDeleteAllByAttribute')) {
+            $this->{'beforeDeleteAllByAttribute'}();
         }
 
         try {
