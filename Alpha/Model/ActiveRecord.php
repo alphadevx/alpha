@@ -704,8 +704,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_saveAttribute_callback')) {
-            $this->{'after_saveAttribute_callback'}();
+        if (method_exists($this, 'afterSaveAttribute')) {
+            $this->{'afterSaveAttribute'}();
         }
 
         self::$logger->debug('<<saveAttribute');
