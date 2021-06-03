@@ -732,8 +732,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->saveHistory();
 
-        if (method_exists($this, 'after_saveHistory_callback')) {
-            $this->{'after_saveHistory_callback'}();
+        if (method_exists($this, 'afterSaveHistory')) {
+            $this->{'afterSaveHistory'}();
         }
     }
 
