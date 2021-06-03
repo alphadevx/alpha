@@ -908,8 +908,8 @@ abstract class ActiveRecord
             throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
         }
 
-        if (method_exists($this, 'after_deleteAllByAttribute_callback')) {
-            $this->{'after_deleteAllByAttribute_callback'}();
+        if (method_exists($this, 'afterDeleteAllByAttribute')) {
+            $this->{'afterDeleteAllByAttribute'}();
         }
 
         self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
