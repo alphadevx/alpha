@@ -864,8 +864,8 @@ abstract class ActiveRecord
             $this->removeFromCache();
         }
 
-        if (method_exists($this, 'after_delete_callback')) {
-            $this->{'after_delete_callback'}();
+        if (method_exists($this, 'afterDelete')) {
+            $this->{'afterDelete'}();
         }
 
         $this->clear();
