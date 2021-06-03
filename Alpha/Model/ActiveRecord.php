@@ -503,8 +503,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAllByDayUpdated($date, $start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAllByDayUpdated_callback')) {
-            $this->{'after_loadAllByDayUpdated_callback'}();
+        if (method_exists($this, 'afterLoadAllByDayUpdated')) {
+            $this->{'afterLoadAllByDayUpdated'}();
         }
 
         self::$logger->debug('<<loadAllByDayUpdated ['.count($objects).']');
