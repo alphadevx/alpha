@@ -677,12 +677,12 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveAttribute(string $attribute, $value): void
+    public function saveAttribute(string $attribute, mixed $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
-        if (method_exists($this, 'before_saveAttribute_callback')) {
-            $this->{'before_saveAttribute_callback'}();
+        if (method_exists($this, 'beforeSaveAttribute')) {
+            $this->{'beforeSaveAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -882,7 +882,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedDeleteException
      */
-    public function deleteAllByAttribute(string $attribute, $value): int
+    public function deleteAllByAttribute(string $attribute, mixed $value): int
     {
         self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -1377,7 +1377,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function set(string $prop, $value, bool $noChildMethods = false): void
+    public function set(string $prop, mixed $value, bool $noChildMethods = false): void
     {
         self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
