@@ -1432,4 +1432,22 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertTrue(ActiveRecord::checkDatabaseExists(), 'Testing the checkDatabaseExists() method');
     }
+
+    /**
+     * Testing the findMissingFields() method
+     *
+     * @since 4.0
+     *
+     * @dataProvider getActiveRecordProviders
+     *
+     */
+    public function testFindMissingFields($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $missingFields = $this->person->findMissingFields();
+
+        $this->assertTrue(count($missingFields) == 0, 'Testing the findMissingFields() method');
+    }
 }
