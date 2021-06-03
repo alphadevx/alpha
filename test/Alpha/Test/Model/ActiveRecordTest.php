@@ -28,7 +28,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -125,7 +125,7 @@ class ActiveRecordTest extends ModelTestCase
 
         $article->createForeignIndex('author', 'Alpha\Model\Person', 'username');
 
-        $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes()), 'Testing the createForeignIndex method');
+        $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes(), true), 'Testing the createForeignIndex method');
     }
 
     /**
@@ -658,7 +658,7 @@ class ActiveRecordTest extends ModelTestCase
         $id = $this->person->getMAX();
         $this->person->load($id);
         $this->assertTrue(
-            in_array('Active', $this->person->getPropObject('state')->getOptions()),
+            in_array('Active', $this->person->getPropObject('state')->getOptions(), true),
             'Testing the setEnumOptions method is loading enum options correctly'
         );
     }
@@ -906,13 +906,13 @@ class ActiveRecordTest extends ModelTestCase
 
         // now mark the URL transient, and save again (old URL value should not be overwritten)
         $this->person->markTransient('URL');
-        $this->assertTrue(in_array('URL', $this->person->getTransientAttributes()), 'Testing that markTransient and markPersistent methods');
+        $this->assertTrue(in_array('URL', $this->person->getTransientAttributes(), true), 'Testing that markTransient and markPersistent methods');
         $this->person->set('URL', 'http://www.alphaframework.org/');
         $this->person->save();
 
         // used to ensure that we attempt to reload it from the DB
         $this->person->markPersistent('URL');
-        $this->assertFalse(in_array('URL', $this->person->getTransientAttributes()), 'Testing that markTransient and markPersistent methods');
+        $this->assertFalse(in_array('URL', $this->person->getTransientAttributes(), true), 'Testing that markTransient and markPersistent methods');
         // reload from DB
         $this->person->reload();
 
@@ -928,8 +928,8 @@ class ActiveRecordTest extends ModelTestCase
     {
         $this->assertTrue(is_array($this->person->getDataLabels()), 'Testing the getDataLabels method');
         $labels = $this->person->getDataLabels();
-        $this->assertTrue(in_array('ID', array_keys($labels)), 'Testing the getDataLabels method');
-        $this->assertTrue(in_array('E-mail Address', $labels), 'Testing the getDataLabels method');
+        $this->assertTrue(in_array('ID', array_keys($labels), true), 'Testing the getDataLabels method');
+        $this->assertTrue(in_array('E-mail Address', $labels, true), 'Testing the getDataLabels method');
     }
 
     /**
@@ -945,12 +945,12 @@ class ActiveRecordTest extends ModelTestCase
         );
         $this->person->markTransient('URL');
         $this->assertTrue(
-            in_array('URL', $this->person->getTransientAttributes()),
+            in_array('URL', $this->person->getTransientAttributes(), true),
             'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
         );
         $this->person->markPersistent('URL');
         $this->assertFalse(
-            in_array('URL', $this->person->getTransientAttributes()),
+            in_array('URL', $this->person->getTransientAttributes(), true),
             'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
         );
     }
@@ -1071,7 +1071,7 @@ class ActiveRecordTest extends ModelTestCase
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->person->getDefaultAttributes()) && !in_array($propName, $this->person->getTransientAttributes())) {
+            if (!in_array($propName, $this->person->getDefaultAttributes(), true) && !in_array($propName, $this->person->getTransientAttributes(), true)) {
                 $this->assertNotNull($this->person->get($propName), 'Testing the clear method for unsetting the attributes of an object');
             }
         }
@@ -1349,7 +1349,7 @@ class ActiveRecordTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         $record = new BadRequest();
         $record->newStringField = new SmallText();
 
@@ -1415,5 +1415,21 @@ class ActiveRecordTest extends ModelTestCase
 
         $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
         $this->assertEquals(3, count($lookup->loadAllbyAttribute('rightID', $group->getID())), 'testing the loadAllbyAttribute() method');
+    }
+
+    /**
+     * Testing the checkDatabaseExists() method
+     *
+     * @since 4.0
+     *
+     * @dataProvider getActiveRecordProviders
+     *
+     */
+    public function testCheckDatabaseExists($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->assertTrue(ActiveRecord::checkDatabaseExists(), 'Testing the checkDatabaseExists() method');
     }
 }

@@ -2432,9 +2432,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $result = $connection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \''.$config->get('db.name').'\'');
+        $result = $connection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \''.$config->get('db.name').'\'')->num_rows;
 
-        if (count($result) > 0) {
+        if ($result > 0) {
             return true;
         } else {
             return false;
