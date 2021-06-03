@@ -2235,6 +2235,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             throw new FailedSaveException('Error commiting a transaction, error is ['.self::getConnection()->error.']');
         }
 
+        self::disconnect();
+
         self::$logger->debug('<<commit');
     }
 
@@ -2253,6 +2255,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         if (!self::getConnection()->rollback()) {
             throw new AlphaException('Error rolling back a transaction, error is ['.self::getConnection()->error.']');
         }
+
+        self::disconnect();
 
         self::$logger->debug('<<rollback');
     }

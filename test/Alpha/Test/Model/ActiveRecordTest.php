@@ -1450,4 +1450,42 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertTrue(count($missingFields) == 0, 'Testing the findMissingFields() method');
     }
+
+    /**
+     * Testing transactions
+     *
+     * @since 4.0
+     *
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testTransactions($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->person->save();
+
+        $this->person->set('username', 'test1');
+
+        ActiveRecord::begin();
+
+        $this->person->save();
+
+        $this->assertEquals('test1', $this->person->get('username'), 'Testing transactions');
+
+        ActiveRecord::rollback();
+
+        $person = new Person();
+        $person->load($this->person->getID());
+        $this->assertEquals('unitTestUser', $person->get('username'), 'Testing transactions');
+
+
+        $person->set('username', 'test2');
+        ActiveRecord::begin();
+        $person->save();
+        ActiveRecord::commit();
+        $person->reload();
+
+        $this->assertEquals('test2', $person->get('username'), 'Testing transactions');
+    }
 }
