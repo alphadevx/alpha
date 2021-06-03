@@ -263,7 +263,7 @@ class Response
      *
      * @since 2.0
      */
-    public function getHeader(string $key, $default = null): mixed
+    public function getHeader(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -303,7 +303,7 @@ class Response
      *
      * @since 2.0
      */
-    public function getCookie(string $key, $default = null): mixed
+    public function getCookie(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];

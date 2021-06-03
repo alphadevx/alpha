@@ -954,7 +954,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeTable($checkIndexes = true): void
+    public function makeTable(bool $checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1040,11 +1040,11 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
+     * @param string|null $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function dropTable(string $tableName = null): void
+    public function dropTable(string|null $tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1886,13 +1886,13 @@ abstract class ActiveRecord
     /**
      * Gets the data label for the given attribute name.
      *
-     * @param $att The attribute name to get the label for.
+     * @param string $att The attribute name to get the label for.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getDataLabel($att): string
+    public function getDataLabel(string $att): string
     {
         self::$logger->debug('>>getDataLabel(att=['.$att.'])');
 
@@ -2165,13 +2165,13 @@ abstract class ActiveRecord
     /**
      * Starts a new database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin(ActiveRecord $record = null): void
+    public static function begin(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2200,13 +2200,13 @@ abstract class ActiveRecord
     /**
      * Commits the current database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit(ActiveRecord $record = null): void
+    public static function commit(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2235,13 +2235,13 @@ abstract class ActiveRecord
     /**
      * Aborts the current database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback(ActiveRecord $record = null): void
+    public static function rollback(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');

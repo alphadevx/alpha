@@ -405,7 +405,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public static function decodeQueryParams($tk): string
+    public static function decodeQueryParams(string $tk): string
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
@@ -420,7 +420,7 @@ class FrontController
      *
      * @since 1.0
      */
-    public static function getDecodeQueryParams($tk): array
+    public static function getDecodeQueryParams(string $tk): array
     {
         // replace any troublesome characters from the URL with the original values
         $token = strtr($tk, '-_', '+/');
@@ -508,7 +508,7 @@ class FrontController
      *
      * @since 2.0
      */
-    public function value(string $param, $defaultValue): \Alpha\Controller\Front\FrontController
+    public function value(string $param, mixed $defaultValue): \Alpha\Controller\Front\FrontController
     {
         $this->defaultParamValues[$this->currentRoute][$param] = $defaultValue;
 

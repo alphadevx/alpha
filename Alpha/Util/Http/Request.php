@@ -316,7 +316,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getHeader(string $key, $default = null): string|null
+    public function getHeader(string $key, mixed $default = null): string|null
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -370,7 +370,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getCookie(string $key, $default = null): mixed
+    public function getCookie(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
@@ -397,7 +397,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getParam(string $key, $default = null): string|null
+    public function getParam(string $key, mixed $default = null): string|null
     {
         if (array_key_exists($key, $this->params)) {
             return $this->params[$key];
@@ -409,11 +409,11 @@ class Request
     /**
      * Append the hash array provided to the params for this request.
      *
-     * @param array A hash array of values to add to the request params
+     * @param array $params A hash array of values to add to the request params
      *
      * @since 2.0
      */
-    public function addParams($params): void
+    public function addParams(array $params): void
     {
         if (is_array($params)) {
             $this->params = array_merge($this->params, $params);
@@ -423,11 +423,11 @@ class Request
     /**
      * Set the params array.
      *
-     * @param array A hash array of values to set as the request params
+     * @param array $params A hash array of values to set as the request params
      *
      * @since 2.0
      */
-    public function setParams($params): void
+    public function setParams(array $params): void
     {
         if (is_array($params)) {
             $this->params = $params;
@@ -452,7 +452,7 @@ class Request
      *
      * @since 2.0
      */
-    public function getFile(string $key, $default = null): mixed
+    public function getFile(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->files)) {
             return $this->files[$key];
