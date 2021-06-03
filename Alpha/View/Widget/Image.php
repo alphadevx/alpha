@@ -154,17 +154,18 @@ class Image
      * The constructor.
      *
      * @param string $source
-     * @param $width
-     * @param $height
-     * @param $sourceType
-     * @param $quality
-     * @param $scale
+     * @param int $width
+     * @param int $height
+     * @param string $sourceType
+     * @param float $quality
+     * @param bool $scale
+     * @param bool $secure
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function __construct(string $source, $width, $height, $sourceType, $quality = 0.75, $scale = false, $secure = false)
+    public function __construct(string $source, int $width, int $height, string $sourceType, float $quality = 0.75, bool $scale = false, bool $secure = false)
     {
         self::$logger = new Logger('Image');
         self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
@@ -199,11 +200,11 @@ class Image
      * Renders the HTML <img> tag to the ViewImage controller, with all of the correct params to render the source
      * image in the desired resolution.
      *
-     * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
+     * @param string $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
      *
      * @since 1.0
      */
-    public function renderHTMLLink($altText = ''): string
+    public function renderHTMLLink(string $altText = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -353,11 +354,11 @@ class Image
     /**
      * Caches the image to the cache directory.
      *
-     * @param image $image the binary GD image stream to save
+     * @param GdImage $image the binary GD image stream to save
      *
      * @since 1.0
      */
-    private function cache(image $image): void
+    private function cache(\GdImage $image): void
     {
         $config = ConfigProvider::getInstance();
 
