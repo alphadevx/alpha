@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -226,9 +226,11 @@ class SearchProviderTagsTest extends TestCase
         $this->article->save();
 
         $article2 = $this->createArticle('unitTestArticle 2');
+        $article2->set('description', 'Duplicated description');
         $article2->save();
 
         $article3 = $this->createArticle('unitTestArticle 3');
+        $article3->set('description', 'Duplicated description');
         $article3->save();
 
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
@@ -240,8 +242,12 @@ class SearchProviderTagsTest extends TestCase
 
         $this->assertTrue(count($results) == 1, 'Testing the method for getting related objects honours limit param');
 
-        $results = $provider->getRelated($this->article, 'PersonObject');
+        $results = $provider->getRelated($this->article, '\Alpha\Model\Person');
 
         $this->assertTrue(count($results) == 0, 'Testing the get related objects method honours returnType filtering');
+
+        $results = $provider->getRelated($this->article, 'all', 0, 10, 'description');
+
+        $this->assertTrue(count($results) == 1, 'Testing the method for getting related objects honours the distinct param');
     }
 }

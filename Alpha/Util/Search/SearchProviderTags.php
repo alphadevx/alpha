@@ -116,7 +116,7 @@ class SearchProviderTags implements SearchProviderInterface
         if (count($matches) == 0) {
             /*
              * Build an array of records for the matching tags from the DB:
-             * array key = Record ID
+             * array key = record ID
              * array value = weight (the amount of tags matching the record)
              */
             foreach ($matchingTags as $tag) {
@@ -124,7 +124,7 @@ class SearchProviderTags implements SearchProviderInterface
                     $key = $tag->get('taggedClass').'-'.$tag->get('taggedID');
 
                     if (isset($matches[$key])) {
-                        // increment the weight if the same Record is tagged more than once
+                        // increment the weight if the same record is tagged more than once
                         $weight = intval($matches[$key])+1;
                         $matches[$key] = $weight;
                     } else {
@@ -153,12 +153,12 @@ class SearchProviderTags implements SearchProviderInterface
                 $parts = explode('-', $key);
 
                 try {
-                    $Record = new $parts[0]();
-                    $Record->load($parts[1]);
+                    $record = new $parts[0]();
+                    $record->load($parts[1]);
 
-                    $results[] = $Record;
+                    $results[] = $record;
                 } catch (RecordNotFoundException $e) {
-                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant Record of ID ['.$parts[1].'] and type ['.$parts[0].'].');
+                    self::$logger->warn('Orpaned Tag detected pointing to a non-existant record of ID ['.$parts[1].'] and type ['.$parts[0].'].');
                 }
             }
         }
@@ -190,15 +190,15 @@ class SearchProviderTags implements SearchProviderInterface
             $tags = $sourceObject->getPropObject('tags')->getRelated();
 
             foreach ($tags as $tag) {
-                $Tag = new Tag();
+                $newTag = new Tag();
 
                 if ($distinct == '') {
-                    $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
+                    $matchingTags = $newTag->query('SELECT * FROM '.$newTag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
                         (taggedID = '".$sourceObject->getID()."' AND taggedClass = '".get_class($sourceObject)."');");
                 } else {
                     // filter out results where the source object field is identical to distinct param
-                    $matchingTags = $Tag->query('SELECT * FROM '.$Tag->getTableName()." WHERE 
+                    $matchingTags = $newTag->query('SELECT * FROM '.$newTag->getTableName()." WHERE 
                         content='".$tag->get('content')."' AND NOT 
                         (taggedID = '".$sourceObject->getID()."' AND taggedClass = '".get_class($sourceObject)."')
                         AND taggedID IN (SELECT ID FROM ".$sourceObject->getTableName().' WHERE '.$distinct." != '".addslashes($sourceObject->get($distinct))."');");
@@ -211,16 +211,16 @@ class SearchProviderTags implements SearchProviderInterface
                         // matches on the distinct if defined need to be skipped
                         if ($distinct != '') {
                             try {
-                                $Record = new $matchingTag['taggedClass']();
-                                $Record->load($matchingTag['taggedID']);
+                                $record = new $matchingTag['taggedClass']();
+                                $record->load($matchingTag['taggedID']);
 
                                 // skip where the source object field is identical
-                                if ($sourceObject->get($distinct) == $Record->get($distinct)) {
+                                if ($sourceObject->get($distinct) == $record->get($distinct)) {
                                     continue;
                                 }
 
-                                if (!in_array($Record->get($distinct), $distinctValues, true)) {
-                                    $distinctValues[] = $Record->get($distinct);
+                                if (!in_array($record->get($distinct), $distinctValues, true)) {
+                                    $distinctValues[] = $record->get($distinct);
                                 } else {
                                     continue;
                                 }
@@ -230,7 +230,7 @@ class SearchProviderTags implements SearchProviderInterface
                         }
 
                         if (isset($matches[$key])) {
-                            // increment the weight if the same Record is tagged more than once
+                            // increment the weight if the same record is tagged more than once
                             $weight = intval($matches[$key])+1;
                             $matches[$key] = $weight;
                         } else {
@@ -258,10 +258,10 @@ class SearchProviderTags implements SearchProviderInterface
         foreach ($matches as $key => $weight) {
             $parts = explode('-', $key);
 
-            $Record = new $parts[0]();
-            $Record->load($parts[1]);
+            $record = new $parts[0]();
+            $record->load($parts[1]);
 
-            $results[] = $Record;
+            $results[] = $record;
         }
 
         return $results;
@@ -282,7 +282,7 @@ class SearchProviderTags implements SearchProviderInterface
                     $tag->save();
                 } catch (ValidationException $e) {
                     /*
-                     * The unique key has most-likely been violated because this Record is already tagged with this
+                     * The unique key has most-likely been violated because this record is already tagged with this
                      * value, so we can ignore in this case.
                      */
                 }
