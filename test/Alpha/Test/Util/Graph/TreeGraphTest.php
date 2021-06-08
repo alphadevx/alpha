@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -76,12 +76,16 @@ class TreeGraphTest extends TestCase
         $graph = new TreeGraph();
         $graph->add(1, 0, 'First child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
         $graph->add(2, 0, 'Second child', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+        $graph->add(3, 1, 'First grandchild', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
+        $graph->add(4, 2, 'Second grandchild', 10, 10, array(0, 0, 0), 'http://www.alphaframework.org/');
 
-        $node = new GraphNode(3, 0, 10, 'Left node', array(0, 0, 0), 'http://www.alphaframework.org/');
+        $node = new GraphNode(5, 0, 10, 'Left node', array(0, 0, 0), 'http://www.alphaframework.org/');
 
         $graph->get(0)->setLeftSibling($node);
 
         $this->assertTrue($graph->hasNext(), 'Testing the hasNext method');
         $this->assertTrue($graph->next() instanceof GraphNode, 'Testing the next method');
+        $this->assertEquals(100, $graph->getWidth(), 'Testing the getWidth method');
+        $this->assertEquals(100, $graph->getHeight(), 'Testing the getHeight method');
     }
 }
