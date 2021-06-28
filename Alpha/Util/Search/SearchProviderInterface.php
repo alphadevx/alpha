@@ -51,7 +51,7 @@ interface SearchProviderInterface
      * search engine.  An array of business objects will be returned (ordered by the search engine).
      *
      * @param string $query      The search query.
-     * @param string $returnType Use this filter to determine that only business objects of a certain class hould be returned (default is to return all classes indexed).
+     * @param string $returnType Use this filter to determine that only business objects of a certain class should be returned (default is to return all classes indexed).
      * @param int    $start      Start point for pagination.
      * @param int    $limit      The maximum amount to return in the list (for pagination).
      * @param int    $createdBy  Optionally provide the creator ID to restrict search to Tags created by that user.

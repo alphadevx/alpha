@@ -186,9 +186,31 @@ class SearchProviderTagsTest extends TestCase
         $this->assertTrue(count($results) == 1, 'Testing the search method for expected results');
         $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
 
-        $results = $provider->search('unitTestArticle', 'PersonObject');
+        $results = $provider->search('unitTestArticle', '\Alpha\Model\Article');
 
         $this->assertTrue(count($results) == 0, 'Testing the search method honours returnType filtering');
+    }
+
+    /**
+     * Testing the search method for expected results.
+     *
+     * @since 3.0.0
+     */
+    public function testSearchWithCache()
+    {
+        $config = ConfigProvider::getInstance();
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+
+        $this->article->save();
+
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue(count($results) == 1, 'Testing the search method for expected results with result caching enabled');
+        $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
+
+        $config->set('cache.provider.name', $oldSetting);
     }
 
     /**
