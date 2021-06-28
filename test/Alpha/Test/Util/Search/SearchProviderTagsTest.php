@@ -210,6 +210,13 @@ class SearchProviderTagsTest extends TestCase
         $this->assertTrue(count($results) == 1, 'Testing the search method for expected results with result caching enabled');
         $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
 
+        // search again to hit the cache...
+
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue(count($results) == 1, 'Testing the search method for expected results with result caching enabled');
+        $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
+
         $config->set('cache.provider.name', $oldSetting);
     }
 
