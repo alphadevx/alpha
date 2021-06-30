@@ -1488,4 +1488,27 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertEquals('test2', $person->get('username'), 'Testing transactions');
     }
+
+    /**
+     * Testing reload
+     *
+     * @since 4.0
+     *
+     * @dataProvider getActiveRecordProviders
+     */
+    public function testReload($provider)
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $this->person->save();
+
+        $this->person->set('username', 'test1');
+
+        $this->assertEquals('test1', $this->person->get('username'), 'Testing reload');
+
+        $this->person->reload();
+
+        $this->assertEquals('unitTestUser', $this->person->get('username'), 'Testing reload');
+    }
 }

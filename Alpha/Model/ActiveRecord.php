@@ -2098,8 +2098,12 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>reload()');
 
+        $config = ConfigProvider::getInstance();
+
         if (!$this->isTransient()) {
-            $this->load($this->getID());
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($this);
+            $provider->reload();
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
