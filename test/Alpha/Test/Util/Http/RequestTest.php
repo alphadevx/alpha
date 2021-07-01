@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -271,5 +271,16 @@ class RequestTest extends TestCase
         $request = new Request();
 
         $this->assertEquals('HEAD', $request->getMethod(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override');
+    }
+
+    /**
+     * Testing that the setMethod and getMethod methods
+     */
+    public function testSetMethod()
+    {
+        $request = new Request(array('IP' => '127.0.0.1'));
+        $request->setMethod('GET');
+
+        $this->assertEquals('GET', $request->getMethod(), 'Testing that the setMethod and getMethod methods');
     }
 }
