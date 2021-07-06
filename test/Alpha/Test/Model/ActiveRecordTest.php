@@ -13,6 +13,9 @@ use Alpha\Model\BlacklistedIP;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Enum;
+use Alpha\Model\Type\DEnum;
+use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
@@ -106,6 +109,11 @@ class ActiveRecordTest extends ModelTestCase
             $comment->rebuildTable();
             $tag = new Tag();
             $tag->rebuildTable();
+
+            $denum = new DEnum();
+            $denum->rebuildTable();
+            $item = new DEnumItem();
+            $item->rebuildTable();
         }
     }
 
@@ -1355,12 +1363,34 @@ class ActiveRecordTest extends ModelTestCase
 
         $record->addProperty('newStringField');
 
+        $enum = new Enum();
+        $enum->setOptions(array('a', 'b', 'c'));
+        $record->newEnumField = $enum;
+
+        $record->addProperty('newEnumField');
+
+        $denum = new DEnum('Alpha\Model\BadRequest::newDEnumField');
+        $record->newDEnumField = $denum;
+        $item = new DEnumItem();
+        $item->set('DEnumID', $denum->getID());
+        $item->set('value', 'Test');
+        $item->save();
+
+        $record->addProperty('newDEnumField');
+
         $record->set('newStringField', 'test value');
+        $record->set('newEnumField', 'a');
+
+        $options = $denum->getOptions();
+        $optionIDs = array_keys($options);
+        $record->set('newDEnumField', $optionIDs[0]);
+
         $record->save();
 
         $record->reload();
 
-        $this->assertEquals('test value', $record->get('newStringField'), 'Testing that we can save and retrieve from a newly-added column');
+        $this->assertEquals('test value', $record->get('newStringField'), 'Testing that we can save and retrieve from a newly-added SmallText column');
+        $this->assertEquals('a', $record->get('newEnumField'), 'Testing that we can save and retrieve from a newly-added Enum column');
 
         $record = new BadRequest();
         $record->setMaintainHistory(true);

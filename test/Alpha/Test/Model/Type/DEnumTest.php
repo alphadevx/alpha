@@ -15,7 +15,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -115,7 +115,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $this->denum1->setValue('blah');
             $this->fail('testing the setValue method with a bad options array index value');
@@ -135,7 +135,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -157,7 +157,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -180,7 +180,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -202,7 +202,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         $options = $this->denum1->getOptions();
 
         $this->assertEquals(count($options), $this->denum1->getItemCount(), 'testing the getItemCount method');
@@ -219,7 +219,7 @@ class DEnumTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         $DEnumID = $this->denum1->getID();
         $item = new DEnumItem();
         $items = $item->loadItems($DEnumID);
