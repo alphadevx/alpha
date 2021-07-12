@@ -112,10 +112,45 @@ class TimestampTest extends TestCase
     public function testSetValueInvalidValue()
     {
         try {
+            $this->timestamp1->setTimestampValue(26, 12, 1, 0, 0, 0);
+            $this->fail('testing the setValue method with a bad timestamp value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The year value 26 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+        }
+
+        try {
             $this->timestamp1->setTimestampValue(2000, 13, 1, 0, 0, 0);
             $this->fail('testing the setValue method with a bad timestamp value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('The day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+            $this->assertEquals('The month value 13 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+        }
+
+        try {
+            $this->timestamp1->setTimestampValue(2000, 12, 100, 0, 0, 0);
+            $this->fail('testing the setValue method with a bad timestamp value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The day value 100 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+        }
+
+        try {
+            $this->timestamp1->setTimestampValue(2000, 1, 1, 25, 0, 0);
+            $this->fail('testing the setValue method with a bad timestamp value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The hour value 25 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+        }
+
+        try {
+            $this->timestamp1->setTimestampValue(2000, 7, 1, 23, 99, 0);
+            $this->fail('testing the setValue method with a bad timestamp value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The minute value 99 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
+        }
+
+        try {
+            $this->timestamp1->setTimestampValue(2000, 4, 6, 0, 59, 61);
+            $this->fail('testing the setValue method with a bad timestamp value (out of range)');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The second value 61 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad timestamp value (out of range)');
         }
     }
 
@@ -200,7 +235,7 @@ class TimestampTest extends TestCase
             $this->timestamp1->setDate(2000, 1, 99);
             $this->fail('testing the setDate method with a bad value');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('The day value 2000/1/99 provided is invalid!', $e->getMessage(), 'testing the setDate method with a bad value');
+            $this->assertEquals('The day value 99 provided is invalid!', $e->getMessage(), 'testing the setDate method with a bad value');
         }
     }
 

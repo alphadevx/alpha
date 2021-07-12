@@ -162,11 +162,7 @@ class Timestamp extends Type implements TypeInterface
                 $this->second = '00';
             }
         } else {
-            if (preg_match($this->validationRule, $timestamp)) {
-                $this->populateFromString($timestamp);
-            } else {
-                throw new IllegalArguementException($this->helper);
-            }
+            $this->populateFromString($timestamp);
         }
     }
 
@@ -203,22 +199,22 @@ class Timestamp extends Type implements TypeInterface
         if (!preg_match('/^[0-9]{4}$/', $year)) {
             $valid = 'The year value '.$year.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+        if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
             $valid = 'The month value '.$month.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+        if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
             $valid = 'The day value '.$day.' provided is invalid!';
         }
         if (!isset($valid) && !checkdate($month, $day, $year)) {
             $valid = 'The day value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+        if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
             $valid = 'The hour value '.$hour.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
             $valid = 'The minute value '.$minute.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
             $valid = 'The second value '.$second.' provided is invalid!';
         }
 
@@ -294,10 +290,10 @@ class Timestamp extends Type implements TypeInterface
         if (!preg_match('/^[0-9]{4}$/', $year)) {
             $valid = 'The year value '.$year.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+        if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
             $valid = 'The month value '.$month.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+        if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
             $valid = 'The day value '.$day.' provided is invalid!';
         }
         if (!isset($valid) && !checkdate($month, $day, $year)) {
@@ -410,13 +406,13 @@ class Timestamp extends Type implements TypeInterface
     {
         $valid = null;
 
-        if (!isset($valid) && !preg_match('/^[0-9]{2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+        if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
             $valid = 'The hour value '.$hour.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
             $valid = 'The minute value '.$minute.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
             $valid = 'The second value '.$second.' provided is invalid!';
         }
 
@@ -467,19 +463,19 @@ class Timestamp extends Type implements TypeInterface
             $split_by_dash = explode('-', $date);
 
             if (isset($split_by_dash[0])) {
-                $year = $split_by_dash[0];
+                $year = intval($split_by_dash[0]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_dash[1])) {
-                $month = $split_by_dash[1];
+                $month = intval($split_by_dash[1]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_dash[2])) {
-                $day = $split_by_dash[2];
+                $day = intval($split_by_dash[2]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
@@ -487,19 +483,19 @@ class Timestamp extends Type implements TypeInterface
             $split_by_colon = explode(':', $time);
 
             if (isset($split_by_colon[0])) {
-                $hour = $split_by_colon[0];
+                $hour = intval($split_by_colon[0]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_colon[1])) {
-                $minute = $split_by_colon[1];
+                $minute = intval($split_by_colon[1]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_colon[2])) {
-                $second = $split_by_colon[2];
+                $second = intval($split_by_colon[2]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
@@ -507,22 +503,22 @@ class Timestamp extends Type implements TypeInterface
             if (!preg_match('/^[0-9]{4}$/', $year)) {
                 $valid = 'The year value '.$year.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+            if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
                 $valid = 'The month value '.$month.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+            if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
                 $valid = 'The day value '.$day.' provided is invalid!';
             }
             if (!isset($valid) && !checkdate($month, $day, $year)) {
                 $valid = 'The day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+            if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
                 $valid = 'The hour value '.$hour.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+            if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
                 $valid = 'The minute value '.$minute.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+            if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
                 $valid = 'The second value '.$second.' provided is invalid!';
             }
 
