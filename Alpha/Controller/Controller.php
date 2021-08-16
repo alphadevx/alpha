@@ -1620,7 +1620,9 @@ abstract class Controller
 
         if ($accept != 'application/json' && $this->checkIfAccessingFromSecureURL()) {
             $viewState = ViewState::getInstance();
-            if ($viewState->get('renderAdminMenu') === true) {
+            $menu = '';
+
+            if ($viewState->get('renderAdminMenu')) {
                 $config = ConfigProvider::getInstance();
 
                 $sessionProvider = $config->get('session.provider.name');
@@ -1635,8 +1637,8 @@ abstract class Controller
 
                 return $menu;
             }
-        } else {
-            return '';
         }
+
+        return '';
     }
 }

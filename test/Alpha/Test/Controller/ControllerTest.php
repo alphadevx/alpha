@@ -5,6 +5,7 @@ namespace Alpha\Test\Controller;
 use Alpha\Controller\ImageController;
 use Alpha\Controller\LoginController;
 use Alpha\Controller\Controller;
+use Alpha\Controller\ListActiveRecordsController;
 use Alpha\Controller\Front\FrontController;
 use Alpha\Model\Article;
 use Alpha\Model\Person;
@@ -21,6 +22,7 @@ use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\View\ViewState;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -30,7 +32,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -314,7 +316,7 @@ class ControllerTest extends TestCase
         } catch (PHPException $e) {
             $this->fail('failed to access a controller that I have access to by rights group membership');
         }
-        
+
         $front = new FrontController();
         $request = new Request(array('method' => 'GET', 'URI' => '/gensecure'));
 
@@ -804,6 +806,52 @@ class ControllerTest extends TestCase
 
         $this->assertTrue(strpos($response->getBody(), 'test@test.com') !== false);
 
+        $config->set('security.encrypt.http.fieldnames', false);
+    }
+
+    /**
+     * Testing that this callback renders the admin nav menu when required
+     */
+    public function testAfterDisplayPageHead()
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', true);
+
+        $viewState = ViewState::getInstance();
+        $viewState->set('renderAdminMenu', true);
+
+        $front = new FrontController();
+
+        $oldKey = $config->get('security.encryption.key');
+        $oldRewriteSetting = $config->get('app.use.pretty.urls');
+
+        $config->set('security.encryption.key', 'testkey12345678901234567');
+        $params = 'act=\Alpha\Controller\ListActiveRecordsController';
+
+        $config->set('app.use.pretty.urls', true);
+        $this->assertEquals($config->get('app.url').'/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled');
+
+        $group = new Rights();
+        $group->loadByAttribute('name', 'Admin');
+
+        $this->person->save();
+
+        $lookup = $this->person->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($this->person->getID(), $group->getID()));
+        $lookup->save();
+
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session->set('currentUser', $this->person);
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ=='));
+
+        $response = $front->process($request);
+
+        $this->assertTrue(strpos($response->getBody(), 'adminmenu') !== false);
+
+        $config->set('security.encryption.key', $oldKey);
+        $config->set('app.use.pretty.urls', $oldRewriteSetting);
         $config->set('security.encrypt.http.fieldnames', false);
     }
 }
