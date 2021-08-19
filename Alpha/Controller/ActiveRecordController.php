@@ -448,11 +448,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to edit!');
             }
 
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
-            }
-
             $record->load($params['ActiveRecordID']);
 
             ActiveRecord::begin();

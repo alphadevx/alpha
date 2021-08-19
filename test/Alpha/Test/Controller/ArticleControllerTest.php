@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -264,5 +264,45 @@ Content Cell  | Content Cell
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/a/new-put-title/edit') !== false, 'Testing the doPUT method');
+    }
+
+    /**
+     * Testing the doDELETE method.
+     */
+    public function testDoDELETE()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ArticleController();
+
+        $article = $this->createArticleObject('test article');
+        $article->save();
+
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method with a hit');
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'DELETE', 'URI' => '/a/test-article', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method with a miss');
     }
 }

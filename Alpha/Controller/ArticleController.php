@@ -383,7 +383,24 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
+        $config = ConfigProvider::getInstance();
+
+        $params = $request->getParams();
+
         $this->setUnitOfWork(array());
+
+        if (!isset($params['ActiveRecordID']) && isset($params['title'])) {
+            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+            $record = new Article();
+            $record->loadByAttribute('title', $title);
+            $params['ActiveRecordID'] = $record->getID();
+
+            $request->addParams(array('ActiveRecordID' => $params['ActiveRecordID']));
+        }
+
+        if (!isset($params['ActiveRecordType'])) {
+            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
+        }
 
         self::$logger->debug('<<doDELETE');
 
