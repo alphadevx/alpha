@@ -9,6 +9,8 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\ResourceNotFoundException;
 
 /**
  * Test cases for the ActiveRecordController class.
@@ -17,7 +19,7 @@ use Alpha\Model\Rights;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -306,5 +308,36 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doDELETE method');
         $this->assertEquals('deleted', json_decode($response->getBody())->message, 'Testing the doDELETE method');
+    }
+
+    /**
+     * Triggering various expected exceptions
+     */
+    public function testTriggerExceptions()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        // get a single record
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Blah').'/'.$person->getID()));
+
+        $response = $front->process($request);
+        $this->assertEquals(404, $response->getStatus(), 'Testing that provided a bad model class will trigger an exception');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/1234/edit'));
+        $response = $front->process($request);
+        $this->assertEquals(404, $response->getStatus(), 'Testing that provided a bad model class will trigger an exception');
     }
 }

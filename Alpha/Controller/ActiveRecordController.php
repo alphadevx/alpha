@@ -159,7 +159,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @param \Alpha\Util\Http\Request $request
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
-     * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
