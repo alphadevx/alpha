@@ -163,6 +163,27 @@ class TimestampTest extends TestCase
         $this->timestamp1->populateFromString('2007-08-13 23:44:07');
 
         $this->assertEquals('2007-08-13 23:44:07', $this->timestamp1->getValue(), 'testing the populateFromString method');
+
+        try {
+            $this->timestamp1->populateFromString('2007-08-40 23:44:07');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The day value 40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+        }
+
+        try {
+            $this->timestamp1->populateFromString('2007-08-aa 23:44:07');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('The day value 0 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+        }
+
+        try {
+            $this->timestamp1->populateFromString('bad');
+            $this->fail('testing the populateFromString method with a bad date value');
+        } catch (IllegalArguementException $e) {
+            $this->assertEquals('Not a valid timestamp value!  A timestamp should be in the format YYYY-MM-DD HH:MM:SS.', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+        }
     }
 
     /**

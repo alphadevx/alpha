@@ -122,21 +122,21 @@ class DateTest extends TestCase
             $this->date1->setDateValue(2000, 13, 1);
             $this->fail('testing the setDateValue method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setDateValue method with a bad date value (out of range)');
+            $this->assertEquals('The day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setDateValue method with a bad date value (out of range)');
         }
 
         try {
             $date = new Date('2000-13-01');
             $this->fail('testing the constructor method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the constructor method with a bad date value (out of range)');
+            $this->assertEquals('The date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the constructor method with a bad date value (out of range)');
         }
 
         try {
             $this->date1->setValue('2000-13-01');
             $this->fail('testing the setValue method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
+            $this->assertEquals('The date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
         }
     }
 
@@ -155,14 +155,14 @@ class DateTest extends TestCase
             $this->date1->populateFromString('2007-08-40');
             $this->fail('testing the populateFromString method with a bad date value');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2007-08-40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+            $this->assertEquals('The date value 2007-08-40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {
             $this->date1->populateFromString('2007-08-aa');
             $this->fail('testing the populateFromString method with a bad date value');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value aa provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+            $this->assertEquals('The date value 2007-08-00 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {

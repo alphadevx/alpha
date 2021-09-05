@@ -180,16 +180,16 @@ class Date extends Type implements TypeInterface
         $valid = null;
 
         if (!preg_match('/^[0-9]{4}$/', $year)) {
-            $valid = 'Error: the year value '.$year.' provided is invalid!';
+            $valid = 'The year value '.$year.' provided is invalid!';
         }
         if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
-            $valid = 'Error: the month value '.$month.' provided is invalid!';
+            $valid = 'The month value '.$month.' provided is invalid!';
         }
         if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
-            $valid = 'Error: the day value '.$day.' provided is invalid!';
+            $valid = 'The day value '.$day.' provided is invalid!';
         }
         if (!isset($valid) && !checkdate($month, $day, $year)) {
-            $valid = 'Error: the day value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
+            $valid = 'The day value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
         }
 
         if (isset($valid)) {
@@ -325,32 +325,32 @@ class Date extends Type implements TypeInterface
 
             // Parse for the date parts, seperated by "-"
             if (isset($split_by_dash[0]) && isset($split_by_dash[1]) && isset($split_by_dash[2])) {
-                $year = $split_by_dash[0];
-                $month = $split_by_dash[1];
-                $day = $split_by_dash[2];
+                $year = intval($split_by_dash[0]);
+                $month = str_pad(intval($split_by_dash[1]), 2, '0', STR_PAD_LEFT);
+                $day = str_pad(intval($split_by_dash[2]), 2, '0', STR_PAD_LEFT);
             } else {
                 throw new IllegalArguementException('Invalid Date value ['.$date.'] provided!');
             }
 
             if (!preg_match('/^[0-9]{4}$/', $year)) {
-                $valid = 'Error: the year value '.$year.' provided is invalid!';
+                $valid = 'The year value '.$year.' provided is invalid!';
             }
             if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
-                $valid = 'Error: the month value '.$month.' provided is invalid!';
+                $valid = 'The month value '.$month.' provided is invalid!';
             }
             if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
-                $valid = 'Error: the day value '.$day.' provided is invalid!';
+                $valid = 'The day value '.$day.' provided is invalid!';
             }
             if (!isset($valid) && !checkdate($month, $day, $year)) {
-                $valid = 'Error: the date value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
+                $valid = 'The date value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
             }
 
             if (isset($valid)) {
                 throw new IllegalArguementException($valid);
             } else {
                 $this->year = $year;
-                $this->month = str_pad($month, 2, '0', STR_PAD_LEFT);
-                $this->day = str_pad($day, 2, '0', STR_PAD_LEFT);
+                $this->month = $month;
+                $this->day = $day;
                 $unixTime = mktime(0, 0, 0, $this->month, $this->day, $this->year);
                 $this->weekday = date('l', $unixTime);
                 $this->monthName = date('F', $unixTime);

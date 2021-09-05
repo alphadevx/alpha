@@ -331,7 +331,7 @@ class ActiveRecordControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Blah').'/'.$person->getID()));
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Does\Not\Exist').'/'.$person->getID()));
 
         $response = $front->process($request);
         $this->assertEquals(404, $response->getStatus(), 'Testing that provided a bad model class will trigger an exception');
