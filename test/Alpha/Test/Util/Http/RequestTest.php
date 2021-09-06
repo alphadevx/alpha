@@ -121,6 +121,10 @@ class RequestTest extends TestCase
         $request = new Request();
 
         $this->assertEquals('application/json', $request->getHeader('Accept'), 'Testing that the HTTP headers can be set from overrides or super-globals during object construction');
+
+        $headers = $request->getHeaders();
+
+        $this->assertTrue(array_key_exists('Accept', $headers), 'Testing the getHeaders method returns the expected array');
     }
 
     /**
@@ -135,6 +139,9 @@ class RequestTest extends TestCase
 
         $this->assertEquals('application/json', $request->getHeader('Content-Type'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
         $this->assertEquals(500, $request->getHeader('Content-Length'), 'Testing that the Content-Type and Content-Length headers are accessible in the Request once available in globals');
+
+        $this->assertEquals('application/json', $request->getContentType(), 'Testing the getContentType() method');
+        $this->assertEquals(500, $request->getContentLength(), 'Testing the getContentLength() method');
     }
 
     /**
@@ -151,6 +158,10 @@ class RequestTest extends TestCase
         $request = new Request();
 
         $this->assertEquals('bob', $request->getCookie('username'), 'Testing that the HTTP cookies can be set from overrides or super-globals during object construction');
+
+        $cookies = $request->getCookies();
+
+        $this->assertTrue(array_key_exists('username', $cookies), 'Testing the getCookies method returns the expected array');
     }
 
     /**
