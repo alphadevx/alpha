@@ -928,8 +928,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getVersion()');
 
-        if (method_exists($this, 'before_getVersion_callback')) {
-            $this->{'before_getVersion_callback'}();
+        if (method_exists($this, 'beforeGetVersionCallback')) {
+            $this->{'beforeGetVersionCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -938,8 +938,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $ver = $provider->getVersion();
 
-        if (method_exists($this, 'after_getVersion_callback')) {
-            $this->{'after_getVersion_callback'}();
+        if (method_exists($this, 'afterGetVersionCallback')) {
+            $this->{'afterGetVersionCallback'}();
         }
 
         self::$logger->debug('<<getVersion ['.$ver.']');
@@ -958,8 +958,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>makeTable()');
 
-        if (method_exists($this, 'before_makeTable_callback')) {
-            $this->{'before_makeTable_callback'}();
+        if (method_exists($this, 'beforeMakeTableCallback')) {
+            $this->{'beforeMakeTableCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -968,8 +968,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->makeTable($checkIndexes);
 
-        if (method_exists($this, 'after_makeTable_callback')) {
-            $this->{'after_makeTable_callback'}();
+        if (method_exists($this, 'afterMakeTableCallback')) {
+            $this->{'afterMakeTableCallback'}();
         }
 
         self::$logger->info('Successfully created the table ['.$this->getTableName().'] for the class ['.get_class($this).']');
@@ -988,8 +988,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>makeHistoryTable()');
 
-        if (method_exists($this, 'before_makeHistoryTable_callback')) {
-            $this->{'before_makeHistoryTable_callback'}();
+        if (method_exists($this, 'beforeMakeHistoryTableCallback')) {
+            $this->{'beforeMakeHistoryTableCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -998,8 +998,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->makeHistoryTable();
 
-        if (method_exists($this, 'after_makeHistoryTable_callback')) {
-            $this->{'after_makeHistoryTable_callback'}();
+        if (method_exists($this, 'afterMakeHistoryTableCallback')) {
+            $this->{'afterMakeHistoryTableCallback'}();
         }
 
         self::$logger->info('Successfully created the table ['.$this->getTableName().'_history] for the class ['.get_class($this).']');
