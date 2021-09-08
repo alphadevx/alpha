@@ -1018,8 +1018,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>rebuildTable()');
 
-        if (method_exists($this, 'before_rebuildTable_callback')) {
-            $this->{'before_rebuildTable_callback'}();
+        if (method_exists($this, 'beforeRebuildTableCallback')) {
+            $this->{'beforeRebuildTableCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1028,8 +1028,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->rebuildTable();
 
-        if (method_exists($this, 'after_rebuildTable_callback')) {
-            $this->{'after_rebuildTable_callback'}();
+        if (method_exists($this, 'afterRebuildTableCallback')) {
+            $this->{'afterRebuildTableCallback'}();
         }
 
         self::$logger->debug('<<rebuildTable');
@@ -1048,8 +1048,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>dropTable()');
 
-        if (method_exists($this, 'before_dropTable_callback')) {
-            $this->{'before_dropTable_callback'}();
+        if (method_exists($this, 'beforeDropTableCallback')) {
+            $this->{'beforeDropTableCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1058,8 +1058,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->dropTable($tableName);
 
-        if (method_exists($this, 'after_dropTable_callback')) {
-            $this->{'after_dropTable_callback'}();
+        if (method_exists($this, 'afterDropTableCallback')) {
+            $this->{'afterDropTableCallback'}();
         }
 
         self::$logger->debug('<<dropTable');
