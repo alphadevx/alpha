@@ -1081,16 +1081,16 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_addProperty_callback')) {
-            $this->{'before_addProperty_callback'}();
+        if (method_exists($this, 'beforeAddPropertyCallback')) {
+            $this->{'beforeAddPropertyCallback'}();
         }
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
         $provider->addProperty($propName);
 
-        if (method_exists($this, 'after_addProperty_callback')) {
-            $this->{'after_addProperty_callback'}();
+        if (method_exists($this, 'afterAddPropertyCallback')) {
+            $this->{'afterAddPropertyCallback'}();
         }
 
         self::$logger->debug('<<addProperty');
@@ -1151,8 +1151,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getMAX()');
 
-        if (method_exists($this, 'before_getMAX_callback')) {
-            $this->{'before_getMAX_callback'}();
+        if (method_exists($this, 'beforeGetMAXCallback')) {
+            $this->{'beforeGetMAXCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1161,8 +1161,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $max = $provider->getMAX();
 
-        if (method_exists($this, 'after_getMAX_callback')) {
-            $this->{'after_getMAX_callback'}();
+        if (method_exists($this, 'afterGetMAXCallback')) {
+            $this->{'afterGetMAXCallback'}();
         }
 
         self::$logger->debug('<<getMAX ['.$max.']');
