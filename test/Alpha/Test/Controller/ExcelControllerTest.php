@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -117,5 +117,18 @@ class ExcelControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('application/vnd.ms-excel', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertEquals('attachment; filename=Person-00000000001.xls', $response->getHeader('Content-Disposition'), 'Testing the doGET method');
+        $this->assertEquals(198, $response->getContentLength(), 'Testing the doGET method');
+
+        $person2 = $this->createPersonObject('test2');
+        $person2->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/excel/Person'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('application/vnd.ms-excel', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertEquals('attachment; filename=Person.xls', $response->getHeader('Content-Disposition'), 'Testing the doGET method');
+        $this->assertEquals(321, $response->getContentLength(), 'Testing the doGET method');
     }
 }
