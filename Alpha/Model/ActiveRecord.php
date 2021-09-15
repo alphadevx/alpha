@@ -1185,8 +1185,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
-        if (method_exists($this, 'before_getCount_callback')) {
-            $this->{'before_getCount_callback'}();
+        if (method_exists($this, 'beforeGetCountCallback')) {
+            $this->{'beforeGetCountCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1199,8 +1199,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $count = $provider->getCount($attributes, $values);
 
-        if (method_exists($this, 'after_getCount_callback')) {
-            $this->{'after_getCount_callback'}();
+        if (method_exists($this, 'afterGetCountCallback')) {
+            $this->{'afterGetCountCallback'}();
         }
 
         self::$logger->debug('<<getCount ['.$count.']');
@@ -1220,8 +1220,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getHistoryCount()');
 
-        if (method_exists($this, 'before_getHistoryCount_callback')) {
-            $this->{'before_getHistoryCount_callback'}();
+        if (method_exists($this, 'beforeGetHistoryCountCallback')) {
+            $this->{'beforeGetHistoryCountCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1230,8 +1230,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $count = $provider->getHistoryCount();
 
-        if (method_exists($this, 'after_getHistoryCount_callback')) {
-            $this->{'after_getHistoryCount_callback'}();
+        if (method_exists($this, 'afterGetHistoryCountCallback')) {
+            $this->{'afterGetHistoryCountCallback'}();
         }
 
         self::$logger->debug('<<getHistoryCount ['.$count.']');
@@ -1280,8 +1280,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>setEnumOptions()');
 
-        if (method_exists($this, 'before_setEnumOptions_callback')) {
-            $this->{'before_setEnumOptions_callback'}();
+        if (method_exists($this, 'beforeSetEnumOptionsCallback')) {
+            $this->{'beforeSetEnumOptionsCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1318,8 +1318,8 @@ abstract class ActiveRecord
 
         self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
 
-        if (method_exists($this, 'before_get_callback')) {
-            $this->{'before_get_callback'}();
+        if (method_exists($this, 'beforeGetCallback')) {
+            $this->{'beforeGetCallback'}();
         }
 
         if (empty($prop)) {
@@ -1328,8 +1328,8 @@ abstract class ActiveRecord
 
         // handle attributes with a get.ucfirst($prop) method
         if (!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
-            if (method_exists($this, 'after_get_callback')) {
-                $this->{'after_get_callback'}();
+            if (method_exists($this, 'afterGetCallback')) {
+                $this->{'afterGetCallback'}();
             }
 
             $methodName = 'get'.ucfirst($prop);
@@ -1340,8 +1340,8 @@ abstract class ActiveRecord
         } else {
             // handle attributes with no dedicated child get.ucfirst($prop) method
             if (isset($this->$prop) && is_object($this->$prop) && method_exists($this->$prop, 'getValue')) {
-                if (method_exists($this, 'after_get_callback')) {
-                    $this->{'after_get_callback'}();
+                if (method_exists($this, 'afterGetCallback')) {
+                    $this->{'afterGetCallback'}();
                 }
 
                 // complex types will have a getValue() method, return the value of that
@@ -1349,8 +1349,8 @@ abstract class ActiveRecord
 
                 return $this->$prop->getValue();
             } elseif (isset($this->$prop)) {
-                if (method_exists($this, 'after_get_callback')) {
-                    $this->{'after_get_callback'}();
+                if (method_exists($this, 'afterGetCallback')) {
+                    $this->{'afterGetCallback'}();
                 }
 
                 // simple types returned as-is
@@ -1387,8 +1387,8 @@ abstract class ActiveRecord
 
         // handle attributes with a set.ucfirst($prop) method
         if (!$noChildMethods && method_exists($this, 'set'.ucfirst($prop))) {
-            if (method_exists($this, 'after_set_callback')) {
-                $this->{'after_set_callback'}();
+            if (method_exists($this, 'afterSetCallback')) {
+                $this->{'afterSetCallback'}();
             }
 
             $methodName = 'set'.ucfirst($prop);
@@ -1397,8 +1397,8 @@ abstract class ActiveRecord
         } else {
             // handle attributes with no dedicated child set.ucfirst($prop) method
             if (isset($this->$prop)) {
-                if (method_exists($this, 'after_set_callback')) {
-                    $this->{'after_set_callback'}();
+                if (method_exists($this, 'afterSetCallback')) {
+                    $this->{'afterSetCallback'}();
                 }
 
                 // complex types will have a setValue() method to call
@@ -1434,8 +1434,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
 
-        if (method_exists($this, 'before_getPropObject_callback')) {
-            $this->{'before_getPropObject_callback'}();
+        if (method_exists($this, 'beforeGetPropObjectCallback')) {
+            $this->{'beforeGetPropObjectCallback'}();
         }
 
         // get the class attributes
@@ -1446,8 +1446,8 @@ abstract class ActiveRecord
         $attribute = new ReflectionProperty($this, $prop);
 
         if ($attribute->isPrivate()) {
-            if (method_exists($this, 'after_getPropObject_callback')) {
-                $this->{'after_getPropObject_callback'}();
+            if (method_exists($this, 'afterGetPropObjectCallback')) {
+                $this->{'afterGetPropObjectCallback'}();
             }
 
             self::$logger->debug('<<getPropObject [false]');
@@ -1459,8 +1459,8 @@ abstract class ActiveRecord
             $propName = $propObj->name;
 
             if ($prop == $propName) {
-                if (method_exists($this, 'after_getPropObject_callback')) {
-                    $this->{'after_getPropObject_callback'}();
+                if (method_exists($this, 'afterGetPropObjectCallback')) {
+                    $this->{'afterGetPropObjectCallback'}();
                 }
 
                 self::$logger->debug('<<getPropObject ['.var_export($this->$prop, true).']');
@@ -1486,8 +1486,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>checkTableExists()');
 
-        if (method_exists($this, 'before_checkTableExists_callback')) {
-            $this->{'before_checkTableExists_callback'}();
+        if (method_exists($this, 'beforeCheckTableExistsCallback')) {
+            $this->{'beforeCheckTableExistsCallback'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1496,8 +1496,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $tableExists = $provider->checkTableExists($checkHistoryTable);
 
-        if (method_exists($this, 'after_checkTableExists_callback')) {
-            $this->{'after_checkTableExists_callback'}();
+        if (method_exists($this, 'afterCheckTableExistsCallback')) {
+            $this->{'afterCheckTableExistsCallback'}();
         }
 
         self::$logger->debug('<<checkTableExists ['.$tableExists.']');
