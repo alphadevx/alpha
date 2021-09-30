@@ -169,16 +169,10 @@ class TextBox
      * @param \Alpha\Model\Type\Text $text
      *
      * @since 1.0
-     *
-     * @throws \Alpha\Exception\IllegalArguementException
      */
     public function setTextObject(\Alpha\Model\Type\Text $text): void
     {
-        if ($text instanceof Text) {
-            $this->textObject = $text;
-        } else {
-            throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
-        }
+        $this->textObject = $text;
     }
 
     /**

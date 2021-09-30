@@ -2,13 +2,13 @@
 
 namespace Alpha\Test\View\Widget;
 
-use Alpha\View\Widget\DateBox;
-use Alpha\Model\Type\Date;
+use Alpha\View\Widget\TextBox;
+use Alpha\Model\Type\Text;
 use Alpha\Exception\IllegalArguementException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test case for the DateBox widget.
+ * Test case for the TextBox widget.
  *
  * @since 2.0
  *
@@ -49,32 +49,30 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class DateBoxTest extends TestCase
+class TextBoxTest extends TestCase
 {
-    /**
-     * Testing for an expected exception when a bad object provided.
-     *
-     * @since 2.0
-     */
-    public function testConstructorBadSource()
-    {
-        try {
-            $dateBox = new DateBox(new self());
-            $this->fail('Testing for an expected exception when a bad object provided');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('DateBox widget can only accept a Date or Timestamp object!', $e->getMessage(), 'Testing for an expected exception when a bad object provided');
-        }
-    }
-
     /**
      * Testing the render() method.
      *
-     * @since 2.0
+     * @since 4.0
      */
     public function testRender()
     {
-        $dateBox = new DateBox(new Date(), 'Test label', 'testName');
-        $html = $dateBox->render();
+        $textBox = new TextBox(new Text(), 'Test label', 'testName');
+        $html = $textBox->render();
         $this->assertTrue(strpos($html, 'testName') !== false, 'Testing the render() method');
+    }
+
+    /**
+     * Testing the get/set text object methods
+     *
+     * @since 4.0
+     */
+    public function testGetSetTextObject()
+    {
+        $textBox = new TextBox(new Text(), 'Test label', 'testName');
+        $text = new Text('alpha');
+        $textBox->setTextObject($text);
+        $this->assertEquals('alpha', $textBox->getTextObject()->getValue(), 'Testing the get/set text object methods');
     }
 }
