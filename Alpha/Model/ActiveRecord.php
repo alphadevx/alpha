@@ -1548,8 +1548,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_checkTableNeedsUpdate_callback')) {
-            $this->{'before_checkTableNeedsUpdate_callback'}();
+        if (method_exists($this, 'beforeCheckTableNeedsUpdateCallback')) {
+            $this->{'beforeCheckTableNeedsUpdateCallback'}();
         }
 
         $tableExists = $this->checkTableExists();
@@ -1563,8 +1563,8 @@ abstract class ActiveRecord
             $provider->setRecord($this);
             $updateRequired = $provider->checkTableNeedsUpdate();
 
-            if (method_exists($this, 'after_checkTableNeedsUpdate_callback')) {
-                $this->{'after_checkTableNeedsUpdate_callback'}();
+            if (method_exists($this, 'afterCheckTableNeedsUpdateCallback')) {
+                $this->{'afterCheckTableNeedsUpdateCallback'}();
             }
 
             self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
@@ -1587,16 +1587,16 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_findMissingFields_callback')) {
-            $this->{'before_findMissingFields_callback'}();
+        if (method_exists($this, 'beforeFindMissingFieldsCallback')) {
+            $this->{'beforeFindMissingFieldsCallback'}();
         }
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
         $missingFields = $provider->findMissingFields();
 
-        if (method_exists($this, 'after_findMissingFields_callback')) {
-            $this->{'after_findMissingFields_callback'}();
+        if (method_exists($this, 'afterFindMissingFieldsCallback')) {
+            $this->{'afterFindMissingFieldsCallback'}();
         }
 
         self::$logger->debug('<<findMissingFields ['.var_export($missingFields, true).']');
@@ -1791,8 +1791,8 @@ abstract class ActiveRecord
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_createForeignIndex_callback')) {
-            $this->{'before_createForeignIndex_callback'}();
+        if (method_exists($this, 'beforeCreateForeignIndexCallback')) {
+            $this->{'beforeCreateForeignIndexCallback'}();
         }
 
         $relatedRecord = new $relatedClass();
@@ -1809,8 +1809,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName);
 
-        if (method_exists($this, 'after_createForeignIndex_callback')) {
-            $this->{'after_createForeignIndex_callback'}();
+        if (method_exists($this, 'afterCreateForeignIndexCallback')) {
+            $this->{'afterCreateForeignIndexCallback'}();
         }
 
         self::$logger->debug('<<createForeignIndex');
