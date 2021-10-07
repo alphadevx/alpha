@@ -1831,8 +1831,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
-        if (method_exists($this, 'before_createUniqueIndex_callback')) {
-            $this->{'before_createUniqueIndex_callback'}();
+        if (method_exists($this, 'beforeCreateUniqueIndex')) {
+            $this->{'beforeCreateUniqueIndex'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1841,8 +1841,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->createUniqueIndex($attribute1Name, $attribute2Name, $attribute3Name);
 
-        if (method_exists($this, 'after_createUniqueIndex_callback')) {
-            $this->{'before_createUniqueIndex_callback'}();
+        if (method_exists($this, 'afterCreateUniqueIndex')) {
+            $this->{'afterCreateUniqueIndex'}();
         }
 
         self::$logger->debug('<<createUniqueIndex');
@@ -2123,8 +2123,8 @@ abstract class ActiveRecord
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
-        if (method_exists($this, 'before_checkRecordExists_callback')) {
-            $this->{'before_checkRecordExists_callback'}();
+        if (method_exists($this, 'beforeCheckRecordExists')) {
+            $this->{'beforeCheckRecordExists'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -2133,8 +2133,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $recordExists = $provider->checkRecordExists($ID);
 
-        if (method_exists($this, 'after_checkRecordExists_callback')) {
-            $this->{'after_checkRecordExists_callback'}();
+        if (method_exists($this, 'afterCheckRecordExists')) {
+            $this->{'afterCheckRecordExists'}();
         }
 
         self::$logger->debug('<<checkRecordExists ['.$recordExists.']');
