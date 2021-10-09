@@ -209,8 +209,8 @@ class View
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_createView_callback')) {
-            $this->{'before_createView_callback'}();
+        if (method_exists($this, 'beforeCreateView')) {
+            $this->{'beforeCreateView'}();
         }
 
         $body = self::$provider->createView($fields);
@@ -235,14 +235,14 @@ class View
     {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_editView_callback')) {
-            $this->{'before_editView_callback'}();
+        if (method_exists($this, 'beforeEditView')) {
+            $this->{'beforeEditView'}();
         }
 
         $body = self::$provider->editView($fields);
 
-        if (method_exists($this, 'after_editView_callback')) {
-            $this->{'after_editView_callback'}();
+        if (method_exists($this, 'afterEditView')) {
+            $this->{'afterEditView'}();
         }
 
         self::$logger->debug('<<editView');
@@ -261,14 +261,14 @@ class View
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_listView_callback')) {
-            $this->{'before_listView_callback'}();
+        if (method_exists($this, 'beforeListView')) {
+            $this->{'beforeListView'}();
         }
 
         $body = self::$provider->listView($fields);
 
-        if (method_exists($this, 'after_listView_callback')) {
-            $this->{'after_listView_callback'}();
+        if (method_exists($this, 'afterListView')) {
+            $this->{'afterListView'}();
         }
 
         self::$logger->debug('<<listView');
