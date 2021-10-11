@@ -287,14 +287,14 @@ class View
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_detailedView_callback')) {
-            $this->{'before_detailedView_callback'}();
+        if (method_exists($this, 'beforeDetailedView')) {
+            $this->{'beforeDetailedView'}();
         }
 
         $body = self::$provider->detailedView($fields);
 
-        if (method_exists($this, 'after_detailedView_callback')) {
-            $this->{'after_detailedView_callback'}();
+        if (method_exists($this, 'afterDetailedView')) {
+            $this->{'afterDetailedView'}();
         }
 
         self::$logger->debug('<<detailedView');
@@ -313,14 +313,14 @@ class View
     {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_adminView_callback')) {
-            $this->{'before_adminView_callback'}();
+        if (method_exists($this, 'beforeAdminView')) {
+            $this->{'beforeAdminView'}();
         }
 
         $body = self::$provider->adminView($fields);
 
-        if (method_exists($this, 'after_adminView_callback')) {
-            $this->{'after_adminView_callback'}();
+        if (method_exists($this, 'afterAdminView')) {
+            $this->{'afterAdminView'}();
         }
 
         self::$logger->debug('<<adminView');
@@ -344,8 +344,8 @@ class View
         }
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
-        if (method_exists($controller, 'before_displayPageHead_callback')) {
-            $controller->{'before_displayPageHead_callback'}();
+        if (method_exists($controller, 'beforeDisplayPageHead')) {
+            $controller->{'beforeDisplayPageHead'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -396,8 +396,8 @@ class View
         $provider = self::$provider;
         $footer .= $provider::displayPageFoot($controller);
 
-        if (method_exists($controller, 'after_displayPageFoot_callback')) {
-            $footer .= $controller->{'after_displayPageFoot_callback'}();
+        if (method_exists($controller, 'afterDisplayPageFoot')) {
+            $footer .= $controller->{'afterDisplayPageFoot'}();
         }
 
         self::$logger->debug('<<displayPageFoot ['.$footer.']');
