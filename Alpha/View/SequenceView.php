@@ -92,8 +92,8 @@ class SequenceView extends View
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_listView_callback')) {
-            $this->{'before_listView_callback'}();
+        if (method_exists($this, 'beforeListView')) {
+            $this->{'beforeListView'}();
         }
 
         // the form action
@@ -172,8 +172,8 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->record, 'list', $fields);
 
-        if (method_exists($this, 'after_listView_callback')) {
-            $this->{'after_listView_callback'}();
+        if (method_exists($this, 'afterListView')) {
+            $this->{'afterListView'}();
         }
 
         self::$logger->debug('<<listView');
@@ -192,8 +192,8 @@ class SequenceView extends View
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_detailedView_callback')) {
-            $this->{'before_detailedView_callback'}();
+        if (method_exists($this, 'beforeDetailedView')) {
+            $this->{'beforeDetailedView'}();
         }
 
         // we may want to display the ID regardless of class
@@ -211,8 +211,8 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->record, 'detail', $fields);
 
-        if (method_exists($this, 'after_detailedView_callback')) {
-            $this->{'after_detailedView_callback'}();
+        if (method_exists($this, 'afterDetailedView')) {
+            $this->{'afterDetailedView'}();
         }
 
         self::$logger->debug('<<detailedView');
