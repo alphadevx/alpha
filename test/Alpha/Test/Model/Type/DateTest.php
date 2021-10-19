@@ -260,4 +260,44 @@ class DateTest extends TestCase
         $this->assertEquals('2020-02-03', Date::getStartAndEndDate(6, 2020)['start'], 'testing the getStartAndEndDate method');
         $this->assertEquals('2020-02-09', Date::getStartAndEndDate(6, 2020)['end'], 'testing the getStartAndEndDate method');
     }
+
+    /**
+     * Testing the getYear() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetYear()
+    {
+        $this->assertEquals(date('Y'), $this->date1->getYear(), 'testing the getYear() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonth() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetMonth()
+    {
+        $this->assertEquals(date('m'), $this->date1->getMonth(), 'testing the getMonth() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonthName() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetMonthName()
+    {
+        $this->assertEquals(date('F'), $this->date1->getMonthName(), 'testing the getMonthName() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonthDay() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetDay()
+    {
+        $this->assertEquals(date('d'), $this->date1->getDay(), 'testing the getDay() method when the default constructor is used');
+    }
 }

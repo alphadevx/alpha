@@ -298,4 +298,34 @@ class TimestampTest extends TestCase
             $this->assertEquals('The second value 99 provided is invalid!', $e->getMessage(), 'testing the setTime method with a bad value');
         }
     }
+
+    /**
+     * Testing the getYear() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetYear()
+    {
+        $this->assertEquals(date('Y'), $this->timestamp1->getYear(), 'testing the getYear() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonth() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetMonth()
+    {
+        $this->assertEquals(date('m'), $this->timestamp1->getMonth(), 'testing the getMonth() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonthDay() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetDay()
+    {
+        $this->assertEquals(date('d'), $this->timestamp1->getDay(), 'testing the getDay() method when the default constructor is used');
+    }
 }
