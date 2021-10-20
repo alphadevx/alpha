@@ -300,54 +300,39 @@ class Image
                     $oldImage = imagecreatefrompng($this->source);
             }
 
-            if (!$oldImage) {
-                $im = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
-                $bgc = imagecolorallocate($im, 255, 255, 255);
-                $tc = imagecolorallocate($im, 0, 0, 0);
-                imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc);
+            // the dimensions of the source image
+            $oldWidth = imagesx($oldImage);
+            $oldHeight = imagesy($oldImage);
 
-                imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    imagepng($im);
-                } else {
-                    imagejpeg($im);
-                }
-                imagedestroy($im);
-            } else {
-                // the dimensions of the source image
-                $oldWidth = imagesx($oldImage);
-                $oldHeight = imagesy($oldImage);
+            // now create the new image
+            $newImage = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
 
-                // now create the new image
-                $newImage = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
+            // set a transparent background for PNGs
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                // Turn off transparency blending (temporarily)
+                imagealphablending($newImage, false);
 
-                // set a transparent background for PNGs
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    // Turn off transparency blending (temporarily)
-                    imagealphablending($newImage, false);
+                // Create a new transparent color for image
+                $color = imagecolorallocatealpha($newImage, 255, 0, 0, 0);
 
-                    // Create a new transparent color for image
-                    $color = imagecolorallocatealpha($newImage, 255, 0, 0, 0);
+                // Completely fill the background of the new image with allocated color.
+                imagefill($newImage, 0, 0, $color);
 
-                    // Completely fill the background of the new image with allocated color.
-                    imagefill($newImage, 0, 0, $color);
-
-                    // Restore transparency blending
-                    imagesavealpha($newImage, true);
-                }
-                // copy the old image to the new image (in memory, not the file!)
-                imagecopyresampled($newImage, $oldImage, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
-
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    imagepng($newImage);
-                } else {
-                    imagejpeg($newImage, null, 100*$this->quality->getValue());
-                }
-
-                $this->cache($newImage);
-                imagedestroy($oldImage);
-                imagedestroy($newImage);
+                // Restore transparency blending
+                imagesavealpha($newImage, true);
             }
+            // copy the old image to the new image (in memory, not the file!)
+            imagecopyresampled($newImage, $oldImage, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
+
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                imagepng($newImage);
+            } else {
+                imagejpeg($newImage, null, 100*$this->quality->getValue());
+            }
+
+            $this->cache($newImage);
+            imagedestroy($oldImage);
+            imagedestroy($newImage);
         }
     }
 
