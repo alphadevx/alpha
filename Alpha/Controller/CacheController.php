@@ -180,7 +180,9 @@ class CacheController extends Controller implements ControllerInterface
 
             if (isset($params['clearCache']) && $params['clearCache'] == 'true') {
                 try {
-                    FileUtils::deleteDirectoryContents($this->dataDir, array('.htaccess', 'html', 'images', 'pdf', 'xls'));
+                    FileUtils::deleteDirectoryContents($this->dataDir.'xls');
+                    FileUtils::deleteDirectoryContents($this->dataDir.'images');
+                    FileUtils::deleteDirectoryContents($this->dataDir.'files');
 
                     $this->setStatusMessage(View::displayUpdateMessage('Cache contents deleted successfully.'));
 

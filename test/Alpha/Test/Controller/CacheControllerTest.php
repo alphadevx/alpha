@@ -3,6 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
+use Alpha\Controller\CacheController;
 use Alpha\Util\Http\Request;
 
 /**
@@ -12,7 +13,7 @@ use Alpha\Util\Http\Request;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -71,7 +72,11 @@ class CacheControllerTest extends ControllerTestCase
     {
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => true)));
+        $controller = new CacheController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('var1' => $securityParams[0], 'var2' => $securityParams[1], 'clearCache' => 'true')));
 
         $response = $front->process($request);
 
