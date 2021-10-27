@@ -72,6 +72,8 @@ class ImageControllerTest extends TestCase
     public function testDoGET()
     {
         $config = ConfigProvider::getInstance();
+        $config->set('cms.images.perserve.png', false);
+
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
@@ -99,5 +101,14 @@ class ImageControllerTest extends TestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method with secure image and valid tokens');
+
+        $config->set('cms.images.perserve.png', true);
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/false'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('image/png', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
 }

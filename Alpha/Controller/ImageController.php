@@ -137,7 +137,7 @@ class ImageController extends Controller implements ControllerInterface
                 $bgc = imagecolorallocate($im, 0, 0, 0);
                 imagefilledrectangle($im, 0, 0, $imgWidth, $imgHeight, $bgc);
 
-                if ($imgSource == 'png' && $config->get('cms.images.perserve.png')) {
+                if (pathinfo($imgSource)['extension'] == 'png' && $config->get('cms.images.perserve.png')) {
                     ob_start();
                     imagepng($im);
                     $body = ob_get_contents();
