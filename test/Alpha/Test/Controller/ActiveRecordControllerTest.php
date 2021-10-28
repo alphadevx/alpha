@@ -79,6 +79,12 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertTrue(strpos($response->getBody(), 'Viewing a Person') !== false, 'Testing the doGET method');
 
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method with a bad record ID');
+
         $request = new Request(
             array(
                 'method' => 'GET',
@@ -190,6 +196,12 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPOST method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doPOST method');
         $this->assertEquals('test3', json_decode($response->getBody())->username, 'Testing the doPOST method');
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/record/'.urlencode('Alpha\Model\Blah')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doPOST method for a 404 response');
     }
 
     /**
@@ -251,6 +263,19 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPUT method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()) !== false, 'Testing the doPUT method');
         $this->assertEquals('updated2@test.com', json_decode($response->getBody())->email, 'Testing the doPUT method');
+
+        $request = new Request(
+            array(
+                'method' => 'PUT',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123',
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json'),
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doPUT method with a bad record ID');
     }
 
     /**
@@ -308,6 +333,19 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doDELETE method');
         $this->assertEquals('deleted', json_decode($response->getBody())->message, 'Testing the doDELETE method');
+
+        $request = new Request(
+            array(
+                'method' => 'DELETE',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123',
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json'),
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doDELETE method with a bad record ID');
     }
 
     /**
