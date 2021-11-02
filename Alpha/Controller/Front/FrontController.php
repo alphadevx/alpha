@@ -581,7 +581,7 @@ class FrontController
         try {
             $callback = $this->getRouteCallback($request->getURI());
         } catch (IllegalArguementException $e) {
-            self::$logger->info($e->getMessage());
+            self::$logger->warn($e->getMessage());
             throw new ResourceNotFoundException('Resource not found');
         }
 

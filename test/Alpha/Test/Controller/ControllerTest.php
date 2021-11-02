@@ -301,6 +301,10 @@ class ControllerTest extends TestCase
         $this->group->set('name', 'testgroup');
         $this->group->save();
 
+        $this->group = new Rights();
+        $this->group->set('name', 'testgroup2');
+        $this->group->save();
+
         $this->person->save();
 
         $lookup = $this->person->getPropObject('rights')->getLookup();
@@ -324,6 +328,27 @@ class ControllerTest extends TestCase
 
         $this->assertEquals(403, $response->getStatus(), 'Testing that an admin page request is rejected');
         $this->assertTrue(strpos($response->getBody(), 'not have the correct access rights') !== false, 'Testing that an admin page request is rejected');
+
+
+        // Testing that a group that the user is not a member of request is rejected
+        $person = $this->createPersonObject('unitTestUser2');
+        $person->save();
+
+        $session->set('currentUser', $person);
+
+        $front->addRoute('/logintest', function ($request) {
+            $controller = new LoginController();
+            $controller->setVisibility('testgroup2');
+
+            return $controller->process($request);
+        });
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/logintest'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(403, $response->getStatus(), 'Testing that a group that the user is not a member of request is rejected');
+        $this->assertTrue(strpos($response->getBody(), 'not have the correct access rights') !== false, 'Testing that a group that the user is not a member of request is rejected');
     }
 
     /**
