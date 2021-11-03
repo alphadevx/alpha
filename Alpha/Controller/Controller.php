@@ -124,15 +124,6 @@ abstract class Controller
     protected $unitEndTime;
 
     /**
-     * Stores the maximum allowed time duration (in seconds) of the unit of work.
-     *
-     * @var \Alpha\Model\Type\Integer
-     *
-     * @since 1.0
-     */
-    protected $unitMAXDuration;
-
-    /**
      * The name of the first controller that is used in this unit of work.
      *
      * @var string
@@ -265,7 +256,6 @@ abstract class Controller
 
         $this->unitStartTime = new Timestamp(date('Y-m-d H:i:s'));
         $this->unitEndTime = new Timestamp();
-        $this->unitMAXDuration = new Integer();
 
         // uses controller class name as the job name
         if ($this->name == '') {
@@ -461,11 +451,6 @@ abstract class Controller
             $this->{'beforeSetUnitOfWork'}();
         }
 
-        if (!is_array($jobs)) {
-            self::$logger->debug('<<setUnitOfWork');
-            throw new IllegalArguementException('Bad $jobs array ['.var_export($jobs, true).'] passed to setUnitOfWork method!');
-        }
-
         // validate that each controller name in the array actually exists
         foreach ($jobs as $job) {
             if (!Validator::isURL($job) && !class_exists($job)) {
@@ -607,33 +592,6 @@ abstract class Controller
         $session->set('unitEndTime', $this->unitEndTime->getValue());
 
         self::$logger->debug('<<setUnitEndTime');
-    }
-
-    /**
-     * Getter for the unit of work MAX duration.
-     *
-     * @since 1.0
-     */
-    public function getMAXDuration(): \Alpha\Model\Type\Integer
-    {
-        self::$logger->debug('>>getMAXDuration()');
-        self::$logger->debug('<<getMAXDuration ['.$this->unitMAXDuration.']');
-
-        return $this->unitMAXDuration;
-    }
-
-    /**
-     * Setter for the unit MAX duration.
-     *
-     * @param int $duration The desired duration in seconds.
-     *
-     * @since 1.0
-     */
-    public function setUnitMAXDuration(int $duration): void
-    {
-        self::$logger->debug('>>setUnitMAXDuration(duration=['.$duration.'])');
-        $this->unitMAXDuration->setValue($duration);
-        self::$logger->debug('<<setUnitMAXDuration');
     }
 
     /**
