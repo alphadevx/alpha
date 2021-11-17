@@ -171,6 +171,14 @@ class DateTest extends TestCase
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Invalid Date value [bad] provided!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
+
+        $this->date1->populateFromString('0000-00-00');
+
+        $this->assertEquals('0000-00-00', $this->date1->getValue(), 'testing the populateFromString method with empty value');
+
+        $this->date1->populateFromString('');
+
+        $this->assertEquals('0000-00-00', $this->date1->getValue(), 'testing the populateFromString method with empty value');
     }
 
     /**
