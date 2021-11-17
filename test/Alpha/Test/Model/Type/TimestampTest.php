@@ -184,6 +184,14 @@ class TimestampTest extends TestCase
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Not a valid timestamp value!  A timestamp should be in the format YYYY-MM-DD HH:MM:SS.', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
+
+        $this->timestamp1->populateFromString('0000-00-00 00:00:00');
+
+        $this->assertEquals('0000-00-00 00:00:00', $this->timestamp1->getValue(), 'testing the populateFromString method with empty value');
+
+        $this->timestamp1->populateFromString('');
+
+        $this->assertEquals('0000-00-00 00:00:00', $this->timestamp1->getValue(), 'testing the populateFromString method with empty value');
     }
 
     /**

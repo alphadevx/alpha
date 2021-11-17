@@ -438,7 +438,7 @@ class Timestamp extends Type implements TypeInterface
     {
         $valid = null;
 
-        if ($dateTime == 'Please select' || $dateTime == '0000-00-00 00:00:00') {
+        if ($dateTime == '' || $dateTime == '0000-00-00 00:00:00') {
             $this->year = '0000';
             $this->month = '00';
             $this->day = '00';
