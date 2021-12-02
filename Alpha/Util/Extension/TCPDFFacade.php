@@ -132,11 +132,11 @@ class TCPDFFacade
         $this->HTMLCacheKey = 'html_'.$classname.'_'.$this->article->getID().'_'.$this->article->getVersion();
 
         // first check the PDF cache
-        if ($cache->get($this->PDFCacheKey) !== false) {
+        if ($cache->check($this->PDFCacheKey) !== false) {
             return;
         }
 
-        if ($cache->get($this->HTMLCacheKey) !== false) {
+        if ($cache->check($this->HTMLCacheKey) !== false) {
             $this->content = $cache->get($this->HTMLCacheKey);
         } else {
             $this->content = $this->markdown($this->article->get('content', true));
@@ -281,6 +281,10 @@ class TCPDFFacade
         $config = ConfigProvider::getInstance();
         $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');
 
-        return $cache->get($this->PDFCacheKey);
+        if ($cache->check($this->PDFCacheKey)) {
+            return $cache->get($this->PDFCacheKey);
+        } else {
+            return '';
+        }
     }
 }

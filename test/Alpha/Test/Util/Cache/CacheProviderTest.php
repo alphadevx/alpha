@@ -2,6 +2,7 @@
 
 namespace Alpha\Test\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Config\ConfigProvider;
 use PHPUnit\Framework\TestCase;
@@ -92,7 +93,19 @@ class CacheProviderTest extends TestCase
 
         $cache->delete('cached');
 
-        $this->assertFalse($cache->get('cached'), 'Testing the delete method');
+        try {
+            $val = $cache->get('cached');
+            $this->fail('Testing the get method');
+        } catch (ResourceNotFoundException $e) {
+            $this->assertEquals('Unable to get a cache value on the key [cached]', $e->getMessage());
+        }
+
+        try {
+            $cache->delete('cached');
+            $this->fail('Testing the delete method');
+        } catch (ResourceNotFoundException $e) {
+            $this->assertEquals('Unable to delete a cache value on the key [cached]', $e->getMessage());
+        }
     }
 
     /**

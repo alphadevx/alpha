@@ -86,16 +86,16 @@ class TagCloud
 
         if ($cacheKey != '' && $config->get('cache.provider.name') != '') {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
-            $this->popTags = $cache->get($cacheKey);
 
             // cache look-up failed, so add it for the next time
-            if (!$this->popTags) {
+            if (!$cache->check($cacheKey)) {
                 self::$logger->debug('Cache lookup on the key ['.$cacheKey.'] failed, regenerating popular tags...');
 
                 $this->popTags = Tag::getPopularTagsArray($limit);
 
                 $cache->set($cacheKey, $this->popTags, 86400);
             } else {
+                $this->popTags = $cache->get($cacheKey);
                 $this->popTags = array_slice($this->popTags, 0, $limit);
                 self::$logger->debug('Cache lookup on the key ['.$cacheKey.'] succeeded');
             }

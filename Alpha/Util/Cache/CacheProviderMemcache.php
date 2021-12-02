@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Memcached;
@@ -111,14 +112,18 @@ class CacheProviderMemcache implements CacheProviderInterface
         try {
             $value = $this->connection->get($this->appPrefix.'-'.$key);
 
+            if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            }
+
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
             return $value;
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from Memcache instance: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
+            self::$logger->debug('<<get');
 
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
@@ -145,8 +150,28 @@ class CacheProviderMemcache implements CacheProviderInterface
     {
         try {
             $this->connection->delete($this->appPrefix.'-'.$key);
+
+            if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Memcached instance: ['.$e->getMessage().']');
+
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        $this->connection->get($this->appPrefix.'-'.$key);
+
+        if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

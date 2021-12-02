@@ -3,7 +3,7 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for 404 resource not found controller errors.
+ * The exception class for resource not found errors.
  *
  * @since 1.0
  *

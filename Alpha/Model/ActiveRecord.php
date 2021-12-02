@@ -16,6 +16,7 @@ use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\NotImplementedException;
@@ -2463,38 +2464,39 @@ abstract class ActiveRecord
 
         try {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
-            $record = $cache->get(get_class($this).'-'.$this->getID());
 
-            if (!$record) {
+            try {
+                $record = $cache->get(get_class($this).'-'.$this->getID());
+            } catch (ResourceNotFoundException $e) {
                 self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getID().']');
                 self::$logger->debug('<<loadFromCache: [false]');
 
                 return false;
-            } else {
-                // get the class attributes
-                $reflection = new ReflectionClass(get_class($this));
-                $properties = $reflection->getProperties();
+            }
 
-                foreach ($properties as $propObj) {
-                    $propName = $propObj->name;
+            // get the class attributes
+            $reflection = new ReflectionClass(get_class($this));
+            $properties = $reflection->getProperties();
 
-                    // filter transient attributes
-                    if (!in_array($propName, $this->transientAttributes, true)) {
-                        $this->set($propName, $record->get($propName, true));
-                    } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-                        $prop = $this->getPropObject($propName);
+            foreach ($properties as $propObj) {
+                $propName = $propObj->name;
 
-                        // handle the setting of ONE-TO-MANY relation values
-                        if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $this->set($propObj->name, $this->getID());
-                        }
+                // filter transient attributes
+                if (!in_array($propName, $this->transientAttributes, true)) {
+                    $this->set($propName, $record->get($propName, true));
+                } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+                    $prop = $this->getPropObject($propName);
+
+                    // handle the setting of ONE-TO-MANY relation values
+                    if ($prop->getRelationType() == 'ONE-TO-MANY') {
+                        $this->set($propObj->name, $this->getID());
                     }
                 }
-
-                self::$logger->debug('<<loadFromCache: [true]');
-
-                return true;
             }
+
+            self::$logger->debug('<<loadFromCache: [true]');
+
+            return true;
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from ['.$config->get('cache.provider.name').']
              instance: ['.$e->getMessage().']');

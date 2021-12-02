@@ -103,7 +103,7 @@ class MarkdownFacade
         if (!$useCache) {
             $this->content = $this->markdown($this->record->get('content', true));
         } else {
-            if ($cache->get($this->cacheKey) !== false) {
+            if ($cache->check($this->cacheKey) !== false) {
                 $this->content = $cache->get($this->cacheKey);
             } else {
                 if ($this->record->get('content', true) == '') {

@@ -52,6 +52,8 @@ interface CacheProviderInterface
      *
      * @param $key
      *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     *
      * @since 1.1
      */
     public function get($key): mixed;
@@ -73,7 +75,18 @@ interface CacheProviderInterface
      *
      * @param $key
      *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     *
      * @since 1.1
      */
     public function delete($key): void;
+
+    /**
+     * Check the cache for the existance of the given $key.  Returns true if the $key is set, false otherwise.
+     *
+     * @param $key
+     *
+     * @since 4.0
+     */
+    public function check($key): bool;
 }

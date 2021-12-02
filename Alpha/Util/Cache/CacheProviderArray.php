@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -104,7 +105,7 @@ class CacheProviderArray implements CacheProviderInterface
         if (array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray)) {
             return self::$cacheArray[$this->appPrefix.'-'.$key];
         } else {
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
@@ -125,6 +126,18 @@ class CacheProviderArray implements CacheProviderInterface
     {
         self::$logger->debug('Removing value for key ['.$key.']');
 
-        unset(self::$cacheArray[$this->appPrefix.'-'.$key]);
+        if (array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray)) {
+            unset(self::$cacheArray[$this->appPrefix.'-'.$key]);
+        } else {
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        return array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray);
     }
 }

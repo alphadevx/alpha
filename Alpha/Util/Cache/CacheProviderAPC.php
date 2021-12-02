@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -93,6 +94,12 @@ class CacheProviderAPC implements CacheProviderInterface
         try {
             $value = apcu_fetch($this->appPrefix.'-'.$key);
 
+            if ($value === false) {
+                if (!apcu_exists($key)) {
+                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+                }
+            }
+
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
             return $value;
@@ -100,7 +107,7 @@ class CacheProviderAPC implements CacheProviderInterface
             self::$logger->error('Error while attempting to load a business object from APC cache: ['.$e->getMessage().']');
             self::$logger->debug('<<get: [false])');
 
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
@@ -126,9 +133,25 @@ class CacheProviderAPC implements CacheProviderInterface
     public function delete($key): void
     {
         try {
-            apcu_delete($this->appPrefix.'-'.$key);
+            $result = apcu_delete($this->appPrefix.'-'.$key);
+
+            if ($result === false) {
+                if (!apcu_exists($key)) {
+                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+                }
+            }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from APC cache: ['.$e->getMessage().']');
+
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        return apcu_exists($key);
     }
 }

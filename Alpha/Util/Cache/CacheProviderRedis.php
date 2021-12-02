@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Redis;
@@ -112,14 +113,20 @@ class CacheProviderRedis implements CacheProviderInterface
         try {
             $value = $this->connection->get($this->appPrefix.'-'.$key);
 
+            if ($value === false) {
+                if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+                }
+            }
+
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
             return $value;
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
+            self::$logger->debug('<<get');
 
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
@@ -145,9 +152,29 @@ class CacheProviderRedis implements CacheProviderInterface
     public function delete($key): void
     {
         try {
-            $this->connection->del($this->appPrefix.'-'.$key);
+            $count = $this->connection->del($this->appPrefix.'-'.$key);
+
+            if ($count === 0) {
+                if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+                }
+            }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
+
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
