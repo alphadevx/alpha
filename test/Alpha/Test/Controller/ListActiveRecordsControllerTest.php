@@ -8,6 +8,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Article;
+use Alpha\Model\ActiveRecordProviderSQLite;
 
 /**
  * Test cases for the ListActiveRecordsController class.
@@ -16,7 +17,7 @@ use Alpha\Model\Article;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -64,10 +65,22 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
 
         $response = $front->process($request);
 
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        // test that the 'Recreate Table' button is rendererd as required
+        $this->assertFalse(str_contains($response->getBody(), 'Recreate Table'));
+        $article = new Article();
+
+        $connection = ActiveRecordProviderSQLite::getConnection();
+        $result = $connection->query('ALTER TABLE Article DROP COLUMN description;');
+
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $this->assertTrue(str_contains($response->getBody(), 'Recreate Table'));
     }
 
     /**
