@@ -73,7 +73,7 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
         $article = new Article();
 
         $connection = ActiveRecordProviderSQLite::getConnection();
-        $result = $connection->query('ALTER TABLE Article DROP COLUMN description;');
+        $result = $connection->query('ALTER TABLE Article RENAME COLUMN description TO descriptionback;');
 
         $response = $front->process($request);
 
