@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     
     services:
       redis:
@@ -15,13 +15,6 @@ jobs:
         image: memcached
         ports:
         - 11211:11211
-      mysql:
-        image: mysql:5.7
-        env:
-          MYSQL_ROOT_PASSWORD: root
-        ports:
-        - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=10
     
     env:
       DB_DATABASE: unittests
@@ -39,8 +32,9 @@ jobs:
         extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
         ini-values: apc.enable_cli=1
     - run: |
-          mysql --host 127.0.0.1 -e 'CREATE DATABASE unittests;' -uroot -proot
-          mysql --host 127.0.0.1 -e 'SHOW DATABASES;' -uroot -proot
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE unittests;' -uroot -proot
+          mysql -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
           hostname
           php -i
