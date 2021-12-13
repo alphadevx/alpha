@@ -32,7 +32,7 @@ jobs:
         extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
         ini-values: apc.enable_cli=1
     - run: |
-          sudo apt update sqlite3
+          sudo apt install sqlite3
           sqlite3 --version
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE unittests;' -uroot -proot
