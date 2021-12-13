@@ -39,8 +39,8 @@ jobs:
         extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
         ini-values: apc.enable_cli=1
     - run: |
-          mysql -e 'CREATE DATABASE unittests;' -uroot -proot
-          mysql -e 'SHOW DATABASES;' -uroot -proot
+          mysql --host 127.0.0.1 -e 'CREATE DATABASE unittests;' -uroot -proot
+          mysql --host 127.0.0.1 -e 'SHOW DATABASES;' -uroot -proot
           sudo hostname unittests
           hostname
           php -i
