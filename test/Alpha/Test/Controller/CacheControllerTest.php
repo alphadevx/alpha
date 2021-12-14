@@ -82,5 +82,13 @@ class CacheControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => 'true')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(str_contains($response->getBody(), 'This page cannot accept post data from remote servers'));
     }
 }
