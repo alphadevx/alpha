@@ -2,3 +2,8 @@
 *.db
 /apidocs
 .php_cs.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
+.phpdoc/
+clover.xml
+public/bootstrap/
