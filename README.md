@@ -45,12 +45,22 @@ Alpha should be installed using Composer.  Here is a minimum example _composer.j
 	    "minimum-stability": "dev",
 	    "prefer-stable": true,
 	    "require": {
-	        "alphadevx/alpha": "3.1.*"
+	        "alphadevx/alpha": "4.*"
 	    },
 	    "autoload": {
 	        "psr-0": {
 	            "": "src/"
 	        }
+	    },
+	    "scripts": {
+	        "post-update-cmd": [
+	            "cp -R vendor/twbs/bootstrap/dist/* public/bootstrap"
+	        ],
+	        "post-install-cmd": [
+	            "rm -rf public/bootstrap",
+	            "mkdir -p public/bootstrap",
+	            "cp -R vendor/twbs/bootstrap/dist/* public/bootstrap"
+	        ]
 	    }
 	}
 
