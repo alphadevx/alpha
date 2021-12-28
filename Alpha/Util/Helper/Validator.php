@@ -53,7 +53,7 @@ class Validator
      *
      * @since 1.0
      */
-    public const ALLOW_ALL = '/.*/i';
+    public const ALLOW_ALL = '/.*/';
 
     /**
      * Required double value.
