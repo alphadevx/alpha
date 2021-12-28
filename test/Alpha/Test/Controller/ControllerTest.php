@@ -873,7 +873,7 @@ class ControllerTest extends TestCase
 
         $response = $front->process($request);
 
-        $this->assertTrue(strpos($response->getBody(), 'adminmenu') !== false);
+        $this->assertTrue(strpos($response->getBody(), 'navbar-expand-lg') !== false);
 
         $config->set('security.encryption.key', $oldKey);
         $config->set('app.use.pretty.urls', $oldRewriteSetting);
