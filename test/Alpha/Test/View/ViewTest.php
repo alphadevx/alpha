@@ -189,7 +189,7 @@ class ViewTest extends TestCase
     {
         $generatedHTML = View::loadTemplateFragment('html', 'footer.phtml', array());
 
-        $this->assertTrue(strpos($generatedHTML, '<footer>') > 0, 'Testing that a generated HTML fragment can load from a file');
+        $this->assertTrue(strpos($generatedHTML, '<script') > 0, 'Testing that a generated HTML fragment can load from a file');
     }
 
     /**
@@ -266,7 +266,7 @@ class ViewTest extends TestCase
 
         $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
         $this->assertTrue(strpos($this->view->editView(), 'Test Article') !== false, 'Testing the editView() method');
-        
+
         $badClient = new BlacklistedClient();
         $badClient->set('client', 'very bad client');
         $this->view = View::getInstance($badClient);
@@ -399,7 +399,7 @@ class ViewTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('security.encrypt.http.fieldnames', false);
-        
+
         $article = new Article();
         $article->set('title', 'Test Article');
         $this->view = View::getInstance($article);
