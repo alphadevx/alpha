@@ -19,7 +19,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -416,7 +416,7 @@ class View
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '';
+        $html = '<nav>';
         $recordCount = $controller->getRecordCount();
         $start = $controller->getStart();
         $limit = $controller->getLimit();
@@ -446,9 +446,9 @@ class View
             } else {
                 $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start-$limit).'/'.$limit;
             }
-            $html .= '<li><a href="'.$url.'">&lt;&lt;-Previous</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">&lt;&lt;-Previous</a></li>';
         } elseif ($recordCount  > $limit) {
-            $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
+            $html .= '<li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;-Previous</a></li>';
         }
 
         // render the page index links
@@ -463,9 +463,9 @@ class View
                     } else {
                         $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.$i.'/'.$limit;
                     }
-                    $html .= '<li><a href="'.$url.'">'.$page.'</a></li>';
+                    $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">'.$page.'</a></li>';
                 } elseif ($recordCount  > $limit) { // render an anchor for the current page
-                    $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
+                    $html .= '<li class="page-item active"><a class="page-link" href="#">'.$page.'</a></li>';
                 }
 
                 ++$page;
@@ -480,12 +480,12 @@ class View
             } else {
                 $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start+$limit.'/'.$limit);
             }
-            $html .= '<li><a href="'.$url.'">Next-&gt;&gt;</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">Next-&gt;&gt;</a></li>';
         } elseif ($recordCount  > $limit) {
-            $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
+            $html .= '<li class="page-item disabled"><a class="page-link" href="#">Next-&gt;&gt;</a></li>';
         }
 
-        $html .= '</ul>';
+        $html .= '</ul></nav>';
 
         return $html;
     }
