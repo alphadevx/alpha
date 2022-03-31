@@ -1,26 +1,11 @@
-if(window.jQuery) {
-    BootstrapDialog.show({
-        title: 'Confirmation',
-        message: '<?= $prompt ?>',
-        buttons: [
-            {
-                icon: 'glyphicon glyphicon-remove',
-                label: 'Cancel',
-                cssClass: 'btn btn-default btn-xs',
-                action: function(dialogItself){
-                    dialogItself.close();
-                }
-            },
-            {
-                icon: 'glyphicon glyphicon-ok',
-                label: 'Okay',
-                cssClass: 'btn btn-default btn-xs',
-                action: function(dialogItself) {
-                    $('[Id="<?= $formFieldId ?>"]').attr('value', '<?= $formFieldValue ?>');
-                    $('#<?= $formId ?>').submit();
-                    dialogItself.close();
-                }
-            }
-        ]
-    });
-}
+document.getElementById('pageModal').querySelector('.modal-body p').textContent = '<?= $prompt ?>';
+document.getElementById('pageModalOkayButton').addEventListener('click', function(){
+    document.getElementById('<?= $formFieldId ?>').setAttribute('value', '<?= $formFieldValue ?>');
+    document.getElementById('<?= $formId ?>').submit();
+}, false);
+
+var pageModal = new bootstrap.Modal(document.getElementById('pageModal'), {
+  keyboard: false
+});
+
+pageModal.show();
