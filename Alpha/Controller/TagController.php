@@ -129,7 +129,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             }
 
             $ActiveRecordTypes = ActiveRecord::getRecordClassNames();
-            $fieldname = '';
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
 
             foreach ($ActiveRecordTypes as $ActiveRecordType) {
                 $record = new $ActiveRecordType();

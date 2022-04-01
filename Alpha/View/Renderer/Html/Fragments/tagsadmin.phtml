@@ -3,32 +3,17 @@
 if ($adminView) {
 	echo "<h4>$friendlyClassName record type is tagged ($count tags found)</h4>";
 
-	$js = "if(window.jQuery) {
-	        BootstrapDialog.show({
-	            title: 'Confirmation',
-	            message: 'Are you sure you want to delete all tags attached to the ".$friendlyClassName." class, and have them re-created?',
-	            buttons: [
-	                {
-	                    icon: 'glyphicon glyphicon-remove',
-	                    label: 'Cancel',
-	                    cssClass: 'btn btn-default btn-xs',
-	                    action: function(dialogItself){
-	                        dialogItself.close();
-	                    }
-	                },
-	                {
-	                    icon: 'glyphicon glyphicon-ok',
-	                    label: 'Okay',
-	                    cssClass: 'btn btn-default btn-xs',
-	                    action: function(dialogItself) {
-	                        $('[id=\"".$fieldname."\"]').attr('value', '".addslashes($ActiveRecordType)."');
-	                        $('#clearForm').submit();
-	                        dialogItself.close();
-	                    }
-	                }
-	            ]
-	        });
-	    }";
+	$js = "document.getElementById('pageModal').querySelector('.modal-body p').textContent = 'Are you sure you want to delete all tags attached to the ".$friendlyClassName." class, and have them re-created?';
+			document.getElementById('pageModalOkayButton').addEventListener('click', function(){
+			    document.getElementById('".$fieldname."').setAttribute('value', '".addslashes($ActiveRecordType)."');
+			    document.getElementById('clearForm').submit();
+			}, false);
+
+			var pageModal = new bootstrap.Modal(document.getElementById('pageModal'), {
+			  keyboard: false
+			});
+
+			pageModal.show();";
 
 	$button = new \Alpha\View\Widget\Button($js, 'Re-create tags', 'clearBut'.stripslashes($ActiveRecordType));
 	echo $button->render();
@@ -36,32 +21,17 @@ if ($adminView) {
 
 	echo $contentSmallTextBox;
 
-    $js = "if(window.jQuery) {
-        BootstrapDialog.show({
-            title: 'Confirmation',
-            message: 'Are you sure you wish to delete this tag?',
-            buttons: [
-                {
-                    icon: 'glyphicon glyphicon-remove',
-                    label: 'Cancel',
-                    cssClass: 'btn btn-default btn-xs',
-                    action: function(dialogItself){
-                        dialogItself.close();
-                    }
-                },
-                {
-                    icon: 'glyphicon glyphicon-ok',
-                    label: 'Okay',
-                    cssClass: 'btn btn-default btn-xs',
-                    action: function(dialogItself) {
-                        $('[id=\"".$fieldname."\"]').attr('value', '".$tagID."');
-                        $('#deleteForm').submit();
-                        dialogItself.close();
-                    }
-                }
-            ]
-        });
-    }";
+	$js = "document.getElementById('pageModal').querySelector('.modal-body p').textContent = 'Are you sure you wish to delete this tag?';
+			document.getElementById('pageModalOkayButton').addEventListener('click', function(){
+			    document.getElementById('".$fieldname."').setAttribute('value', '".$tagID."');
+			    document.getElementById('clearForm').submit();
+			}, false);
+
+			var pageModal = new bootstrap.Modal(document.getElementById('pageModal'), {
+			  keyboard: false
+			});
+
+			pageModal.show();";
 
     $button = new \Alpha\View\Widget\Button($js, 'Delete', 'delete'.$tagID.'But');
     echo $button->render();
