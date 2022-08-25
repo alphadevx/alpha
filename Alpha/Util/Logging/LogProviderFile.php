@@ -12,7 +12,7 @@ use Alpha\Util\File\FileUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -138,7 +138,7 @@ class LogProviderFile implements LogProviderInterface
         clearstatcache();
         $size = filesize($this->path);
 
-        return ($size/1024)/1024;
+        return intval(($size/1024)/1024);
     }
 
     /**

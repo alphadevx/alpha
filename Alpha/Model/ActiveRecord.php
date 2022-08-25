@@ -30,7 +30,7 @@ use ReflectionProperty;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -1251,7 +1251,7 @@ abstract class ActiveRecord
             self::$logger = new Logger('ActiveRecord');
         }
         self::$logger->debug('>>getID()');
-        $id = str_pad($this->ID, 11, '0', STR_PAD_LEFT);
+        $id = str_pad(($this->ID == null ? '0': $this->ID), 11, '0', STR_PAD_LEFT);
         self::$logger->debug('<<getID ['.$id.']');
 
         return $id;
