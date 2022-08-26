@@ -2,11 +2,11 @@
 
 require __DIR__.'/vendor/autoload.php';
 
-error_reporting(E_ALL & ~E_STRICT & ~E_NOTICE);
-
 use Alpha\Util\Config\ConfigProvider;
 
 $config = ConfigProvider::getInstance();
+
+error_reporting($config->get('php.error.log.level'));
 
 $dirs = array(
     $config->get('app.file.store.dir').'logs',

@@ -116,6 +116,10 @@ class SmallText extends Type implements TypeInterface
     {
         $this->validationRule = Validator::ALLOW_ALL;
 
+        if ($val == null) {
+            $val = '';
+        }
+
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
                 $this->value = $val;
@@ -141,7 +145,7 @@ class SmallText extends Type implements TypeInterface
         if ($val == null) {
             $val = '';
         }
-        
+
         if (mb_strlen($val) <= $this->size) {
             if (preg_match($this->validationRule, $val)) {
                 $this->value = $val;

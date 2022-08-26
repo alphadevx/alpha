@@ -34,6 +34,7 @@ use Alpha\Exception\PHPException;
 use Exception;
 use ReflectionClass;
 use Mysqli;
+use mysqli_sql_exception;
 
 /**
  * MySQL active record provider (uses the MySQLi native API in PHP).
@@ -42,7 +43,7 @@ use Mysqli;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -132,8 +133,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             try {
                 self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
             } catch (\Exception $e) {
+                ;
                 // if we failed to connect because the database does not exist, create it and try again
-                if (strpos($e->getMessage(), 'HY000/1049') !== false) {
+                if ($e->getCode() == '1049') {
                     self::createDatabase();
                     self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
                 }
@@ -220,7 +222,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $row = array();
 
-        if ($stmt->prepare($sqlQuery)) {
+        try {
+            $stmt->prepare($sqlQuery);
+
             if ($version > 0) {
                 $stmt->bind_param('ii', $ID, $version);
             } else {
@@ -235,7 +239,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             }
 
             $stmt->close();
-        } else {
+        } catch (mysqli_sql_exception $e) {
             self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.'], ID is ['.print_r($ID, true).'], MySql error is ['.self::getConnection()->error.']');
             if (!$this->record->checkTableExists()) {
                 $this->record->makeTable();
@@ -598,19 +602,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     switch ($argsCount) {
                         case 1:
                             $obj = new $RecordClass($constructorArgs[0]);
-                        break;
+                            break;
                         case 2:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1]);
-                        break;
+                            break;
                         case 3:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2]);
-                        break;
+                            break;
                         case 4:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3]);
-                        break;
+                            break;
                         case 5:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3], $constructorArgs[4]);
-                        break;
+                            break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
                     }
@@ -713,19 +717,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     switch ($argsCount) {
                         case 1:
                             $obj = new $RecordClass($constructorArgs[0]);
-                        break;
+                            break;
                         case 2:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1]);
-                        break;
+                            break;
                         case 3:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2]);
-                        break;
+                            break;
                         case 4:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3]);
-                        break;
+                            break;
                         case 5:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3], $constructorArgs[4]);
-                        break;
+                            break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
                     }
@@ -884,11 +888,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $stmt = self::getConnection()->stmt_init();
 
-            if ($stmt->prepare($sqlQuery)) {
+            try {
+                $stmt->prepare($sqlQuery);
                 $stmt = $this->bindParams($stmt);
                 $stmt->execute();
-            } else {
-                throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->record->getLastQuery().']');
+            } catch (mysqli_sql_exception $e) {
+                if ($e->getCode() == '1062') {
+                    throw new ValidationException('Failed to save due to a key violation, error is ['.$e->getMessage().'], query ['.$this->record->getLastQuery().']');
+                } else {
+                    throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().'], query ['.$this->record->getLastQuery().']');
+                }
             }
         } else {
             // assume that it is a persistent object that needs to be updated
@@ -1846,18 +1855,18 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $query = 'SHOW INDEX FROM '.$this->record->getTableName();
 
-        $result = self::getConnection()->query($query);
-
         $this->record->setLastQuery($query);
 
         $indexNames = array();
 
-        if (!$result) {
-            throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
-        } else {
+        try {
+            $result = self::getConnection()->query($query);
+
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 array_push($indexNames, $row['Key_name']);
             }
+        } catch (mysqli_sql_exception $e) {
+            throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
         }
 
         self::$logger->debug('<<getIndexes');
@@ -1990,47 +1999,45 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         $relatedRecord = new $relatedClass();
         $tableName = $relatedRecord->getTableName();
 
-        $result = false;
+        try {
+            if (self::checkRecordTableExists($relatedClass)) {
+                $sqlQuery = '';
 
-        if (self::checkRecordTableExists($relatedClass)) {
-            $sqlQuery = '';
-
-            if ($attributeName == 'leftID') {
-                if ($indexName === null) {
-                    $indexName = $this->record->getTableName().'_leftID_fk_idx';
+                if ($attributeName == 'leftID') {
+                    if ($indexName === null) {
+                        $indexName = $this->record->getTableName().'_leftID_fk_idx';
+                    }
+                    $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (leftID);';
                 }
-                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (leftID);';
-            }
-            if ($attributeName == 'rightID') {
-                if ($indexName === null) {
-                    $indexName = $this->record->getTableName().'_rightID_fk_idx';
+                if ($attributeName == 'rightID') {
+                    if ($indexName === null) {
+                        $indexName = $this->record->getTableName().'_rightID_fk_idx';
+                    }
+                    $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (rightID);';
                 }
-                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (rightID);';
-            }
 
-            if (!empty($sqlQuery)) {
+                if (!empty($sqlQuery)) {
+                    $this->record->setLastQuery($sqlQuery);
+
+                    $result = self::getConnection()->query($sqlQuery);
+
+                    if (!$result) {
+                        throw new FailedIndexCreateException('Failed to create an index on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
+                    }
+                }
+
+                if ($indexName === null) {
+                    $indexName = $this->record->getTableName().'_'.$attributeName.'_fk_idx';
+                }
+
+                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD FOREIGN KEY '.$indexName.' ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+
                 $this->record->setLastQuery($sqlQuery);
-
                 $result = self::getConnection()->query($sqlQuery);
-
-                if (!$result) {
-                    throw new FailedIndexCreateException('Failed to create an index on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
-                }
             }
 
-            if ($indexName === null) {
-                $indexName = $this->record->getTableName().'_'.$attributeName.'_fk_idx';
-            }
-
-            $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD FOREIGN KEY '.$indexName.' ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
-
-            $this->record->setLastQuery($sqlQuery);
-            $result = self::getConnection()->query($sqlQuery);
-        }
-
-        if ($result) {
             self::$logger->debug('Successfully created the foreign key index ['.$indexName.']');
-        } else {
+        } catch (mysqli_sql_exception $e) {
             throw new FailedIndexCreateException('Failed to create the index ['.$indexName.'] on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
         }
 
@@ -2180,9 +2187,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $query = 'SHOW COLUMNS FROM '.$this->record->getTableName();
 
-            $result = self::getConnection()->query($query);
+            try {
+                $result = self::getConnection()->query($query);
 
-            if ($result) {
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                     if ('classname' == $row['Field']) {
                         self::$logger->debug('<<isTableOverloaded [true]');
@@ -2190,13 +2197,17 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                         return true;
                     }
                 }
-            } else {
-                self::$logger->warn('Error during show columns ['.self::getConnection()->error.']');
+
+                self::$logger->debug('<<isTableOverloaded [false]');
+
+                return false;
+            } catch (mysqli_sql_exception $e) {
+                self::$logger->warn('Error during show columns ['.$e->getMessage().']');
+
+                self::$logger->debug('<<isTableOverloaded [false]');
+
+                return false;
             }
-
-            self::$logger->debug('<<isTableOverloaded [false]');
-
-            return false;
         }
     }
 
@@ -2307,7 +2318,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 array_push($params, get_class($this->record));
             }
         } else { // bind all attributes on the business object
-
             // get the class attributes
             $reflection = new ReflectionClass(get_class($this->record));
             $properties = $reflection->getProperties();
@@ -2456,7 +2466,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $connection->query('CREATE DATABASE '.$config->get('db.name'));
+        if (!self::checkDatabaseExists()) {
+            $connection->query('CREATE DATABASE '.$config->get('db.name'));
+        }
     }
 
     /**
