@@ -8,6 +8,7 @@ use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
@@ -21,7 +22,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -309,6 +310,9 @@ class Tag extends ActiveRecord
             try {
                 $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
                 $cache->delete($this->get('content'));
+            } catch (ResourceNotFoundException $e) {
+                self::$logger->debug('Cache miss while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
+                    instance: ['.$e->getMessage().']');
             } catch (\Exception $e) {
                 self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
                     instance: ['.$e->getMessage().']');

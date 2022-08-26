@@ -110,24 +110,22 @@ class CacheProviderRedis implements CacheProviderInterface
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
-        try {
-            $value = $this->connection->get($this->appPrefix.'-'.$key);
+        $value = $this->connection->get($this->appPrefix.'-'.$key);
 
-            if ($value === false) {
-                if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
-                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
-                }
+        if ($value === false) {
+            if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            } else {
+                self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
+                self::$logger->debug('<<get');
+
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
             }
-
-            self::$logger->debug('<<get: ['.print_r($value, true).'])');
-
-            return $value;
-        } catch (\Exception $e) {
-            self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
-            self::$logger->debug('<<get');
-
-            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
+
+        self::$logger->debug('<<get: ['.print_r($value, true).'])');
+
+        return $value;
     }
 
     /**
@@ -151,18 +149,16 @@ class CacheProviderRedis implements CacheProviderInterface
      */
     public function delete($key): void
     {
-        try {
-            $count = $this->connection->del($this->appPrefix.'-'.$key);
+        $count = $this->connection->del($this->appPrefix.'-'.$key);
 
-            if ($count === 0) {
-                if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
-                    throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
-                }
+        if ($count === 0) {
+            if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+            } else {
+                self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
+
+                throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
             }
-        } catch (\Exception $e) {
-            self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
-
-            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
         }
     }
 

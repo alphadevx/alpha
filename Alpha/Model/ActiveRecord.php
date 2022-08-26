@@ -1251,7 +1251,7 @@ abstract class ActiveRecord
             self::$logger = new Logger('ActiveRecord');
         }
         self::$logger->debug('>>getID()');
-        $id = str_pad(($this->ID == null ? '0': $this->ID), 11, '0', STR_PAD_LEFT);
+        $id = str_pad(($this->ID == null ? '0' : $this->ID), 11, '0', STR_PAD_LEFT);
         self::$logger->debug('<<getID ['.$id.']');
 
         return $id;
@@ -2444,9 +2444,13 @@ abstract class ActiveRecord
         try {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $cache->delete(get_class($this).'-'.$this->getID());
+        } catch (ResourceNotFoundException $e) {
+            self::$logger->debug('Cache miss while attempting to delete ['.$config->get('cache.provider.name').']
+                instance: ['.$e->getMessage().']');
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
-                instance: ['.$e->getMessage().']');
+                instance: ['.print_r($e, true).']');
+            exit;
         }
 
         self::$logger->debug('<<removeFromCache');
