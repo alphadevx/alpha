@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -70,7 +70,7 @@ class ImageTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png');
+        $this->img = new Image($config->get('app.root').'public/images/logo-small.png', 16, 16, 'png');
     }
 
     /**
@@ -108,7 +108,7 @@ class ImageTest extends TestCase
         $config = ConfigProvider::getInstance();
 
         try {
-            $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'tif');
+            $this->img = new Image($config->get('app.root').'public/images/logo-small.png', 16, 16, 'tif');
             $this->fail('testing for an expected exception when a bad source type is provided');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Not a valid enum option!', $e->getMessage(), 'testing for an expected exception when a bad source type is provided');
@@ -125,7 +125,7 @@ class ImageTest extends TestCase
         $config = ConfigProvider::getInstance();
 
         try {
-            $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 2.5);
+            $this->img = new Image($config->get('app.root').'public/images/logo-small.png', 16, 16, 'png', 2.5);
             $this->fail('testing for an expected exception when a quality value is provided');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('The quality setting of [2.5] is outside of the allowable range of 0.0 to 1.0', $e->getMessage(), 'testing for an expected exception when a quality value is provided');
@@ -141,16 +141,16 @@ class ImageTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $this->assertEquals($config->get('app.file.store.dir').'cache/images/accept_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename to store the generated image automatically');
+        $this->assertEquals($config->get('app.file.store.dir').'cache/images/logo-small_16x16.png', $this->img->getFilename(), 'testing that the constructor will call setFilename internally to get up a filename to store the generated image automatically');
 
         if (!file_exists('/tmp/attachments/article_123/')) {
             $this->assertTrue(mkdir('/tmp/attachments/article_123/', 0777, true));
         }
 
-        FileUtils::copy($config->get('app.root').'public/images/icons/accept.png', '/tmp/attachments/article_123/accept.png');
+        FileUtils::copy($config->get('app.root').'public/images/logo-small.png', '/tmp/attachments/article_123/logo.png');
 
         try {
-            $this->img = new Image('/tmp/attachments/article_123/accept.png', 16, 16, 'png');
+            $this->img = new Image('/tmp/attachments/article_123/logo.png', 16, 16, 'png');
         } catch (\Exception $e) {
             $cacheDir = $config->get('app.file.store.dir').'cache/images/article_123';
             $this->assertTrue(file_exists($cacheDir));
@@ -178,12 +178,12 @@ class ImageTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0);
+        $this->img = new Image($config->get('app.root').'public/images/logo-small.png', 16, 16, 'png', 1.0);
 
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);
 
-        $this->img = new Image($config->get('app.root').'public/images/icons/accept.png', 16, 16, 'png', 1.0, false, true);
+        $this->img = new Image($config->get('app.root').'public/images/logo-small.png', 16, 16, 'png', 1.0, false, true);
 
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), 'Test alt text') !== false);
         $this->assertTrue(strpos($this->img->renderHTMLLink('Test alt text'), '<img src=') !== false);

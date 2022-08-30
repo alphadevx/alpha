@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -79,14 +79,14 @@ class ImageControllerTest extends TestCase
 
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/false'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/logo-small.png').'/16/16/png/0.75/false/false'));
 
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('image/jpeg', $response->getHeader('Content-Type'), 'Testing the doGET method');
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/true'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/logo-small.png').'/16/16/png/0.75/false/true'));
 
         $response = $front->process($request);
 
@@ -95,7 +95,7 @@ class ImageControllerTest extends TestCase
 
         $tokens = Controller::generateSecurityFields();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/true/'.urlencode($tokens[0]).'/'.urlencode($tokens[1])));
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/logo-small.png').'/16/16/png/0.75/false/true/'.urlencode($tokens[0]).'/'.urlencode($tokens[1])));
 
         $response = $front->process($request);
 
@@ -104,7 +104,7 @@ class ImageControllerTest extends TestCase
 
         $config->set('cms.images.perserve.png', true);
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/icons/accept.png').'/16/16/png/0.75/false/false'));
+        $request = new Request(array('method' => 'GET', 'URI' => '/image/'.urlencode($config->get('app.root').'public/images/logo-small.png').'/16/16/png/0.75/false/false'));
 
         $response = $front->process($request);
 
