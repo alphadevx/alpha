@@ -21,3 +21,17 @@ span.success {color:blue;}
 span.warning {color:red;}
 
 body {padding: 25px;}
+
+.form-control, .input-group-addon {
+  padding: 0.3rem 1rem;
+  padding-top: 0.3rem;
+  padding-right: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0.3rem;
+
+  border-radius: 3px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}

@@ -15,7 +15,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -127,7 +127,7 @@ class DateBox
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
         $html .= '  <div class="input-group date">';
         $html .= '    <input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
-        $html .= '    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+        $html .= '    <span class="input-group-addon"><i class="bi bi-calendar-event"></i></span>';
         $html .= '  </div>';
         $html .= '</div>';
 
