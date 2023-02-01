@@ -236,14 +236,14 @@ class Article extends ActiveRecord
         $this->description = new SmallText();
         $this->description->setHelper('Please provide a brief description of the article.');
         $this->description->setSize(200);
-        $this->description->setRule("/\w+/");
+        $this->description->isRequired();
         $this->bodyOnload = new SmallText();
         $this->content = new LargeText();
         $this->headerContent = new Text();
         $this->author = new SmallText();
         $this->author->setHelper('Please state the name of the author of this article');
         $this->author->setSize(70);
-        $this->author->setRule("/\w+/");
+        $this->author->isRequired();
         $this->published = new Boolean(0);
 
         $this->comments = new Relation();
