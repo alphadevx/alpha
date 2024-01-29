@@ -24,7 +24,7 @@ jobs:
       hostname: unittests
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
@@ -47,4 +47,4 @@ jobs:
     - name: Upload coverage to Codecov  
       uses: codecov/codecov-action@v3
       with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+        token: ${{ secrets.CODECOV_ORG_TOKEN }}
