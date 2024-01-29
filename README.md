@@ -1,13 +1,8 @@
 [![Install and unit tests](https://github.com/alphadevx/alpha/actions/workflows/php.yml/badge.svg)](https://github.com/alphadevx/alpha/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/alphadevx/alpha/branch/develop/graph/badge.svg?token=ASL3NLDW1F)](https://codecov.io/gh/alphadevx/alpha)
 
-Alpha Framework (4.0.0 Alpha)
+Alpha Framework (4.0.0)
 =================================================================
-
-Note
-----
-
-This is the dev branch for Alpha version 4.0.0, please use version 3.1.0 in production!
 
 Introduction
 ------------
