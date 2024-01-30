@@ -43,7 +43,7 @@ jobs:
     - name: Composer Install Project
       run: composer install
     - name: Run unit tests
-      run: vendor/bin/phpunit --coverage-clover coverage.xml ./Alpha
+      run: vendor/bin/phpunit --coverage-clover clover.xml ./test
     - name: Upload coverage to Codecov  
       uses: codecov/codecov-action@v4-beta
       with:
