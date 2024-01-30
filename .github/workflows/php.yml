@@ -44,9 +44,8 @@ jobs:
       run: composer install
     - name: Run unit tests
       run: vendor/bin/phpunit --coverage-clover clover.xml ./test
-    - name: Upload coverage to Codecov  
-      uses: codecov/codecov-action@v4-beta
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./clover.xml
-        verbose: true
