@@ -45,7 +45,7 @@ jobs:
     - name: Run unit tests
       uses: php-actions/phpunit@v3
       with:
-        php_extensions: "xdebug"
+        php_extensions: "gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv, xdebug"
         coverage_clover: "clover.xml"
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
