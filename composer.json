@@ -20,7 +20,7 @@
         "source": "https://github.com/alphadevx/alpha"
     },
     "require": {
-        "php": ">=8.1.0",
+        "php": ">=8.2.0",
         "ext-openssl": "*",
         "ext-mbstring": "*",
         "ext-sqlite3": "*",
