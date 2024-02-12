@@ -51,7 +51,6 @@ jobs:
         php_version: 8.2.14
         php_extensions: "gd mysqli redis apcu memcached sqlite3 mbstring iconv xdebug zip"
         coverage_clover: "clover.xml"
-        ini-values: apc.enable_cli=1, xdebug.profiler_enable=On, xdebug.mode=coverage
     - run: |
           sudo apt install sqlite3
           sqlite3 --version
