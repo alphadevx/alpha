@@ -38,7 +38,7 @@ jobs:
       env:
          XDEBUG_MODE: coverage
       with:
-        version: 9.5.4
+        version: 11.0.3
         php_version: 8.2.14
         php_extensions: "gd mysqli redis apcu memcached sqlite3 mbstring iconv xdebug zip"
         coverage_clover: "clover.xml"
