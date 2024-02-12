@@ -244,7 +244,7 @@ class SmallText extends Type implements TypeInterface
         $this->password = $pass;
 
         if ($pass) {
-            $this->validationRule = '/\w+/';
+            $this->validationRule = Validator::REQUIRED_STRING;
             $this->helper = 'Password is required!';
         }
     }

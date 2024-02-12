@@ -20,7 +20,7 @@ try {
     set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
 
     $front = new FrontController();
-	
+
     if ($config->get('security.client.blacklist.filter.enabled')) {
         $front->registerFilter(new ClientBlacklistFilter());
     }
@@ -48,4 +48,5 @@ if ($config->get('security.http.header.x.frame.options') != '' && $response->get
 
 echo $response->send();
 
-?>
+restore_exception_handler();
+restore_error_handler();

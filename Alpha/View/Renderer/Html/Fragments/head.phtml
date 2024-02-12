@@ -7,7 +7,9 @@
     <meta name="description" content="<?= $description ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/bootstrap/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/jquery.pagedown-bootstrap.min.css">
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/font-awesome.min.css">
     
     <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/alpha.css">
     <?= (isset($allowCSSOverrides) && $allowCSSOverrides ? '<link rel="stylesheet" href="'.$config->get('app.url').'/css/overrides.css">' : '') ?>

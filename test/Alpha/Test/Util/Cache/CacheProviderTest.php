@@ -6,6 +6,7 @@ use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Config\ConfigProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for the CacheProviderInterface implementations.
@@ -14,7 +15,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,7 +59,7 @@ class CacheProviderTest extends TestCase
      *
      * @since 2.0
      */
-    public function getCacheProviders()
+    public static function getCacheProviders(): array
     {
         return array(
             array('Alpha\Util\Cache\CacheProviderArray'),
@@ -73,9 +74,9 @@ class CacheProviderTest extends TestCase
      * Testing the set()/get()/delete() methods.
      *
      * @since 2.0
-     * @dataProvider getCacheProviders
      */
-    public function testSetGetDelete($provider)
+    #[DataProvider('getCacheProviders')]
+    public function testSetGetDelete(string $provider)
     {
         $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
 
@@ -112,9 +113,9 @@ class CacheProviderTest extends TestCase
      * Testing the application key prefix is working as expected to prevent collisions
      *
      * @since 3.0
-     * @dataProvider getCacheProviders
      */
-    public function testKeyPrefix($provider)
+    #[DataProvider('getCacheProviders')]
+    public function testKeyPrefix(string $provider)
     {
         $config = ConfigProvider::getInstance();
 

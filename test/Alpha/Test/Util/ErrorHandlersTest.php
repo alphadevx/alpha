@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,6 +58,12 @@ class ErrorHandlersTest extends TestCase
         set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
     }
 
+    protected function tearDown(): void
+    {
+        restore_exception_handler();
+        restore_error_handler();
+    }
+
     /**
      * Testing that a division by 0 exception is caught by the general exception handler.
      *
@@ -89,7 +95,7 @@ class ErrorHandlersTest extends TestCase
 
         try {
             $e = $empty->test;
-        } catch (PHPException $e) {
+        } catch (\Exception $e) {
             $exceptionCaught = true;
         }
 

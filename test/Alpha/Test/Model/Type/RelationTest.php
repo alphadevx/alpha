@@ -11,6 +11,7 @@ use Alpha\Model\Type\Relation;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\AlphaException;
 use Alpha\Util\Config\Configprovider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the Relation data type.
@@ -19,7 +20,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -267,10 +268,9 @@ class RelationTest extends ModelTestCase
      * Testing the getRelatedClassDisplayFieldValue() method on ONE-TO-MANY and MANY-TO-MANY relations.
      *
      * @since 1.2.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testGetRelatedClassDisplayFieldValuePass($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testGetRelatedClassDisplayFieldValuePass(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -393,10 +393,9 @@ class RelationTest extends ModelTestCase
      * Testing the getRelated method.
      *
      * @since 1.2.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testGetRelated($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testGetRelated(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

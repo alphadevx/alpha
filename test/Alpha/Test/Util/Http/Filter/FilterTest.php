@@ -13,6 +13,7 @@ use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Filter\IPBlacklistFilter;
 use Alpha\Util\Http\Request;
 use Alpha\Test\Model\ModelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for implementations of the FilterInterface.
@@ -21,7 +22,7 @@ use Alpha\Test\Model\ModelTestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -211,10 +212,9 @@ class FilterTest extends ModelTestCase
      * Testing that a user agent string/IP compbo cannot pass the ClientTempBlacklistFilter filter beyond the config limit.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testClientTempBlacklistFilter($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testClientTempBlacklistFilter(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -241,10 +241,9 @@ class FilterTest extends ModelTestCase
      * Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter.
      *
      * @since 1.2.3
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testIPBlacklistFilter($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testIPBlacklistFilter(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

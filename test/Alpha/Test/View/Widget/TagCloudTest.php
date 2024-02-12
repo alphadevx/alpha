@@ -7,6 +7,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Model\Tag;
 use Alpha\Model\Article;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the TagCloud widget.
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -96,7 +97,7 @@ class TagCloudTest extends TestCase
      *
      * @since 3.1
      */
-    public function getCacheProviders()
+    public static function getCacheProviders(): array
     {
         return array(
             array('Alpha\Util\Cache\CacheProviderArray'),
@@ -111,9 +112,9 @@ class TagCloudTest extends TestCase
      * Testing the render() method.
      *
      * @since 2.0
-     * @dataProvider getCacheProviders
      */
-    public function testRender($provider)
+    #[DataProvider('getCacheProviders')]
+    public function testRender(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $configOld = $config->get('cache.provider.name');

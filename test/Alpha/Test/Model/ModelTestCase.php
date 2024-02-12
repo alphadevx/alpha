@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -98,7 +98,7 @@ class ModelTestCase extends TestCase
      *
      * @since 2.0
      */
-    public function getActiveRecordProviders()
+    public static function getActiveRecordProviders(): array
     {
         return array(
             array('Alpha\Model\ActiveRecordProviderSQLite'),

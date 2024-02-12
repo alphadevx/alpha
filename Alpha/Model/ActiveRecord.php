@@ -30,7 +30,7 @@ use ReflectionProperty;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -198,8 +198,11 @@ abstract class ActiveRecord
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
-        set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
-        set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+        //set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
+        //restore_exception_handler();
+
+        //set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+        //restore_error_handler();
 
         $this->version_num = new Integer(0);
         $this->created_ts = new Timestamp(date('Y-m-d H:i:s'));

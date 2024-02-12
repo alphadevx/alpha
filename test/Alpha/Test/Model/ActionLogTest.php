@@ -9,6 +9,7 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Config\Configprovider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\AlphaException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the ActionLog class.
@@ -17,7 +18,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -85,10 +86,9 @@ class ActionLogTest extends ModelTestCase
      * Testing ActionLog is honouring the app.log.action.logging config setting
      *
      * @since 3.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testLogAction($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testLogAction(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('app.log.action.logging', true);
