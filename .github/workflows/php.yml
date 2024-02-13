@@ -24,13 +24,13 @@ jobs:
       hostname: unittests
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v2
     - name: Setup PHP with PECL extension
       uses: shivammathur/setup-php@v2
       with:
-        php-version: 8.2.14
-        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv, xdebug
-        ini-values: apc.enable_cli=1, xdebug.profiler_enable=On, xdebug.mode=coverage
+        php-version: '8.2'
+        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
+        ini-values: apc.enable_cli=1
     - run: |
           sudo apt install sqlite3
           sqlite3 --version
@@ -43,23 +43,7 @@ jobs:
     - name: Composer Install Project
       run: composer install
     - name: Run unit tests
-      uses: php-actions/phpunit@v3
-    - run: |
-          sudo apt install sqlite3
-          sqlite3 --version
-          sudo systemctl start mysql.service
-          mysql -e 'CREATE DATABASE unittests;' -uroot -proot
-          mysql -e 'SHOW DATABASES;' -uroot -proot
-          sudo hostname unittests
-          hostname
-          php -i
-      env:
-         XDEBUG_MODE: coverage
-      with:
-        version: 11.0.3
-        php_version: 8.2.14
-        php_extensions: "gd mysqli redis apcu memcached sqlite3 mbstring iconv xdebug zip"
-        coverage_clover: "clover.xml"
+      run: vendor/bin/phpunit
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
