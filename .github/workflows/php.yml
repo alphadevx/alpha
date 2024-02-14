@@ -29,8 +29,8 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
-        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
-        ini-values: apc.enable_cli=1
+        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv, xdebug
+        ini-values: apc.enable_cli=1, xdebug.profiler_enable=On, xdebug.mode=coverage
     - run: |
           sudo apt install sqlite3
           sqlite3 --version
