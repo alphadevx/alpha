@@ -107,7 +107,7 @@ class LogProviderFile implements LogProviderInterface
                 if ($this->checkFileSize() >= $this->maxSize) {
                     $this->backupFile();
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception | \Error $e) {
                 $logsDir = $config->get('app.file.store.dir').'logs';
 
                 if (!file_exists($logsDir)) {
@@ -138,7 +138,7 @@ class LogProviderFile implements LogProviderInterface
         clearstatcache();
         $size = filesize($this->path);
 
-        return intval(($size/1024)/1024);
+        return intval(($size / 1024) / 1024);
     }
 
     /**
@@ -190,25 +190,25 @@ class LogProviderFile implements LogProviderInterface
                     switch ($line[$col]) {
                         case 'DEBUG':
                             $body .= '<td class="debug">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'INFO':
                             $body .= '<td class="info">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'WARN':
                             $body .= '<td class="warn">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'ERROR':
                             $body .= '<td class="error">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'FATAL':
                             $body .= '<td class="fatal">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'SQL':
                             $body .= '<td class="sql">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         default:
                             $body .= '<td>'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                     }
                 } else {
                     if ($cols[$col] == 'Message') {
