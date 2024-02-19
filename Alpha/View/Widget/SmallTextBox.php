@@ -15,7 +15,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -100,7 +100,7 @@ class SmallTextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($string, $label, $name, $size = 0)
+    public function __construct(\Alpha\Model\Type\SmallText $string, string $label, string $name, int $size = 0)
     {
         $config = ConfigProvider::getInstance();
 
@@ -125,21 +125,18 @@ class SmallTextBox
      *
      * @param bool $readOnly set to true to make the text box readonly (defaults to false)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($readOnly = false)
+    public function render(bool $readOnly = false): string
     {
         $request = new Request(array('method' => 'GET'));
 
-        $html = '<div class="form-group">';
-        $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
-        $html .= '  <input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.SmallText::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').'/>';
+        $html = '<div>';
+        $html .= '<label for="'.$this->name.'">'.$this->label.'</label>';
+        $html .= '<input '.($this->stringObject->checkIsPassword() ? 'type="password"' : 'type="text"').($this->size == 0 ? ' style="width:100%;"' : ' size="'.$this->size.'"').' maxlength="'.SmallText::MAX_SIZE.'" name="'.$this->name.'" id="'.$this->name.'" value="'.(($request->getParam($this->name, false) && $this->stringObject->getValue() == '' && !$this->stringObject->checkIsPassword()) ? $request->getParam($this->name) : $this->stringObject->getValue()).'" class="form-control"'.($readOnly ? ' disabled="disabled"' : '').($this->stringObject->getRule() != '' ? ' pattern="'.str_replace('/', '', $this->stringObject->getRule()).'"' : '').' required/>';
 
-        if ($this->stringObject->getRule() != '') {
-            $html .= '  <input type="hidden" id="'.$this->name.'_msg" value="'.$this->stringObject->getHelper().'"/>';
-            $html .= '  <input type="hidden" id="'.$this->name.'_rule" value="'.$this->stringObject->getRule().'"/>';
+        if ($this->stringObject->getHelper() != '') {
+            $html .= '<div class="invalid-feedback">'.$this->stringObject->getHelper().'</div>';
         }
         $html .= '</div>';
 
@@ -155,7 +152,7 @@ class SmallTextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setStringObject($string)
+    public function setStringObject(\Alpha\Model\Type\SmallText $string): void
     {
         if ($string instanceof SmallText) {
             $this->stringObject = $string;
@@ -167,11 +164,9 @@ class SmallTextBox
     /**
      * Getter for string object.
      *
-     * @return \Alpha\Model\Type\SmallText
-     *
      * @since 1.0
      */
-    public function getStringObject()
+    public function getStringObject(): \Alpha\Model\Type\SmallText
     {
         return $this->stringObject;
     }

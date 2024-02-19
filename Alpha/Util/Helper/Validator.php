@@ -9,7 +9,7 @@ namespace Alpha\Util\Helper;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,7 +53,7 @@ class Validator
      *
      * @since 1.0
      */
-    const ALLOW_ALL = '/.*/i';
+    public const ALLOW_ALL = '/.*/';
 
     /**
      * Required double value.
@@ -62,7 +62,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_DOUBLE = '/^-{0,1}[0-9\.]+$/';
+    public const REQUIRED_DOUBLE = '/^-{0,1}[0-9\.]+$/';
 
     /**
      * Required integer value.
@@ -71,7 +71,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_INTEGER = '/^-{0,1}[0-9]*$/';
+    public const REQUIRED_INTEGER = '/^-{0,1}[0-9]*$/';
 
     /**
      * Required text value, accepts a maximum of 65536 characters.
@@ -80,7 +80,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_TEXT = '/^[\S]{1}.{0,65535}$/';
+    public const REQUIRED_TEXT = '/^[\S]{1}.{0,65535}$/';
 
     /**
      * Required string value, accepts a maximum of 255 characters.
@@ -89,7 +89,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_STRING = '/^[\S]{1}.{0,254}$/';
+    public const REQUIRED_STRING = '/^[\S]{1}.{0,254}$/';
 
     /**
      * Required alphabet string.
@@ -98,7 +98,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_ALPHA = '/^[a-zA-Z]+$/';
+    public const REQUIRED_ALPHA = '/^[a-zA-Z]+$/';
 
     /**
      * Required uppercase alphabet string.
@@ -107,7 +107,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_ALPHA_UPPER = '/^[A-Z]+$/';
+    public const REQUIRED_ALPHA_UPPER = '/^[A-Z]+$/';
 
     /**
      * Required alpha-numeric string.
@@ -116,7 +116,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_ALPHA_NUMERIC = '/^[a-zA-Z0-9]+$/';
+    public const REQUIRED_ALPHA_NUMERIC = '/^[a-zA-Z0-9]+$/';
 
     /**
      * Required HTTP URL value.
@@ -125,7 +125,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_HTTP_URL = '/^((http|https):\/\/.*)$/i';
+    public const REQUIRED_HTTP_URL = '/^((http|https):\/\/.*)$/i';
 
     /**
      * Optional HTTP URL value.
@@ -134,7 +134,7 @@ class Validator
      *
      * @since 1.0
      */
-    const OPTIONAL_HTTP_URL = '/(http|https).*|^$/i';
+    public const OPTIONAL_HTTP_URL = '/(http|https).*|^$/i';
 
     /**
      * Required IP address value.
@@ -143,7 +143,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_IP = '/^(((([1-9])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))(\.(([\d])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))){3})|(0(\.0){3}))$/';
+    public const REQUIRED_IP = '/^(((([1-9])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))(\.(([\d])|([1-9][\d])|(1[\d]{2})|(2[0-4][\d])|(25[0-4]))){3})|(0(\.0){3}))$/';
 
     /**
      * Required email address value.
@@ -152,7 +152,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_EMAIL = '/^[-_.a-zA-Z0-9]+@((([a-zA-Z0-9]|[-_.a-zA-Z0-9]*[a-zA-Z0-9])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|email|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))$/i';
+    public const REQUIRED_EMAIL = '/[-_.a-zA-Z0-9]+@((([a-zA-Z0-9]|[-_.a-zA-Z0-9]*[a-zA-Z0-9])\.)+(ad|ae|aero|af|ag|ai|al|am|an|ao|aq|ar|arpa|as|at|au|aw|az|ba|bb|bd|be|bf|bg|bh|bi|biz|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|com|coop|cr|cs|cu|cv|cx|cy|cz|de|dj|dk|dm|do|dz|ec|edu|ee|eg|eh|email|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gh|gi|gl|gm|gn|gov|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|in|info|int|io|iq|ir|is|it|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|mg|mh|mil|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|museum|mv|mw|mx|my|mz|na|name|nc|ne|net|nf|ng|ni|nl|no|np|nr|nt|nu|nz|om|org|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|pro|ps|pt|pw|py|qa|re|ro|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|um|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw)|(([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5])\.){3}([0-9][0-9]?|[0-1][0-9][0-9]|[2][0-4][0-9]|[2][5][0-5]))/';
 
     /**
      * Required username (allows a-z A-Z 0-9 and -_. characters).
@@ -161,7 +161,7 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_USERNAME = '/^[-_\.a-zA-Z0-9]+$/';
+    public const REQUIRED_USERNAME = '/^[-_\.a-zA-Z0-9]+$/';
 
     /**
      * Required sequence value.
@@ -170,18 +170,16 @@ class Validator
      *
      * @since 1.0
      */
-    const REQUIRED_SEQUENCE = '/^[A-Z]*-[0-9]*$/';
+    public const REQUIRED_SEQUENCE = '/^[A-Z]*-[0-9]*$/';
 
     /**
      * Validate that the provided value is a valid integer.
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isInteger($value)
+    public static function isInteger($value): bool
     {
         if (preg_match(self::REQUIRED_INTEGER, $value)) {
             return is_numeric($value) ? intval($value) == $value : false;
@@ -195,11 +193,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isDouble($value)
+    public static function isDouble($value): bool
     {
         if (preg_match(self::REQUIRED_DOUBLE, $value)) {
             return is_numeric($value) ? doubleval($value) == $value : false;
@@ -213,11 +209,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isBoolean($value)
+    public static function isBoolean($value): bool
     {
         $acceptable = array(true, false, 'true', 'false', 1, 0, '1', '0', 'on', 'off');
 
@@ -233,11 +227,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 2.0
      */
-    public static function isBooleanTrue($value)
+    public static function isBooleanTrue($value): bool
     {
         $acceptableTrue = array(true, 'true', 1, '1', 'on');
 
@@ -253,11 +245,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isAlpha($value)
+    public static function isAlpha($value): bool
     {
         if (preg_match(self::REQUIRED_ALPHA, $value)) {
             return true;
@@ -271,11 +261,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isAlphaNum($value)
+    public static function isAlphaNum($value): bool
     {
         if (preg_match(self::REQUIRED_ALPHA_NUMERIC, $value)) {
             return true;
@@ -289,11 +277,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isSequence($value)
+    public static function isSequence($value): bool
     {
         if (preg_match(self::REQUIRED_SEQUENCE, $value)) {
             return true;
@@ -307,11 +293,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isURL($url)
+    public static function isURL($url): bool
     {
         if (preg_match(self::REQUIRED_HTTP_URL, $url)) {
             if (!filter_var($url, FILTER_VALIDATE_URL)) {
@@ -329,11 +313,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isIP($ip)
+    public static function isIP($ip): bool
     {
         if (preg_match(self::REQUIRED_IP, $ip)) {
             if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
@@ -351,11 +333,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isEmail($email)
+    public static function isEmail($email): bool
     {
         if (preg_match(self::REQUIRED_EMAIL, $email)) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -373,11 +353,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 1.2.2
      */
-    public static function isBase64($value)
+    public static function isBase64($value): bool
     {
         return (bool)preg_match('/^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$/', $value);
     }
@@ -388,11 +366,9 @@ class Validator
      *
      * @param $value
      *
-     * @return bool
-     *
      * @since 2.0.1
      */
-    public static function isHTML($value)
+    public static function isHTML($value): bool
     {
         return $value != strip_tags($value) ? true : false;
     }

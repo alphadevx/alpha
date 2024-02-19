@@ -8,6 +8,7 @@ use Alpha\Model\Person;
 use Alpha\Model\Rights;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\Configprovider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the Enum data type.
@@ -16,7 +17,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -96,10 +97,9 @@ class EnumTest extends ModelTestCase
      * Testing that enum options are loaded correctly from the database.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testLoadEnumOptions($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testLoadEnumOptions(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -163,21 +163,6 @@ class EnumTest extends ModelTestCase
         }
 
         $this->assertEquals('b', $enum->getValue(), 'testing the getValue method');
-    }
-
-    /**
-     * Test the constructor failing when a bad array is provided.
-     *
-     * @since 1.0
-     */
-    public function testConstructorFail()
-    {
-        try {
-            $enum = new Enum('blah');
-            $this->fail('test the constructor failing when a bad array is provided');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Not a valid enum option array!', $e->getMessage(), 'test the constructor failing when a bad array is provided');
-        }
     }
 
     /**

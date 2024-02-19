@@ -14,7 +14,7 @@ use Alpha\Model\ActionLog;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -103,7 +103,7 @@ class Logger
      *
      * @since 1.0
      */
-    public function __construct($classname)
+    public function __construct(string $classname)
     {
         $config = ConfigProvider::getInstance();
 
@@ -123,9 +123,9 @@ class Logger
      *
      * @since 1.0
      */
-    public function debug($message)
+    public function debug(string $message): void
     {
-        if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses)) {
+        if ($this->level == 'DEBUG' || in_array($this->classname, $this->debugClasses, true)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'DEBUG', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
@@ -139,9 +139,9 @@ class Logger
      *
      * @since 1.0
      */
-    public function info($message)
+    public function info(string $message): void
     {
-        if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses)) {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || in_array($this->classname, $this->debugClasses, true)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'INFO', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
@@ -155,9 +155,9 @@ class Logger
      *
      * @since 1.0
      */
-    public function warn($message)
+    public function warn(string $message): void
     {
-        if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses)) {
+        if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || in_array($this->classname, $this->debugClasses, true)) {
             $dateTime = date('Y-m-d H:i:s');
             $this->logProvider->writeLine(array($dateTime, 'WARN', $this->classname, $message,
                 $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI()));
@@ -171,10 +171,10 @@ class Logger
      *
      * @since 1.0
      */
-    public function error($message)
+    public function error(string $message): void
     {
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
-            in_array($this->classname, $this->debugClasses)) {
+            in_array($this->classname, $this->debugClasses, true)) {
             $dateTime = date('Y-m-d H:i:s');
             $line = array($dateTime, 'ERROR', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI());
             $this->logProvider->writeLine($line);
@@ -190,10 +190,10 @@ class Logger
      *
      * @since 1.0
      */
-    public function fatal($message)
+    public function fatal(string $message): void
     {
         if ($this->level == 'DEBUG' || $this->level == 'INFO' || $this->level == 'WARN' || $this->level == 'ERROR' ||
-            $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses)) {
+            $this->level == 'FATAL' || in_array($this->classname, $this->debugClasses, true)) {
             $dateTime = date('Y-m-d H:i:s');
             $line = array($dateTime, 'FATAL', $this->classname, $message, $this->request->getUserAgent(), $this->request->getIP(), gethostname(), $this->request->getURI());
             $this->logProvider->writeLine($line);
@@ -209,7 +209,7 @@ class Logger
      *
      * @since 1.1
      */
-    public function sql($message)
+    public function sql(string $message): void
     {
         if ($this->level == 'SQL') {
             $dateTime = date('Y-m-d H:i:s');
@@ -225,7 +225,7 @@ class Logger
      *
      * @since 1.1
      */
-    public function action($message)
+    public function action(string $message): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -249,7 +249,7 @@ class Logger
      *
      * @throws \Alpha\Exception\MailNotSentException
      */
-    public function notifyAdmin($message)
+    public function notifyAdmin(string $message): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -275,7 +275,7 @@ class Logger
      *
      * @since 1.0
      */
-    public function setLogProviderFile($filepath)
+    public function setLogProviderFile(string $filepath): void
     {
         $config = ConfigProvider::getInstance();
 

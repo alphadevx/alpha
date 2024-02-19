@@ -14,7 +14,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -103,7 +103,7 @@ class ActionLog extends ActiveRecord
      *
      * @since 1.2.2
      */
-    const TABLE_NAME = 'ActionLog';
+    public const TABLE_NAME = 'ActionLog';
 
     /**
      * Trace logger.

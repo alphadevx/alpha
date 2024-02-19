@@ -8,6 +8,7 @@ use Alpha\Exception\AlphaException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\CustomQueryException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
@@ -21,7 +22,7 @@ use Exception;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -101,7 +102,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'Tag';
+    public const TABLE_NAME = 'Tag';
 
     /**
      * Trace logger.
@@ -136,14 +137,12 @@ class Tag extends ActiveRecord
      * @param $taggedClass The class name of the DAO that has been tagged (with namespace).
      * @param $taggedID The Object ID of the DAO that has been tagged.
      *
-     * @return array
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadTags($taggedClass, $taggedID)
+    public function loadTags($taggedClass, $taggedID): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -176,13 +175,11 @@ class Tag extends ActiveRecord
      * @param $startDate The start date of the date range to load the tags of (optional, YYYY-MM-DD format)
      * @param $endDate   The end date of the date range to load the tags of (optional, YYYY-MM-DD format)
      *
-     * @return array
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function getPopularTagsArray($limit, $ownerID = '', $startDate = '', $endDate = '')
+    public static function getPopularTagsArray($limit, $ownerID = '', $startDate = '', $endDate = ''): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -219,13 +216,11 @@ class Tag extends ActiveRecord
      * @param $taggedID Optionally provide a Record instance ID
      * @param $applyStopwords Defaults true, set to false if you want to ignore the stopwords.
      *
-     * @return array
-     *
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
-    public static function tokenize($content, $taggedClass = '', $taggedID = '', $applyStopwords = true)
+    public static function tokenize($content, $taggedClass = '', $taggedID = '', $applyStopwords = true): array
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Tag');
@@ -260,7 +255,7 @@ class Tag extends ActiveRecord
             // we only want to create word tags
             if (Validator::isAlpha($tagContent)) {
                 // just making sure that we haven't added this one in already
-                if (!in_array($tagContent, $tagContents) && !empty($tagContent)) {
+                if (!in_array($tagContent, $tagContents, true) && !empty($tagContent)) {
                     $tag = new self();
                     $tag->set('content', trim(mb_strtolower($tagContent)));
                     if (!empty($taggedClass)) {
@@ -287,7 +282,7 @@ class Tag extends ActiveRecord
      * @param $element
      * @param $key (not required)
      */
-    private static function lowercaseArrayElement(&$element, $key)
+    private static function lowercaseArrayElement(&$element, $key): void
     {
         $element = trim(mb_strtolower($element));
     }
@@ -296,10 +291,8 @@ class Tag extends ActiveRecord
      * Cleans tag content by removing white spaces and converting to lowercase.
      *
      * @param $content
-     *
-     * @return string
      */
-    public static function cleanTagContent($content)
+    public static function cleanTagContent($content): string
     {
         return trim(mb_strtolower(str_replace(' ', '', $content)));
     }
@@ -309,7 +302,7 @@ class Tag extends ActiveRecord
      *
      * @since 1.2.4
      */
-    protected function after_save_callback()
+    protected function afterSave(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -317,6 +310,9 @@ class Tag extends ActiveRecord
             try {
                 $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
                 $cache->delete($this->get('content'));
+            } catch (ResourceNotFoundException $e) {
+                self::$logger->debug('Cache miss while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
+                    instance: ['.$e->getMessage().']');
             } catch (\Exception $e) {
                 self::$logger->error('Error while attempting to remove search matches array from the ['.$config->get('cache.provider.name').'] 
                     instance: ['.$e->getMessage().']');
@@ -329,8 +325,8 @@ class Tag extends ActiveRecord
      *
      * @since 1.2.4
      */
-    protected function before_delete_callback()
+    protected function beforeDelete(): void
     {
-        $this->{'after_save_callback'}();
+        $this->{'afterSave'}();
     }
 }

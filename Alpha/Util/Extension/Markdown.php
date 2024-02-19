@@ -13,7 +13,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -137,7 +137,7 @@ class Markdown extends MarkdownExtra
             $result .= " target=\"$url\"";
         }
         $result .= $attr;
-        
+
         $link_text = $this->runSpanGamut($link_text);
         $result .= ">$link_text</a>";
 
@@ -161,7 +161,7 @@ class Markdown extends MarkdownExtra
         $content    = preg_replace('/[|] *$/m', '', $content);
 
         $attr = array();
-        
+
         # Reading alignement from header underline.
         $separators = preg_split('/ *[|] */', $underline);
         foreach ($separators as $n => $s) {
@@ -175,14 +175,14 @@ class Markdown extends MarkdownExtra
                 $attr[$n] = '';
             }
         }
-        
+
         # Parsing span elements, including code spans, character escapes,
         # and inline HTML tags, so that pipes inside those gets ignored.
         $head       = $this->parseSpan($head);
         $headers    = preg_split('/ *[|] */', $head);
         $col_count  = count($headers);
         $attr       = array_pad($attr, $col_count, '');
-        
+
         # Write column headers.
         $text = "<table class=\"table table-bordered\">\n";
         $text .= "<thead>\n";
@@ -192,20 +192,20 @@ class Markdown extends MarkdownExtra
         }
         $text .= "</tr>\n";
         $text .= "</thead>\n";
-        
+
         # Split content by row.
         $rows = explode("\n", trim($content, "\n"));
-        
+
         $text .= "<tbody>\n";
         foreach ($rows as $row) {
             # Parsing span elements, including code spans, character escapes,
             # and inline HTML tags, so that pipes inside those gets ignored.
             $row = $this->parseSpan($row);
-            
+
             # Split row by cell.
             $row_cells = preg_split('/ *[|] */', $row, $col_count);
             $row_cells = array_pad($row_cells, $col_count, '');
-            
+
             $text .= "<tr>\n";
             foreach ($row_cells as $n => $cell) {
                 $text .= "  <td$attr[$n]>".$this->runSpanGamut(trim($cell))."</td>\n";
@@ -214,7 +214,7 @@ class Markdown extends MarkdownExtra
         }
         $text .= "</tbody>\n";
         $text .= "</table>";
-        
+
         return $this->hashBlock($text)."\n";
     }
 }

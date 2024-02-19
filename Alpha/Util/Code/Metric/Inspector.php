@@ -2,7 +2,7 @@
 
 namespace Alpha\Util\Code\Metric;
 
-use \Alpha\Util\File\FileUtils;
+use Alpha\Util\File\FileUtils;
 
 /**
  * Utility class for calculating some software metrics related to a project.
@@ -11,7 +11,7 @@ use \Alpha\Util\File\FileUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -146,7 +146,7 @@ class Inspector
      *
      * @since 1.0
      */
-    public function __construct($rootDir = '.')
+    public function __construct(string $rootDir = '.')
     {
         $this->rootDir = $rootDir;
         $this->files = FileUtils::getDirectoryContents($rootDir, $this->files);
@@ -157,13 +157,13 @@ class Inspector
      *
      * @since 1.0
      */
-    public function calculateLOC()
+    public function calculateLOC(): void
     {
         foreach ($this->files as $dir => $fileArray) {
             foreach ($fileArray as $file) {
                 $file = $dir.'/'.$file;
                 $fileType = mb_substr($file, mb_strrpos($file, '.'));
-                if (in_array($fileType, $this->includeFileTypes)) {
+                if (in_array($fileType, $this->includeFileTypes, true)) {
                     $exclude = false;
                     foreach ($this->excludeSubDirectories as $excludedDir) {
                         if (preg_match('/'.$excludedDir.'/i', $file)) {
@@ -191,11 +191,9 @@ class Inspector
     /**
      * Generates a HTML table containing the metrics results.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function resultsToHTML()
+    public function resultsToHTML(): string
     {
         $count = 1;
 
@@ -224,11 +222,9 @@ class Inspector
      *
      * @param string $sourceFile
      *
-     * @return int
-     *
      * @since 1.0
      */
-    private function disregardCommentsLOC($sourceFile)
+    private function disregardCommentsLOC(string $sourceFile): int
     {
         $file = file($sourceFile);
 

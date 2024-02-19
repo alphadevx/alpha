@@ -10,7 +10,7 @@ namespace Alpha\Util\Cache;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -52,11 +52,11 @@ interface CacheProviderInterface
      *
      * @param $key
      *
-     * @since 1.1
+     * @throws \Alpha\Exception\ResourceNotFoundException
      *
-     * @return mixed The expected value from the cache, boolean false otherwise
+     * @since 1.1
      */
-    public function get($key);
+    public function get($key): mixed;
 
     /**
      * Attempt to set the value in the cache for the given $key.  Old values on the same
@@ -68,14 +68,25 @@ interface CacheProviderInterface
      *
      * @since 1.1
      */
-    public function set($key, $value, $expiry = 0);
+    public function set($key, $value, $expiry = 0): void;
 
     /**
      * Attempt to delete the value from the cache for the given $key.
      *
      * @param $key
      *
+     * @throws \Alpha\Exception\ResourceNotFoundException
+     *
      * @since 1.1
      */
-    public function delete($key);
+    public function delete($key): void;
+
+    /**
+     * Check the cache for the existance of the given $key.  Returns true if the $key is set, false otherwise.
+     *
+     * @param $key
+     *
+     * @since 4.0
+     */
+    public function check($key): bool;
 }

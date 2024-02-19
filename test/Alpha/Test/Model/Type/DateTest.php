@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -112,21 +112,6 @@ class DateTest extends TestCase
     }
 
     /**
-     * Testing the setValue method with a bad month.
-     *
-     * @since 1.0
-     */
-    public function testSetValueInvalidMonth()
-    {
-        try {
-            $this->date1->setDateValue(2000, 'blah', 1);
-            $this->fail('testing the setValue method with a bad month');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the month value blah provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad month');
-        }
-    }
-
-    /**
      * Testing the setValue method with a bad date value (out of range).
      *
      * @since 1.0
@@ -137,21 +122,21 @@ class DateTest extends TestCase
             $this->date1->setDateValue(2000, 13, 1);
             $this->fail('testing the setDateValue method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setDateValue method with a bad date value (out of range)');
+            $this->assertEquals('The day value 2000-13-1 provided is invalid!', $e->getMessage(), 'testing the setDateValue method with a bad date value (out of range)');
         }
 
         try {
             $date = new Date('2000-13-01');
             $this->fail('testing the constructor method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the constructor method with a bad date value (out of range)');
+            $this->assertEquals('The date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the constructor method with a bad date value (out of range)');
         }
 
         try {
             $this->date1->setValue('2000-13-01');
             $this->fail('testing the setValue method with a bad date value (out of range)');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
+            $this->assertEquals('The date value 2000-13-01 provided is invalid!', $e->getMessage(), 'testing the setValue method with a bad date value (out of range)');
         }
     }
 
@@ -170,14 +155,14 @@ class DateTest extends TestCase
             $this->date1->populateFromString('2007-08-40');
             $this->fail('testing the populateFromString method with a bad date value');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the date value 2007-08-40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+            $this->assertEquals('The date value 2007-08-40 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {
             $this->date1->populateFromString('2007-08-aa');
             $this->fail('testing the populateFromString method with a bad date value');
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('Error: the day value aa provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
+            $this->assertEquals('The date value 2007-08-00 provided is invalid!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
 
         try {
@@ -186,6 +171,14 @@ class DateTest extends TestCase
         } catch (IllegalArguementException $e) {
             $this->assertEquals('Invalid Date value [bad] provided!', $e->getMessage(), 'testing the populateFromString method with a bad date value');
         }
+
+        $this->date1->populateFromString('0000-00-00');
+
+        $this->assertEquals('0000-00-00', $this->date1->getValue(), 'testing the populateFromString method with empty value');
+
+        $this->date1->populateFromString('');
+
+        $this->assertEquals('0000-00-00', $this->date1->getValue(), 'testing the populateFromString method with empty value');
     }
 
     /**
@@ -274,5 +267,45 @@ class DateTest extends TestCase
         $this->assertEquals('2019-12-29', Date::getStartAndEndDate(52, 2019)['end'], 'testing the getStartAndEndDate method');
         $this->assertEquals('2020-02-03', Date::getStartAndEndDate(6, 2020)['start'], 'testing the getStartAndEndDate method');
         $this->assertEquals('2020-02-09', Date::getStartAndEndDate(6, 2020)['end'], 'testing the getStartAndEndDate method');
+    }
+
+    /**
+     * Testing the getYear() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetYear()
+    {
+        $this->assertEquals(date('Y'), $this->date1->getYear(), 'testing the getYear() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonth() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetMonth()
+    {
+        $this->assertEquals(date('m'), $this->date1->getMonth(), 'testing the getMonth() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonthName() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetMonthName()
+    {
+        $this->assertEquals(date('F'), $this->date1->getMonthName(), 'testing the getMonthName() method when the default constructor is used');
+    }
+
+    /**
+     * Testing the getMonthDay() method when the default constructor is used.
+     *
+     * @since 4.0
+     */
+    public function testGetDay()
+    {
+        $this->assertEquals(date('d'), $this->date1->getDay(), 'testing the getDay() method when the default constructor is used');
     }
 }

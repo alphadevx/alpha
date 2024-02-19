@@ -18,7 +18,7 @@ use Alpha\Exception\RecordNotFoundException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -123,7 +123,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'Person';
+    public const TABLE_NAME = 'Person';
 
     /**
      * The state of the person (account status).
@@ -203,7 +203,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_load_callback()
+    protected function afterLoad(): void
     {
         $this->setupRels();
     }
@@ -213,7 +213,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_loadByAttribute_callback()
+    protected function afterLoadByAttribute(): void
     {
         $this->setupRels();
     }
@@ -225,7 +225,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_save_callback()
+    protected function afterSave(): void
     {
         if ($this->getVersionNumber()->getValue() == 1) {
             $standardGroup = new Rights();
@@ -252,7 +252,7 @@ class Person extends ActiveRecord
      *
      * @since 2.0
      */
-    protected function before_save_callback()
+    protected function beforeSave(): void
     {
         if (password_needs_rehash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12])) {
             $this->set('password', password_hash($this->get('password'), PASSWORD_DEFAULT, ['cost' => 12]));
@@ -264,7 +264,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function setupRels()
+    protected function setupRels(): void
     {
         // set up MANY-TO-MANY relation person2rights
         if (isset($this->rights)) {
@@ -292,7 +292,7 @@ class Person extends ActiveRecord
      *
      * @since 1.0
      */
-    public function setUsername($username)
+    public function setUsername(string $username): void
     {
         $this->username->setValue($username);
     }
@@ -300,11 +300,9 @@ class Person extends ActiveRecord
     /**
      * Getter for username.
      *
-     * @return \Alpha\Model\Type\SmallText
-     *
      * @since 1.0
      */
-    public function getUsername()
+    public function getUsername(): \Alpha\Model\Type\SmallText
     {
         return $this->username;
     }
@@ -314,11 +312,9 @@ class Person extends ActiveRecord
      *
      * @param string $groupName
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function inGroup($groupName)
+    public function inGroup(string $groupName): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Person');
@@ -371,7 +367,7 @@ class Person extends ActiveRecord
      *
      * @since 2.0
      */
-    public function addToGroup($groupName)
+    public function addToGroup(string $groupName): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('Person');
@@ -398,7 +394,7 @@ class Person extends ActiveRecord
      *
      * @throws \Alpha\Exception\MailNotSentException
      */
-    public function sendMail($message, $subject)
+    public function sendMail(string $message, string $subject): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -415,11 +411,9 @@ class Person extends ActiveRecord
     /**
      * Generates a random password for the user.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function generatePassword()
+    public function generatePassword(): string
     {
         $alphabet = array('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z');
         // the password will be 7 random characters and 2 numbers
@@ -436,11 +430,9 @@ class Person extends ActiveRecord
     /**
      * Method for getting a count of the amount of article comments posted by the user.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getCommentCount()
+    public function getCommentCount(): int
     {
         $temp = new ArticleComment();
 

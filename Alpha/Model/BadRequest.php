@@ -16,7 +16,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2020, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2023, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -96,7 +96,7 @@ class BadRequest extends ActiveRecord
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'BadRequest';
+    public const TABLE_NAME = 'BadRequest';
 
     /**
      * Trace logger.
@@ -131,21 +131,19 @@ class BadRequest extends ActiveRecord
      * Gets the count of bad requests for the client with this IP and client string in the past
      * configurable period (security.client.temp.blacklist.filter.period).
      *
-     * @return int
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getBadRequestCount()
+    public function getBadRequestCount(): int
     {
         $config = ConfigProvider::getInstance();
 
         // the datetime interval syntax between MySQL and SQLite3 is a little different
         if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
+            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
         } else {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".$this->client->getValue()."' AND created_ts > datetime('now', '-".$config->get('security.client.temp.blacklist.filter.period')." MINUTES')";
+            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > datetime('now', '-".$config->get('security.client.temp.blacklist.filter.period')." MINUTES')";
         }
 
         $result = $this->query($sqlQuery);

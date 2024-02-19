@@ -21,7 +21,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -154,17 +154,18 @@ class Image
      * The constructor.
      *
      * @param string $source
-     * @param $width
-     * @param $height
-     * @param $sourceType
-     * @param $quality
-     * @param $scale
+     * @param int $width
+     * @param int $height
+     * @param string $sourceType
+     * @param float $quality
+     * @param bool $scale
+     * @param bool $secure
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function __construct($source, $width, $height, $sourceType, $quality = 0.75, $scale = false, $secure = false)
+    public function __construct(string $source, int $width, int $height, string $sourceType, float $quality = 0.75, bool $scale = false, bool $secure = false)
     {
         self::$logger = new Logger('Image');
         self::$logger->debug('>>__construct(source=['.$source.'], width=['.$width.'], height=['.$height.'], sourceType=['.$sourceType.'], quality=['.$quality.'], scale=['.$scale.'], secure=['.$secure.'])');
@@ -199,13 +200,11 @@ class Image
      * Renders the HTML <img> tag to the ViewImage controller, with all of the correct params to render the source
      * image in the desired resolution.
      *
-     * @param $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
-     *
-     * @return string
+     * @param string $altText Set this value to render alternate text as part of the HTML link (defaults to no alternate text)
      *
      * @since 1.0
      */
-    public function renderHTMLLink($altText = '')
+    public function renderHTMLLink(string $altText = ''): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -229,7 +228,7 @@ class Image
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    private function setFilename()
+    private function setFilename(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -271,7 +270,7 @@ class Image
      *
      * @since 1.0
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -281,7 +280,7 @@ class Image
      *
      * @since 1.0
      */
-    public function renderImage()
+    public function renderImage(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -301,65 +300,50 @@ class Image
                     $oldImage = imagecreatefrompng($this->source);
             }
 
-            if (!$oldImage) {
-                $im = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
-                $bgc = imagecolorallocate($im, 255, 255, 255);
-                $tc = imagecolorallocate($im, 0, 0, 0);
-                imagefilledrectangle($im, 0, 0, $this->width->getValue(), $this->height->getValue(), $bgc);
+            // the dimensions of the source image
+            $oldWidth = imagesx($oldImage);
+            $oldHeight = imagesy($oldImage);
 
-                imagestring($im, 1, 5, 5, "Error loading $this->source", $tc);
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    imagepng($im);
-                } else {
-                    imagejpeg($im);
-                }
-                imagedestroy($im);
-            } else {
-                // the dimensions of the source image
-                $oldWidth = imagesx($oldImage);
-                $oldHeight = imagesy($oldImage);
+            // now create the new image
+            $newImage = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
 
-                // now create the new image
-                $newImage = imagecreatetruecolor($this->width->getValue(), $this->height->getValue());
+            // set a transparent background for PNGs
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                // Turn off transparency blending (temporarily)
+                imagealphablending($newImage, false);
 
-                // set a transparent background for PNGs
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    // Turn off transparency blending (temporarily)
-                    imagealphablending($newImage, false);
+                // Create a new transparent color for image
+                $color = imagecolorallocatealpha($newImage, 255, 0, 0, 0);
 
-                    // Create a new transparent color for image
-                    $color = imagecolorallocatealpha($newImage, 255, 0, 0, 0);
+                // Completely fill the background of the new image with allocated color.
+                imagefill($newImage, 0, 0, $color);
 
-                    // Completely fill the background of the new image with allocated color.
-                    imagefill($newImage, 0, 0, $color);
-
-                    // Restore transparency blending
-                    imagesavealpha($newImage, true);
-                }
-                // copy the old image to the new image (in memory, not the file!)
-                imagecopyresampled($newImage, $oldImage, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
-
-                if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
-                    imagepng($newImage);
-                } else {
-                    imagejpeg($newImage, null, 100*$this->quality->getValue());
-                }
-
-                $this->cache($newImage);
-                imagedestroy($oldImage);
-                imagedestroy($newImage);
+                // Restore transparency blending
+                imagesavealpha($newImage, true);
             }
+            // copy the old image to the new image (in memory, not the file!)
+            imagecopyresampled($newImage, $oldImage, 0, 0, 0, 0, $this->width->getValue(), $this->height->getValue(), $oldWidth, $oldHeight);
+
+            if ($this->sourceType->getValue() == 'png' && $config->get('cms.images.perserve.png')) {
+                imagepng($newImage);
+            } else {
+                imagejpeg($newImage, null, 100*$this->quality->getValue());
+            }
+
+            $this->cache($newImage);
+            imagedestroy($oldImage);
+            imagedestroy($newImage);
         }
     }
 
     /**
      * Caches the image to the cache directory.
      *
-     * @param image $image the binary GD image stream to save
+     * @param GdImage $image the binary GD image stream to save
      *
      * @since 1.0
      */
-    private function cache($image)
+    private function cache(\GdImage $image): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -373,11 +357,9 @@ class Image
     /**
      * Used to check the image cache for the image jpeg cache file.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    private function checkCache()
+    private function checkCache(): bool
     {
         return file_exists($this->filename);
     }
@@ -387,22 +369,20 @@ class Image
      *
      * @since 1.0
      */
-    private function loadCache()
+    private function loadCache(): void
     {
         readfile($this->filename);
     }
 
     /**
      * Converts a URL for an image to a relative file system path for the image, assuming it is
-     * hosted on the same server as the application.
+     * hosted on the same server as the application. Returns the path of the image.
      *
      * @param string $imgURL
      *
-     * @return string the path of the image
-     *
      * @since 1.0
      */
-    public static function convertImageURLToPath($imgURL)
+    public static function convertImageURLToPath(string $imgURL): string
     {
         $config = ConfigProvider::getInstance();
 

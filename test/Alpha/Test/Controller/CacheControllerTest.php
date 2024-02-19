@@ -3,6 +3,7 @@
 namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
+use Alpha\Controller\CacheController;
 use Alpha\Util\Http\Request;
 
 /**
@@ -12,7 +13,7 @@ use Alpha\Util\Http\Request;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -71,11 +72,23 @@ class CacheControllerTest extends ControllerTestCase
     {
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => true)));
+        $controller = new CacheController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('var1' => $securityParams[0], 'var2' => $securityParams[1], 'clearCache' => 'true')));
 
         $response = $front->process($request);
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/cache', 'params' => array('clearCache' => 'true')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+        $this->assertTrue(str_contains($response->getBody(), 'This page cannot accept post data from remote servers'));
     }
 }

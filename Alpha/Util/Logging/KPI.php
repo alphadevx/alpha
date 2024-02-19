@@ -15,7 +15,7 @@ use Alpha\Util\Service\ServiceFactory;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -115,7 +115,7 @@ class KPI
      *
      * @since 1.1
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $config = ConfigProvider::getInstance();
 
@@ -146,7 +146,7 @@ class KPI
      *
      * @since 1.0
      */
-    public function storeStartTimeInSession()
+    public function storeStartTimeInSession(): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -161,7 +161,7 @@ class KPI
      *
      * @since 1.1
      */
-    public function log()
+    public function log(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -183,7 +183,7 @@ class KPI
      *
      * @since 1.1
      */
-    public function logStep($stepName)
+    public function logStep($stepName): void
     {
         $config = ConfigProvider::getInstance();
 

@@ -1,24 +1,67 @@
-<nav class="navbar navbar-default" role="navigation">
-	<ul id="adminmenu" class="nav navbar-nav">
-		<li><a href="<?= $config->get('app.url') ?>">Home</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\ListActiveRecordsController') ?>">Admin Home</a></li>
-		<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Logs<b class="caret"></b></a>
-			<ul class="dropdown-menu">
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>">System Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/search.log') ?>">Search Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/feeds.log') ?>">Feed Log</a></li>
-				<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/tasks.log') ?>">Cron Tasks Log</a></li>
-			</ul>
-		</li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\GenSecureQueryStringController') ?>">Generate Secure URL</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\MetricController') ?>">Code Metrics</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\CacheController') ?>">Cache</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\TagController') ?>">Tags</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\DEnumController') ?>">DEnums</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\SequenceController') ?>">Sequences</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\PhpinfoController') ?>">PHP Info</a></li>
-		<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogoutController') ?>">Logout</a></li>
-	</ul>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<div class="container-fluid">
+    	<div class="navbar-brand"><img src="/images/logo-small.png"></div>
+
+    	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    	<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= $config->get('app.url') ?>">Home</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\ListActiveRecordsController') ?>">Admin Home</a>
+	    		</li>    
+
+			    <li class="nav-item dropdown">
+		        	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+		        	Logs
+		        	</a>
+		        	<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/'.$config->get('app.log.file')) ?>" class="dropdown-item">System Log</a></li>
+						<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/search.log') ?>" class="dropdown-item">Search Log</a></li>
+						<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/feeds.log') ?>" class="dropdown-item">Feed Log</a></li>
+						<li><a href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogController&logPath='.$config->get('app.file.store.dir').'logs/tasks.log') ?>" class="dropdown-item">Cron Tasks Log</a></li>
+					</ul>
+		        </li>
+
+		        <li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\GenSecureQueryStringController') ?>">Generate Secure URL</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\MetricController') ?>">Code Metrics</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\CacheController') ?>">Cache</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\TagController') ?>">Tags</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\DEnumController') ?>">DEnums</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\SequenceController') ?>">Sequences</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\PhpinfoController') ?>">PHP info</a>
+	    		</li>
+
+	    		<li class="nav-item">
+	    			<a class="nav-link" aria-current="page" href="<?= Alpha\Controller\Front\FrontController::generateSecureURL('act=Alpha\Controller\LogoutController') ?>">Logout</a>
+	    		</li>
+		    </ul>
+
+	    	<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		      <span class="navbar-toggler-icon"></span>
+		    </button>
+		</div>
+	</div>
 </nav>
 
 <?php if ($passwordResetRequired) { ?>

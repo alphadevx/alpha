@@ -11,7 +11,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -193,7 +193,7 @@ class GraphNode
      * @param array  $nodeColour
      * @param string $URL
      */
-    public function __construct($id, $width, $height, $message = '', $nodeColour = array(), $URL = null)
+    public function __construct(int $id, int $width, int $height, string $message = '', array $nodeColour = array(), string $URL = null)
     {
         $this->id = $id;
         $this->width = $width;
@@ -206,11 +206,9 @@ class GraphNode
     /**
      * Get the node colour array.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getNodeColour()
+    public function getNodeColour(): array
     {
         return $this->nodeColour;
     }
@@ -224,7 +222,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setNodeColour($nodeColour)
+    public function setNodeColour(array $nodeColour): void
     {
         if (is_array($nodeColour) && count($nodeColour) == 3) {
             $this->nodeColour = $nodeColour;
@@ -236,11 +234,9 @@ class GraphNode
     /**
      * Get the node URL.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getURL()
+    public function getURL(): string
     {
         return $this->URL;
     }
@@ -252,7 +248,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setURL($URL)
+    public function setURL(string $URL): void
     {
         $this->URL = $URL;
     }
@@ -260,11 +256,9 @@ class GraphNode
     /**
      * Get the node text message.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -276,7 +270,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setMessage($message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
@@ -284,11 +278,9 @@ class GraphNode
     /**
      * Get the node offset.
      *
-     * @return integer
-     *
      * @since 1.0
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         return $this->offset;
     }
@@ -300,7 +292,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setOffset($offset)
+    public function setOffset(int $offset): void
     {
         $this->offset = $offset;
     }
@@ -308,11 +300,9 @@ class GraphNode
     /**
      * Get the node modifier.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getModifier()
+    public function getModifier(): int
     {
         return $this->modifier;
     }
@@ -324,7 +314,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setModifier($modifier)
+    public function setModifier(int $modifier): void
     {
         $this->modifier = $modifier;
     }
@@ -332,11 +322,9 @@ class GraphNode
     /**
      * Get the number of child nodes attached to this node.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function childCount()
+    public function childCount(): int
     {
         return count($this->children);
     }
@@ -344,11 +332,9 @@ class GraphNode
     /**
      * Get the parent node of this node (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
-     *
      * @since 1.0
      */
-    public function getParentNode()
+    public function getParentNode(): \Alpha\Util\Graph\GraphNode
     {
         return $this->parentNode;
     }
@@ -356,13 +342,13 @@ class GraphNode
     /**
      * Set the parent node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setParentNode($node)
+    public function setParentNode(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->parentNode = $node;
@@ -374,29 +360,27 @@ class GraphNode
     /**
      * Get the node to the left of this one (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
-     *
      * @since 1.0
      */
-    public function getLeftSibling()
+    public function getLeftSibling(): \Alpha\Util\Graph\GraphNode|null
     {
         if ($this->leftNode) {
             return $this->leftNode;
         } else {
-            return;
+            return null;
         }
     }
 
     /**
      * Sets the node to the left of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setLeftSibling($node)
+    public function setLeftSibling(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->leftNode = $node;
@@ -408,29 +392,27 @@ class GraphNode
     /**
      * Get the node to the right of this one (if any).
      *
-     * @return Alpha\Util\Graph\GraphNode
-     *
      * @since 1.0
      */
-    public function getRightSibling()
+    public function getRightSibling(): \Alpha\Util\Graph\GraphNode|null
     {
         if ($this->rightNode) {
             return $this->rightNode;
         } else {
-            return;
+            return null;
         }
     }
 
     /**
      * Sets the node to the right of this node.
      *
-     * @param Alpha\Util\Graph\GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function setRightSibling($node)
+    public function setRightSibling(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             $this->rightNode = $node;
@@ -444,11 +426,9 @@ class GraphNode
      *
      * @param int $i
      *
-     * @return mixed
-     *
      * @since 1.0
      */
-    public function getChildAt($i)
+    public function getChildAt(int $i): mixed
     {
         if (isset($this->children[$i])) {
             return $this->children[$i];
@@ -460,11 +440,9 @@ class GraphNode
     /**
      * Calculates and returns the midpoint X coordinate of the children of this node.
      *
-     * @return double
-     *
      * @since 1.0
      */
-    public function getChildrenCenter()
+    public function getChildrenCenter(): float
     {
         $node = $this->getChildAt(0);
         $node1 = $this->getChildAt(count($this->children)-1);
@@ -475,11 +453,9 @@ class GraphNode
     /**
      * Returns the array of child GraphNode objects.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
@@ -487,13 +463,13 @@ class GraphNode
     /**
      * Add a new node to the children array of this node.
      *
-     * @param GraphNode $node
+     * @param \Alpha\Util\Graph\GraphNode $node
      *
      * @throws ALpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function addChild($node)
+    public function addChild(\Alpha\Util\Graph\GraphNode $node): void
     {
         if ($node instanceof self) {
             array_push($this->children, $node);
@@ -505,11 +481,9 @@ class GraphNode
     /**
      * Returns the links array.
      *
-     * @return array
-     *
      * @since 1.0
      */
-    public function getLinks()
+    public function getLinks(): array
     {
         return $this->links;
     }
@@ -519,7 +493,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setUpLinks()
+    public function setUpLinks(): void
     {
         $xa = $this->x+($this->width/2);
         $ya = $this->y+$this->height;
@@ -543,11 +517,9 @@ class GraphNode
     /**
      * Returns the node height.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->height;
     }
@@ -555,11 +527,9 @@ class GraphNode
     /**
      * Returns the node width.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->width;
     }
@@ -567,11 +537,9 @@ class GraphNode
     /**
      * Returns the node X-coordinate.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getX()
+    public function getX(): int
     {
         return $this->x;
     }
@@ -579,11 +547,9 @@ class GraphNode
     /**
      * Returns the node Y-coordinate.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getY()
+    public function getY(): int
     {
         return $this->y;
     }
@@ -595,7 +561,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setX($x)
+    public function setX(int $x): void
     {
         $this->x = $x;
     }
@@ -607,7 +573,7 @@ class GraphNode
      *
      * @since 1.0
      */
-    public function setY($y)
+    public function setY(int $y): void
     {
         $this->y = $y;
     }
@@ -615,11 +581,9 @@ class GraphNode
     /**
      * Returns the node ID.
      *
-     * @return int
-     *
      * @since 3.1
      */
-    public function getID()
+    public function getID(): int
     {
         return $this->id;
     }

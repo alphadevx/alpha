@@ -16,7 +16,7 @@ use Alpha\View\Widget\Button;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -71,7 +71,7 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    protected function __construct($Record)
+    protected function __construct(\Alpha\Model\ActiveRecord $Record)
     {
         self::$logger = new Logger('SequenceView');
         self::$logger->debug('>>__construct(Record=['.var_export($Record, true).'])');
@@ -88,12 +88,12 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    public function listView($fields = array())
+    public function listView(array $fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_listView_callback')) {
-            $this->{'before_listView_callback'}();
+        if (method_exists($this, 'beforeListView')) {
+            $this->{'beforeListView'}();
         }
 
         // the form action
@@ -116,7 +116,7 @@ class SequenceView extends View
             // skip over password fields
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $html .= '  <th>'.$this->record->getDataLabel($propName).'</th>';
                 }
                 if ($propName == 'ID') {
@@ -138,7 +138,7 @@ class SequenceView extends View
 
             $property = $this->record->getPropObject($propName);
             if (!($property instanceof SmallText && $property->checkIsPassword())) {
-                if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                     if ($property instanceof Text) {
                         $text = htmlentities($this->record->get($propName), ENT_COMPAT, 'utf-8');
                         if (mb_strlen($text) > 70) {
@@ -172,8 +172,8 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->record, 'list', $fields);
 
-        if (method_exists($this, 'after_listView_callback')) {
-            $this->{'after_listView_callback'}();
+        if (method_exists($this, 'afterListView')) {
+            $this->{'afterListView'}();
         }
 
         self::$logger->debug('<<listView');
@@ -188,12 +188,12 @@ class SequenceView extends View
      *
      * @since 1.0
      */
-    public function detailedView($fields = array())
+    public function detailedView(array $fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_detailedView_callback')) {
-            $this->{'before_detailedView_callback'}();
+        if (method_exists($this, 'beforeDetailedView')) {
+            $this->{'beforeDetailedView'}();
         }
 
         // we may want to display the ID regardless of class
@@ -211,8 +211,8 @@ class SequenceView extends View
 
         $html = $this->loadTemplate($this->record, 'detail', $fields);
 
-        if (method_exists($this, 'after_detailedView_callback')) {
-            $this->{'after_detailedView_callback'}();
+        if (method_exists($this, 'afterDetailedView')) {
+            $this->{'afterDetailedView'}();
         }
 
         self::$logger->debug('<<detailedView');

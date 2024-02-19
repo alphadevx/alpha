@@ -21,7 +21,7 @@ use Alpha\Model\Article;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -142,13 +142,11 @@ class FeedController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      */
-    public function doGET($request)
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -181,7 +179,7 @@ class FeedController extends Controller implements ControllerInterface
             $this->setup();
 
             $feed = null;
-            
+
             switch ($type) {
                 case 'RSS2':
                     $feed = new RSS2($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
@@ -195,8 +193,13 @@ class FeedController extends Controller implements ControllerInterface
                 break;
                 case 'Atom':
                     $feed = new Atom($this->ActiveRecordType, $this->title, str_replace('&', '&amp;', $request->getURI()), $this->description);
-                    $feed->setFieldMappings($this->fieldMappings[0], $this->fieldMappings[1], $this->fieldMappings[2], $this->fieldMappings[3],
-                        $this->fieldMappings[4]);
+                    $feed->setFieldMappings(
+                        $this->fieldMappings[0],
+                        $this->fieldMappings[1],
+                        $this->fieldMappings[2],
+                        $this->fieldMappings[3],
+                        $this->fieldMappings[4]
+                    );
                     if ($config->get('feeds.atom.author') != '') {
                         $feed->addAuthor($config->get('feeds.atom.author'));
                     }
@@ -225,7 +228,7 @@ class FeedController extends Controller implements ControllerInterface
     /**
      * setup the feed title, field mappings and description based on common Record types.
      */
-    protected function setup()
+    protected function setup(): void
     {
         self::$logger->debug('>>setup()');
 

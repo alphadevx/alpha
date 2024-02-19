@@ -7,6 +7,7 @@ use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Exception\AlphaException;
 use Alpha\Util\Config\Configprovider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the DEnum data type.
@@ -15,7 +16,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -93,10 +94,9 @@ class DEnumTest extends ModelTestCase
      * Test to check that the denum options loaded from the database.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testDEnumLoadedOptionsFromDB($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testDEnumLoadedOptionsFromDB(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -108,14 +108,13 @@ class DEnumTest extends ModelTestCase
      * Testing the setValue method with a bad options array index value.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testSetValueInvalid($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testSetValueInvalid(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $this->denum1->setValue('blah');
             $this->fail('testing the setValue method with a bad options array index value');
@@ -128,14 +127,13 @@ class DEnumTest extends ModelTestCase
      * Testing the setValue method with a good options index array value.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testSetValueValid($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testSetValueValid(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -150,14 +148,13 @@ class DEnumTest extends ModelTestCase
      * Testing the getDisplayValue method.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testGetDisplayValue($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testGetDisplayValue(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -173,14 +170,13 @@ class DEnumTest extends ModelTestCase
      * Testing the getOptionID method.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testGetOptionID($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testGetOptionID(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         try {
             $options = $this->denum1->getOptions();
             $optionIDs = array_keys($options);
@@ -195,14 +191,13 @@ class DEnumTest extends ModelTestCase
      * Testing the getItemCount method.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testGetItemCount($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testGetItemCount(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         $options = $this->denum1->getOptions();
 
         $this->assertEquals(count($options), $this->denum1->getItemCount(), 'testing the getItemCount method');
@@ -212,14 +207,13 @@ class DEnumTest extends ModelTestCase
      * Testing the DEnumItem::loadItems method directly.
      *
      * @since 1.2.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testDEnumItemLoadItems($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testDEnumItemLoadItems(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
-        
+
         $DEnumID = $this->denum1->getID();
         $item = new DEnumItem();
         $items = $item->loadItems($DEnumID);

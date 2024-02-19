@@ -2,8 +2,6 @@
 
 namespace Alpha\Task;
 
-require_once './vendor/autoload.php';
-
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -11,13 +9,11 @@ use Alpha\Util\Config\ConfigProvider;
  * The main class responsible for running custom cron tasks found under the [webapp]/Task
  * directory.  This class should be executed from Linux cron via the CLI.
  *
- * To run: cd to app.root, then "php vendor/alphadevx/alpha/Alpha/Task/CronManager.php"
- *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -105,14 +101,12 @@ class CronManager
     }
 
     /**
-     * Loops over the /tasks directory and builds an array of all of the task
+     * Loops over the /src/Task directory and builds an array of all of the task
      * class names in the system.
-     *
-     * @return array
      *
      * @since 1.0
      */
-    public static function getTaskClassNames()
+    public static function getTaskClassNames(): array
     {
         $config = ConfigProvider::getInstance();
 
@@ -130,7 +124,7 @@ class CronManager
             // loop over the custom task directory
             while (false !== ($file = readdir($handle))) {
                 if (preg_match('/Task.php/', $file)) {
-                    $classname = 'Task\\'.mb_substr($file, 0, -4);
+                    $classname = '\\Task\\'.mb_substr($file, 0, -4);
 
                     array_push($classNameArray, $classname);
                 }
@@ -142,6 +136,3 @@ class CronManager
         return $classNameArray;
     }
 }
-
-// invoke a cron manager object
-$processor = new CronManager();

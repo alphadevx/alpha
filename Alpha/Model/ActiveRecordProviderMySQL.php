@@ -34,6 +34,7 @@ use Alpha\Exception\PHPException;
 use Exception;
 use ReflectionClass;
 use Mysqli;
+use mysqli_sql_exception;
 
 /**
  * MySQL active record provider (uses the MySQLi native API in PHP).
@@ -42,7 +43,7 @@ use Mysqli;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -124,7 +125,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getConnection()
      */
-    public static function getConnection()
+    public static function getConnection(): \Mysqli
     {
         $config = ConfigProvider::getInstance();
 
@@ -132,8 +133,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             try {
                 self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
             } catch (\Exception $e) {
+                ;
                 // if we failed to connect because the database does not exist, create it and try again
-                if (strpos($e->getMessage(), 'HY000/1049') !== false) {
+                if ($e->getCode() == '1049') {
                     self::createDatabase();
                     self::$connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'), $config->get('db.name'));
                 }
@@ -154,7 +156,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::disconnect()
      */
-    public static function disconnect()
+    public static function disconnect(): void
     {
         if (isset(self::$connection)) {
             self::$connection->close();
@@ -167,7 +169,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getLastDatabaseError()
      */
-    public static function getLastDatabaseError()
+    public static function getLastDatabaseError(): string
     {
         return self::getConnection()->error;
     }
@@ -177,7 +179,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::query()
      */
-    public function query($sqlQuery)
+    public function query($sqlQuery): array
     {
         $this->record->setLastQuery($sqlQuery);
 
@@ -199,7 +201,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::load()
      */
-    public function load($ID, $version = 0)
+    public function load($ID, $version = 0): void
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
@@ -220,7 +222,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         $row = array();
 
-        if ($stmt->prepare($sqlQuery)) {
+        try {
+            $stmt->prepare($sqlQuery);
+
             if ($version > 0) {
                 $stmt->bind_param('ii', $ID, $version);
             } else {
@@ -235,7 +239,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             }
 
             $stmt->close();
-        } else {
+        } catch (mysqli_sql_exception $e) {
             self::$logger->warn('The following query caused an unexpected result ['.$sqlQuery.'], ID is ['.print_r($ID, true).'], MySql error is ['.self::getConnection()->error.']');
             if (!$this->record->checkTableExists()) {
                 $this->record->makeTable();
@@ -260,7 +264,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 $propName = $propObj->name;
 
                 // filter transient attributes
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $this->record->set($propName, $row[$propName]);
                 } elseif (!$propObj->isPrivate() && $this->record->getPropObject($propName) instanceof Relation) {
                     $prop = $this->record->getPropObject($propName);
@@ -302,7 +306,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
      */
-    public function loadAllOldVersions($ID)
+    public function loadAllOldVersions($ID): array
     {
         self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
@@ -345,7 +349,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadByAttribute()
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
+    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'],
 			loadAttributes=['.var_export($loadAttributes, true).'])');
@@ -429,7 +433,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                 if (isset($row[$propName])) {
                     // filter transient attributes
-                    if (!in_array($propName, $this->record->getTransientAttributes())) {
+                    if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                         $this->record->set($propName, $row[$propName]);
                     } elseif (!$propObj->isPrivate() && $this->record->get($propName) != '' && $this->record->getPropObject($propName) instanceof Relation) {
                         $prop = $this->record->getPropObject($propName);
@@ -467,7 +471,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAll()
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -526,7 +530,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -598,19 +602,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     switch ($argsCount) {
                         case 1:
                             $obj = new $RecordClass($constructorArgs[0]);
-                        break;
+                            break;
                         case 2:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1]);
-                        break;
+                            break;
                         case 3:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2]);
-                        break;
+                            break;
                         case 4:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3]);
-                        break;
+                            break;
                         case 5:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3], $constructorArgs[4]);
-                        break;
+                            break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
                     }
@@ -634,7 +638,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttributes()
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
@@ -713,19 +717,19 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                     switch ($argsCount) {
                         case 1:
                             $obj = new $RecordClass($constructorArgs[0]);
-                        break;
+                            break;
                         case 2:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1]);
-                        break;
+                            break;
                         case 3:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2]);
-                        break;
+                            break;
                         case 4:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3]);
-                        break;
+                            break;
                         case 5:
                             $obj = new $RecordClass($constructorArgs[0], $constructorArgs[1], $constructorArgs[2], $constructorArgs[3], $constructorArgs[4]);
-                        break;
+                            break;
                         default:
                             throw new IllegalArguementException('Too many elements in the $constructorArgs array passed to the loadAllByAttribute method!');
                     }
@@ -749,7 +753,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByDayUpdated()
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -794,7 +798,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllFieldValuesByAttribute()
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false)
+    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -832,7 +836,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::save()
      */
-    public function save()
+    public function save(): void
     {
         self::$logger->debug('>>save()');
 
@@ -847,7 +851,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName,";
@@ -884,11 +888,16 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $stmt = self::getConnection()->stmt_init();
 
-            if ($stmt->prepare($sqlQuery)) {
+            try {
+                $stmt->prepare($sqlQuery);
                 $stmt = $this->bindParams($stmt);
                 $stmt->execute();
-            } else {
-                throw new FailedSaveException('Failed to save object, error is ['.$stmt->error.'], query ['.$this->record->getLastQuery().']');
+            } catch (mysqli_sql_exception $e) {
+                if ($e->getCode() == '1062') {
+                    throw new ValidationException('Failed to save due to a key violation, error is ['.$e->getMessage().'], query ['.$this->record->getLastQuery().']');
+                } else {
+                    throw new FailedSaveException('Failed to save object, error is ['.$e->getMessage().'], query ['.$this->record->getLastQuery().']');
+                }
             }
         } else {
             // assume that it is a persistent object that needs to be updated
@@ -897,7 +906,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName = ?,";
@@ -962,7 +971,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveAttribute()
      */
-    public function saveAttribute($attribute, $value)
+    public function saveAttribute($attribute, $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -1022,7 +1031,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveHistory()
      */
-    public function saveHistory()
+    public function saveHistory(): void
     {
         self::$logger->debug('>>saveHistory()');
 
@@ -1038,7 +1047,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $sqlQuery .= "$propName,";
                 $attributeNames[] = $propName;
                 $attributeValues[] = $this->record->get($propName);
@@ -1082,7 +1091,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::delete()
      */
-    public function delete()
+    public function delete(): void
     {
         self::$logger->debug('>>delete()');
 
@@ -1111,7 +1120,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getVersion()
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
@@ -1139,8 +1148,6 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
                 throw new RecordNotFoundException('Failed to get the version number, table did not exist so had to create!');
             }
-
-            return;
         }
 
         if (!isset($row['version_num']) || $row['version_num'] < 1) {
@@ -1161,7 +1168,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeTable()
      */
-    public function makeTable($checkIndexes = true)
+    public function makeTable($checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1174,7 +1181,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1246,7 +1253,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeHistoryTable()
      */
-    public function makeHistoryTable()
+    public function makeHistoryTable(): void
     {
         self::$logger->debug('>>makeHistoryTable()');
 
@@ -1259,7 +1266,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1323,7 +1330,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rebuildTable()
      */
-    public function rebuildTable()
+    public function rebuildTable(): void
     {
         self::$logger->debug('>>rebuildTable()');
 
@@ -1346,7 +1353,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropTable()
      */
-    public function dropTable($tableName = null)
+    public function dropTable($tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1382,7 +1389,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::addProperty()
      */
-    public function addProperty($propName)
+    public function addProperty($propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 
@@ -1391,7 +1398,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         if ($this->isTableOverloaded() && $propName == 'classname') {
             $sqlQuery .= 'classname VARCHAR(100)';
         } else {
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1458,7 +1465,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getMAX()
      */
-    public function getMAX()
+    public function getMAX(): int
     {
         self::$logger->debug('>>getMAX()');
 
@@ -1489,7 +1496,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getCount()
      */
-    public function getCount($attributes = array(), $values = array())
+    public function getCount($attributes = array(), $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
@@ -1535,7 +1542,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getHistoryCount()
      */
-    public function getHistoryCount()
+    public function getHistoryCount(): int
     {
         self::$logger->debug('>>getHistoryCount()');
 
@@ -1567,7 +1574,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * @see Alpha\Model\ActiveRecordProviderInterface::setEnumOptions()
      * @since 1.1
      */
-    public function setEnumOptions()
+    public function setEnumOptions(): void
     {
         self::$logger->debug('>>setEnumOptions()');
 
@@ -1580,7 +1587,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $propClass = get_class($this->record->getPropObject($propName));
                 if ($propClass == 'Alpha\Model\Type\Enum') {
                     $sqlQuery = 'SHOW COLUMNS FROM '.$this->record->getTableName()." LIKE '$propName'";
@@ -1603,8 +1610,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
         }
 
         if (!$dbError) {
-            if (method_exists($this, 'after_setEnumOptions_callback')) {
-                $this->{'after_setEnumOptions_callback'}();
+            if (method_exists($this, 'afterSetEnumOptions')) {
+                $this->{'afterSetEnumOptions'}();
             }
         } else {
             throw new AlphaException('Failed to load enum options correctly for object instance of class ['.get_class($this).']');
@@ -1617,7 +1624,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableExists()
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists($checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 
@@ -1650,7 +1657,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordTableExists()
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderMySQL');
@@ -1698,7 +1705,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableNeedsUpdate()
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
@@ -1716,7 +1723,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $foundMatch = false;
 
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -1775,7 +1782,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::findMissingFields()
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
@@ -1794,7 +1801,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                     if ($propName == $row['Field']) {
                         ++$matchCount;
@@ -1842,24 +1849,24 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getIndexes()
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
         $query = 'SHOW INDEX FROM '.$this->record->getTableName();
 
-        $result = self::getConnection()->query($query);
-
         $this->record->setLastQuery($query);
 
         $indexNames = array();
 
-        if (!$result) {
-            throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
-        } else {
+        try {
+            $result = self::getConnection()->query($query);
+
             while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                 array_push($indexNames, $row['Key_name']);
             }
+        } catch (mysqli_sql_exception $e) {
+            throw new AlphaException('Failed to access the system database correctly, error is ['.self::getConnection()->error.']');
         }
 
         self::$logger->debug('<<getIndexes');
@@ -1872,7 +1879,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @since 1.1
      */
-    private function checkIndexes()
+    private function checkIndexes(): void
     {
         self::$logger->debug('>>checkIndexes()');
 
@@ -1985,54 +1992,52 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createForeignIndex()
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
     {
         self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
         $relatedRecord = new $relatedClass();
         $tableName = $relatedRecord->getTableName();
 
-        $result = false;
+        try {
+            if (self::checkRecordTableExists($relatedClass)) {
+                $sqlQuery = '';
 
-        if (self::checkRecordTableExists($relatedClass)) {
-            $sqlQuery = '';
-
-            if ($attributeName == 'leftID') {
-                if ($indexName === null) {
-                    $indexName = $this->record->getTableName().'_leftID_fk_idx';
+                if ($attributeName == 'leftID') {
+                    if ($indexName === null) {
+                        $indexName = $this->record->getTableName().'_leftID_fk_idx';
+                    }
+                    $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (leftID);';
                 }
-                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (leftID);';
-            }
-            if ($attributeName == 'rightID') {
-                if ($indexName === null) {
-                    $indexName = $this->record->getTableName().'_rightID_fk_idx';
+                if ($attributeName == 'rightID') {
+                    if ($indexName === null) {
+                        $indexName = $this->record->getTableName().'_rightID_fk_idx';
+                    }
+                    $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (rightID);';
                 }
-                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD INDEX '.$indexName.' (rightID);';
-            }
 
-            if (!empty($sqlQuery)) {
+                if (!empty($sqlQuery)) {
+                    $this->record->setLastQuery($sqlQuery);
+
+                    $result = self::getConnection()->query($sqlQuery);
+
+                    if (!$result) {
+                        throw new FailedIndexCreateException('Failed to create an index on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
+                    }
+                }
+
+                if ($indexName === null) {
+                    $indexName = $this->record->getTableName().'_'.$attributeName.'_fk_idx';
+                }
+
+                $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD FOREIGN KEY '.$indexName.' ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
+
                 $this->record->setLastQuery($sqlQuery);
-
                 $result = self::getConnection()->query($sqlQuery);
-
-                if (!$result) {
-                    throw new FailedIndexCreateException('Failed to create an index on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
-                }
             }
 
-            if ($indexName === null) {
-                $indexName = $this->record->getTableName().'_'.$attributeName.'_fk_idx';
-            }
-
-            $sqlQuery = 'ALTER TABLE '.$this->record->getTableName().' ADD FOREIGN KEY '.$indexName.' ('.$attributeName.') REFERENCES '.$tableName.' ('.$relatedClassAttribute.') ON DELETE SET NULL;';
-
-            $this->record->setLastQuery($sqlQuery);
-            $result = self::getConnection()->query($sqlQuery);
-        }
-
-        if ($result) {
             self::$logger->debug('Successfully created the foreign key index ['.$indexName.']');
-        } else {
+        } catch (mysqli_sql_exception $e) {
             throw new FailedIndexCreateException('Failed to create the index ['.$indexName.'] on ['.$this->record->getTableName().'], error is ['.self::getConnection()->error.'], query ['.$this->record->getLastQuery().']');
         }
 
@@ -2044,7 +2049,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createUniqueIndex()
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -2080,7 +2085,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::reload()
      */
-    public function reload()
+    public function reload(): void
     {
         self::$logger->debug('>>reload()');
 
@@ -2097,7 +2102,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordExists()
      */
-    public function checkRecordExists($ID)
+    public function checkRecordExists($ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
@@ -2141,7 +2146,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::isTableOverloaded()
      */
-    public function isTableOverloaded()
+    public function isTableOverloaded(): bool
     {
         self::$logger->debug('>>isTableOverloaded()');
 
@@ -2182,9 +2187,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
 
             $query = 'SHOW COLUMNS FROM '.$this->record->getTableName();
 
-            $result = self::getConnection()->query($query);
+            try {
+                $result = self::getConnection()->query($query);
 
-            if ($result) {
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                     if ('classname' == $row['Field']) {
                         self::$logger->debug('<<isTableOverloaded [true]');
@@ -2192,13 +2197,17 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                         return true;
                     }
                 }
-            } else {
-                self::$logger->warn('Error during show columns ['.self::getConnection()->error.']');
+
+                self::$logger->debug('<<isTableOverloaded [false]');
+
+                return false;
+            } catch (mysqli_sql_exception $e) {
+                self::$logger->warn('Error during show columns ['.$e->getMessage().']');
+
+                self::$logger->debug('<<isTableOverloaded [false]');
+
+                return false;
             }
-
-            self::$logger->debug('<<isTableOverloaded [false]');
-
-            return false;
         }
     }
 
@@ -2207,7 +2216,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::begin()
      */
-    public static function begin()
+    public static function begin(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderMySQL');
@@ -2226,7 +2235,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::commit()
      */
-    public static function commit()
+    public static function commit(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderMySQL');
@@ -2237,6 +2246,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             throw new FailedSaveException('Error commiting a transaction, error is ['.self::getConnection()->error.']');
         }
 
+        self::disconnect();
+
         self::$logger->debug('<<commit');
     }
 
@@ -2245,7 +2256,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rollback()
      */
-    public static function rollback()
+    public static function rollback(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderMySQL');
@@ -2256,6 +2267,8 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
             throw new AlphaException('Error rolling back a transaction, error is ['.self::getConnection()->error.']');
         }
 
+        self::disconnect();
+
         self::$logger->debug('<<rollback');
     }
 
@@ -2264,9 +2277,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::setRecord()
      */
-    public function setRecord($Record)
+    public function setRecord($record): void
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**
@@ -2278,11 +2291,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      * @param array Optional array of Record attributes.
      * @param array Optional array of Record values.
      *
-     * @return \mysqli_stmt
-     *
      * @since 1.1
      */
-    private function bindParams($stmt, $attributes = array(), $values = array())
+    private function bindParams(\mysqli_stmt $stmt, $attributes = array(), $values = array()): \mysqli_stmt
     {
         self::$logger->debug('>>bindParams(stmt=['.var_export($stmt, true).'])');
 
@@ -2307,14 +2318,13 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
                 array_push($params, get_class($this->record));
             }
         } else { // bind all attributes on the business object
-
             // get the class attributes
             $reflection = new ReflectionClass(get_class($this->record));
             $properties = $reflection->getProperties();
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         if ($this->record->getPropObject($propName) instanceof Integer) {
@@ -2374,11 +2384,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @param \mysqli_stmt $stmt
      *
-     * @return array A 2D array containing the query result.
-     *
      * @since 1.1
      */
-    private function bindResult($stmt)
+    private function bindResult(\mysqli_stmt $stmt): array
     {
         $result = array();
 
@@ -2412,11 +2420,9 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
     /**
      * Parses a MySQL error for the value that violated a unique constraint.
      *
-     * @param string $error The MySQL error string.
-     *
      * @since 1.1
      */
-    private function findOffendingValue($error)
+    private function findOffendingValue($error): string
     {
         self::$logger->debug('>>findOffendingValue(error=['.$error.'])');
 
@@ -2434,15 +2440,15 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkDatabaseExists()
      */
-    public static function checkDatabaseExists()
+    public static function checkDatabaseExists(): bool
     {
         $config = ConfigProvider::getInstance();
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $result = $connection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \''.$config->get('db.name').'\'');
+        $result = $connection->query('SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = \''.$config->get('db.name').'\'')->num_rows;
 
-        if (count($result) > 0) {
+        if ($result > 0) {
             return true;
         } else {
             return false;
@@ -2454,13 +2460,15 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createDatabase()
      */
-    public static function createDatabase()
+    public static function createDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
         $connection = new Mysqli($config->get('db.hostname'), $config->get('db.username'), $config->get('db.password'));
 
-        $connection->query('CREATE DATABASE '.$config->get('db.name'));
+        if (!self::checkDatabaseExists()) {
+            $connection->query('CREATE DATABASE '.$config->get('db.name'));
+        }
     }
 
     /**
@@ -2468,7 +2476,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropDatabase()
      */
-    public static function dropDatabase()
+    public static function dropDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2482,7 +2490,7 @@ class ActiveRecordProviderMySQL implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::backupDatabase()
      */
-    public static function backupDatabase($targetFile)
+    public static function backupDatabase($targetFile): void
     {
         $config = ConfigProvider::getInstance();
 

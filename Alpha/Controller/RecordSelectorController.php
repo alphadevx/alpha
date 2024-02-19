@@ -16,7 +16,7 @@ use Alpha\Model\Type\Relation;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -83,13 +83,11 @@ class RecordSelectorController extends Controller implements ControllerInterface
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      */
-    public function doGet($request)
+    public function doGet(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGet(request=['.var_export($request, true).'])');
 

@@ -12,7 +12,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -158,7 +158,7 @@ class Request
      *
      * @since 2.0
      */
-    public function __construct($overrides = array())
+    public function __construct(array $overrides = array())
     {
         // set HTTP headers
         if (isset($overrides['headers']) && is_array($overrides['headers'])) {
@@ -168,22 +168,22 @@ class Request
         }
 
         // set HTTP method
-        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods)) {
+        if (isset($overrides['method']) && in_array($overrides['method'], $this->HTTPMethods, true)) {
             $this->method = $overrides['method'];
         } else {
             $method = $this->getGlobalServerValue('REQUEST_METHOD');
-            if (in_array($method, $this->HTTPMethods)) {
+            if (in_array($method, $this->HTTPMethods, true)) {
                 $this->method = $method;
             }
         }
 
         // allow the POST param _METHOD to override the HTTP method
-        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods)) {
+        if (isset($_POST['_METHOD']) && in_array($_POST['_METHOD'], $this->HTTPMethods, true)) {
             $this->method = $_POST['_METHOD'];
         }
 
         // allow the POST param X-HTTP-Method-Override to override the HTTP method
-        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods)) {
+        if (isset($this->headers['X-HTTP-Method-Override']) && in_array($this->headers['X-HTTP-Method-Override'], $this->HTTPMethods, true)) {
             $this->method = $this->headers['X-HTTP-Method-Override'];
         }
 
@@ -256,11 +256,10 @@ class Request
      * empty string.
      *
      * @param string $param
-     * @return string
      *
      * @since 3.0
      */
-    private function getGlobalServerValue($param)
+    private function getGlobalServerValue(string $param): string
     {
         $server = $_SERVER;
 
@@ -274,11 +273,9 @@ class Request
     /**
      * Get the HTTP method of this request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -292,9 +289,9 @@ class Request
      *
      * @since 2.0
      */
-    public function setMethod($method)
+    public function setMethod(string $method): void
     {
-        if (in_array($method, $this->HTTPMethods)) {
+        if (in_array($method, $this->HTTPMethods, true)) {
             $this->method = $method;
         } else {
             throw new IllegalArguementException('The method provided ['.$method.'] is not valid!');
@@ -304,11 +301,9 @@ class Request
     /**
      * Return all headers on this request.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return $this->headers;
     }
@@ -319,11 +314,9 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getHeader($key, $default = null)
+    public function getHeader(string $key, mixed $default = null): string|null
     {
         if (array_key_exists($key, $this->headers)) {
             return $this->headers[$key];
@@ -335,11 +328,9 @@ class Request
     /**
      * Tries to get the current HTTP request headers from super globals.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    private function getGlobalHeaders()
+    private function getGlobalHeaders(): array
     {
         if (!function_exists('getallheaders')) {
             $headers = array();
@@ -364,11 +355,9 @@ class Request
     /**
      * Return all cookies on this request.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getCookies()
+    public function getCookies(): array
     {
         return $this->cookies;
     }
@@ -379,11 +368,9 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
-     *
      * @since 2.0
      */
-    public function getCookie($key, $default = null)
+    public function getCookie(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->cookies)) {
             return $this->cookies[$key];
@@ -395,11 +382,9 @@ class Request
     /**
      * Return all params on this request.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
     }
@@ -410,11 +395,9 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getParam($key, $default = null)
+    public function getParam(string $key, mixed $default = null): string|null
     {
         if (array_key_exists($key, $this->params)) {
             return $this->params[$key];
@@ -426,11 +409,11 @@ class Request
     /**
      * Append the hash array provided to the params for this request.
      *
-     * @param array A hash array of values to add to the request params
+     * @param array $params A hash array of values to add to the request params
      *
      * @since 2.0
      */
-    public function addParams($params)
+    public function addParams(array $params): void
     {
         if (is_array($params)) {
             $this->params = array_merge($this->params, $params);
@@ -440,11 +423,11 @@ class Request
     /**
      * Set the params array.
      *
-     * @param array A hash array of values to set as the request params
+     * @param array $params A hash array of values to set as the request params
      *
      * @since 2.0
      */
-    public function setParams($params)
+    public function setParams(array $params): void
     {
         if (is_array($params)) {
             $this->params = $params;
@@ -454,11 +437,9 @@ class Request
     /**
      * Return all files on this request.
      *
-     * @return array
-     *
      * @since 2.0
      */
-    public function getFiles()
+    public function getFiles(): array
     {
         return $this->files;
     }
@@ -469,11 +450,9 @@ class Request
      * @param string $key     The key to search for
      * @param mixed  $default If key is not found, return this instead
      *
-     * @return mixed
-     *
      * @since 2.0
      */
-    public function getFile($key, $default = null)
+    public function getFile(string $key, mixed $default = null): mixed
     {
         if (array_key_exists($key, $this->files)) {
             return $this->files[$key];
@@ -485,11 +464,9 @@ class Request
     /**
      * Get the request body if one was provided.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -497,11 +474,9 @@ class Request
     /**
      * Attempts to get the raw body of the current request from super globals.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    private function getGlobalBody()
+    private function getGlobalBody(): string
     {
         if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
             return $GLOBALS['HTTP_RAW_POST_DATA'];
@@ -513,11 +488,9 @@ class Request
     /**
      * Get the Accept header of the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getAccept()
+    public function getAccept(): string|null
     {
         return $this->getHeader('Accept');
     }
@@ -525,11 +498,9 @@ class Request
     /**
      * Get the Content-Type header of the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getContentType()
+    public function getContentType(): string|null
     {
         return $this->getHeader('Content-Type');
     }
@@ -537,11 +508,9 @@ class Request
     /**
      * Get the Content-Length header of the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getContentLength()
+    public function getContentLength(): string
     {
         return $this->getHeader('Content-Length');
     }
@@ -549,11 +518,9 @@ class Request
     /**
      * Get the host name of the client that sent the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getHost()
+    public function getHost(): string
     {
         return $this->host;
     }
@@ -561,11 +528,9 @@ class Request
     /**
      * Get the URI that was requested.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getURI()
+    public function getURI(): string
     {
         return $this->URI;
     }
@@ -573,11 +538,9 @@ class Request
     /**
      * Get the URL that was requested.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getURL()
+    public function getURL(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -587,11 +550,9 @@ class Request
     /**
      * Get the IP address of the client that sent the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getIP()
+    public function getIP(): string
     {
         return $this->IP;
     }
@@ -599,11 +560,9 @@ class Request
     /**
      * Get the Referrer header of the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getReferrer()
+    public function getReferrer(): string
     {
         return $this->getHeader('Referrer');
     }
@@ -611,11 +570,9 @@ class Request
     /**
      * Get the User-Agent header of the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getUserAgent()
+    public function getUserAgent(): string|null
     {
         return $this->getHeader('User-Agent');
     }
@@ -623,11 +580,9 @@ class Request
     /**
      * Get the query string provided on the request.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getQueryString()
+    public function getQueryString(): string
     {
         return $this->queryString;
     }
@@ -640,7 +595,7 @@ class Request
      *
      * @since 2.0
      */
-    public function parseParamsFromRoute($route, $defaultParams = array())
+    public function parseParamsFromRoute(string $route, array $defaultParams = array()): void
     {
         // if the URI has a query-string, we will ignore it for now
         if (mb_strpos($this->URI, '?') !== false) {
@@ -674,11 +629,9 @@ class Request
     /**
      * Checks to see if the request contains a secure/encrypted token.
      *
-     * @return bool
-     *
      * @since 2.0
      */
-    public function isSecureURI()
+    public function isSecureURI(): bool
     {
         if (isset($this->params['act']) && mb_strpos($this->URI, '/tk/') !== false) {
             return true;

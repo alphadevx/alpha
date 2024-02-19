@@ -13,7 +13,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -162,22 +162,18 @@ class Timestamp extends Type implements TypeInterface
                 $this->second = '00';
             }
         } else {
-            if (preg_match($this->validationRule, $timestamp)) {
-                $this->populateFromString($timestamp);
-            } else {
-                throw new IllegalArguementException($this->helper);
-            }
+            $this->populateFromString($timestamp);
         }
     }
 
     /**
      * Accepts a full date/time string in YYYY-mm-dd hh:ii:ss format.
      *
-     * @param string $dateTime
+     * @param mixed $dateTime
      *
      * @since 1.0
      */
-    public function setValue($dateTime)
+    public function setValue(mixed $dateTime): void
     {
         $this->populateFromString($dateTime);
     }
@@ -196,29 +192,29 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTimestampValue($year, $month, $day, $hour, $minute, $second)
+    public function setTimestampValue(int $year, int $month, int $day, int $hour, int $minute, int $second): void
     {
         $valid = null;
 
         if (!preg_match('/^[0-9]{4}$/', $year)) {
             $valid = 'The year value '.$year.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+        if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
             $valid = 'The month value '.$month.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+        if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
             $valid = 'The day value '.$day.' provided is invalid!';
         }
         if (!isset($valid) && !checkdate($month, $day, $year)) {
             $valid = 'The day value '.$year.'-'.$month.'-'.$day.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+        if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
             $valid = 'The hour value '.$hour.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
             $valid = 'The minute value '.$minute.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
             $valid = 'The second value '.$second.' provided is invalid!';
         }
 
@@ -239,11 +235,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the Timestamp value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':'.$this->second;
     }
@@ -251,11 +245,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Return the value in UNIX timestamp format.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getUnixValue()
+    public function getUnixValue(): int
     {
         return mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
     }
@@ -263,11 +255,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the date part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDate()
+    public function getDate(): string
     {
         return $this->year.'-'.$this->month.'-'.$this->day;
     }
@@ -275,11 +265,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the date value as a string in the format "DD/MM/YYYY".
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getEuroValue()
+    public function getEuroValue(): string
     {
         return $this->day.'/'.$this->month.'/'.mb_substr($this->year, 2, 2);
     }
@@ -295,17 +283,17 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setDate($year, $month, $day)
+    public function setDate(int $year, int $month, int $day): void
     {
         $valid = null;
 
         if (!preg_match('/^[0-9]{4}$/', $year)) {
             $valid = 'The year value '.$year.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+        if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
             $valid = 'The month value '.$month.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+        if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
             $valid = 'The day value '.$day.' provided is invalid!';
         }
         if (!isset($valid) && !checkdate($month, $day, $year)) {
@@ -326,11 +314,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the time part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getTime()
+    public function getTime(): string
     {
         return $this->hour.':'.$this->minute.':'.$this->second;
     }
@@ -338,11 +324,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the year part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getYear()
+    public function getYear(): string
     {
         return $this->year;
     }
@@ -350,11 +334,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the month part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMonth()
+    public function getMonth(): string
     {
         return $this->month;
     }
@@ -362,11 +344,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the day part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getDay()
+    public function getDay(): string
     {
         return $this->day;
     }
@@ -374,11 +354,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the textual weekday part, e.g. Monday.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getWeekday()
+    public function getWeekday(): string
     {
         return $this->weekday;
     }
@@ -386,11 +364,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the hour part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHour()
+    public function getHour(): string
     {
         return $this->hour;
     }
@@ -398,11 +374,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the minute part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getMinute()
+    public function getMinute(): string
     {
         return $this->minute;
     }
@@ -410,11 +384,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Getter for the second part.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getSecond()
+    public function getSecond(): string
     {
         return $this->second;
     }
@@ -430,17 +402,17 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTime($hour, $minute, $second)
+    public function setTime(int $hour, int $minute, int $second): void
     {
         $valid = null;
 
-        if (!isset($valid) && !preg_match('/^[0-9]{2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+        if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
             $valid = 'The hour value '.$hour.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
             $valid = 'The minute value '.$minute.' provided is invalid!';
         }
-        if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+        if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
             $valid = 'The second value '.$second.' provided is invalid!';
         }
 
@@ -462,11 +434,11 @@ class Timestamp extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function populateFromString($dateTime)
+    public function populateFromString(string $dateTime): void
     {
         $valid = null;
 
-        if ($dateTime == 'Please select' || $dateTime == '0000-00-00 00:00:00') {
+        if ($dateTime == '' || $dateTime == '0000-00-00 00:00:00') {
             $this->year = '0000';
             $this->month = '00';
             $this->day = '00';
@@ -491,19 +463,19 @@ class Timestamp extends Type implements TypeInterface
             $split_by_dash = explode('-', $date);
 
             if (isset($split_by_dash[0])) {
-                $year = $split_by_dash[0];
+                $year = intval($split_by_dash[0]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_dash[1])) {
-                $month = $split_by_dash[1];
+                $month = intval($split_by_dash[1]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_dash[2])) {
-                $day = $split_by_dash[2];
+                $day = intval($split_by_dash[2]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
@@ -511,19 +483,19 @@ class Timestamp extends Type implements TypeInterface
             $split_by_colon = explode(':', $time);
 
             if (isset($split_by_colon[0])) {
-                $hour = $split_by_colon[0];
+                $hour = intval($split_by_colon[0]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_colon[1])) {
-                $minute = $split_by_colon[1];
+                $minute = intval($split_by_colon[1]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
 
             if (isset($split_by_colon[2])) {
-                $second = $split_by_colon[2];
+                $second = intval($split_by_colon[2]);
             } else {
                 throw new IllegalArguementException($this->helper);
             }
@@ -531,22 +503,22 @@ class Timestamp extends Type implements TypeInterface
             if (!preg_match('/^[0-9]{4}$/', $year)) {
                 $valid = 'The year value '.$year.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $month)) {
+            if (!isset($valid) && !preg_match('/^(1[0-2]|[1-9])$/', $month)) {
                 $valid = 'The month value '.$month.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $day)) {
+            if (!isset($valid) && !preg_match('/^(3[01]|[12][0-9]|[1-9])$/', $day)) {
                 $valid = 'The day value '.$day.' provided is invalid!';
             }
             if (!isset($valid) && !checkdate($month, $day, $year)) {
                 $valid = 'The day value '.$year.'/'.$month.'/'.$day.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $hour) || !($hour >= 0 && $hour < 24)) {
+            if (!isset($valid) && !preg_match('/^(2[0-3]|[0-1]?[0-9])$/', $hour) || !($hour >= 0 && $hour < 24)) {
                 $valid = 'The hour value '.$hour.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $minute) || !($minute >= 0 && $minute < 60)) {
+            if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $minute) || !($minute >= 0 && $minute < 60)) {
                 $valid = 'The minute value '.$minute.' provided is invalid!';
             }
-            if (!isset($valid) && !preg_match('/^[0-9]{1,2}$/', $second) || !($second >= 0 && $second < 60)) {
+            if (!isset($valid) && !preg_match('/^[1-5]?[0-9]$/', $second) || !($second >= 0 && $second < 60)) {
                 $valid = 'The second value '.$second.' provided is invalid!';
             }
 
@@ -568,11 +540,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -584,7 +554,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setRule($rule)
+    public function setRule(string $rule): void
     {
         $this->validationRule = $rule;
     }
@@ -592,11 +562,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Get the validation helper text.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -608,7 +576,7 @@ class Timestamp extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }
@@ -616,11 +584,9 @@ class Timestamp extends Type implements TypeInterface
     /**
      * Returns the difference between now and this timestamp value, in a human-readable format, e.g: 3 days ago, 3 days from now.
      *
-     * @return string
-     *
      * @since 1.2.4
      */
-    public function getTimeAway()
+    public function getTimeAway(): string
     {
         $periods = array('second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade');
         $lengths = array('60', '60', '24', '7', '4.35', '12', '10');

@@ -6,6 +6,7 @@ use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Type\Sequence;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\Configprovider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for the Sequence data type.
@@ -14,7 +15,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -133,10 +134,9 @@ class SequenceTest extends ModelTestCase
      * Testing the setSequenceToNext methid increments the sequence number.
      *
      * @since 1.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testSetSequenceToNext($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testSetSequenceToNext(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

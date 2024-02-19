@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -59,7 +59,7 @@ class DateBoxTest extends TestCase
     public function testConstructorBadSource()
     {
         try {
-            $dateBox = new DateBox(new self());
+            $dateBox = new DateBox(new \stdClass());
             $this->fail('Testing for an expected exception when a bad object provided');
         } catch (IllegalArguementException $e) {
             $this->assertEquals('DateBox widget can only accept a Date or Timestamp object!', $e->getMessage(), 'Testing for an expected exception when a bad object provided');

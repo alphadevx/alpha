@@ -14,7 +14,7 @@ use Alpha\Util\Backup\BackupUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -61,7 +61,7 @@ class BackupTask implements TaskInterface
     /**
      * {@inheritdoc}
      */
-    public function doTask()
+    public function doTask(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -118,7 +118,7 @@ class BackupTask implements TaskInterface
     /**
      * {@inheritdoc}
      */
-    public function getMaxRunTime()
+    public function getMaxRunTime(): int
     {
         return 600;
     }

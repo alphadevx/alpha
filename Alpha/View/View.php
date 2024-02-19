@@ -19,7 +19,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -93,7 +93,7 @@ class View
      *
      * @since 1.0
      */
-    protected function __construct($record, $acceptHeader = null)
+    protected function __construct(ActiveRecord $record, string $acceptHeader = null)
     {
         self::$logger = new Logger('View');
         self::$logger->debug('>>__construct(Record=['.var_export($record, true).'], acceptHeader=['.$acceptHeader.'])');
@@ -120,11 +120,9 @@ class View
      * @param bool         $returnParent Flag to enforce the return of this object instead of a child (defaults to false)
      * @param string       $acceptHeader Optionally pass the HTTP Accept header to select the correct renderer provider.
      *
-     * @return View Returns a View object, or a child view object if one exists for this record
-     *
      * @since 1.0
      */
-    public static function getInstance($record, $returnParent = false, $acceptHeader = null)
+    public static function getInstance(ActiveRecord $record, bool $returnParent = false, string $acceptHeader = null): mixed
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -176,7 +174,7 @@ class View
      *
      * @since 1.0
      */
-    public function setRecord($record)
+    public function setRecord(\Alpha\Model\ActiveRecord $record): void
     {
         self::$logger->debug('>>setRecord(Record=['.var_export($record, true).'])');
 
@@ -193,11 +191,9 @@ class View
     /**
      * Gets the Record attached to this view (if any).
      *
-     * @return \Alpha\Model\ActiveRecord
-     *
      * @since 1.0
      */
-    public function getRecord()
+    public function getRecord(): \Alpha\Model\ActiveRecord
     {
         return $this->record;
     }
@@ -207,22 +203,20 @@ class View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function createView($fields = array())
+    public function createView(array $fields = array()): string
     {
         self::$logger->debug('>>createView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_createView_callback')) {
-            $this->{'before_createView_callback'}();
+        if (method_exists($this, 'beforeCreateView')) {
+            $this->{'beforeCreateView'}();
         }
 
         $body = self::$provider->createView($fields);
 
-        if (method_exists($this, 'after_createView_callback')) {
-            $this->{'after_createView_callback'}();
+        if (method_exists($this, 'afterCreateView')) {
+            $this->{'afterCreateView'}();
         }
 
         self::$logger->debug('<<createView');
@@ -235,22 +229,20 @@ class View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function editView($fields = array())
+    public function editView(array $fields = array()): string
     {
         self::$logger->debug('>>editView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_editView_callback')) {
-            $this->{'before_editView_callback'}();
+        if (method_exists($this, 'beforeEditView')) {
+            $this->{'beforeEditView'}();
         }
 
         $body = self::$provider->editView($fields);
 
-        if (method_exists($this, 'after_editView_callback')) {
-            $this->{'after_editView_callback'}();
+        if (method_exists($this, 'afterEditView')) {
+            $this->{'afterEditView'}();
         }
 
         self::$logger->debug('<<editView');
@@ -263,22 +255,20 @@ class View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function listView($fields = array())
+    public function listView(array $fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_listView_callback')) {
-            $this->{'before_listView_callback'}();
+        if (method_exists($this, 'beforeListView')) {
+            $this->{'beforeListView'}();
         }
 
         $body = self::$provider->listView($fields);
 
-        if (method_exists($this, 'after_listView_callback')) {
-            $this->{'after_listView_callback'}();
+        if (method_exists($this, 'afterListView')) {
+            $this->{'afterListView'}();
         }
 
         self::$logger->debug('<<listView');
@@ -291,22 +281,20 @@ class View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function detailedView($fields = array())
+    public function detailedView(array $fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_detailedView_callback')) {
-            $this->{'before_detailedView_callback'}();
+        if (method_exists($this, 'beforeDetailedView')) {
+            $this->{'beforeDetailedView'}();
         }
 
         $body = self::$provider->detailedView($fields);
 
-        if (method_exists($this, 'after_detailedView_callback')) {
-            $this->{'after_detailedView_callback'}();
+        if (method_exists($this, 'afterDetailedView')) {
+            $this->{'afterDetailedView'}();
         }
 
         self::$logger->debug('<<detailedView');
@@ -319,22 +307,20 @@ class View
      *
      * @param array $fields Hash array of fields to pass to the template
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function adminView($fields = array())
+    public function adminView(array $fields = array()): string
     {
         self::$logger->debug('>>adminView(fields=['.var_export($fields, true).'])');
 
-        if (method_exists($this, 'before_adminView_callback')) {
-            $this->{'before_adminView_callback'}();
+        if (method_exists($this, 'beforeAdminView')) {
+            $this->{'beforeAdminView'}();
         }
 
         $body = self::$provider->adminView($fields);
 
-        if (method_exists($this, 'after_adminView_callback')) {
-            $this->{'after_adminView_callback'}();
+        if (method_exists($this, 'afterAdminView')) {
+            $this->{'afterAdminView'}();
         }
 
         self::$logger->debug('<<adminView');
@@ -347,21 +333,19 @@ class View
      *
      * @param \Alpha\Controller\Controller $controller
      *
-     * @return string
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public static function displayPageHead($controller)
+    public static function displayPageHead(\Alpha\Controller\Controller $controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
         }
         self::$logger->debug('>>displayPageHead(controller=['.var_export($controller, true).'])');
 
-        if (method_exists($controller, 'before_displayPageHead_callback')) {
-            $controller->{'before_displayPageHead_callback'}();
+        if (method_exists($controller, 'beforeDisplayPageHead')) {
+            $controller->{'beforeDisplayPageHead'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -373,8 +357,8 @@ class View
         $provider = self::$provider;
         $header = $provider::displayPageHead($controller);
 
-        if (method_exists($controller, 'after_displayPageHead_callback')) {
-            $header .= $controller->{'after_displayPageHead_callback'}();
+        if (method_exists($controller, 'afterDisplayPageHead')) {
+            $header .= $controller->{'afterDisplayPageHead'}();
         }
 
         self::$logger->debug('<<displayPageHead ['.$header.']');
@@ -387,11 +371,9 @@ class View
      *
      * @param \Alpha\Controller\Controller $controller
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function displayPageFoot($controller)
+    public static function displayPageFoot(\Alpha\Controller\Controller $controller): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -403,8 +385,8 @@ class View
 
         $footer = '';
 
-        if (method_exists($controller, 'before_displayPageFoot_callback')) {
-            $footer .= $controller->before_displayPageFoot_callback();
+        if (method_exists($controller, 'beforeDisplayPageFoot')) {
+            $footer .= $controller->beforeDisplayPageFoot();
         }
 
         if (!self::$provider instanceof RendererProviderInterface) {
@@ -414,8 +396,8 @@ class View
         $provider = self::$provider;
         $footer .= $provider::displayPageFoot($controller);
 
-        if (method_exists($controller, 'after_displayPageFoot_callback')) {
-            $footer .= $controller->{'after_displayPageFoot_callback'}();
+        if (method_exists($controller, 'afterDisplayPageFoot')) {
+            $footer .= $controller->{'afterDisplayPageFoot'}();
         }
 
         self::$logger->debug('<<displayPageFoot ['.$footer.']');
@@ -428,15 +410,13 @@ class View
      *
      * @param \Alpha\Controller\Controller $controller
      *
-     * @return string
-     *
      * @since 3.0
      */
-    public static function displayPageLinks($controller)
+    public static function displayPageLinks(\Alpha\Controller\Controller $controller): string
     {
         $config = ConfigProvider::getInstance();
 
-        $html = '';
+        $html = '<nav>';
         $recordCount = $controller->getRecordCount();
         $start = $controller->getStart();
         $limit = $controller->getLimit();
@@ -466,9 +446,9 @@ class View
             } else {
                 $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start-$limit).'/'.$limit;
             }
-            $html .= '<li><a href="'.$url.'">&lt;&lt;-Previous</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">&lt;&lt;-Previous</a></li>';
         } elseif ($recordCount  > $limit) {
-            $html .= '<li class="disabled"><a href="#">&lt;&lt;-Previous</a></li>';
+            $html .= '<li class="page-item disabled"><a class="page-link" href="#">&lt;&lt;-Previous</a></li>';
         }
 
         // render the page index links
@@ -483,9 +463,9 @@ class View
                     } else {
                         $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.$i.'/'.$limit;
                     }
-                    $html .= '<li><a href="'.$url.'">'.$page.'</a></li>';
+                    $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">'.$page.'</a></li>';
                 } elseif ($recordCount  > $limit) { // render an anchor for the current page
-                    $html .= '<li class="active"><a href="#">'.$page.'</a></li>';
+                    $html .= '<li class="page-item active"><a class="page-link" href="#">'.$page.'</a></li>';
                 }
 
                 ++$page;
@@ -500,12 +480,12 @@ class View
             } else {
                 $url = '/records/'.urlencode($controller->getRequest()->getParam('ActiveRecordType')).'/'.($start+$limit.'/'.$limit);
             }
-            $html .= '<li><a href="'.$url.'">Next-&gt;&gt;</a></li>';
+            $html .= '<li class="page-item"><a class="page-link" href="'.$url.'">Next-&gt;&gt;</a></li>';
         } elseif ($recordCount  > $limit) {
-            $html .= '<li class="disabled"><a href="#">Next-&gt;&gt;</a></li>';
+            $html .= '<li class="page-item disabled"><a class="page-link" href="#">Next-&gt;&gt;</a></li>';
         }
 
-        $html .= '</ul>';
+        $html .= '</ul></nav>';
 
         return $html;
     }
@@ -515,11 +495,9 @@ class View
      *
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function displayUpdateMessage($message)
+    public static function displayUpdateMessage(string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -545,11 +523,9 @@ class View
      *
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function displayErrorMessage($message)
+    public static function displayErrorMessage(string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -576,11 +552,9 @@ class View
      * @param string $code
      * @param string $message
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function renderErrorPage($code, $message)
+    public static function renderErrorPage(string $code, string $message): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -606,11 +580,9 @@ class View
      *
      * @param string $URI The URI that the form will point to
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function renderDeleteForm($URI)
+    public static function renderDeleteForm(string $URI): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -636,11 +608,9 @@ class View
      * a check to ensure that a post to the controller is being sent from the same server
      * as hosting it.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public static function renderSecurityFields()
+    public static function renderSecurityFields(): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -669,11 +639,9 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderIntegerField($name, $label, $mode, $value = '')
+    public function renderIntegerField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderIntegerField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.']');
 
@@ -692,11 +660,9 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderDoubleField($name, $label, $mode, $value = '')
+    public function renderDoubleField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderDoubleField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -715,11 +681,9 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderBooleanField($name, $label, $mode, $value = '')
+    public function renderBooleanField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderBooleanField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -739,11 +703,9 @@ class View
      * @param array  $options   The Enum options
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderEnumField($name, $label, $mode, $options, $value = '')
+    public function renderEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string
     {
         self::$logger->debug('>>renderEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -763,11 +725,9 @@ class View
      * @param array  $options   The DEnum options
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = '')
+    public function renderDEnumField(string $name, string $label, string $mode, array $options, string $value = ''): string
     {
         self::$logger->debug('>>renderDEnumField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -786,11 +746,9 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderDefaultField($name, $label, $mode, $value = '')
+    public function renderDefaultField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderDefaultField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -809,11 +767,9 @@ class View
      * @param string $mode      The field mode (create/edit/view)
      * @param string $value     The field value (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderTextField($name, $label, $mode, $value = '')
+    public function renderTextField(string $name, string $label, string $mode, string $value = ''): string
     {
         self::$logger->debug('>>renderTextField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'])');
 
@@ -834,11 +790,9 @@ class View
      * @param bool   $expanded  Render the related fields in expanded format or not (optional)
      * @param bool   $buttons   Render buttons for expanding/contacting the related fields (optional)
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
+    public function renderRelationField(string $name, string $label, string $mode, string $value = '', bool $expanded = false, bool $buttons = true): string
     {
         self::$logger->debug('>>renderRelationField(name=['.$name.'], label=['.$label.'], mode=['.$mode.'], value=['.$value.'], expanded=['.$expanded.'], buttons=['.$buttons.'])');
 
@@ -856,11 +810,9 @@ class View
      * @param array  $filterFields   Optional list of field names to exclude from rendering
      * @param array  $readOnlyFields Optional list of fields to render in a readonly fashion when rendering in create or edit mode
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
+    public function renderAllFields(string $mode, array $filterFields = array(), array $readOnlyFields = array()): string
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 
@@ -879,13 +831,11 @@ class View
      * @param string                   $mode
      * @param array                    $fields
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplate($record, $mode, $fields = array())
+    public static function loadTemplate(\Alpha\Model\ActiveRecord $record, string $mode, array $fields = array()): string
     {
         self::$logger->debug('>>loadTemplate(Record=['.var_export($record, true).'], mode=['.$mode.'], fields=['.var_export($fields, true).'])');
 
@@ -977,13 +927,11 @@ class View
      * @param string $fileName The name of the fragment file
      * @param array  $fields   A hash array of field values to pass to the template fragment.
      *
-     * @return string
-     *
      * @since 1.2
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function loadTemplateFragment($type, $fileName, $fields = array())
+    public static function loadTemplateFragment(string $type, string $fileName, array $fields = array()): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('View');
@@ -1043,7 +991,7 @@ class View
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public static function setProvider($ProviderClassName, $acceptHeader = null)
+    public static function setProvider(string $ProviderClassName, string $acceptHeader = null): void
     {
         if ($ProviderClassName == 'auto') {
             $ProviderClassName = 'Alpha\View\Renderer\Html\RendererProviderHTML';
@@ -1071,11 +1019,9 @@ class View
     /**
      * Get the current view renderer provider.
      *
-     * @return \Alpha\View\Renderer\RendererProviderInterface
-     *
      * @since 2.0
      */
-    public static function getProvider()
+    public static function getProvider(): \Alpha\View\Renderer\RendererProviderInterface
     {
         if (self::$provider instanceof RendererProviderInterface) {
             return self::$provider;

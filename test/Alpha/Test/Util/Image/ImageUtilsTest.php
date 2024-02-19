@@ -58,6 +58,14 @@ class ImageUtilsTest extends TestCase
     {
         ImageUtils::generateSquareThumbnail('./public/images/logo-small.png', '/tmp/testalphathumb.png', 100);
 
-        $this->assertTrue(file_exists('/tmp/testalphathumb.png'), 'Testing the generateSquareThumbnail() method');
+        $this->assertTrue(file_exists('/tmp/testalphathumb.png'), 'Testing the generateSquareThumbnail() method on a PNG');
+
+        ImageUtils::generateSquareThumbnail('./public/images/logo-small.gif', '/tmp/testalphathumb.gif', 100);
+
+        $this->assertTrue(file_exists('/tmp/testalphathumb.gif'), 'Testing the generateSquareThumbnail() method on a Gif');
+
+        ImageUtils::generateSquareThumbnail('./public/images/logo-small.jpg', '/tmp/testalphathumb.jpg', 100);
+
+        $this->assertTrue(file_exists('/tmp/testalphathumb.jpg'), 'Testing the generateSquareThumbnail() method on a JPEG');
     }
 }

@@ -12,7 +12,7 @@ use Alpha\Util\File\FileUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -75,7 +75,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 2.0
      */
-    public function setPath($path)
+    public function setPath(string $path)
     {
         $this->path = $path;
     }
@@ -87,7 +87,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 1.0
      */
-    public function setMaxSize($maxSize)
+    public function setMaxSize(int $maxSize)
     {
         $this->maxSize = $maxSize;
     }
@@ -95,7 +95,7 @@ class LogProviderFile implements LogProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function writeLine($line)
+    public function writeLine($line): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -107,7 +107,7 @@ class LogProviderFile implements LogProviderInterface
                 if ($this->checkFileSize() >= $this->maxSize) {
                     $this->backupFile();
                 }
-            } catch (\Exception $e) {
+            } catch (\Exception | \Error $e) {
                 $logsDir = $config->get('app.file.store.dir').'logs';
 
                 if (!file_exists($logsDir)) {
@@ -131,16 +131,14 @@ class LogProviderFile implements LogProviderInterface
     /**
      * Returns the size in megabytes of the log file on disc.
      *
-     * @return integer
-     *
      * @since 1.0
      */
-    private function checkFileSize()
+    private function checkFileSize(): int
     {
         clearstatcache();
         $size = filesize($this->path);
 
-        return ($size/1024)/1024;
+        return intval(($size / 1024) / 1024);
     }
 
     /**
@@ -149,7 +147,7 @@ class LogProviderFile implements LogProviderInterface
      *
      * @since 1.0
      */
-    private function backupFile()
+    private function backupFile(): void
     {
         // generate the name of the backup file name to contain a timestampe
         $backName = str_replace('.log', '-backup-'.date('y-m-d').'.log', $this->path);
@@ -170,7 +168,7 @@ class LogProviderFile implements LogProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderLog($cols)
+    public function renderLog($cols): string
     {
         // render the start of the table
         $body = '<table class="table">';
@@ -192,25 +190,25 @@ class LogProviderFile implements LogProviderInterface
                     switch ($line[$col]) {
                         case 'DEBUG':
                             $body .= '<td class="debug">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'INFO':
                             $body .= '<td class="info">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'WARN':
                             $body .= '<td class="warn">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'ERROR':
                             $body .= '<td class="error">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'FATAL':
                             $body .= '<td class="fatal">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         case 'SQL':
                             $body .= '<td class="sql">'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                         default:
                             $body .= '<td>'.htmlentities($line[$col], ENT_COMPAT, 'utf-8').'</td>';
-                        break;
+                            break;
                     }
                 } else {
                     if ($cols[$col] == 'Message') {

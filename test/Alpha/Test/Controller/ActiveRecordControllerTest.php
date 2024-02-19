@@ -9,6 +9,8 @@ use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Person;
 use Alpha\Model\Rights;
+use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\ResourceNotFoundException;
 
 /**
  * Test cases for the ActiveRecordController class.
@@ -17,7 +19,7 @@ use Alpha\Model\Rights;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -76,6 +78,12 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
         $this->assertTrue(strpos($response->getBody(), 'Viewing a Person') !== false, 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method with a bad record ID');
 
         $request = new Request(
             array(
@@ -188,6 +196,12 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPOST method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person')) !== false, 'Testing the doPOST method');
         $this->assertEquals('test3', json_decode($response->getBody())->username, 'Testing the doPOST method');
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/record/'.urlencode('Alpha\Model\Blah')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doPOST method for a 404 response');
     }
 
     /**
@@ -249,6 +263,19 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doPUT method');
         $this->assertTrue(strpos($response->getHeader('Location'), '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()) !== false, 'Testing the doPUT method');
         $this->assertEquals('updated2@test.com', json_decode($response->getBody())->email, 'Testing the doPUT method');
+
+        $request = new Request(
+            array(
+                'method' => 'PUT',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123',
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json'),
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doPUT method with a bad record ID');
     }
 
     /**
@@ -306,5 +333,49 @@ class ActiveRecordControllerTest extends ControllerTestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doDELETE method');
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the doDELETE method');
         $this->assertEquals('deleted', json_decode($response->getBody())->message, 'Testing the doDELETE method');
+
+        $request = new Request(
+            array(
+                'method' => 'DELETE',
+                'URI' => '/record/'.urlencode('Alpha\Model\Person').'/123',
+                'params' => $params,
+                'headers' => array('Accept' => 'application/json'),
+            )
+        );
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing the doDELETE method with a bad record ID');
+    }
+
+    /**
+     * Triggering various expected exceptions
+     */
+    public function testTriggerExceptions()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        // get a single record
+        $person = $this->createPersonObject('test');
+        $person->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/'.$person->getID()));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Does\Not\Exist').'/'.$person->getID()));
+
+        $response = $front->process($request);
+        $this->assertEquals(404, $response->getStatus(), 'Testing that provided a bad model class will trigger an exception');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/record/'.urlencode('Alpha\Model\Person').'/1234/edit'));
+        $response = $front->process($request);
+        $this->assertEquals(404, $response->getStatus(), 'Testing that provided a bad model class will trigger an exception');
     }
 }

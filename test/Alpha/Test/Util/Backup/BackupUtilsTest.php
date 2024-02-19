@@ -15,6 +15,7 @@ use Alpha\Model\ArticleVote;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
 use Alpha\Test\Model\ModelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for the BackupUtils class.
@@ -23,7 +24,7 @@ use Alpha\Test\Model\ModelTestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -112,10 +113,9 @@ class BackupUtilsTest extends ModelTestCase
      * Testing that attempting to access a config value that is not set will cause an exception.
      *
      * @since 3.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testBackUpDatabase($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testBackUpDatabase(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

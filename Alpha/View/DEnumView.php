@@ -18,7 +18,7 @@ use Alpha\Model\Type\SmallText;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -58,11 +58,9 @@ class DEnumView extends View
     /**
      * Custom list view.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function listView($fields = array())
+    public function listView($fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -79,7 +77,7 @@ class DEnumView extends View
         $html .= '<tr>';
         foreach ($properties as $propObj) {
             $prop = $propObj->name;
-            if (!in_array($prop, $this->record->getDefaultAttributes()) && !in_array($prop, $this->record->getTransientAttributes())) {
+            if (!in_array($prop, $this->record->getDefaultAttributes(), true) && !in_array($prop, $this->record->getTransientAttributes(), true)) {
                 if (get_class($this->record->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
                     ++$colCount;
                     $html .= '  <th>'.$labels[$prop].'</th>';
@@ -97,7 +95,7 @@ class DEnumView extends View
         // and now the values
         foreach ($properties as $propObj) {
             $prop = $propObj->name;
-            if (!in_array($prop, $this->record->getDefaultAttributes()) && !in_array($prop, $this->record->getTransientAttributes())) {
+            if (!in_array($prop, $this->record->getDefaultAttributes(), true) && !in_array($prop, $this->record->getTransientAttributes(), true)) {
                 if (get_class($this->record->getPropObject($prop)) != 'Alpha\Model\Type\Text') {
                     $html .= '  <td>&nbsp;'.$this->record->get($prop).'</td>';
                 }
@@ -130,11 +128,9 @@ class DEnumView extends View
     /**
      * Custom edit view.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function editView($fields = array())
+    public function editView($fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -142,7 +138,7 @@ class DEnumView extends View
 
         $html = '<form action="'.$fields['URI'].'" method="POST" accept-charset="UTF-8">';
 
-        $temp = new SmallTextBox($this->record->getPropObject('name'), $labels['name'], 'name', '', 0, true, true);
+        $temp = new SmallTextBox($this->record->getPropObject('name'), $labels['name'], 'name');
         $html .= $temp->render();
 
         $html .= '<h3>DEnum display values:</h3>';
@@ -154,7 +150,7 @@ class DEnumView extends View
 
         foreach ($denumItems as $item) {
             $labels = $item->getDataLabels();
-            $temp = new SmallTextBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID(), '');
+            $temp = new SmallTextBox($item->getPropObject('value'), $labels['value'], 'value_'.$item->getID());
             $html .= $temp->render();
         }
 
@@ -164,7 +160,7 @@ class DEnumView extends View
 
         $html .= '<h3>Add a new value to the DEnum dropdown list:</h3>';
 
-        $temp = new SmallTextBox(new SmallText(), 'Dropdown value', 'new_value', '');
+        $temp = new SmallTextBox(new SmallText(), 'Dropdown value', 'new_value');
         $html .= $temp->render();
 
         $temp = new Button('submit', 'Save', 'saveBut');

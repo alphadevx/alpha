@@ -12,7 +12,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -83,7 +83,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setRecord($record)
+    public function setRecord($record): void
     {
         $this->record = $record;
     }
@@ -91,7 +91,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function createView($fields = array())
+    public function createView($fields = array()): string
     {
         return '';
     }
@@ -99,7 +99,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function editView($fields = array())
+    public function editView($fields = array()): string
     {
         return '';
     }
@@ -107,7 +107,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function listView($fields = array())
+    public function listView($fields = array()): string
     {
         self::$logger->debug('>>listView(fields=['.var_export($fields, true).'])');
 
@@ -121,7 +121,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function detailedView($fields = array())
+    public function detailedView($fields = array()): string
     {
         self::$logger->debug('>>detailedView(fields=['.var_export($fields, true).'])');
 
@@ -135,7 +135,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function adminView($fields = array())
+    public function adminView($fields = array()): string
     {
         return '';
     }
@@ -143,7 +143,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayPageHead($controller)
+    public static function displayPageHead($controller): string
     {
         return '';
     }
@@ -151,7 +151,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayPageFoot($controller)
+    public static function displayPageFoot($controller): string
     {
         return '';
     }
@@ -159,7 +159,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayUpdateMessage($message)
+    public static function displayUpdateMessage($message): string
     {
         self::$logger->debug('>>displayUpdateMessage(fields=['.var_export($message, true).'])');
 
@@ -173,7 +173,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function displayErrorMessage($message)
+    public static function displayErrorMessage($message): string
     {
         self::$logger->debug('>>displayErrorMessage(fields=['.var_export($message, true).'])');
 
@@ -187,7 +187,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderErrorPage($code, $message)
+    public static function renderErrorPage($code, $message): string
     {
         return '';
     }
@@ -195,7 +195,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderDeleteForm($URI)
+    public static function renderDeleteForm($URI): string
     {
         return '';
     }
@@ -203,7 +203,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public static function renderSecurityFields()
+    public static function renderSecurityFields(): string
     {
         return '';
     }
@@ -211,7 +211,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderIntegerField($name, $label, $mode, $value = '')
+    public function renderIntegerField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -219,7 +219,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDoubleField($name, $label, $mode, $value = '')
+    public function renderDoubleField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -227,14 +227,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderBooleanField($name, $label, $mode, $value = '')
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function renderEnumField($name, $label, $mode, $options, $value = '')
+    public function renderBooleanField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -242,7 +235,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDEnumField($name, $label, $mode, $options, $value = '')
+    public function renderEnumField($name, $label, $mode, $options, $value = ''): string
     {
         return '';
     }
@@ -250,7 +243,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderDefaultField($name, $label, $mode, $value = '')
+    public function renderDEnumField($name, $label, $mode, $options, $value = ''): string
     {
         return '';
     }
@@ -258,7 +251,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderTextField($name, $label, $mode, $value = '')
+    public function renderDefaultField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -266,7 +259,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderStringField($name, $label, $mode, $value = '')
+    public function renderTextField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -274,7 +267,7 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true)
+    public function renderStringField($name, $label, $mode, $value = ''): string
     {
         return '';
     }
@@ -282,7 +275,15 @@ class RendererProviderJSON implements RendererProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array())
+    public function renderRelationField($name, $label, $mode, $value = '', $expanded = false, $buttons = true): string
+    {
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function renderAllFields($mode, $filterFields = array(), $readOnlyFields = array()): string
     {
         self::$logger->debug('>>renderAllFields(mode=['.$mode.'], filterFields=['.var_export($filterFields, true).'], readOnlyFields=['.var_export($readOnlyFields, true).'])');
 

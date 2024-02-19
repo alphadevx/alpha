@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -85,7 +85,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = true)
+    public function __construct(bool $val = true)
     {
         if (!Validator::isBoolean($val)) {
             throw new IllegalArguementException($this->helper);
@@ -109,7 +109,7 @@ class Boolean extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue(mixed $val): void
     {
         if (!Validator::isBoolean($val)) {
             throw new IllegalArguementException($this->helper);
@@ -127,11 +127,9 @@ class Boolean extends Type implements TypeInterface
     /**
      * Used to get the binary (1/0) value of the Boolean.  This is the value stored in the database.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
@@ -139,11 +137,9 @@ class Boolean extends Type implements TypeInterface
     /**
      * Used to get the boolean value of the Boolean.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function getBooleanValue()
+    public function getBooleanValue(): bool
     {
         return $this->booleanValue;
     }
@@ -151,11 +147,9 @@ class Boolean extends Type implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->value ? 'true' : 'false';
     }

@@ -3,13 +3,13 @@
 namespace Alpha\Exception;
 
 /**
- * The exception class for 404 resource not found controller errors.
+ * The exception class for resource not found errors.
  *
  * @since 1.0
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>

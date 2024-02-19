@@ -15,7 +15,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -77,7 +77,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'Sequence';
+    public const TABLE_NAME = 'Sequence';
 
     /**
      * An array of data display labels for the class properties.
@@ -122,7 +122,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 255;
+    public const MAX_SIZE = 255;
 
     /**
      * The constructor.
@@ -151,11 +151,9 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -166,7 +164,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setSequenceToNext()
+    public function setSequenceToNext(): void
     {
         try {
             $this->loadByAttribute('prefix', $this->prefix->getValue());
@@ -181,11 +179,9 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * Getter for the validation helper string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -197,7 +193,7 @@ class Sequence extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }
@@ -205,11 +201,9 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * Used to get the Sequence value as a string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): string
     {
         if ($this->prefix->getValue() != '' && $this->sequence->getValue() != 0) {
             return $this->prefix->getValue().'-'.$this->sequence->getValue();
@@ -222,13 +216,13 @@ class Sequence extends ActiveRecord implements TypeInterface
      * Accepts a string to set the Sequence prefix/sequence values to, in the
      * format PREFIX-00000000000.
      *
-     * @param string $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue(mixed $val): void
     {
         if (mb_strlen($val) <= $this->size) {
             if (!empty($val)) {
@@ -248,11 +242,9 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * Get the allowable size of the Sequence in the database field.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -260,11 +252,9 @@ class Sequence extends ActiveRecord implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->prefix->getValue().'-'.$this->sequence->getValue();
     }

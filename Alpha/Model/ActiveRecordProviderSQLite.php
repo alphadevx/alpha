@@ -43,7 +43,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -134,7 +134,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getConnection()
      */
-    public static function getConnection()
+    public static function getConnection(): \SQLite3
     {
         $config = ConfigProvider::getInstance();
 
@@ -154,7 +154,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::disconnect()
      */
-    public static function disconnect()
+    public static function disconnect(): void
     {
         if (isset(self::$connection)) {
             self::$connection->close();
@@ -167,9 +167,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getLastDatabaseError()
      */
-    public static function getLastDatabaseError()
+    public static function getLastDatabaseError(): string
     {
-        self::$connection->lastErrorMsg();
+        return self::$connection->lastErrorMsg();
     }
 
     /**
@@ -177,7 +177,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::query()
      */
-    public function query($sqlQuery)
+    public function query($sqlQuery): array
     {
         $this->record->setLastQuery($sqlQuery);
 
@@ -199,7 +199,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::load()
      */
-    public function load($ID, $version = 0)
+    public function load($ID, $version = 0): void
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
@@ -259,7 +259,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
                 $propName = $propObj->name;
 
                 // filter transient attributes
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     $this->record->set($propName, $row[$propName]);
                 } elseif (!$propObj->isPrivate() && $this->record->getPropObject($propName) instanceof Relation) {
                     $prop = $this->record->getPropObject($propName);
@@ -301,7 +301,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllOldVersions()
      */
-    public function loadAllOldVersions($ID)
+    public function loadAllOldVersions($ID): array
     {
         self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
@@ -344,7 +344,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadByAttribute()
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
+    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array()): void
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
             loadAttributes=['.var_export($loadAttributes, true).'])');
@@ -423,7 +423,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                 if (isset($row[$propName])) {
                     // filter transient attributes
-                    if (!in_array($propName, $this->record->getTransientAttributes())) {
+                    if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                         $this->record->set($propName, $row[$propName]);
                     } elseif (!$propObj->isPrivate() && $this->record->get($propName) != '' && $this->record->getPropObject($propName) instanceof Relation) {
                         $prop = $this->record->getPropObject($propName);
@@ -461,7 +461,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAll()
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -520,7 +520,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
@@ -627,7 +627,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByAttributes()
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
@@ -746,7 +746,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllByDayUpdated()
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -791,7 +791,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::loadAllFieldValuesByAttribute()
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false)
+    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -829,7 +829,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::save()
      */
-    public function save()
+    public function save(): void
     {
         self::$logger->debug('>>save()');
 
@@ -844,7 +844,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName,";
@@ -915,7 +915,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                     // Skip the ID, database auto number takes care of this.
                     if ($propName != 'ID' && $propName != 'version_num') {
                         $sqlQuery .= "$propName = :$propName,";
@@ -992,7 +992,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveAttribute()
      */
-    public function saveAttribute($attribute, $value)
+    public function saveAttribute($attribute, $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
@@ -1056,7 +1056,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::saveHistory()
      */
-    public function saveHistory()
+    public function saveHistory(): void
     {
         self::$logger->debug('>>saveHistory()');
 
@@ -1072,7 +1072,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $sqlQuery .= "$propName,";
                 $attributeNames[] = $propName;
                 $attributeValues[] = $this->record->get($propName);
@@ -1127,7 +1127,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::delete()
      */
-    public function delete()
+    public function delete(): void
     {
         self::$logger->debug('>>delete()');
 
@@ -1155,7 +1155,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getVersion()
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
@@ -1180,8 +1180,6 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
                 throw new RecordNotFoundException('Failed to get the version number, table did not exist so had to create!');
             }
-
-            return;
         }
 
         if (!isset($row['version_num']) || $row['version_num'] < 1) {
@@ -1202,7 +1200,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeTable()
      */
-    public function makeTable($checkIndexes = true)
+    public function makeTable($checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
@@ -1217,7 +1215,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1306,7 +1304,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::makeHistoryTable()
      */
-    public function makeHistoryTable()
+    public function makeHistoryTable(): void
     {
         self::$logger->debug('>>makeHistoryTable()');
 
@@ -1319,7 +1317,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->record->getTransientAttributes()) && $propName != 'ID') {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && $propName != 'ID') {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1377,7 +1375,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rebuildTable()
      */
-    public function rebuildTable()
+    public function rebuildTable(): void
     {
         self::$logger->debug('>>rebuildTable()');
 
@@ -1401,7 +1399,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropTable()
      */
-    public function dropTable($tableName = null)
+    public function dropTable($tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
@@ -1438,7 +1436,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::addProperty()
      */
-    public function addProperty($propName)
+    public function addProperty($propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 
@@ -1447,7 +1445,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
         if ($this->isTableOverloaded() && $propName == 'classname') {
             $sqlQuery .= 'classname TEXT(100)';
         } else {
-            if (!in_array($propName, $this->record->getDefaultAttributes()) && !in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getDefaultAttributes(), true) && !in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $prop = $this->record->getPropObject($propName);
 
                 if ($prop instanceof RelationLookup && ($propName == 'leftID' || $propName == 'rightID')) {
@@ -1508,7 +1506,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getMAX()
      */
-    public function getMAX()
+    public function getMAX(): int
     {
         self::$logger->debug('>>getMAX()');
 
@@ -1539,7 +1537,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getCount()
      */
-    public function getCount($attributes = array(), $values = array())
+    public function getCount($attributes = array(), $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
@@ -1583,7 +1581,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getHistoryCount()
      */
-    public function getHistoryCount()
+    public function getHistoryCount(): int
     {
         self::$logger->debug('>>getHistoryCount()');
 
@@ -1617,7 +1615,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @throws \Alpha\Exception\NotImplementedException
      */
-    public function setEnumOptions()
+    public function setEnumOptions(): void
     {
         throw new NotImplementedException('ActiveRecordProviderInterface::setEnumOptions() not implemented by the SQLite3 provider');
     }
@@ -1627,7 +1625,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableExists()
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists($checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists(checkHistoryTable=['.$checkHistoryTable.'])');
 
@@ -1661,7 +1659,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordTableExists()
      */
-    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists($RecordClassName, $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -1709,7 +1707,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkTableNeedsUpdate()
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
@@ -1731,7 +1729,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 $foundMatch = false;
 
                 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
@@ -1790,7 +1788,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::findMissingFields()
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
@@ -1807,7 +1805,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->record->getTransientAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true)) {
                 while ($row = $result->fetchArray(SQLITE3_ASSOC)) {
                     if ($propName == $row['name']) {
                         ++$matchCount;
@@ -1855,7 +1853,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::getIndexes()
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
@@ -1875,7 +1873,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
 
         // in SQLite foreign keys are not stored in sqlite_master, so we have to run a different query and append the results
         $sqlQuery = 'PRAGMA foreign_key_list('.$this->record->getTableName().')';
-        
+
         $this->record->setLastQuery($sqlQuery);
 
         if (!$result = self::getConnection()->query($sqlQuery)) {
@@ -1898,7 +1896,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @since 1.2
      */
-    private function checkIndexes()
+    private function checkIndexes(): void
     {
         self::$logger->debug('>>checkIndexes()');
 
@@ -2005,7 +2003,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createForeignIndex()
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null): void
     {
         self::$logger->info('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
@@ -2059,7 +2057,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createUniqueIndex()
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -2095,7 +2093,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::reload()
      */
-    public function reload()
+    public function reload(): void
     {
         self::$logger->debug('>>reload()');
 
@@ -2113,7 +2111,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkRecordExists()
      */
-    public function checkRecordExists($ID)
+    public function checkRecordExists($ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
@@ -2151,7 +2149,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::isTableOverloaded()
      */
-    public function isTableOverloaded()
+    public function isTableOverloaded(): bool
     {
         self::$logger->debug('>>isTableOverloaded()');
 
@@ -2215,7 +2213,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::begin()
      */
-    public static function begin()
+    public static function begin(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -2234,7 +2232,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::commit()
      */
-    public static function commit()
+    public static function commit(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -2253,7 +2251,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::rollback()
      */
-    public static function rollback()
+    public static function rollback(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecordProviderSQLite');
@@ -2278,9 +2276,9 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::setRecord()
      */
-    public function setRecord($Record)
+    public function setRecord($record): void
     {
-        $this->record = $Record;
+        $this->record = $record;
     }
 
     /**
@@ -2288,7 +2286,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::checkDatabaseExists()
      */
-    public static function checkDatabaseExists()
+    public static function checkDatabaseExists(): bool
     {
         $config = ConfigProvider::getInstance();
 
@@ -2300,7 +2298,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::createDatabase()
      */
-    public static function createDatabase()
+    public static function createDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2315,7 +2313,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::dropDatabase()
      */
-    public static function dropDatabase()
+    public static function dropDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2329,7 +2327,7 @@ class ActiveRecordProviderSQLite implements ActiveRecordProviderInterface
      *
      * @see Alpha\Model\ActiveRecordProviderInterface::backupDatabase()
      */
-    public static function backupDatabase($targetFile)
+    public static function backupDatabase($targetFile): void
     {
         $config = ConfigProvider::getInstance();
 

@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -13,7 +14,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -86,7 +87,7 @@ class CacheProviderFile implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): mixed
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
@@ -98,14 +99,14 @@ class CacheProviderFile implements CacheProviderInterface
         if (file_exists($filepath)) {
             return unserialize(file_get_contents($filepath));
         } else {
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value, $expiry = 0)
+    public function set($key, $value, $expiry = 0): void
     {
         self::$logger->debug('Setting value for key ['.$key.']');
 
@@ -118,13 +119,28 @@ class CacheProviderFile implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($key)
+    public function delete($key): void
     {
         self::$logger->debug('Removing value for key ['.$key.']');
 
         $config = ConfigProvider::getInstance();
         $filepath = $config->get('app.file.store.dir').'/cache/files/'.$this->appPrefix.'-'.$key;
 
-        unlink($filepath);
+        if (file_exists($filepath)) {
+            unlink($filepath);
+        } else {
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        $config = ConfigProvider::getInstance();
+        $filepath = $config->get('app.file.store.dir').'/cache/files/'.$this->appPrefix.'-'.$key;
+
+        return file_exists($filepath);
     }
 }

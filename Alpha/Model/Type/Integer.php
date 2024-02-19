@@ -12,7 +12,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -92,7 +92,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    const MAX_SIZE = 11;
+    public const MAX_SIZE = 11;
 
     /**
      * Constructor.
@@ -103,7 +103,7 @@ class Integer extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($val = 0)
+    public function __construct(int $val = 0)
     {
         $this->validationRule = Validator::REQUIRED_INTEGER;
 
@@ -121,13 +121,13 @@ class Integer extends Type implements TypeInterface
     /**
      * Setter for the Integer value.
      *
-     * @param int $val
+     * @param mixed $val
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($val)
+    public function setValue(mixed $val): void
     {
         if (!Validator::isInteger($val)) {
             throw new IllegalArguementException($this->helper);
@@ -143,11 +143,9 @@ class Integer extends Type implements TypeInterface
     /**
      * Getter for the Integer value.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): int
     {
         return intval($this->value);
     }
@@ -155,11 +153,9 @@ class Integer extends Type implements TypeInterface
     /**
      * Get the validation rule.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRule()
+    public function getRule(): string
     {
         return $this->validationRule;
     }
@@ -173,7 +169,7 @@ class Integer extends Type implements TypeInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setSize($size)
+    public function setSize(int $size): void
     {
         if ($size <= self::MAX_SIZE) {
             $this->size = $size;
@@ -186,11 +182,9 @@ class Integer extends Type implements TypeInterface
     /**
      * Get the allowable size of the Integer in the database field.
      *
-     * @return int
-     *
      * @since 1.0
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -202,7 +196,7 @@ class Integer extends Type implements TypeInterface
      *
      * @since 1.0
      */
-    public static function zeroPad($val)
+    public static function zeroPad(int $val): string
     {
         return str_pad($val, self::MAX_SIZE, '0', STR_PAD_LEFT);
     }

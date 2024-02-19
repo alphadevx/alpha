@@ -21,7 +21,7 @@ use Alpha\View\Widget\Button;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -104,11 +104,9 @@ class CacheController extends Controller implements ControllerInterface
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -162,11 +160,9 @@ class CacheController extends Controller implements ControllerInterface
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -184,7 +180,9 @@ class CacheController extends Controller implements ControllerInterface
 
             if (isset($params['clearCache']) && $params['clearCache'] == 'true') {
                 try {
-                    FileUtils::deleteDirectoryContents($this->dataDir, array('.htaccess', 'html', 'images', 'pdf', 'xls'));
+                    FileUtils::deleteDirectoryContents($this->dataDir.'xls');
+                    FileUtils::deleteDirectoryContents($this->dataDir.'images');
+                    FileUtils::deleteDirectoryContents($this->dataDir.'files');
 
                     $this->setStatusMessage(View::displayUpdateMessage('Cache contents deleted successfully.'));
 

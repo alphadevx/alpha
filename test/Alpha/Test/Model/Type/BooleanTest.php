@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -105,22 +105,6 @@ class BooleanTest extends TestCase
 
         $this->assertFalse($this->boolean->getBooleanValue(), 'testing the constructor default can be overridden');
         $this->assertEquals($this->boolean->getValue(), 0, 'testing the constructor default can be overridden');
-    }
-
-    /**
-     * Testing passing invalid data to the constructor.
-     *
-     * @since 1.0
-     */
-    public function testConstructorInvalid()
-    {
-        try {
-            $this->boolean = new Boolean(7);
-            $this->boolean = new Boolean('abc');
-            $this->fail('testing passing invalid data to the constructor');
-        } catch (IllegalArguementException $e) {
-            $this->assertTrue(true, 'testing passing invalid data to the constructor');
-        }
     }
 
     /**

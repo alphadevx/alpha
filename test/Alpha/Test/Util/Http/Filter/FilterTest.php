@@ -12,7 +12,8 @@ use Alpha\Util\Http\Filter\ClientTempBlacklistFilter;
 use Alpha\Util\Http\Filter\ClientBlacklistFilter;
 use Alpha\Util\Http\Filter\IPBlacklistFilter;
 use Alpha\Util\Http\Request;
-use PHPUnit\Framework\TestCase;
+use Alpha\Test\Model\ModelTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for implementations of the FilterInterface.
@@ -21,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -56,7 +57,7 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class FilterTest extends TestCase
+class FilterTest extends ModelTestCase
 {
     /**
      * Blacklisted client string.
@@ -151,34 +152,38 @@ class FilterTest extends TestCase
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
 
-        $this->blacklistedClient = new BlacklistedClient();
-        $this->blacklistedClient->rebuildTable();
-        $this->blacklistedClient->set('client', $this->badAgent);
-        $this->blacklistedClient->save();
+        foreach ($this->getActiveRecordProviders() as $provider) {
+            $config->set('db.provider.name', $provider[0]);
 
-        $this->blacklistedIP = new BlacklistedIP();
-        $this->blacklistedIP->rebuildTable();
-        $this->blacklistedIP->set('IP', $this->badIP);
-        $this->blacklistedIP->save();
+            $this->blacklistedClient = new BlacklistedClient();
+            $this->blacklistedClient->rebuildTable();
+            $this->blacklistedClient->set('client', $this->badAgent);
+            $this->blacklistedClient->save();
 
-        $this->badRequest1 = new BadRequest();
-        $this->badRequest1->rebuildTable();
-        $this->badRequest1->set('client', $this->badAgent);
-        $this->badRequest1->set('IP', $this->badIP);
-        $this->badRequest1->set('requestedResource', '/doesNotExist');
-        $this->badRequest1->save();
+            $this->blacklistedIP = new BlacklistedIP();
+            $this->blacklistedIP->rebuildTable();
+            $this->blacklistedIP->set('IP', $this->badIP);
+            $this->blacklistedIP->save();
 
-        $this->badRequest2 = new BadRequest();
-        $this->badRequest2->set('client', $this->badAgent);
-        $this->badRequest2->set('IP', $this->badIP);
-        $this->badRequest2->set('requestedResource', '/doesNotExist');
-        $this->badRequest2->save();
+            $this->badRequest1 = new BadRequest();
+            $this->badRequest1->rebuildTable();
+            $this->badRequest1->set('client', $this->badAgent);
+            $this->badRequest1->set('IP', $this->badIP);
+            $this->badRequest1->set('requestedResource', '/doesNotExist');
+            $this->badRequest1->save();
 
-        $this->badRequest3 = new BadRequest();
-        $this->badRequest3->set('client', $this->badAgent);
-        $this->badRequest3->set('IP', $this->badIP);
-        $this->badRequest3->set('requestedResource', '/doesNotExist');
-        $this->badRequest3->save();
+            $this->badRequest2 = new BadRequest();
+            $this->badRequest2->set('client', $this->badAgent);
+            $this->badRequest2->set('IP', $this->badIP);
+            $this->badRequest2->set('requestedResource', '/doesNotExist');
+            $this->badRequest2->save();
+
+            $this->badRequest3 = new BadRequest();
+            $this->badRequest3->set('client', $this->badAgent);
+            $this->badRequest3->set('IP', $this->badIP);
+            $this->badRequest3->set('requestedResource', '/doesNotExist');
+            $this->badRequest3->save();
+        }
     }
 
     /**
@@ -208,10 +213,13 @@ class FilterTest extends TestCase
      *
      * @since 1.0
      */
-    public function testClientTempBlacklistFilter()
+    #[DataProvider('getActiveRecordProviders')]
+    public function testClientTempBlacklistFilter(string $provider)
     {
         $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
         $config->set('security.client.temp.blacklist.filter.limit', 1);
+        $config->set('security.client.temp.blacklist.filter.period', 5);
 
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
@@ -234,8 +242,12 @@ class FilterTest extends TestCase
      *
      * @since 1.2.3
      */
-    public function testIPBlacklistFilter()
+    #[DataProvider('getActiveRecordProviders')]
+    public function testIPBlacklistFilter(string $provider)
     {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
         $_SERVER['REQUEST_URI'] = '/';
 

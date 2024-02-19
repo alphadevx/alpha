@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -107,21 +107,6 @@ class ViewTest extends TestCase
     }
 
     /**
-     * Testing that passing a bad object to the getInstance method will throw an IllegalArguementException.
-     *
-     * @since 1.0
-     */
-    public function testGetInstanceBad()
-    {
-        try {
-            $bad = View::getInstance(new self());
-            $this->fail('testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
-        } catch (IllegalArguementException $e) {
-            $this->assertEquals('The record type provided [Alpha\Test\View\ViewTest] is not defined anywhere!', $e->getMessage(), 'testing that passing a bad object to the getInstance method will throw an IllegalArguementException');
-        }
-    }
-
-    /**
      * Testing that passing a good object to the getInstance method will return the child view object.
      *
      * @since 1.0
@@ -167,21 +152,6 @@ class ViewTest extends TestCase
     }
 
     /**
-     * Testing that attempting to attach a bad record to an existing view object will cause an exception.
-     *
-     * @since 1.0
-     */
-    public function testSetRecordBad()
-    {
-        try {
-            $this->view->setRecord(new self());
-            $this->fail('testing that attempting to attach a bad record object to an existing view object will cause an exception');
-        } catch (IllegalArguementException $e) {
-            $this->assertTrue(true);
-        }
-    }
-
-    /**
      * Testing that a bad mode param provided to the loadTemplate method will throw an exception.
      *
      * @since 1.0
@@ -219,7 +189,7 @@ class ViewTest extends TestCase
     {
         $generatedHTML = View::loadTemplateFragment('html', 'footer.phtml', array());
 
-        $this->assertTrue(strpos($generatedHTML, '<footer>') > 0, 'Testing that a generated HTML fragment can load from a file');
+        $this->assertTrue(strpos($generatedHTML, '<script') > 0, 'Testing that a generated HTML fragment can load from a file');
     }
 
     /**
@@ -296,7 +266,7 @@ class ViewTest extends TestCase
 
         $this->assertNotEmpty($this->view->editView(), 'Testing the editView() method');
         $this->assertTrue(strpos($this->view->editView(), 'Test Article') !== false, 'Testing the editView() method');
-        
+
         $badClient = new BlacklistedClient();
         $badClient->set('client', 'very bad client');
         $this->view = View::getInstance($badClient);
@@ -429,7 +399,7 @@ class ViewTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
         $config->set('security.encrypt.http.fieldnames', false);
-        
+
         $article = new Article();
         $article->set('title', 'Test Article');
         $this->view = View::getInstance($article);

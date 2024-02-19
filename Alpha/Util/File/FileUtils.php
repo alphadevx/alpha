@@ -16,7 +16,7 @@ use RecursiveDirectoryIterator;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -519,13 +519,11 @@ class FileUtils
      *
      * @param string $ext The file extension.
      *
-     * @return string
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public static function getMIMETypeByExtension($ext)
+    public static function getMIMETypeByExtension(string $ext): string
     {
         $ext = mb_strtolower($ext);
         if (!isset(self::$extensionToMIMEMappings[$ext])) {
@@ -536,27 +534,25 @@ class FileUtils
     }
 
     /**
-     * Renders the contents of the directory as a HTML list.
+     * Renders the contents of the directory as a HTML list. Returns the current filecount for the directory.
      *
      * @param string $sourceDir    The path to the source directory.
      * @param string $fileList     The HTML list of files generated (pass by reference).
      * @param int    $fileCount    The current file count (used in recursive calls).
      * @param string[]  $excludeFiles An array of file names to exclude from the list rendered.
      *
-     * @return int The current filecount for the directory.
-     *
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
-    public static function listDirectoryContents($sourceDir, &$fileList, $fileCount = 0, $excludeFiles = array())
+    public static function listDirectoryContents(string $sourceDir, string &$fileList, int $fileCount = 0, array $excludeFiles = array()): int
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
             $fileCount = 0;
 
             foreach ($dir as $file) {
-                if (!in_array($file->getFilename(), $excludeFiles)) {
+                if (!in_array($file->getFilename(), $excludeFiles, true)) {
                     if ($file->isDir() && !$file->isDot()) {
                         $fileList .= '<em>'.$file->getPathname().'</em><br>';
                         $fileCount += self::listDirectoryContents($file->getPathname(), $fileList, $fileCount, $excludeFiles);
@@ -580,13 +576,11 @@ class FileUtils
      * @param string $sourceDir    The path to the source directory.
      * @param array $fileList      The list of files generated (pass by reference).
      *
-     * @return array
-     *
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 3.0
      */
-    public static function getDirectoryContents($sourceDir, &$fileList = array())
+    public static function getDirectoryContents(string $sourceDir, array &$fileList = array()): array
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
@@ -608,28 +602,33 @@ class FileUtils
     /**
      * Recursively deletes the contents of the directory indicated (the directory itself is not deleted).
      *
-     * @param string $sourceDir    The path to the source directory.
-     * @param string[]  $excludeFiles An array of file names to exclude from the deletion.
+     * @param string    $sourceDir        The path to the source directory.
+     * @param string[]  $excludeFiles     An array of file names to exclude from the deletion.
+     * @param boolean   $deleteSourceDir  Set to true to also delete the sourceDir, default is false.
      *
      * @throws \Alpha\Exception\AlphaException
      *
      * @since 1.0
      */
-    public static function deleteDirectoryContents($sourceDir, $excludeFiles = array())
+    public static function deleteDirectoryContents(string $sourceDir, array $excludeFiles = array(), bool $deleteSourceDir = false): void
     {
         try {
             $dir = new DirectoryIterator($sourceDir);
 
             foreach ($dir as $file) {
                 if ($file->isDir() && !$file->isDot()) {
-                    if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles)) { // remove an empty directory
+                    if (count(scandir($file->getPathname())) == 2 && !in_array($file->getFilename(), $excludeFiles, true)) { // remove an empty directory
                         rmdir($file->getPathname());
                     } else {
-                        self::deleteDirectoryContents($file->getPathname(), $excludeFiles);
+                        self::deleteDirectoryContents($file->getPathname(), $excludeFiles, true);
                     }
-                } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles)) {
+                } elseif (!$file->isDot() && !in_array($file->getFilename(), $excludeFiles, true)) {
                     unlink($file->getPathname());
                 }
+            }
+
+            if (file_exists($sourceDir) && $deleteSourceDir) {
+                rmdir($sourceDir);
             }
         } catch (\Exception $e) {
             throw new AlphaException('Failed to delete files files in the ['.$sourceDir.'] directory, error is ['.$e->getMessage().']');
@@ -646,36 +645,34 @@ class FileUtils
      *
      * @since 1.1
      */
-    public static function copy($source, $dest)
+    public static function copy(string $source, string $dest): void
     {
         if (is_file($source)) {
             if (!copy($source, $dest)) {
                 throw new AlphaException("Error copying the file [$source] to [$dest].");
             }
-
-            return;
-        }
-
-        // Make destination directory if it does not already exist
-        if (!file_exists($dest) && !is_dir($dest)) {
-            if (!mkdir($dest, 0777, true)) {
-                throw new AlphaException("Error creating the destination directory [$dest].");
-            }
-        }
-
-        $dir = dir($source);
-        if ($dir !== false) {
-            while (false !== $entry = $dir->read()) {
-                if ($entry == '.' || $entry == '..') {
-                    continue;
-                }
-
-                if ($dest !== "$source/$entry") {
-                    self::copy("$source/$entry", "$dest/$entry");
+        } else {
+            // Make destination directory if it does not already exist
+            if (!file_exists($dest) && !is_dir($dest)) {
+                if (!mkdir($dest, 0777, true)) {
+                    throw new AlphaException("Error creating the destination directory [$dest].");
                 }
             }
 
-            $dir->close();
+            $dir = dir($source);
+            if ($dir !== false) {
+                while (false !== $entry = $dir->read()) {
+                    if ($entry == '.' || $entry == '..') {
+                        continue;
+                    }
+
+                    if ($dest !== "$source/$entry") {
+                        self::copy("$source/$entry", "$dest/$entry");
+                    }
+                }
+
+                $dir->close();
+            }
         }
     }
 
@@ -689,7 +686,7 @@ class FileUtils
      *
      * @since 1.1
      */
-    public static function zip($source, $dest)
+    public static function zip(string $source, string $dest): void
     {
         if (extension_loaded('zip') === true) {
             if (file_exists($source) === true) {

@@ -10,7 +10,7 @@ namespace Alpha\Util\Code\Highlight;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -54,9 +54,7 @@ interface HighlightProviderInterface
      * @param string $source   The source code string.
      * @param string $language The language identifier that will be passed as-is to the implementing class.
      *
-     * @return string The colour-highlighted code.
-     *
      * @since 1.2
      */
-    public function highlight($source, $language);
+    public function highlight(string $source, string $language): string;
 }

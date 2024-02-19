@@ -9,7 +9,7 @@ namespace Alpha\Util\Feed;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -89,7 +89,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function createLink($parent, $url)
+    protected function createLink($parent, $url): void
     {
         $link = $this->rssDoc->createElementNS($this->nameSpace, 'link');
         $parent->appendChild($link);
@@ -107,7 +107,7 @@ class Atom extends Feed
      *
      * @since 1.0
      */
-    public function __construct($title, $url, $description, $pubDate = null, $id = null)
+    public function __construct(string $title, string $url, string $description, string $pubDate = null, int $id = null)
     {
         if (empty($id)) {
             $id = $url;
@@ -125,7 +125,7 @@ class Atom extends Feed
      *
      * @since 1.0
      */
-    public function addAuthor($name)
+    public function addAuthor(string $name): void
     {
         $author = $this->rssDoc->createElementNS($this->nameSpace, 'author');
 
@@ -137,7 +137,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function addItem($title, $link, $description = null, $pubDate = null, $id = null)
+    protected function addItem($title, $link, $description = null, $pubDate = null, $id = null): void
     {
         if (empty($id)) {
             $id = $link;

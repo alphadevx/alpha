@@ -18,7 +18,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -61,10 +61,8 @@ class ArticleCommentView extends View
      * @param array $fields hash array of HTML fields to pass to the template
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function markdownView($fields = array())
+    public function markdownView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -106,10 +104,8 @@ class ArticleCommentView extends View
      * @param array $fields hash array of HTML fields to pass to the template
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function createView($fields = array())
+    public function createView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -118,7 +114,7 @@ class ArticleCommentView extends View
         $html .= '<table cols="2" class="create_view">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 10);
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', 10);
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
@@ -147,10 +143,8 @@ class ArticleCommentView extends View
      * @param array $fields Hash array of HTML fields to pass to the template.
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function editView($fields = array())
+    public function editView(array $fields = array()): string
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -159,7 +153,7 @@ class ArticleCommentView extends View
         $html = '<table cols="2" class="edit_view" style="width:100%; margin:0px">';
         $html .= '<form action="'.$fields['formAction'].'" method="POST" accept-charset="UTF-8">';
 
-        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', '', 5, $this->record->getID());
+        $textBox = new TextBox($this->record->getPropObject('content'), $this->record->getDataLabel('content'), 'content', 5, $this->record->getID());
         $html .= $textBox->render();
 
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('version_num')) : 'version_num');

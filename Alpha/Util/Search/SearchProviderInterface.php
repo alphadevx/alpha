@@ -9,7 +9,7 @@ namespace Alpha\Util\Search;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -51,16 +51,14 @@ interface SearchProviderInterface
      * search engine.  An array of business objects will be returned (ordered by the search engine).
      *
      * @param string $query      The search query.
-     * @param string $returnType Use this filter to determine that only business objects of a certain class hould be returned (default is to return all classes indexed).
+     * @param string $returnType Use this filter to determine that only business objects of a certain class should be returned (default is to return all classes indexed).
      * @param int    $start      Start point for pagination.
      * @param int    $limit      The maximum amount to return in the list (for pagination).
      * @param int    $createdBy  Optionally provide the creator ID to restrict search to Tags created by that user.
      *
-     * @return array An array of matching business objects.
-     *
      * @since 1.2.3
      */
-    public function search($query, $returnType = 'all', $start = 0, $limit = 10, $createdBy = 0);
+    public function search(string $query, string $returnType = 'all', int $start = 0, int $limit = 10, int $createdBy = 0): array;
 
     /**
      * Gets a list of documents related to the business objects matching the object provided.  An array
@@ -72,11 +70,9 @@ interface SearchProviderInterface
      * @param int                      $limit        The maximum amount to return in the list (for pagination).
      * @param string                   $distinct     Related items will only be returned that have distinct values in this named field.
      *
-     * @return array An array of related business objects.
-     *
      * @since 1.2.3
      */
-    public function getRelated($sourceObject, $returnType = 'all', $start = 0, $limit = 10, $distinct = '');
+    public function getRelated(\Alpha\Model\ActiveRecord $sourceObject, string $returnType = 'all', int $start = 0, int $limit = 10, string $distinct = ''): array;
 
     /**
      * Adds/updates the business object provided to the search engine index.
@@ -87,7 +83,7 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function index($sourceObject);
+    public function index(\Alpha\Model\ActiveRecord $sourceObject): void;
 
     /**
      * Deletes the business object provided from the search engine index.
@@ -98,14 +94,12 @@ interface SearchProviderInterface
      *
      * @since 1.2.3
      */
-    public function delete($sourceObject);
+    public function delete(\Alpha\Model\ActiveRecord $sourceObject): void;
 
     /**
      * Returns the number of matching objects found in the previous search carried out by this provider.
      *
-     * @return int
-     *
      * @since 1.2.3
      */
-    public function getNumberFound();
+    public function getNumberFound(): int;
 }

@@ -16,6 +16,7 @@ use Alpha\Exception\FailedSaveException;
 use Alpha\Exception\FailedDeleteException;
 use Alpha\Exception\ValidationException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\LockingException;
 use Alpha\Exception\NotImplementedException;
@@ -29,7 +30,7 @@ use ReflectionProperty;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -82,7 +83,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected $lastQuery;
+    protected $lastQuery = '';
 
     /**
      * The version number of the object, used for locking mechanism.
@@ -197,8 +198,11 @@ abstract class ActiveRecord
         $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
 
-        set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
-        set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+        //set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
+        //restore_exception_handler();
+
+        //set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+        //restore_error_handler();
 
         $this->version_num = new Integer(0);
         $this->created_ts = new Timestamp(date('Y-m-d H:i:s'));
@@ -215,7 +219,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public static function disconnect()
+    public static function disconnect(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -228,13 +232,11 @@ abstract class ActiveRecord
      *
      * @param string $sqlQuery
      *
-     * @return array
-     *
      * @since 1.1
      *
      * @throws \Alpha\Exception\CustomQueryException
      */
-    public function query($sqlQuery)
+    public function query(string $sqlQuery): array
     {
         self::$logger->debug('>>query(sqlQuery=['.$sqlQuery.'])');
 
@@ -259,12 +261,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function load($ID, $version = 0)
+    public function load(int $ID, int $version = 0): void
     {
         self::$logger->debug('>>load(ID=['.$ID.'], version=['.$version.'])');
 
-        if (method_exists($this, 'before_load_callback')) {
-            $this->{'before_load_callback'}();
+        if (method_exists($this, 'beforeLoad')) {
+            $this->{'beforeLoad'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -285,8 +287,8 @@ abstract class ActiveRecord
 
         $this->setEnumOptions();
 
-        if (method_exists($this, 'after_load_callback')) {
-            $this->{'after_load_callback'}();
+        if (method_exists($this, 'afterLoad')) {
+            $this->{'afterLoad'}();
         }
 
         self::$logger->debug('<<load');
@@ -297,13 +299,11 @@ abstract class ActiveRecord
      *
      * @param int $ID The object ID of the record to load.
      *
-     * @return array An array containing objects of this type of record object, order by version.
-     *
      * @since 2.0
      *
      * @throws \Alpha\Exception\RecordFoundException
      */
-    public function loadAllOldVersions($ID)
+    public function loadAllOldVersions(int $ID): array
     {
         self::$logger->debug('>>loadAllOldVersions(ID=['.$ID.'])');
 
@@ -330,13 +330,13 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadByAttribute($attribute, $value, $ignoreClassType = false, $loadAttributes = array())
+    public function loadByAttribute(string $attribute, string $value, bool $ignoreClassType = false, array $loadAttributes = array()): void
     {
         self::$logger->debug('>>loadByAttribute(attribute=['.$attribute.'], value=['.$value.'], ignoreClassType=['.$ignoreClassType.'], 
             loadAttributes=['.var_export($loadAttributes, true).'])');
 
-        if (method_exists($this, 'before_loadByAttribute_callback')) {
-            $this->{'before_loadByAttribute_callback'}();
+        if (method_exists($this, 'beforeLoadByAttribute')) {
+            $this->{'beforeLoadByAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -351,8 +351,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_loadByAttribute_callback')) {
-            $this->{'after_loadByAttribute_callback'}();
+        if (method_exists($this, 'afterLoadByAttribute')) {
+            $this->{'afterLoadByAttribute'}();
         }
 
         self::$logger->debug('<<loadByAttribute');
@@ -367,18 +367,16 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAll($start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAll(int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAll(start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-        if (method_exists($this, 'before_loadAll_callback')) {
-            $this->{'before_loadAll_callback'}();
+        if (method_exists($this, 'beforeLoadAll')) {
+            $this->{'beforeLoadAll'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -387,8 +385,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAll($start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAll_callback')) {
-            $this->{'after_loadAll_callback'}();
+        if (method_exists($this, 'afterLoadAll')) {
+            $this->{'afterLoadAll'}();
         }
 
         self::$logger->debug('<<loadAll ['.count($objects).']');
@@ -408,19 +406,17 @@ abstract class ActiveRecord
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      * @param array  $constructorArgs An optional array of contructor arguements to pass to the records that will be generated and returned.  Supports a maximum of 5 arguements.
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute(string $attribute, string $value, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false, array $constructorArgs = array()): array
     {
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
-        if (method_exists($this, 'before_loadAllByAttribute_callback')) {
-            $this->{'before_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'beforeLoadAllByAttribute')) {
+            $this->{'beforeLoadAllByAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -429,8 +425,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAllByAttribute_callback')) {
-            $this->{'after_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'afterLoadAllByAttribute')) {
+            $this->{'afterLoadAllByAttribute'}();
         }
 
         self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
@@ -449,20 +445,18 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function loadAllByAttributes($attributes = array(), $values = array(), $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByAttributes(array $attributes = array(), array $values = array(), int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByAttributes(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'], start=['.
             $start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-        if (method_exists($this, 'before_loadAllByAttributes_callback')) {
-            $this->{'before_loadAllByAttributes_callback'}();
+        if (method_exists($this, 'beforeLoadAllByAttributes')) {
+            $this->{'beforeLoadAllByAttributes'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -476,8 +470,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAllByAttributes($attributes, $values, $start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAllByAttributes_callback')) {
-            $this->{'after_loadAllByAttributes_callback'}();
+        if (method_exists($this, 'afterLoadAllByAttributes')) {
+            $this->{'afterLoadAllByAttributes'}();
         }
 
         self::$logger->debug('<<loadAllByAttributes ['.count($objects).']');
@@ -495,18 +489,16 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the objects by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type
      *
-     * @return array An array containing objects of this type of business object.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllByDayUpdated($date, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false)
+    public function loadAllByDayUpdated(string $date, int $start = 0, int $limit = 0, string $orderBy = 'ID', string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllByDayUpdated(date=['.$date.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
-        if (method_exists($this, 'before_loadAllByDayUpdated_callback')) {
-            $this->{'before_loadAllByDayUpdated_callback'}();
+        if (method_exists($this, 'beforeLoadAllByDayUpdated')) {
+            $this->{'beforeLoadAllByDayUpdated'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -515,8 +507,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $objects = $provider->loadAllByDayUpdated($date, $start, $limit, $orderBy, $order, $ignoreClassType);
 
-        if (method_exists($this, 'after_loadAllByDayUpdated_callback')) {
-            $this->{'after_loadAllByDayUpdated_callback'}();
+        if (method_exists($this, 'afterLoadAllByDayUpdated')) {
+            $this->{'afterLoadAllByDayUpdated'}();
         }
 
         self::$logger->debug('<<loadAllByDayUpdated ['.count($objects).']');
@@ -534,13 +526,11 @@ abstract class ActiveRecord
      * @param string $order           The order to sort the records by.
      * @param bool   $ignoreClassType Default is false, set to true if you want to load from overloaded tables and ignore the class type.
      *
-     * @return array An array of field values.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function loadAllFieldValuesByAttribute($attribute, $value, $returnAttribute, $order = 'ASC', $ignoreClassType = false)
+    public function loadAllFieldValuesByAttribute(string $attribute, string $value, string $returnAttribute, string $order = 'ASC', bool $ignoreClassType = false): array
     {
         self::$logger->debug('>>loadAllFieldValuesByAttribute(attribute=['.$attribute.'], value=['.$value.'], returnAttribute=['.$returnAttribute.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.']');
 
@@ -564,12 +554,12 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\LockingException
      * @throws \Alpha\Exception\ValidationException
      */
-    public function save()
+    public function save(): void
     {
         self::$logger->debug('>>save()');
 
-        if (method_exists($this, 'before_save_callback')) {
-            $this->{'before_save_callback'}();
+        if (method_exists($this, 'beforeSave')) {
+            $this->{'beforeSave'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -600,8 +590,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_save_callback')) {
-            $this->{'after_save_callback'}();
+        if (method_exists($this, 'afterSave')) {
+            $this->{'afterSave'}();
         }
     }
 
@@ -612,7 +602,7 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveRelations()
+    public function saveRelations(): void
     {
         $reflection = new ReflectionClass(get_class($this));
         $properties = $reflection->getProperties();
@@ -691,12 +681,12 @@ abstract class ActiveRecord
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveAttribute($attribute, $value)
+    public function saveAttribute(string $attribute, mixed $value): void
     {
         self::$logger->debug('>>saveAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
-        if (method_exists($this, 'before_saveAttribute_callback')) {
-            $this->{'before_saveAttribute_callback'}();
+        if (method_exists($this, 'beforeSaveAttribute')) {
+            $this->{'beforeSaveAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -718,8 +708,8 @@ abstract class ActiveRecord
             $this->addToCache();
         }
 
-        if (method_exists($this, 'after_saveAttribute_callback')) {
-            $this->{'after_saveAttribute_callback'}();
+        if (method_exists($this, 'afterSaveAttribute')) {
+            $this->{'afterSaveAttribute'}();
         }
 
         self::$logger->debug('<<saveAttribute');
@@ -732,12 +722,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public function saveHistory()
+    public function saveHistory(): void
     {
         self::$logger->debug('>>saveHistory()');
 
-        if (method_exists($this, 'before_saveHistory_callback')) {
-            $this->{'before_saveHistory_callback'}();
+        if (method_exists($this, 'beforeSaveHistory')) {
+            $this->{'beforeSaveHistory'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -746,8 +736,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->saveHistory();
 
-        if (method_exists($this, 'after_saveHistory_callback')) {
-            $this->{'after_saveHistory_callback'}();
+        if (method_exists($this, 'afterSaveHistory')) {
+            $this->{'afterSaveHistory'}();
         }
     }
 
@@ -758,12 +748,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\ValidationException
      */
-    protected function validate()
+    protected function validate(): void
     {
         self::$logger->debug('>>validate()');
 
-        if (method_exists($this, 'before_validate_callback')) {
-            $this->{'before_validate_callback'}();
+        if (method_exists($this, 'beforeValidate')) {
+            $this->{'beforeValidate'}();
         }
 
         // get the class attributes
@@ -772,7 +762,7 @@ abstract class ActiveRecord
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->defaultAttributes) && !in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->defaultAttributes, true) && !in_array($propName, $this->transientAttributes, true)) {
                 $propClass = new ReflectionClass($this->getPropObject($propName));
                 $propClass = $propClass->getShortname();
                 if (mb_strtoupper($propClass) != 'ENUM' &&
@@ -787,8 +777,8 @@ abstract class ActiveRecord
             }
         }
 
-        if (method_exists($this, 'after_validate_callback')) {
-            $this->{'after_validate_callback'}();
+        if (method_exists($this, 'afterValidate')) {
+            $this->{'afterValidate'}();
         }
 
         self::$logger->debug('<<validate');
@@ -801,12 +791,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedDeleteException
      */
-    public function delete()
+    public function delete(): void
     {
         self::$logger->debug('>>delete()');
 
-        if (method_exists($this, 'before_delete_callback')) {
-            $this->{'before_delete_callback'}();
+        if (method_exists($this, 'beforeDelete')) {
+            $this->{'beforeDelete'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -878,8 +868,8 @@ abstract class ActiveRecord
             $this->removeFromCache();
         }
 
-        if (method_exists($this, 'after_delete_callback')) {
-            $this->{'after_delete_callback'}();
+        if (method_exists($this, 'afterDelete')) {
+            $this->{'afterDelete'}();
         }
 
         $this->clear();
@@ -887,23 +877,21 @@ abstract class ActiveRecord
     }
 
     /**
-     * Delete all object instances from the database by the specified attribute matching the value provided.
+     * Delete all object instances from the database by the specified attribute matching the value provided. Returns the count of deleted records.
      *
      * @param string $attribute The name of the field to delete the objects by.
      * @param mixed  $value     The value of the field to delete the objects by.
-     *
-     * @return int The number of rows deleted.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedDeleteException
      */
-    public function deleteAllByAttribute($attribute, $value)
+    public function deleteAllByAttribute(string $attribute, mixed $value): int
     {
         self::$logger->debug('>>deleteAllByAttribute(attribute=['.$attribute.'], value=['.$value.'])');
 
-        if (method_exists($this, 'before_deleteAllByAttribute_callback')) {
-            $this->{'before_deleteAllByAttribute_callback'}();
+        if (method_exists($this, 'beforeDeleteAllByAttribute')) {
+            $this->{'beforeDeleteAllByAttribute'}();
         }
 
         try {
@@ -924,8 +912,8 @@ abstract class ActiveRecord
             throw new FailedDeleteException('Failed to delete objects, error is ['.$e->getMessage().']');
         }
 
-        if (method_exists($this, 'after_deleteAllByAttribute_callback')) {
-            $this->{'after_deleteAllByAttribute_callback'}();
+        if (method_exists($this, 'afterDeleteAllByAttribute')) {
+            $this->{'afterDeleteAllByAttribute'}();
         }
 
         self::$logger->debug('<<deleteAllByAttribute ['.$deletedRowCount.']');
@@ -936,18 +924,16 @@ abstract class ActiveRecord
     /**
      * Gets the version_num of the object from the database (returns 0 if the Record is not saved yet).
      *
-     * @return int
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\RecordNotFoundException
      */
-    public function getVersion()
+    public function getVersion(): int
     {
         self::$logger->debug('>>getVersion()');
 
-        if (method_exists($this, 'before_getVersion_callback')) {
-            $this->{'before_getVersion_callback'}();
+        if (method_exists($this, 'beforeGetVersion')) {
+            $this->{'beforeGetVersion'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -956,8 +942,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $ver = $provider->getVersion();
 
-        if (method_exists($this, 'after_getVersion_callback')) {
-            $this->{'after_getVersion_callback'}();
+        if (method_exists($this, 'afterGetVersion')) {
+            $this->{'afterGetVersion'}();
         }
 
         self::$logger->debug('<<getVersion ['.$ver.']');
@@ -972,12 +958,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeTable($checkIndexes = true)
+    public function makeTable(bool $checkIndexes = true): void
     {
         self::$logger->debug('>>makeTable()');
 
-        if (method_exists($this, 'before_makeTable_callback')) {
-            $this->{'before_makeTable_callback'}();
+        if (method_exists($this, 'beforeMakeTable')) {
+            $this->{'beforeMakeTable'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -986,8 +972,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->makeTable($checkIndexes);
 
-        if (method_exists($this, 'after_makeTable_callback')) {
-            $this->{'after_makeTable_callback'}();
+        if (method_exists($this, 'afterMakeTable')) {
+            $this->{'afterMakeTable'}();
         }
 
         self::$logger->info('Successfully created the table ['.$this->getTableName().'] for the class ['.get_class($this).']');
@@ -1002,12 +988,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function makeHistoryTable()
+    public function makeHistoryTable(): void
     {
         self::$logger->debug('>>makeHistoryTable()');
 
-        if (method_exists($this, 'before_makeHistoryTable_callback')) {
-            $this->{'before_makeHistoryTable_callback'}();
+        if (method_exists($this, 'beforeMakeHistoryTable')) {
+            $this->{'beforeMakeHistoryTable'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1016,8 +1002,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->makeHistoryTable();
 
-        if (method_exists($this, 'after_makeHistoryTable_callback')) {
-            $this->{'after_makeHistoryTable_callback'}();
+        if (method_exists($this, 'afterMakeHistoryTable')) {
+            $this->{'afterMakeHistoryTable'}();
         }
 
         self::$logger->info('Successfully created the table ['.$this->getTableName().'_history] for the class ['.get_class($this).']');
@@ -1032,12 +1018,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function rebuildTable()
+    public function rebuildTable(): void
     {
         self::$logger->debug('>>rebuildTable()');
 
-        if (method_exists($this, 'before_rebuildTable_callback')) {
-            $this->{'before_rebuildTable_callback'}();
+        if (method_exists($this, 'beforeRebuildTable')) {
+            $this->{'beforeRebuildTable'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1046,8 +1032,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->rebuildTable();
 
-        if (method_exists($this, 'after_rebuildTable_callback')) {
-            $this->{'after_rebuildTable_callback'}();
+        if (method_exists($this, 'afterRebuildTable')) {
+            $this->{'afterRebuildTable'}();
         }
 
         self::$logger->debug('<<rebuildTable');
@@ -1058,16 +1044,16 @@ abstract class ActiveRecord
      *
      * @since 1.0
      *
-     * @param string $tableName Optional table name, leave blank for the defined table for this class to be dropped
+     * @param string|null $tableName Optional table name, leave blank for the defined table for this class to be dropped
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function dropTable($tableName = null)
+    public function dropTable(string|null $tableName = null): void
     {
         self::$logger->debug('>>dropTable()');
 
-        if (method_exists($this, 'before_dropTable_callback')) {
-            $this->{'before_dropTable_callback'}();
+        if (method_exists($this, 'beforeDropTable')) {
+            $this->{'beforeDropTable'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1076,8 +1062,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->dropTable($tableName);
 
-        if (method_exists($this, 'after_dropTable_callback')) {
-            $this->{'after_dropTable_callback'}();
+        if (method_exists($this, 'afterDropTable')) {
+            $this->{'afterDropTable'}();
         }
 
         self::$logger->debug('<<dropTable');
@@ -1093,22 +1079,22 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function addProperty($propName)
+    public function addProperty(string $propName): void
     {
         self::$logger->debug('>>addProperty(propName=['.$propName.'])');
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_addProperty_callback')) {
-            $this->{'before_addProperty_callback'}();
+        if (method_exists($this, 'beforeAddProperty')) {
+            $this->{'beforeAddProperty'}();
         }
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
         $provider->addProperty($propName);
 
-        if (method_exists($this, 'after_addProperty_callback')) {
-            $this->{'after_addProperty_callback'}();
+        if (method_exists($this, 'afterAddProperty')) {
+            $this->{'afterAddProperty'}();
         }
 
         self::$logger->debug('<<addProperty');
@@ -1121,7 +1107,7 @@ abstract class ActiveRecord
      *
      * @since 1.2.1
      */
-    public function populateFromArray($hashArray)
+    public function populateFromArray(array $hashArray): void
     {
         self::$logger->debug('>>populateFromArray(hashArray=['.print_r($hashArray, true).'])');
 
@@ -1161,18 +1147,16 @@ abstract class ActiveRecord
     /**
      * Gets the maximum ID value from the database for this class type.
      *
-     * @return int The maximum ID value in the class table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getMAX()
+    public function getMAX(): int
     {
         self::$logger->debug('>>getMAX()');
 
-        if (method_exists($this, 'before_getMAX_callback')) {
-            $this->{'before_getMAX_callback'}();
+        if (method_exists($this, 'beforeGetMAX')) {
+            $this->{'beforeGetMAX'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1181,8 +1165,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $max = $provider->getMAX();
 
-        if (method_exists($this, 'after_getMAX_callback')) {
-            $this->{'after_getMAX_callback'}();
+        if (method_exists($this, 'afterGetMAX')) {
+            $this->{'afterGetMAX'}();
         }
 
         self::$logger->debug('<<getMAX ['.$max.']');
@@ -1196,19 +1180,17 @@ abstract class ActiveRecord
      * @param array $attributes The attributes to count the objects by (optional).
      * @param array $values     The values of the attributes to count the objects by (optional).
      *
-     * @return int
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getCount($attributes = array(), $values = array())
+    public function getCount(array $attributes = array(), array $values = array()): int
     {
         self::$logger->debug('>>getCount(attributes=['.var_export($attributes, true).'], values=['.var_export($values, true).'])');
 
-        if (method_exists($this, 'before_getCount_callback')) {
-            $this->{'before_getCount_callback'}();
+        if (method_exists($this, 'beforeGetCount')) {
+            $this->{'beforeGetCount'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1221,8 +1203,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $count = $provider->getCount($attributes, $values);
 
-        if (method_exists($this, 'after_getCount_callback')) {
-            $this->{'after_getCount_callback'}();
+        if (method_exists($this, 'afterGetCount')) {
+            $this->{'afterGetCount'}();
         }
 
         self::$logger->debug('<<getCount ['.$count.']');
@@ -1234,18 +1216,16 @@ abstract class ActiveRecord
      * Gets the count from the database for the amount of entries in the [tableName]_history table for this business object.  Only call
      * this method on classes where maintainHistory = true, otherwise an exception will be thrown.
      *
-     * @return int
-     *
      * @since 1.2
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getHistoryCount()
+    public function getHistoryCount(): int
     {
         self::$logger->debug('>>getHistoryCount()');
 
-        if (method_exists($this, 'before_getHistoryCount_callback')) {
-            $this->{'before_getHistoryCount_callback'}();
+        if (method_exists($this, 'beforeGetHistoryCount')) {
+            $this->{'beforeGetHistoryCount'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1254,8 +1234,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $count = $provider->getHistoryCount();
 
-        if (method_exists($this, 'after_getHistoryCount_callback')) {
-            $this->{'after_getHistoryCount_callback'}();
+        if (method_exists($this, 'afterGetHistoryCount')) {
+            $this->{'afterGetHistoryCount'}();
         }
 
         self::$logger->debug('<<getHistoryCount ['.$count.']');
@@ -1264,32 +1244,28 @@ abstract class ActiveRecord
     }
 
     /**
-     * Gets the ID for the object in zero-padded format (same as getID()).
-     *
-     * @return string 11 digit zero-padded ID value.
+     * Gets the ID for the object in 11 digit zero-padded format (same as getID()).
      *
      * @since 1.0
      */
-    final public function getID()
+    final public function getID(): string
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
         }
         self::$logger->debug('>>getID()');
-        $oid = str_pad($this->ID, 11, '0', STR_PAD_LEFT);
-        self::$logger->debug('<<getID ['.$oid.']');
+        $id = str_pad(($this->ID == null ? '0' : $this->ID), 11, '0', STR_PAD_LEFT);
+        self::$logger->debug('<<getID ['.$id.']');
 
-        return $oid;
+        return $id;
     }
 
     /**
      * Method for getting version number of the object.
      *
-     * @return \Alpha\Model\Type\Integer The object version number.
-     *
      * @since 1.0
      */
-    public function getVersionNumber()
+    public function getVersionNumber(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getVersionNumber()');
         self::$logger->debug('<<getVersionNumber ['.$this->version_num.']');
@@ -1304,12 +1280,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    protected function setEnumOptions()
+    protected function setEnumOptions(): void
     {
         self::$logger->debug('>>setEnumOptions()');
 
-        if (method_exists($this, 'before_setEnumOptions_callback')) {
-            $this->{'before_setEnumOptions_callback'}();
+        if (method_exists($this, 'beforeSetEnumOptions')) {
+            $this->{'beforeSetEnumOptions'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1333,14 +1309,12 @@ abstract class ActiveRecord
      * @param string $prop           The name of the object property to get.
      * @param bool   $noChildMethods Set to true if you do not want to use getters in the child object, defaults to false.
      *
-     * @return mixed The property value.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\AlphaException
      */
-    public function get($prop, $noChildMethods = false)
+    public function get(string $prop, bool $noChildMethods = false): mixed
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1348,8 +1322,8 @@ abstract class ActiveRecord
 
         self::$logger->debug('>>get(prop=['.$prop.'], noChildMethods=['.$noChildMethods.'])');
 
-        if (method_exists($this, 'before_get_callback')) {
-            $this->{'before_get_callback'}();
+        if (method_exists($this, 'beforeGet')) {
+            $this->{'beforeGet'}();
         }
 
         if (empty($prop)) {
@@ -1358,8 +1332,8 @@ abstract class ActiveRecord
 
         // handle attributes with a get.ucfirst($prop) method
         if (!$noChildMethods && method_exists($this, 'get'.ucfirst($prop))) {
-            if (method_exists($this, 'after_get_callback')) {
-                $this->{'after_get_callback'}();
+            if (method_exists($this, 'afterGet')) {
+                $this->{'afterGet'}();
             }
 
             $methodName = 'get'.ucfirst($prop);
@@ -1370,8 +1344,8 @@ abstract class ActiveRecord
         } else {
             // handle attributes with no dedicated child get.ucfirst($prop) method
             if (isset($this->$prop) && is_object($this->$prop) && method_exists($this->$prop, 'getValue')) {
-                if (method_exists($this, 'after_get_callback')) {
-                    $this->{'after_get_callback'}();
+                if (method_exists($this, 'afterGet')) {
+                    $this->{'afterGet'}();
                 }
 
                 // complex types will have a getValue() method, return the value of that
@@ -1379,8 +1353,8 @@ abstract class ActiveRecord
 
                 return $this->$prop->getValue();
             } elseif (isset($this->$prop)) {
-                if (method_exists($this, 'after_get_callback')) {
-                    $this->{'after_get_callback'}();
+                if (method_exists($this, 'afterGet')) {
+                    $this->{'afterGet'}();
                 }
 
                 // simple types returned as-is
@@ -1407,18 +1381,18 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function set($prop, $value, $noChildMethods = false)
+    public function set(string $prop, mixed $value, bool $noChildMethods = false): void
     {
         self::$logger->debug('>>set(prop=['.$prop.'], $value=['.print_r($value, true).'], noChildMethods=['.$noChildMethods.'])');
 
-        if (method_exists($this, 'before_set_callback')) {
-            $this->{'before_set_callback'}();
+        if (method_exists($this, 'beforeSet')) {
+            $this->{'beforeSet'}();
         }
 
         // handle attributes with a set.ucfirst($prop) method
         if (!$noChildMethods && method_exists($this, 'set'.ucfirst($prop))) {
-            if (method_exists($this, 'after_set_callback')) {
-                $this->{'after_set_callback'}();
+            if (method_exists($this, 'afterSet')) {
+                $this->{'afterSet'}();
             }
 
             $methodName = 'set'.ucfirst($prop);
@@ -1427,8 +1401,8 @@ abstract class ActiveRecord
         } else {
             // handle attributes with no dedicated child set.ucfirst($prop) method
             if (isset($this->$prop)) {
-                if (method_exists($this, 'after_set_callback')) {
-                    $this->{'after_set_callback'}();
+                if (method_exists($this, 'afterSet')) {
+                    $this->{'afterSet'}();
                 }
 
                 // complex types will have a setValue() method to call
@@ -1456,18 +1430,16 @@ abstract class ActiveRecord
      *
      * @param string $prop The name of the property we are getting.
      *
-     * @return \Alpha\Model\Type\Type|bool The complex type object found.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getPropObject($prop)
+    public function getPropObject(string $prop): mixed
     {
         self::$logger->debug('>>getPropObject(prop=['.$prop.'])');
 
-        if (method_exists($this, 'before_getPropObject_callback')) {
-            $this->{'before_getPropObject_callback'}();
+        if (method_exists($this, 'beforeGetPropObject')) {
+            $this->{'beforeGetPropObject'}();
         }
 
         // get the class attributes
@@ -1478,8 +1450,8 @@ abstract class ActiveRecord
         $attribute = new ReflectionProperty($this, $prop);
 
         if ($attribute->isPrivate()) {
-            if (method_exists($this, 'after_getPropObject_callback')) {
-                $this->{'after_getPropObject_callback'}();
+            if (method_exists($this, 'afterGetPropObject')) {
+                $this->{'afterGetPropObject'}();
             }
 
             self::$logger->debug('<<getPropObject [false]');
@@ -1491,8 +1463,8 @@ abstract class ActiveRecord
             $propName = $propObj->name;
 
             if ($prop == $propName) {
-                if (method_exists($this, 'after_getPropObject_callback')) {
-                    $this->{'after_getPropObject_callback'}();
+                if (method_exists($this, 'afterGetPropObject')) {
+                    $this->{'afterGetPropObject'}();
                 }
 
                 self::$logger->debug('<<getPropObject ['.var_export($this->$prop, true).']');
@@ -1510,18 +1482,16 @@ abstract class ActiveRecord
      *
      * @param bool $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableExists($checkHistoryTable = false)
+    public function checkTableExists(bool $checkHistoryTable = false): bool
     {
         self::$logger->debug('>>checkTableExists()');
 
-        if (method_exists($this, 'before_checkTableExists_callback')) {
-            $this->{'before_checkTableExists_callback'}();
+        if (method_exists($this, 'beforeCheckTableExists')) {
+            $this->{'beforeCheckTableExists'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1530,8 +1500,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $tableExists = $provider->checkTableExists($checkHistoryTable);
 
-        if (method_exists($this, 'after_checkTableExists_callback')) {
-            $this->{'after_checkTableExists_callback'}();
+        if (method_exists($this, 'afterCheckTableExists')) {
+            $this->{'afterCheckTableExists'}();
         }
 
         self::$logger->debug('<<checkTableExists ['.$tableExists.']');
@@ -1546,13 +1516,11 @@ abstract class ActiveRecord
      * @param string $recordClassName       The name of the business object class we are checking.
      * @param bool   $checkHistoryTable Set to true if you want to check for the existance of the _history table for this DAO.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function checkRecordTableExists($recordClassName, $checkHistoryTable = false)
+    public static function checkRecordTableExists(string $recordClassName, bool $checkHistoryTable = false): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -1574,20 +1542,18 @@ abstract class ActiveRecord
      * Checks to see if the table in the database matches (for fields) the business class definition, i.e. if the
      * database table is in sync with the class definition.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkTableNeedsUpdate()
+    public function checkTableNeedsUpdate(): bool
     {
         self::$logger->debug('>>checkTableNeedsUpdate()');
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_checkTableNeedsUpdate_callback')) {
-            $this->{'before_checkTableNeedsUpdate_callback'}();
+        if (method_exists($this, 'beforeCheckTableNeedsUpdate')) {
+            $this->{'beforeCheckTableNeedsUpdate'}();
         }
 
         $tableExists = $this->checkTableExists();
@@ -1601,8 +1567,8 @@ abstract class ActiveRecord
             $provider->setRecord($this);
             $updateRequired = $provider->checkTableNeedsUpdate();
 
-            if (method_exists($this, 'after_checkTableNeedsUpdate_callback')) {
-                $this->{'after_checkTableNeedsUpdate_callback'}();
+            if (method_exists($this, 'afterCheckTableNeedsUpdate')) {
+                $this->{'afterCheckTableNeedsUpdate'}();
             }
 
             self::$logger->debug('<<checkTableNeedsUpdate ['.$updateRequired.']');
@@ -1615,28 +1581,26 @@ abstract class ActiveRecord
      * Returns an array containing any properties on the class which have not been created on the database
      * table yet.
      *
-     * @return array An array of missing fields in the database table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function findMissingFields()
+    public function findMissingFields(): array
     {
         self::$logger->debug('>>findMissingFields()');
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_findMissingFields_callback')) {
-            $this->{'before_findMissingFields_callback'}();
+        if (method_exists($this, 'beforeFindMissingFields')) {
+            $this->{'beforeFindMissingFields'}();
         }
 
         $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
         $provider->setRecord($this);
         $missingFields = $provider->findMissingFields();
 
-        if (method_exists($this, 'after_findMissingFields_callback')) {
-            $this->{'after_findMissingFields_callback'}();
+        if (method_exists($this, 'afterFindMissingFields')) {
+            $this->{'afterFindMissingFields'}();
         }
 
         self::$logger->debug('<<findMissingFields ['.var_export($missingFields, true).']');
@@ -1645,15 +1609,13 @@ abstract class ActiveRecord
     }
 
     /**
-     * Getter for the TABLE_NAME, which should be set by a child of this class.
-     *
-     * @return string The table name in the database.
+     * Getter for the TABLE_NAME, the name of the table in the database for this class, which should be set by a child of this class.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         self::$logger->debug('>>getTableName()');
 
@@ -1673,11 +1635,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the ID of the person who created this record.
      *
-     * @return \Alpha\Model\Type\Integer The ID of the creator.
-     *
      * @since 1.0
      */
-    public function getCreatorId()
+    public function getCreatorId(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getCreatorId()');
         self::$logger->debug('<<getCreatorId ['.$this->created_by.']');
@@ -1688,11 +1648,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the ID of the person who updated this record.
      *
-     * @return \Alpha\Model\Type\Integer The ID of the updator.
-     *
      * @since 1.0
      */
-    public function getUpdatorId()
+    public function getUpdatorId(): \Alpha\Model\Type\Integer
     {
         self::$logger->debug('>>getUpdatorId()');
         self::$logger->debug('<<getUpdatorId ['.$this->updated_by.']');
@@ -1703,11 +1661,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the Record was created.
      *
-     * @return \Alpha\Model\Type\Timestamp
-     *
      * @since 1.0
      */
-    public function getCreateTS()
+    public function getCreateTS(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getCreateTS()');
         self::$logger->debug('<<getCreateTS ['.$this->created_ts.']');
@@ -1718,11 +1674,9 @@ abstract class ActiveRecord
     /**
      * Method for getting the date/time of when the Record was last updated.
      *
-     * @return \Alpha\Model\Type\Timestamp
-     *
      * @since 1.0
      */
-    public function getUpdateTS()
+    public function getUpdateTS(): \Alpha\Model\Type\Timestamp
     {
         self::$logger->debug('>>getUpdateTS()');
         self::$logger->debug('<<getUpdateTS ['.$this->updated_ts.']');
@@ -1737,7 +1691,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markTransient($attributeName)
+    public function markTransient(string $attributeName): void
     {
         self::$logger->debug('>>markTransient(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markTransient');
@@ -1752,7 +1706,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function markPersistent($attributeName)
+    public function markPersistent(string $attributeName): void
     {
         self::$logger->debug('>>markPersistent(attributeName=['.$attributeName.'])');
         self::$logger->debug('<<markPersistent');
@@ -1768,7 +1722,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    protected function markUnique($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    protected function markUnique(string $attribute1Name, string $attribute2Name = '', string $attribute3Name = ''): void
     {
         self::$logger->debug('>>markUnique(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
@@ -1791,11 +1745,9 @@ abstract class ActiveRecord
     /**
      * Returns the array of names of unique attributes on this record.
      *
-     * @return array
-     *
      * @since 1.1
      */
-    public function getUniqueAttributes()
+    public function getUniqueAttributes(): array
     {
         self::$logger->debug('>>getUniqueAttributes()');
         self::$logger->debug('<<getUniqueAttributes: ['.print_r($this->uniqueAttributes, true).']');
@@ -1806,13 +1758,11 @@ abstract class ActiveRecord
     /**
      * Gets an array of all of the names of the active database indexes for this class.
      *
-     * @return array An array of database indexes on this table.
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getIndexes()
+    public function getIndexes(): array
     {
         self::$logger->debug('>>getIndexes()');
 
@@ -1839,14 +1789,14 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName = null)
+    public function createForeignIndex(string $attributeName, string $relatedClass, string $relatedClassAttribute, string $indexName = null): void
     {
         self::$logger->debug('>>createForeignIndex(attributeName=['.$attributeName.'], relatedClass=['.$relatedClass.'], relatedClassAttribute=['.$relatedClassAttribute.'], indexName=['.$indexName.']');
 
         $config = ConfigProvider::getInstance();
 
-        if (method_exists($this, 'before_createForeignIndex_callback')) {
-            $this->{'before_createForeignIndex_callback'}();
+        if (method_exists($this, 'beforeCreateForeignIndex')) {
+            $this->{'beforeCreateForeignIndex'}();
         }
 
         $relatedRecord = new $relatedClass();
@@ -1863,8 +1813,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->createForeignIndex($attributeName, $relatedClass, $relatedClassAttribute, $indexName);
 
-        if (method_exists($this, 'after_createForeignIndex_callback')) {
-            $this->{'after_createForeignIndex_callback'}();
+        if (method_exists($this, 'afterCreateForeignIndex')) {
+            $this->{'afterCreateForeignIndex'}();
         }
 
         self::$logger->debug('<<createForeignIndex');
@@ -1881,12 +1831,12 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\FailedIndexCreateException
      */
-    public function createUniqueIndex($attribute1Name, $attribute2Name = '', $attribute3Name = '')
+    public function createUniqueIndex(string $attribute1Name, string $attribute2Name = '', string $attribute3Name = ''): void
     {
         self::$logger->debug('>>createUniqueIndex(attribute1Name=['.$attribute1Name.'], attribute2Name=['.$attribute2Name.'], attribute3Name=['.$attribute3Name.'])');
 
-        if (method_exists($this, 'before_createUniqueIndex_callback')) {
-            $this->{'before_createUniqueIndex_callback'}();
+        if (method_exists($this, 'beforeCreateUniqueIndex')) {
+            $this->{'beforeCreateUniqueIndex'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -1895,8 +1845,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $provider->createUniqueIndex($attribute1Name, $attribute2Name, $attribute3Name);
 
-        if (method_exists($this, 'after_createUniqueIndex_callback')) {
-            $this->{'before_createUniqueIndex_callback'}();
+        if (method_exists($this, 'afterCreateUniqueIndex')) {
+            $this->{'afterCreateUniqueIndex'}();
         }
 
         self::$logger->debug('<<createUniqueIndex');
@@ -1905,11 +1855,9 @@ abstract class ActiveRecord
     /**
      * Gets the data labels array.
      *
-     * @return array An array of attribute labels.
-     *
      * @since 1.0
      */
-    public function getDataLabels()
+    public function getDataLabels(): array
     {
         self::$logger->debug('>>getDataLabels()');
         self::$logger->debug('<<getDataLabels() ['.var_export($this->dataLabels, true).'])');
@@ -1926,7 +1874,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setDataLabels($labels)
+    public function setDataLabels(array $labels): void
     {
         self::$logger->debug('>>setDataLabels(labels=['.print_r($labels, true).'])');
 
@@ -1942,19 +1890,17 @@ abstract class ActiveRecord
     /**
      * Gets the data label for the given attribute name.
      *
-     * @param $att The attribute name to get the label for.
-     *
-     * @return string
+     * @param string $att The attribute name to get the label for.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function getDataLabel($att)
+    public function getDataLabel(string $att): string
     {
         self::$logger->debug('>>getDataLabel(att=['.$att.'])');
 
-        if (in_array($att, array_keys($this->dataLabels))) {
+        if (in_array($att, array_keys($this->dataLabels), true)) {
             self::$logger->debug('<<getDataLabel ['.$this->dataLabels[$att].'])');
 
             return $this->dataLabels[$att];
@@ -1967,11 +1913,9 @@ abstract class ActiveRecord
     /**
      * Loops over the core and custom Record directories and builds an array of all of the Record class names in the system.
      *
-     * @return array An array of business object class names.
-     *
      * @since 1.0
      */
-    public static function getRecordClassNames()
+    public static function getRecordClassNames(): array
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2025,11 +1969,9 @@ abstract class ActiveRecord
     /**
      * Get the array of default attribute names.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getDefaultAttributes()
+    public function getDefaultAttributes(): array
     {
         self::$logger->debug('>>getDefaultAttributes()');
         self::$logger->debug('<<getDefaultAttributes ['.var_export($this->defaultAttributes, true).']');
@@ -2040,11 +1982,9 @@ abstract class ActiveRecord
     /**
      * Get the array of transient attribute names.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getTransientAttributes()
+    public function getTransientAttributes(): array
     {
         self::$logger->debug('>>getTransientAttributes()');
         self::$logger->debug('<<getTransientAttributes ['.var_export($this->transientAttributes, true).']');
@@ -2055,11 +1995,9 @@ abstract class ActiveRecord
     /**
      * Get the array of persistent attribute names, i.e. those that are saved in the database.
      *
-     * @return array An array of attribute names.
-     *
      * @since 1.0
      */
-    public function getPersistentAttributes()
+    public function getPersistentAttributes(): array
     {
         self::$logger->debug('>>getPersistentAttributes()');
 
@@ -2073,7 +2011,7 @@ abstract class ActiveRecord
             $propName = $propObj->name;
 
             // filter transient attributes
-            if (!in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->transientAttributes, true)) {
                 array_push($attributes, $propName);
             }
         }
@@ -2090,7 +2028,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    public function setID($ID)
+    public function setID(int $ID): void
     {
         self::$logger->debug('>>setID(ID=['.$ID.'])');
         self::$logger->debug('<<setID');
@@ -2100,11 +2038,9 @@ abstract class ActiveRecord
     /**
      * Inspector to see if the business object is transient (not presently stored in the database).
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function isTransient()
+    public function isTransient(): bool
     {
         self::$logger->debug('>>isTransient()');
 
@@ -2122,11 +2058,9 @@ abstract class ActiveRecord
     /**
      * Get the last database query run on this object.
      *
-     * @return string An SQL query string.
-     *
      * @since 1.0
      */
-    public function getLastQuery()
+    public function getLastQuery(): string
     {
         self::$logger->debug('>>getLastQuery()');
         self::$logger->debug('<<getLastQuery ['.$this->lastQuery.']');
@@ -2139,7 +2073,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    private function clear()
+    private function clear(): void
     {
         self::$logger->debug('>>clear()');
 
@@ -2164,12 +2098,16 @@ abstract class ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function reload()
+    public function reload(): void
     {
         self::$logger->debug('>>reload()');
 
+        $config = ConfigProvider::getInstance();
+
         if (!$this->isTransient()) {
-            $this->load($this->getID());
+            $provider = ServiceFactory::getInstance($config->get('db.provider.name'), 'Alpha\Model\ActiveRecordProviderInterface');
+            $provider->setRecord($this);
+            $provider->reload();
         } else {
             throw new AlphaException('Cannot reload transient object from database!');
         }
@@ -2181,18 +2119,16 @@ abstract class ActiveRecord
      *
      * @param int $ID The Object ID of the object we want to see whether it exists or not.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkRecordExists($ID)
+    public function checkRecordExists(int $ID): bool
     {
         self::$logger->debug('>>checkRecordExists(ID=['.$ID.'])');
 
-        if (method_exists($this, 'before_checkRecordExists_callback')) {
-            $this->{'before_checkRecordExists_callback'}();
+        if (method_exists($this, 'beforeCheckRecordExists')) {
+            $this->{'beforeCheckRecordExists'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -2201,8 +2137,8 @@ abstract class ActiveRecord
         $provider->setRecord($this);
         $recordExists = $provider->checkRecordExists($ID);
 
-        if (method_exists($this, 'after_checkRecordExists_callback')) {
-            $this->{'after_checkRecordExists_callback'}();
+        if (method_exists($this, 'afterCheckRecordExists')) {
+            $this->{'afterCheckRecordExists'}();
         }
 
         self::$logger->debug('<<checkRecordExists ['.$recordExists.']');
@@ -2215,13 +2151,11 @@ abstract class ActiveRecord
      * name matches the classname name of another record, i.e. the table is used to store
      * multiple types of records.
      *
-     * @return bool
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\BadTableNameException
      */
-    public function isTableOverloaded()
+    public function isTableOverloaded(): bool
     {
         self::$logger->debug('>>isTableOverloaded()');
 
@@ -2239,13 +2173,13 @@ abstract class ActiveRecord
     /**
      * Starts a new database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function begin($record = null)
+    public static function begin(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2274,13 +2208,13 @@ abstract class ActiveRecord
     /**
      * Commits the current database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FailedSaveException
      */
-    public static function commit($record = null)
+    public static function commit(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2309,13 +2243,13 @@ abstract class ActiveRecord
     /**
      * Aborts the current database transaction.
      *
-     * @param ActiveRecord $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
+     * @param \Alpha\Model\ActiveRecord|null $record The ActiveRecord instance to pass to the database provider. Leave empty to have a new Person passed.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public static function rollback($record = null)
+    public static function rollback(\Alpha\Model\ActiveRecord|null $record = null): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2344,11 +2278,9 @@ abstract class ActiveRecord
     /**
      * Static method that tries to determine if the system database has been installed or not.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isInstalled()
+    public static function isInstalled(): bool
     {
         if (self::$logger == null) {
             self::$logger = new Logger('ActiveRecord');
@@ -2375,11 +2307,9 @@ abstract class ActiveRecord
     /**
      * Returns true if the Record has a Relation property called tags, false otherwise.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function isTagged()
+    public function isTagged(): bool
     {
         if (property_exists($this, 'taggedAttributes') && property_exists($this, 'tags') && $this->{'tags'} instanceof \Alpha\Model\Type\Relation) {
             return true;
@@ -2391,11 +2321,9 @@ abstract class ActiveRecord
     /**
      * Returns the contents of the taggedAttributes array, or an empty array if that does not exist.
      *
-     * @return array
-     *
      * @since 1.2.3
      */
-    public function getTaggedAttributes()
+    public function getTaggedAttributes(): array
     {
         if ($this->isTagged()) {
             return $this->{'taggedAttributes'};
@@ -2411,7 +2339,7 @@ abstract class ActiveRecord
      *
      * @since 1.0
      */
-    private function setVersion($versionNumber)
+    private function setVersion(int $versionNumber): void
     {
         $this->version_num->setValue($versionNumber);
     }
@@ -2424,11 +2352,9 @@ abstract class ActiveRecord
      * @param string                    $targetClassName     The fully-qualified name of the target Record class.
      * @param \Alpha\Model\ActiveRecord $originalRecord      The original business object.
      *
-     * @return \Alpha\Model\ActiveRecord The new business object resulting from the cast.
-     *
      * @since 1.0
      */
-    public function cast($targetClassName, $originalRecord)
+    public function cast(string $targetClassName, \Alpha\Model\ActiveRecord $originalRecord): \Alpha\Model\ActiveRecord
     {
         $record = new $targetClassName();
         $record->setID($originalRecord->getID());
@@ -2446,7 +2372,7 @@ abstract class ActiveRecord
             // the original Record is smaller, so loop over its properties
             foreach ($originalRecordproperties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->transientAttributes)) {
+                if (!in_array($propName, $this->transientAttributes, true)) {
                     $record->set($propName, $originalRecord->get($propName));
                 }
             }
@@ -2454,7 +2380,7 @@ abstract class ActiveRecord
             // the new Record is smaller, so loop over its properties
             foreach ($newRecordproperties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->transientAttributes)) {
+                if (!in_array($propName, $this->transientAttributes, true)) {
                     $record->set($propName, $originalRecord->get($propName));
                 }
             }
@@ -2466,11 +2392,9 @@ abstract class ActiveRecord
     /**
      * Returns the simple class name, stripped of the namespace.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getFriendlyClassName()
+    public function getFriendlyClassName(): string
     {
         $reflectClass = new ReflectionClass($this);
 
@@ -2482,11 +2406,9 @@ abstract class ActiveRecord
      *
      * @param string $attribute The attribute name.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function hasAttribute($attribute)
+    public function hasAttribute(string $attribute): bool
     {
         return property_exists($this, $attribute);
     }
@@ -2496,7 +2418,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function addToCache()
+    public function addToCache(): void
     {
         self::$logger->debug('>>addToCache()');
         $config = ConfigProvider::getInstance();
@@ -2517,7 +2439,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function removeFromCache()
+    public function removeFromCache(): void
     {
         self::$logger->debug('>>removeFromCache()');
         $config = ConfigProvider::getInstance();
@@ -2525,60 +2447,63 @@ abstract class ActiveRecord
         try {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
             $cache->delete(get_class($this).'-'.$this->getID());
+        } catch (ResourceNotFoundException $e) {
+            self::$logger->debug('Cache miss while attempting to delete ['.$config->get('cache.provider.name').']
+                instance: ['.$e->getMessage().']');
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a business object from ['.$config->get('cache.provider.name').']
-                instance: ['.$e->getMessage().']');
+                instance: ['.print_r($e, true).']');
+            exit;
         }
 
         self::$logger->debug('<<removeFromCache');
     }
 
     /**
-     * Attempts to load the business object from the configured cache instance.
+     * Attempts to load the business object from the configured cache instance, returns true on a cache hit.
      *
      * @since 1.1
-     *
-     * @return bool
      */
-    public function loadFromCache()
+    public function loadFromCache(): bool
     {
         self::$logger->debug('>>loadFromCache()');
         $config = ConfigProvider::getInstance();
 
         try {
             $cache = ServiceFactory::getInstance($config->get('cache.provider.name'), 'Alpha\Util\Cache\CacheProviderInterface');
-            $record = $cache->get(get_class($this).'-'.$this->getID());
 
-            if (!$record) {
+            try {
+                $record = $cache->get(get_class($this).'-'.$this->getID());
+            } catch (ResourceNotFoundException $e) {
                 self::$logger->debug('Cache miss on key ['.get_class($this).'-'.$this->getID().']');
                 self::$logger->debug('<<loadFromCache: [false]');
 
                 return false;
-            } else {
-                // get the class attributes
-                $reflection = new ReflectionClass(get_class($this));
-                $properties = $reflection->getProperties();
+            }
 
-                foreach ($properties as $propObj) {
-                    $propName = $propObj->name;
+            // get the class attributes
+            $reflection = new ReflectionClass(get_class($this));
+            $properties = $reflection->getProperties();
 
-                    // filter transient attributes
-                    if (!in_array($propName, $this->transientAttributes)) {
-                        $this->set($propName, $record->get($propName, true));
-                    } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
-                        $prop = $this->getPropObject($propName);
+            foreach ($properties as $propObj) {
+                $propName = $propObj->name;
 
-                        // handle the setting of ONE-TO-MANY relation values
-                        if ($prop->getRelationType() == 'ONE-TO-MANY') {
-                            $this->set($propObj->name, $this->getID());
-                        }
+                // filter transient attributes
+                if (!in_array($propName, $this->transientAttributes, true)) {
+                    $this->set($propName, $record->get($propName, true));
+                } elseif (!$propObj->isPrivate() && isset($this->$propName) && $this->$propName instanceof Relation) {
+                    $prop = $this->getPropObject($propName);
+
+                    // handle the setting of ONE-TO-MANY relation values
+                    if ($prop->getRelationType() == 'ONE-TO-MANY') {
+                        $this->set($propObj->name, $this->getID());
                     }
                 }
-
-                self::$logger->debug('<<loadFromCache: [true]');
-
-                return true;
             }
+
+            self::$logger->debug('<<loadFromCache: [true]');
+
+            return true;
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from ['.$config->get('cache.provider.name').']
              instance: ['.$e->getMessage().']');
@@ -2596,7 +2521,7 @@ abstract class ActiveRecord
      *
      * @since 1.1
      */
-    public function setLastQuery($query)
+    public function setLastQuery(string $query): void
     {
         self::$logger->sql($query);
         $this->lastQuery = $query;
@@ -2608,7 +2533,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function __wakeup()
+    public function __wakeup(): void
     {
         if (self::$logger == null) {
             self::$logger = new Logger(get_class($this));
@@ -2624,7 +2549,7 @@ abstract class ActiveRecord
      *
      * @since 1.2
      */
-    public function setMaintainHistory($maintainHistory)
+    public function setMaintainHistory(bool $maintainHistory): void
     {
         if (!is_bool($maintainHistory)) {
             throw new IllegalArguementException('Non-boolean value ['.$maintainHistory.'] passed to setMaintainHistory method!');
@@ -2636,11 +2561,9 @@ abstract class ActiveRecord
     /**
      * Gets the value of the  maintainHistory attribute.
      *
-     * @return bool
-     *
      * @since 1.2
      */
-    public function getMaintainHistory()
+    public function getMaintainHistory(): bool
     {
         return $this->maintainHistory;
     }
@@ -2648,11 +2571,9 @@ abstract class ActiveRecord
     /**
      * Return a hash array of the object containing attribute names and simplfied values.
      *
-     * @return array
-     *
      * @since  1.2.4
      */
-    public function toArray()
+    public function toArray(): array
     {
         // get the class attributes
         $reflection = new ReflectionClass(get_class($this));
@@ -2663,7 +2584,7 @@ abstract class ActiveRecord
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
 
-            if (!in_array($propName, $this->transientAttributes)) {
+            if (!in_array($propName, $this->transientAttributes, true)) {
                 $val = $this->get($propName);
 
                 if (is_object($val)) {
@@ -2680,11 +2601,9 @@ abstract class ActiveRecord
     /**
      * Check to see if the configured database exists.
      *
-     * @return bool
-     *
      * @since 2.0
      */
-    public static function checkDatabaseExists()
+    public static function checkDatabaseExists(): bool
     {
         $config = ConfigProvider::getInstance();
 
@@ -2701,7 +2620,7 @@ abstract class ActiveRecord
      *
      * @since 2.0
      */
-    public static function createDatabase()
+    public static function createDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2717,7 +2636,7 @@ abstract class ActiveRecord
      *
      * @since 2.0
      */
-    public static function dropDatabase()
+    public static function dropDatabase(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -2735,7 +2654,7 @@ abstract class ActiveRecord
      *
      * @since 3.0
      */
-    public static function backupDatabase($targetFile)
+    public static function backupDatabase(string $targetFile): void
     {
         $config = ConfigProvider::getInstance();
 

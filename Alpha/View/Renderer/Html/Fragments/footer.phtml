@@ -1,15 +1,27 @@
-    <footer>
-        <p>&copy; <?= date('Y') ?></p>
-    </footer>
     </div>
 
-        <script src="<?= $config->get('app.url') ?>/js/vendor/bootstrap.min.js"></script>
+    <script src="<?= $config->get('app.url') ?>/bootstrap/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="<?= $config->get('app.url') ?>/js/vendor/jquery.pagedown-bootstrap.combined.min.js"></script>
 
-        <script src="<?= $config->get('app.url') ?>/js/vendor/bootstrap-dialog.min.js"></script>
+    <script src="<?= $config->get('app.url') ?>/js/validation.js"></script>
 
-        <script src="<?= $config->get('app.url') ?>/js/vendor/jquery.pagedown-bootstrap.combined.min.js"></script>
-
-        <script src="<?= $config->get('app.url') ?>/js/validation.min.js"></script>
+    <div class="modal" tabindex="-1" id="pageModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Please confirm</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p></p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="pageModalOkayButton">Okay</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     </body>
 </html>

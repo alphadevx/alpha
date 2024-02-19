@@ -9,7 +9,7 @@ namespace Alpha\Util\Http;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -113,11 +113,9 @@ class AgentUtils
      *
      * @param string $userAgent The user agent string that we want to check.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public static function isBot($userAgent)
+    public static function isBot(string $userAgent): bool
     {
         $isBot = false;
 

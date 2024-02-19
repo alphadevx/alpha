@@ -9,7 +9,7 @@ namespace Alpha\Util\Http\Session;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,17 +50,15 @@ interface SessionProviderInterface
      * Starts a new session, or resumes an existing session if there is already a session ID available.
      *
      * @since 2.0
-     * @return void
      */
-    public function init();
+    public function init(): void;
 
     /**
      * Destroys the current session.
      *
      * @since 2.0
-     * @return void
      */
-    public function destroy();
+    public function destroy(): void;
 
     /**
      * Get the key value from the session.  Returns false if nothing is found.
@@ -68,10 +66,8 @@ interface SessionProviderInterface
      * @param string $key
      *
      * @since 2.0
-     *
-     * @return mixed
      */
-    public function get($key);
+    public function get(string $key): mixed;
 
     /**
      * Stores the value provided at that key in the session.
@@ -80,9 +76,8 @@ interface SessionProviderInterface
      * @param mixed  $value
      *
      * @since 2.0
-     * @return void
      */
-    public function set($key, $value);
+    public function set(string $key, $value): void;
 
     /**
      * Deletes the value provided at that key in the session.
@@ -90,16 +85,13 @@ interface SessionProviderInterface
      * @param string $key
      *
      * @since 2.0
-     * @return void
      */
-    public function delete($key);
+    public function delete(string $key): void;
 
     /**
      * Get the current session ID if available.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getID();
+    public function getID(): string;
 }

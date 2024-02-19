@@ -11,7 +11,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -73,7 +73,7 @@ class ActiveRecord2Excel
      *
      * @since 1.0
      */
-    public function __construct($record)
+    public function __construct(\Alpha\Model\ActiveRecord $record)
     {
         self::$logger = new Logger('ActiveRecord2Excel');
         self::$logger->debug('>>__construct(Record=['.var_export($record, true).'])');
@@ -88,11 +88,9 @@ class ActiveRecord2Excel
      *
      * @param bool $renderHeaders Set to false to supress headers in the spreadsheet (defaults to true).
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render($renderHeaders = true)
+    public function render(bool $renderHeaders = true): string
     {
         self::$logger->debug('>>render()');
 
@@ -110,7 +108,7 @@ class ActiveRecord2Excel
             $output .= $this->record->getDataLabel('ID').$sep;
             foreach ($properties as $propObj) {
                 $propName = $propObj->name;
-                if (!in_array($propName, $this->record->getTransientAttributes()) && !in_array($propName, $this->record->getDefaultAttributes())) {
+                if (!in_array($propName, $this->record->getTransientAttributes(), true) && !in_array($propName, $this->record->getDefaultAttributes(), true)) {
                     $output .= $this->record->getDataLabel($propName).$sep;
                 }
             }
@@ -123,7 +121,7 @@ class ActiveRecord2Excel
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
             $prop = $this->record->getPropObject($propName);
-            if (!in_array($propName, $this->record->getTransientAttributes()) && !in_array($propName, $this->record->getDefaultAttributes())) {
+            if (!in_array($propName, $this->record->getTransientAttributes(), true) && !in_array($propName, $this->record->getDefaultAttributes(), true)) {
                 if (get_class($prop) == 'DEnum') {
                     $output .= $prop->getDisplayValue().$sep;
                 } elseif (get_class($prop) == 'Relation') {

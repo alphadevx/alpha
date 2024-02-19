@@ -26,7 +26,7 @@ use Alpha\Model\ActiveRecord;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -142,7 +142,7 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 1.0
      */
-    public function __construct($visibility = 'Admin')
+    public function __construct(string $visibility = 'Admin')
     {
         self::$logger = new Logger('ActiveRecordController');
         self::$logger->debug('>>__construct()');
@@ -159,13 +159,10 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @param \Alpha\Util\Http\Request $request
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
-     * @throws \Alpha\Exception\IllegalArguementException
-     *
-     * @return \Alpha\Util\Http\Response
      *
      * @since 2.0
      */
-    public function doGET($request)
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET(request=['.var_export($request, true).'])');
 
@@ -233,11 +230,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\SecurityException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 2.0
      */
-    public function doPOST($request)
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDPOST(request=['.var_export($request, true).'])');
 
@@ -328,11 +323,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\SecurityException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 2.0
      */
-    public function doPUT($request)
+    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPUT(request=['.var_export($request, true).'])');
 
@@ -425,11 +418,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\ResourceNotAllowedException
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 2.0
      */
-    public function doDELETE($request)
+    public function doDELETE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE(request=['.var_export($request, true).'])');
 
@@ -454,11 +445,6 @@ class ActiveRecordController extends Controller implements ControllerInterface
                 $record = new $ActiveRecordType();
             } else {
                 throw new IllegalArguementException('No ActiveRecord ['.$ActiveRecordType.'] available to edit!');
-            }
-
-            // check the hidden security fields before accepting the form POST data
-            if (!$this->checkSecurityFields()) {
-                throw new SecurityException('This page cannot accept post data from remote servers!');
             }
 
             $record->load($params['ActiveRecordID']);
@@ -515,9 +501,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
      *
      * @since 2.0
      */
-    public function after_displayPageHead_callback()
+    public function afterDisplayPageHead(): string
     {
-        $body = parent::after_displayPageHead_callback();
+        $body = parent::afterDisplayPageHead();
 
         // set the start point for the list pagination
         if ($this->request->getParam('start') != null) {
@@ -546,11 +532,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Method to display the page footer with pageination links.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function before_displayPageFoot_callback()
+    public function beforeDisplayPageFoot(): string
     {
         $body = '';
 
@@ -572,16 +556,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * Load the requested record and render the HTML or JSON for it.
      *
      * @param array $params The request params
-     * @param string $accept The HTTP accept heard value
+     * @param string|null $accept The HTTP accept heard value
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return string The display data for the requested record
-     *
      * @since 3.0
      */
-    private function renderRecord($params, $accept)
+    private function renderRecord(array $params, string|null $accept): string
     {
         if (!Validator::isInteger($params['ActiveRecordID'])) {
             throw new IllegalArguementException('Invalid oid ['.$params['ActiveRecordID'].'] provided on the request!');
@@ -646,16 +628,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
      * Load all records of the type requested and render the HTML or JSON for them.
      *
      * @param array $params The request params
-     * @param string $accept The HTTP accept heard value
+     * @param string|null $accept The HTTP accept heard value
      *
      * @throws \Alpha\Exception\ResourceNotFoundException
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return string The display data for the requested records
-     *
      * @since 3.0
      */
-    private function renderRecords($params, $accept)
+    private function renderRecords(array $params, string|null $accept): string
     {
         $ActiveRecordType = urldecode($params['ActiveRecordType']);
 
@@ -678,8 +658,14 @@ class ActiveRecordController extends Controller implements ControllerInterface
 
         if (isset($this->filterField) && isset($this->filterValue)) {
             if (isset($this->sort) && isset($this->order)) {
-                $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit'],
-                    $this->sort, $this->order);
+                $records = $record->loadAllByAttribute(
+                    $this->filterField,
+                    $this->filterValue,
+                    $params['start'],
+                    $params['limit'],
+                    $this->sort,
+                    $this->order
+                );
             } else {
                 $records = $record->loadAllByAttribute($this->filterField, $this->filterValue, $params['start'], $params['limit']);
             }
@@ -724,11 +710,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Get the pagination start point
      *
-     * @return int
-     *
      * @since 3.0
      */
-    public function getStart()
+    public function getStart(): int
     {
         return $this->start;
     }
@@ -736,11 +720,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Get the pagination record count
      *
-     * @return int
-     *
      * @since 3.0
      */
-    public function getRecordCount()
+    public function getRecordCount(): int
     {
         return $this->recordCount;
     }
@@ -748,11 +730,9 @@ class ActiveRecordController extends Controller implements ControllerInterface
     /**
      * Get the pagination limit
      *
-     * @return int
-     *
      * @since 3.0
      */
-    public function getLimit()
+    public function getLimit(): int
     {
         return $this->limit;
     }

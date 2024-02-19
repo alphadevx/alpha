@@ -23,7 +23,7 @@ use Alpha\Controller\Front\FrontController;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -184,7 +184,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    const TABLE_NAME = 'Article';
+    public const TABLE_NAME = 'Article';
 
     /**
      * The URL for this article (transient).
@@ -236,14 +236,14 @@ class Article extends ActiveRecord
         $this->description = new SmallText();
         $this->description->setHelper('Please provide a brief description of the article.');
         $this->description->setSize(200);
-        $this->description->setRule("/\w+/");
+        $this->description->isRequired();
         $this->bodyOnload = new SmallText();
         $this->content = new LargeText();
         $this->headerContent = new Text();
         $this->author = new SmallText();
         $this->author->setHelper('Please state the name of the author of this article');
         $this->author->setSize(70);
-        $this->author->setRule("/\w+/");
+        $this->author->isRequired();
         $this->published = new Boolean(0);
 
         $this->comments = new Relation();
@@ -276,7 +276,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_save_callback()
+    protected function afterSave(): void
     {
         if ($this->getVersion() == 1 && $this->tags instanceof \Alpha\Model\Type\Relation) {
             // update the empty tags values to reference this ID
@@ -305,9 +305,9 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_loadByAttribute_callback()
+    protected function afterLoadByAttribute(): void
     {
-        $this->{'after_load_callback'}();
+        $this->{'afterLoad'}();
     }
 
     /**
@@ -315,7 +315,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    protected function after_load_callback()
+    protected function afterLoad(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -332,13 +332,11 @@ class Article extends ActiveRecord
      *
      * @param int    $limit
      *
-     * @return array
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function loadRecentWithLimit($limit)
+    public function loadRecentWithLimit(int $limit): array
     {
         $sqlQuery = 'SELECT ID FROM '.$this->getTableName()." WHERE published='1' ORDER BY created_ts DESC LIMIT 0, $limit;";
 
@@ -356,11 +354,9 @@ class Article extends ActiveRecord
     /**
      * Generates the location of the attachments folder for this article.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getAttachmentsLocation()
+    public function getAttachmentsLocation(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -370,11 +366,9 @@ class Article extends ActiveRecord
     /**
      * Generates the URL of the attachments folder for this article.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getAttachmentsURL()
+    public function getAttachmentsURL(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -388,7 +382,7 @@ class Article extends ActiveRecord
      *
      * @since 1.0
      */
-    public function getAttachmentSecureURL($filename)
+    public function getAttachmentSecureURL(string $filename): string
     {
         return FrontController::generateSecureURL('act=Alpha\\Controller\\AttachmentController&articleID='.$this->getID().'&filename='.$filename);
     }
@@ -400,7 +394,7 @@ class Article extends ActiveRecord
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function createAttachmentsFolder()
+    public function createAttachmentsFolder(): void
     {
         // create the attachment directory for the article
         try {
@@ -420,11 +414,9 @@ class Article extends ActiveRecord
     /**
      * Method for returning the calculated score for this article.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getArticleScore()
+    public function getArticleScore(): string
     {
         $votes = $this->getArticleVotes();
 
@@ -444,13 +436,11 @@ class Article extends ActiveRecord
     }
 
     /**
-     * Method for fetching all of the votes for this article.
-     *
-     * @return array An array of ArticleVote objects
+     * Method for fetching all of the votes for this article. Returns an array of ArticleVote objects.
      *
      * @since 1.0
      */
-    public function getArticleVotes()
+    public function getArticleVotes(): array
     {
         $votes = $this->votes->getRelated();
 
@@ -458,15 +448,13 @@ class Article extends ActiveRecord
     }
 
     /**
-     * Method to determine if the logged-in user has already voted for this article.
-     *
-     * @return bool True if they have voted already, false otherwise
+     * Method to determine if the logged-in user has already voted for this article. Returns true if they have voted already, false otherwise.
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function checkUserVoted()
+    public function checkUserVoted(): bool
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -498,13 +486,11 @@ class Article extends ActiveRecord
     }
 
     /**
-     * Method for fetching all of the comments for this article.
-     *
-     * @return array An array of ArticleComment objects
+     * Method for fetching all of the comments for this article. Return an array of ArticleComment objects.
      *
      * @since 1.0
      */
-    public function getArticleComments()
+    public function getArticleComments(): array
     {
         $comments = $this->comments->getRelated();
 
@@ -520,7 +506,7 @@ class Article extends ActiveRecord
      *
      * @throws \Alpha\Exception\FileNotFoundException
      */
-    public function loadContentFromFile($filePath)
+    public function loadContentFromFile(string $filePath): void
     {
         try {
             $this->content->setValue(file_get_contents($filePath));
@@ -533,11 +519,9 @@ class Article extends ActiveRecord
     /**
      * Returns true if the article content was loaded from a .text file, false otherwise.
      *
-     * @return bool
-     *
      * @since 1.0
      */
-    public function isLoadedFromFile()
+    public function isLoadedFromFile(): bool
     {
         return $this->filePath == '' ? false : true;
     }
@@ -546,13 +530,11 @@ class Article extends ActiveRecord
      * Returns the timestamp of when the content .text file for this article was last
      * modified.
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\FileNotFoundException
      */
-    public function getContentFileDate()
+    public function getContentFileDate(): string
     {
         if ($this->filePath != '') {
             try {
@@ -570,7 +552,7 @@ class Article extends ActiveRecord
      *
      * @since 2.0
      */
-    protected function setupRels()
+    protected function setupRels(): void
     {
         $this->comments->setValue($this->ID);
         $this->comments->setRelatedClass('Alpha\Model\ArticleComment');

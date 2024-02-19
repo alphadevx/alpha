@@ -17,7 +17,7 @@ use Alpha\Exception\IllegalArguementException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -112,7 +112,7 @@ class TextBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($text, $label, $name, $rows = 5, $identifier = 0)
+    public function __construct(\Alpha\Model\Type\Text $text, string $label, string $name, int $rows = 5, int $identifier = 0)
     {
         $config = ConfigProvider::getInstance();
 
@@ -136,11 +136,9 @@ class TextBox
     /**
      * Renders the HTML and javascript for the text box.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render()
+    public function render(): string
     {
         $html = '<div class="form-group">';
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
@@ -171,26 +169,18 @@ class TextBox
      * @param \Alpha\Model\Type\Text $text
      *
      * @since 1.0
-     *
-     * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setTextObject($text)
+    public function setTextObject(\Alpha\Model\Type\Text $text): void
     {
-        if ($text instanceof Text) {
-            $this->textObject = $text;
-        } else {
-            throw new IllegalArguementException('Text object passed ['.var_export($text, true).'] is not a valid Text object!');
-        }
+        $this->textObject = $text;
     }
 
     /**
      * Getter for text object.
      *
-     * @return \Alpha\Model\Type\Text
-     *
      * @since 1.0
      */
-    public function getTextObject()
+    public function getTextObject(): \Alpha\Model\Type\Text
     {
         return $this->textObject;
     }

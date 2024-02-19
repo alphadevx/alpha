@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -161,7 +161,7 @@ class SearchProviderTagsTest extends TestCase
         $this->article->save();
         $tags = $this->article->getPropObject('tags')->getRelated();
 
-        $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::after_save_callback())');
+        $this->assertTrue(count($tags) > 0, 'Confirming that tags exist after saving the article (ArticleObject::afterSave())');
 
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
         $provider->delete($this->article);
@@ -186,9 +186,38 @@ class SearchProviderTagsTest extends TestCase
         $this->assertTrue(count($results) == 1, 'Testing the search method for expected results');
         $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
 
-        $results = $provider->search('unitTestArticle', 'PersonObject');
+        $results = $provider->search('unitTestArticle', '\Alpha\Model\Article');
 
         $this->assertTrue(count($results) == 0, 'Testing the search method honours returnType filtering');
+    }
+
+    /**
+     * Testing the search method for expected results.
+     *
+     * @since 3.0.0
+     */
+    public function testSearchWithCache()
+    {
+        $config = ConfigProvider::getInstance();
+        $oldSetting = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+
+        $this->article->save();
+
+        $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue(count($results) == 1, 'Testing the search method for expected results with result caching enabled');
+        $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
+
+        // search again to hit the cache...
+
+        $results = $provider->search('unitTestArticle');
+
+        $this->assertTrue(count($results) == 1, 'Testing the search method for expected results with result caching enabled');
+        $this->assertEquals($this->article->getID(), $results[0]->getID(), 'Testing the search method for expected results');
+
+        $config->set('cache.provider.name', $oldSetting);
     }
 
     /**
@@ -226,9 +255,11 @@ class SearchProviderTagsTest extends TestCase
         $this->article->save();
 
         $article2 = $this->createArticle('unitTestArticle 2');
+        $article2->set('description', 'Duplicated description');
         $article2->save();
 
         $article3 = $this->createArticle('unitTestArticle 3');
+        $article3->set('description', 'Duplicated description');
         $article3->save();
 
         $provider = ServiceFactory::getInstance('Alpha\Util\Search\SearchProviderTags', 'Alpha\Util\Search\SearchProviderInterface');
@@ -240,8 +271,12 @@ class SearchProviderTagsTest extends TestCase
 
         $this->assertTrue(count($results) == 1, 'Testing the method for getting related objects honours limit param');
 
-        $results = $provider->getRelated($this->article, 'PersonObject');
+        $results = $provider->getRelated($this->article, '\Alpha\Model\Person');
 
         $this->assertTrue(count($results) == 0, 'Testing the get related objects method honours returnType filtering');
+
+        $results = $provider->getRelated($this->article, 'all', 0, 10, 'description');
+
+        $this->assertTrue(count($results) == 1, 'Testing the method for getting related objects honours the distinct param');
     }
 }

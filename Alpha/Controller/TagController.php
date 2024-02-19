@@ -30,7 +30,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -102,14 +102,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\IllegalArguementException
      * @throws \Alpha\Exception\FileNotFoundException
      *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -131,7 +129,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
             }
 
             $ActiveRecordTypes = ActiveRecord::getRecordClassNames();
-            $fieldname = '';
+            $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('clearTaggedClass')) : 'clearTaggedClass');
 
             foreach ($ActiveRecordTypes as $ActiveRecordType) {
                 $record = new $ActiveRecordType();
@@ -187,7 +185,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                 foreach ($tags as $tag) {
                     $labels = $tag->getDataLabels();
 
-                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID(), '');
+                    $temp = new SmallTextBox($tag->getPropObject('content'), $labels['content'], 'content_'.$tag->getID());
                     $fields['contentSmallTextBox'] = $temp->render(false);
                     $fields['fieldname'] = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('ActiveRecordID')) : 'ActiveRecordID');
                     $fields['tagID'] = $tag->getID();
@@ -196,7 +194,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
                     $tagsHTML .= View::loadTemplateFragment('html', 'tagsadmin.phtml', $fields);
                 }
 
-                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue', '');
+                $temp = new SmallTextBox(new SmallText(), 'New tag', 'NewTagValue');
                 $fields['newTagValueTextBox'] = $temp->render(false);
 
                 $temp = new Button('submit', 'Save', 'saveBut');
@@ -236,14 +234,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -360,14 +356,12 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @throws \Alpha\Exception\SecurityException
      * @throws \Alpha\Exception\IllegalArguementException
      *
      * @since 2.0
      */
-    public function doDELETE($request)
+    public function doDELETE(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
 
@@ -390,7 +384,7 @@ class TagController extends ActiveRecordController implements ControllerInterfac
      *
      * @since 1.0
      */
-    private function regenerateTagsOnRecords($records)
+    private function regenerateTagsOnRecords(array $records): void
     {
         foreach ($records as $record) {
             foreach ($record->get('taggedAttributes') as $tagged) {

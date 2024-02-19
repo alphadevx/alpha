@@ -12,7 +12,7 @@ use Alpha\Util\Logging\Logger;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -78,11 +78,9 @@ class ServiceFactory
      *
      * @throws \Alpha\Exception\IllegalArguementException
      *
-     * @return \stdClass
-     *
      * @since 3.0
      */
-    public static function getInstance($serviceName, $serviceInterface, $isSingleton = false)
+    public static function getInstance(string $serviceName, string $serviceInterface, bool $isSingleton = false): mixed
     {
         // as the LogProviderInterface is itself a service, we don't call it's constructor again during instantiation
         if (self::$logger === null && $serviceInterface != 'Alpha\Util\Logging\LogProviderInterface') {
@@ -94,7 +92,7 @@ class ServiceFactory
         }
 
         if (class_exists($serviceName)) {
-            if ($isSingleton && in_array($serviceName, self::$singletons)) {
+            if ($isSingleton && in_array($serviceName, self::$singletons, true)) {
                 return self::$singletons[$serviceName];
             }
 
@@ -104,7 +102,7 @@ class ServiceFactory
                 throw new IllegalArguementException('The class ['.$serviceName.'] does not implement the expected ['.$serviceInterface.'] interface!');
             }
 
-            if ($isSingleton && !in_array($serviceName, self::$singletons)) {
+            if ($isSingleton && !in_array($serviceName, self::$singletons, true)) {
                 self::$singletons[$serviceName] = $instance;
             }
 

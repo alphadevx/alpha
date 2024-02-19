@@ -17,7 +17,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -115,7 +115,7 @@ class TCPDFFacade
      *
      * @since 1.0
      */
-    public function __construct($article)
+    public function __construct(\Alpha\Model\ActiveRecord $article)
     {
         self::$logger = new Logger('TCPDFFacade');
         self::$logger->debug('>>__construct()');
@@ -132,11 +132,11 @@ class TCPDFFacade
         $this->HTMLCacheKey = 'html_'.$classname.'_'.$this->article->getID().'_'.$this->article->getVersion();
 
         // first check the PDF cache
-        if ($cache->get($this->PDFCacheKey) !== false) {
+        if ($cache->check($this->PDFCacheKey) !== false) {
             return;
         }
 
-        if ($cache->get($this->HTMLCacheKey) !== false) {
+        if ($cache->check($this->HTMLCacheKey) !== false) {
             $this->content = $cache->get($this->HTMLCacheKey);
         } else {
             $this->content = $this->markdown($this->article->get('content', true));
@@ -179,7 +179,7 @@ class TCPDFFacade
                     $type = 'png';
                 }
 
-                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (boolean)$config->get('cms.images.widget.secure'));
+                $img = new Image($path, $image_details[0], $image_details[1], $type, 0.95, false, (bool)$config->get('cms.images.widget.secure'));
                 $this->content = str_replace($attachmentURL, $img->renderHTMLLink(), $this->content);
             } else {
                 // render a normal image link to the ViewAttachment controller
@@ -237,7 +237,7 @@ class TCPDFFacade
      *
      * @since 1.0
      */
-    private function markdown($text)
+    private function markdown($text): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -264,11 +264,9 @@ class TCPDFFacade
     /**
      * Fetter for the content.
      *
-     * @return string HTML rendered the content
-     *
      * @since 1.0
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -276,15 +274,17 @@ class TCPDFFacade
     /**
      * Returns the raw PDF data stream from the cache (should be warm first before calling this method).
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function getPDFData()
+    public function getPDFData(): string
     {
         $config = ConfigProvider::getInstance();
         $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderFile', 'Alpha\Util\Cache\CacheProviderInterface');
 
-        return $cache->get($this->PDFCacheKey);
+        if ($cache->check($this->PDFCacheKey)) {
+            return $cache->get($this->PDFCacheKey);
+        } else {
+            return '';
+        }
     }
 }

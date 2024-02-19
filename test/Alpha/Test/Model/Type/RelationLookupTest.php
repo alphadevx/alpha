@@ -10,6 +10,7 @@ use Alpha\Model\Type\RelationLookup;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Exception\FailedLookupCreateException;
 use Alpha\Util\Config\Configprovider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the RelationLookup data type.
@@ -18,7 +19,7 @@ use Alpha\Util\Config\Configprovider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -90,10 +91,9 @@ class RelationLookupTest extends ModelTestCase
      * Testing the RelationLookup constructor.
      *
      * @since 1.2.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testConstruct($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testConstruct(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -148,7 +148,7 @@ class RelationLookupTest extends ModelTestCase
         $lookup->setValue(array(1, 2));
 
         $this->assertTrue(is_array($lookup->getValue()), 'testing the setValue() method with good params');
-        $this->assertTrue(in_array(2, $lookup->getValue()), 'testing the setValue() method with good params');
+        $this->assertTrue(in_array(2, $lookup->getValue(), true), 'testing the setValue() method with good params');
     }
 
     /**
@@ -172,10 +172,9 @@ class RelationLookupTest extends ModelTestCase
      * Testing the loadAllbyAttribute() method.
      *
      * @since 1.2.1
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testLoadAllbyAttribute($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testLoadAllbyAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

@@ -10,6 +10,7 @@ use Alpha\Test\Model\ModelTestCase;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\Tag;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test case for the RecordSelector widget.
@@ -18,7 +19,7 @@ use Alpha\Model\Tag;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -83,10 +84,9 @@ class RecordSelectorTest extends ModelTestCase
      * Testing the render() method.
      *
      * @since 3.0
-     *
-     * @dataProvider getActiveRecordProviders
      */
-    public function testRender($provider)
+    #[DataProvider('getActiveRecordProviders')]
+    public function testRender(string $provider)
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);

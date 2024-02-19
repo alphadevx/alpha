@@ -1,38 +1,21 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<!doctype html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title><?= $title ?></title>
     <meta name="description" content="<?= $description ?>">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/bootstrap.min.css">
-    <style>
-        body {
-            padding-top: 50px;
-            padding-bottom: 20px;
-        }
-    </style>
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/bootstrap-dialog.min.css">
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/bootstrap-datepicker3.min.css">
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/bootstrap/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/jquery.pagedown-bootstrap.min.css">
-    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/alpha.min.css">
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/font-awesome.min.css">
+    
+    <link rel="stylesheet" href="<?= $config->get('app.url') ?>/css/alpha.css">
     <?= (isset($allowCSSOverrides) && $allowCSSOverrides ? '<link rel="stylesheet" href="'.$config->get('app.url').'/css/overrides.css">' : '') ?>
-
-    <script src="<?= $config->get('app.url') ?>/js/vendor/modernizr-3.3.1.min.js"></script>
-    <script src="<?= $config->get('app.url') ?>/js/vendor/respond.matchmedia.addListener.min.js"></script>
-    <script src="<?= $config->get('app.url') ?>/js/vendor/respond.min.js"></script>
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script>window.jQuery || document.write('<script src="<?= $config->get('app.url') ?>/js/vendor/jquery-3.1.0.min.js"><\/script>')</script>
-
-    <script src="<?= $config->get('app.url') ?>/js/vendor/bootstrap-datepicker.min.js"></script>
 
     <?= (isset($duringCallbackOutput) ? $duringCallbackOutput : '') ?>
 

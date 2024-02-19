@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 
@@ -13,7 +14,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -95,7 +96,7 @@ class CacheProviderArray implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): mixed
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
@@ -104,14 +105,14 @@ class CacheProviderArray implements CacheProviderInterface
         if (array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray)) {
             return self::$cacheArray[$this->appPrefix.'-'.$key];
         } else {
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value, $expiry = 0)
+    public function set($key, $value, $expiry = 0): void
     {
         self::$logger->debug('Setting value for key ['.$key.']');
 
@@ -121,10 +122,22 @@ class CacheProviderArray implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($key)
+    public function delete($key): void
     {
         self::$logger->debug('Removing value for key ['.$key.']');
 
-        unset(self::$cacheArray[$this->appPrefix.'-'.$key]);
+        if (array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray)) {
+            unset(self::$cacheArray[$this->appPrefix.'-'.$key]);
+        } else {
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        return array_key_exists($this->appPrefix.'-'.$key, self::$cacheArray);
     }
 }

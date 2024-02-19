@@ -5,6 +5,7 @@ namespace Alpha\Test\Util\Code\Highlight;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Helper\Validator;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Test cases for the HighlightProviderInterface implementations.
@@ -13,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2024, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -57,7 +58,7 @@ class HighlightProviderTest extends TestCase
      *
      * @since 2.0.1
      */
-    public function getHighlightProviders()
+    public static function getHighlightProviders(): array
     {
         return array(
             array('Alpha\Util\Code\Highlight\HighlightProviderGeshi')
@@ -68,9 +69,9 @@ class HighlightProviderTest extends TestCase
      * Testing the highlight() method.
      *
      * @since 2.0.1
-     * @dataProvider getHighlightProviders
      */
-    public function testHighlight($provider)
+    #[DataProvider('getHighlightProviders')]
+    public function testHighlight(string $provider)
     {
         $highlighter = ServiceFactory::getInstance($provider, 'Alpha\Util\Code\Highlight\HighlightProviderInterface');
 

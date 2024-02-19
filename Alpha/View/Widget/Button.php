@@ -12,7 +12,7 @@ use Alpha\Util\Security\SecurityUtils;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -84,15 +84,15 @@ class Button
      * @since 1.0
      */
     private $imgURL;
-    
+
     /**
-     * If provided, the Bootsrap glyphIcon to use for this button.
+     * If provided, the Bootsrap CSS icon class(s) to use for this button.
      *
      * @var string
      *
      * @since 3.0
      */
-    private $glyphIcon;
+    private $iconCSS;
 
     /**
      * If provided, the Bootsrap tooltip to use for this button.
@@ -119,13 +119,13 @@ class Button
      * @param string $title            The title to appear on the button.
      * @param string $id               The HTML id attribute for the button.
      * @param string $imgURL           If provided, the button will be a clickable image using this image.
-     * @param string $glyphIcon        If provided, the Bootsrap glyphIcon to use for this button.
+     * @param string $iconCSS        If provided, the Bootsrap iconCSS to use for this button.
      * @param string $tooltip          If provided, the Bootsrap tooltip to use for this button.
      * @param string $tooltipPosition  If provided, the Bootsrap tooltip position (left|right|top|bottom) to use for this button.
      *
      * @since 1.0
      */
-    public function __construct($action, $title, $id, $imgURL = '', $glyphIcon = '', $tooltip = '', $tooltipPosition = '')
+    public function __construct(string $action, string $title, string $id, string $imgURL = '', string $iconCSS = '', string $tooltip = '', string $tooltipPosition = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -133,7 +133,7 @@ class Button
         $this->title = $title;
         $this->id = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt($id)) : $id);
         $this->imgURL = $imgURL;
-        $this->glyphIcon = $glyphIcon;
+        $this->iconCSS = $iconCSS;
         $this->tooltip = $tooltip;
         $this->tooltipPosition = $tooltipPosition;
     }
@@ -145,10 +145,8 @@ class Button
      * @param string $cssClasses List of CSS classes to apply to the button (optional)
      *
      * @since 1.0
-     *
-     * @return string
      */
-    public function render($width = 0, $cssClasses = '')
+    public function render(int $width = 0, string $cssClasses = 'btn btn-primary'): string
     {
         $html = '';
         $tooltip = '';
@@ -162,8 +160,8 @@ class Button
             $tooltip = ' data-toggle="tooltip" data-placement="'.$position.'" title="'.$this->tooltip.'"';
         }
 
-        if (!empty($this->glyphIcon)) {
-            $html .= '<button type="button" id="'.$this->id.'" name="'.$this->id.'" class="btn btn-default btn-xs"'.$tooltip.'><span class="glyphicon '.$this->glyphIcon.'"></span> '.$this->title.'</button>';
+        if (!empty($this->iconCSS)) {
+            $html .= '<button type="button" id="'.$this->id.'" name="'.$this->id.'" class="'.$cssClasses.'"'.$tooltip.'><span class="bi '.$this->iconCSS.'"></span> '.$this->title.'</button>';
             $html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
 
             return $html;
@@ -175,19 +173,17 @@ class Button
             return $html;
         }
 
-        $css = ($cssClasses == '' ? 'btn btn-primary' : $cssClasses);
-
         switch ($this->action) {
             case 'submit':
-                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
-            break;
+                $html .= '<input type="submit" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$cssClasses.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                break;
             case 'file':
-                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
-            break;
+                $html .= '<input type="file" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$cssClasses.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                break;
             default:
-                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$css.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
+                $html .= '<input type="button" id="'.$this->id.'" name="'.$this->id.'" value="'.$this->title.'" class="'.$cssClasses.'"'.($width == 0 ? '' : ' style="width:'.$width.';"').$tooltip.'/>';
                 $html .= '<script>document.getElementById(\''.$this->id.'\').onclick = function() { '.$this->action.'; };</script>';
-            break;
+                break;
         }
 
         return $html;

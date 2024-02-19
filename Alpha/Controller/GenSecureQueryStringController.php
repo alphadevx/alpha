@@ -20,7 +20,7 @@ use Alpha\Model\Type\SmallText;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -89,11 +89,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doGET($request)
+    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
 
@@ -113,11 +111,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
      *
      * @param \Alpha\Util\Http\Request $request
      *
-     * @return \Alpha\Util\Http\Response
-     *
      * @since 1.0
      */
-    public function doPOST($request)
+    public function doPOST(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
     {
         self::$logger->debug('>>doPOST($request=['.var_export($request, true).'])');
 
@@ -125,9 +121,22 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
 
         $body = View::displayPageHead($this);
 
+        $body .= '<script language="javascript">
+                    function copyLink() {
+                      var copyText = document.getElementById("newLink");
+
+                      copyText.select();
+                      copyText.setSelectionRange(0, 99999);
+
+                      navigator.clipboard.writeText(copyText.value);
+
+                      alert("Copied the text: " + copyText.value);
+                    }
+                  </script>';
+
         $body .= '<p class="alert alert-success">';
         if (isset($params['QS'])) {
-            $body .= FrontController::generateSecureURL($params['QS']);
+            $body .= 'Your link: <br><input type="text" value="'.FrontController::generateSecureURL($params['QS']).'" id="newLink" style="width: 80%;"><button onclick="copyLink();" class="btn btn-primary">Copy text</button>';
             self::$logger->action('Generated the secure URL in admin: '.FrontController::generateSecureURL($params['QS']));
         }
         $body .= '</p>';
@@ -144,11 +153,9 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
     /**
      * Renders the HTML form for generating secure URLs.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    private function renderForm()
+    private function renderForm(): string
     {
         $config = ConfigProvider::getInstance();
 
@@ -158,7 +165,7 @@ class GenSecureQueryStringController extends Controller implements ControllerInt
         $html .= '<p>Example 2: to generate a secure URL for viewing an Atom news feed of the articles, enter'.
             ' <em>act=Alpha\Controller\FeedController&amp;ActiveRecordType=Alpha\Model\Article&amp;type=Atom</em></p>';
 
-        $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8"><div class="form-group">';
+        $html .= '<form action="'.$this->request->getURI().'" method="post" accept-charset="UTF-8" class="needs-validation" novalidate><div class="form-group">';
         $string = new SmallTextBox(new SmallText(''), 'Parameters', 'QS');
         $html .= $string->render();
         $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('saveBut')) : 'saveBut');

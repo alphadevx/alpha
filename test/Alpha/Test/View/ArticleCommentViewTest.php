@@ -5,8 +5,11 @@ namespace Alpha\Test\View;
 use Alpha\View\View;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
+use Alpha\Model\Person;
+use Alpha\Model\Rights;
 use Alpha\Test\Controller\ControllerTestCase;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Service\ServiceFactory;
 
 /**
  * Test cases for the ArticleCommentView class.
@@ -15,7 +18,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,6 +56,15 @@ use Alpha\Util\Config\ConfigProvider;
 class ArticleCommentViewTest extends ControllerTestCase
 {
     /**
+     * A Person object for testing
+     *
+     * @var \Alpha\Model\Person
+     *
+     * @since 4.0
+     */
+    private $person;
+
+    /**
      * {@inheritdoc}
      *
      * @since 2.0
@@ -66,6 +78,23 @@ class ArticleCommentViewTest extends ControllerTestCase
 
         $articleComment = new ArticleComment();
         $articleComment->rebuildTable();
+
+        $this->person = $this->createPersonObject('unitTestUser');
+        $this->person->rebuildTable();
+        $this->person->save();
+
+        $group = new Rights();
+        $group->rebuildTable();
+        $group->set('name', 'Admin');
+        $group->save();
+
+        $lookup = $group->getMembers()->getLookup();
+        $lookup->setValue('00000000001', $group->getID());
+        $lookup->save();
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
     }
 
     /**
@@ -134,5 +163,13 @@ class ArticleCommentViewTest extends ControllerTestCase
 
         $this->assertNotEmpty($view->editView(array('formAction' => '/')), 'Testing the editView() method');
         $this->assertTrue(strpos($view->editView(array('formAction' => '/')), 'Update Your Comment') !== false, 'Testing the editView() method');
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session->set('currentUser', $this->person);
+
+        $this->assertNotEmpty($view->editView(array('formAction' => '/tk/')), 'Testing the editView() method');
+        $this->assertTrue(strpos($view->editView(array('formAction' => '/tk/')), 'Are you sure you wish to delete this item') !== false, 'Testing the editView() method');
     }
 }

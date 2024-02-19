@@ -15,7 +15,7 @@ use Alpha\Util\Config\ConfigProvider;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -90,7 +90,7 @@ class DateBox
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function __construct($object, $label = '', $name = '')
+    public function __construct($object, string $label = '', string $name = '')
     {
         $config = ConfigProvider::getInstance();
 
@@ -113,11 +113,9 @@ class DateBox
     /**
      * Renders the text box and icon to open the calendar pop-up.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function render()
+    public function render(): string
     {
         $value = $this->dateObject->getValue();
 
@@ -129,7 +127,7 @@ class DateBox
         $html .= '  <label for="'.$this->name.'">'.$this->label.'</label>';
         $html .= '  <div class="input-group date">';
         $html .= '    <input type="text" class="form-control" name="'.$this->name.'" id="'.$this->name.'" value="'.$value.'" readonly/>';
-        $html .= '    <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>';
+        $html .= '    <span class="input-group-addon"><i class="bi bi-calendar-event"></i></span>';
         $html .= '  </div>';
         $html .= '</div>';
 

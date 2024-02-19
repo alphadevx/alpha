@@ -6,7 +6,6 @@ use Alpha\Model\Tag;
 use Alpha\Model\Article;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Test case for the Tag class.
@@ -15,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2022, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -50,7 +49,7 @@ use PHPUnit\Framework\TestCase;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class TagTest extends TestCase
+class TagTest extends ModelTestCase
 {
     /**
      * An Article for testing.

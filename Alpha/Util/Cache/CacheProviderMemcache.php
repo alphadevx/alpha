@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Memcached;
@@ -14,7 +15,7 @@ use Memcached;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -104,28 +105,32 @@ class CacheProviderMemcache implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): mixed
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
         try {
             $value = $this->connection->get($this->appPrefix.'-'.$key);
 
+            if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            }
+
             self::$logger->debug('<<get: ['.print_r($value, true).'])');
 
             return $value;
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to load a business object from Memcache instance: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
+            self::$logger->debug('<<get');
 
-            return false;
+            throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
         }
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value, $expiry = 0)
+    public function set($key, $value, $expiry = 0): void
     {
         try {
             if ($expiry > 0) {
@@ -141,12 +146,32 @@ class CacheProviderMemcache implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($key)
+    public function delete($key): void
     {
         try {
             $this->connection->delete($this->appPrefix.'-'.$key);
+
+            if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            }
         } catch (\Exception $e) {
             self::$logger->error('Error while attempting to remove a value from Memcached instance: ['.$e->getMessage().']');
+
+            throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        $this->connection->get($this->appPrefix.'-'.$key);
+
+        if ($this->connection->getResultCode() === Memcached::RES_NOTFOUND) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

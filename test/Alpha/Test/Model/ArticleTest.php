@@ -13,7 +13,7 @@ use Alpha\Exception\AlphaException;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -72,5 +72,34 @@ class ArticleTest extends ModelTestCase
             $this->assertEquals('Alpha\Exception\IllegalArguementException', get_class($e));
             $this->assertEquals('Please provide a title for the article. Note that the _ character is not allowed!', $e->getMessage());
         }
+    }
+
+    /*
+     * Testing the loadRecentWithLimit() method
+     *
+     * @since 3.0
+     */
+    public function testLoadRecentWithLimit()
+    {
+        $article = new Article();
+        $article->rebuildTable();
+
+        $article->set('title', 'Article 1');
+        $article->set('description', 'Article 1');
+        $article->set('author', 'Article 1');
+        $article->set('published', 1);
+        $article->save();
+
+        $article = new Article();
+        $article->set('title', 'Article 2');
+        $article->set('description', 'Article 2');
+        $article->set('author', 'Article 2');
+        $article->set('published', 1);
+        $article->save();
+
+        $this->assertTrue(count($article->loadRecentWithLimit(1)) == 1, 'Testing the loadRecentWithLimit() method');
+        $this->assertTrue(count($article->loadRecentWithLimit(2)) == 2, 'Testing the loadRecentWithLimit() method');
+
+        $article->dropTable();
     }
 }

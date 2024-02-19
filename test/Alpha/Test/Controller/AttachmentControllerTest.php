@@ -25,7 +25,7 @@ use PHPUnit\Framework\TestCase;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -229,6 +229,24 @@ class AttachmentControllerTest extends TestCase
         $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
         $this->assertTrue(file_exists($article->getAttachmentsLocation().'/logo.png'));
 
+        $article->set('content', '<img src="$attachURL/logo.png" alt=""/>');
+        $article->save();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+
+        $this->assertStringContainsString('<img src="http://testapp/tk/', $response->getBody(), 'Testing that the secure attachment URL was rendered');
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article', 'headers' => array('Accept' => 'application/pdf')));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method on a PDF');
+        $this->assertEquals('application/pdf', $response->getHeader('Content-Type'), 'Testing the doGET method on a PDF');
+
         $params = array('deletefile' => 'logo.png', 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'articleID' => $article->getID());
         $params = array_merge($params, $article->toArray());
 
@@ -237,7 +255,7 @@ class AttachmentControllerTest extends TestCase
         $response = $front->process($request);
 
         $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article/edit') !== false, 'Testing the doPUT method');
+        $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article') !== false, 'Testing the doPUT method');
         $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
     }
 }

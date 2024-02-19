@@ -19,7 +19,7 @@ use ReflectionClass;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -169,11 +169,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Get the leftClassName value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getLeftClassName()
+    public function getLeftClassName(): string
     {
         return $this->leftClassName;
     }
@@ -181,11 +179,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Get the rightClassName value.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getRightClassName()
+    public function getRightClassName(): string
     {
         return $this->rightClassName;
     }
@@ -194,13 +190,11 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Custom getter for the TABLE_NAME, which can't be static in this class due to
      * the lookup tablenames being different each time.
      *
-     * @return string
-     *
      * @since 1.0
      *
      * @throws \Alpha\Exception\AlphaException
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         if (isset($this->leftClassName) && isset($this->rightClassName)) {
             $leftClass = new ReflectionClass($this->leftClassName);
@@ -223,7 +217,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @see Alpha\Model\ActiveRecord::loadAllByAttribute()
      */
-    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array())
+    public function loadAllByAttribute($attribute, $value, $start = 0, $limit = 0, $orderBy = 'ID', $order = 'ASC', $ignoreClassType = false, $constructorArgs = array()): array
     {
         if (!isset(self::$logger)) {
             self::$logger = new Logger('RelationLookup');
@@ -231,8 +225,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
 
         self::$logger->debug('>>loadAllByAttribute(attribute=['.$attribute.'], value=['.$value.'], start=['.$start.'], limit=['.$limit.'], orderBy=['.$orderBy.'], order=['.$order.'], ignoreClassType=['.$ignoreClassType.'], constructorArgs=['.print_r($constructorArgs, true).']');
 
-        if (method_exists($this, 'before_loadAllByAttribute_callback')) {
-            $this->{'before_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'beforeLoadAllByAttribute')) {
+            $this->{'beforeLoadAllByAttribute'}();
         }
 
         $config = ConfigProvider::getInstance();
@@ -241,8 +235,8 @@ class RelationLookup extends ActiveRecord implements TypeInterface
         $provider->setRecord($this);
         $objects = $provider->loadAllByAttribute($attribute, $value, $start, $limit, $orderBy, $order, $ignoreClassType, array($this->leftClassName, $this->rightClassName));
 
-        if (method_exists($this, 'after_loadAllByAttribute_callback')) {
-            $this->{'after_loadAllByAttribute_callback'}();
+        if (method_exists($this, 'afterLoadAllByAttribute')) {
+            $this->{'afterLoadAllByAttribute'}();
         }
 
         self::$logger->debug('<<loadAllByAttribute ['.count($objects).']');
@@ -253,11 +247,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Getter for the validation helper string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function getHelper()
+    public function getHelper(): string
     {
         return $this->helper;
     }
@@ -269,7 +261,7 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      *
      * @since 1.0
      */
-    public function setHelper($helper)
+    public function setHelper(string $helper): void
     {
         $this->helper = $helper;
     }
@@ -277,11 +269,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Returns an array of the IDs of the related objects.
      *
-     * @return integer[]
-     *
      * @since 1.0
      */
-    public function getValue()
+    public function getValue(): array
     {
         return array($this->leftID->getValue(), $this->rightID->getValue());
     }
@@ -290,13 +280,13 @@ class RelationLookup extends ActiveRecord implements TypeInterface
      * Used to set the IDs of the related objects.  Pass a two-item array of IDs, the first
      * one being the left object ID, the second being the right.
      *
-     * @param string[] $IDs
+     * @param mixed $IDs
      *
      * @since 1.0
      *
      * @throws \Alpha\Exception\IllegalArguementException
      */
-    public function setValue($IDs)
+    public function setValue(mixed $IDs): void
     {
         try {
             $this->leftID->setValue($IDs[0]);
@@ -309,11 +299,9 @@ class RelationLookup extends ActiveRecord implements TypeInterface
     /**
      * Used to convert the object to a printable string.
      *
-     * @return string
-     *
      * @since 1.0
      */
-    public function __toString()
+    public function __toString(): string
     {
         return strval($this->getTableName());
     }

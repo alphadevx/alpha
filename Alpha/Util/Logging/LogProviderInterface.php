@@ -9,7 +9,7 @@ namespace Alpha\Util\Logging;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -53,16 +53,14 @@ interface LogProviderInterface
      *
      * @since 2.0
      */
-    public function writeLine($line);
+    public function writeLine(array $line): void;
 
     /**
      * Renders a log as a HTML table.
      *
      * @param array $cols The headings to use when rendering the log.
      *
-     * @return string
-     *
      * @since 2.0
      */
-    public function renderLog($cols);
+    public function renderLog(array $cols): string;
 }

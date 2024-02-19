@@ -2,6 +2,7 @@
 
 namespace Alpha\Util\Cache;
 
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Redis;
@@ -14,7 +15,7 @@ use Redis;
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2018, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2021, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -105,28 +106,32 @@ class CacheProviderRedis implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function get($key)
+    public function get($key): mixed
     {
         self::$logger->debug('>>get(key=['.$key.'])');
 
-        try {
-            $value = $this->connection->get($this->appPrefix.'-'.$key);
+        $value = $this->connection->get($this->appPrefix.'-'.$key);
 
-            self::$logger->debug('<<get: ['.print_r($value, true).'])');
+        if ($value === false) {
+            if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            } else {
+                self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
+                self::$logger->debug('<<get');
 
-            return $value;
-        } catch (\Exception $e) {
-            self::$logger->error('Error while attempting to load a business object from Redis instance: ['.$e->getMessage().']');
-            self::$logger->debug('<<get: [false])');
-
-            return false;
+                throw new ResourceNotFoundException('Unable to get a cache value on the key ['.$key.']');
+            }
         }
+
+        self::$logger->debug('<<get: ['.print_r($value, true).'])');
+
+        return $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value, $expiry = 0)
+    public function set($key, $value, $expiry = 0): void
     {
         try {
             if ($expiry > 0) {
@@ -142,12 +147,30 @@ class CacheProviderRedis implements CacheProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function delete($key)
+    public function delete($key): void
     {
-        try {
-            $this->connection->del($this->appPrefix.'-'.$key);
-        } catch (\Exception $e) {
-            self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
+        $count = $this->connection->del($this->appPrefix.'-'.$key);
+
+        if ($count === 0) {
+            if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+                throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+            } else {
+                self::$logger->error('Error while attempting to remove a value from Redis instance: ['.$e->getMessage().']');
+
+                throw new ResourceNotFoundException('Unable to delete a cache value on the key ['.$key.']');
+            }
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function check($key): bool
+    {
+        if ($this->connection->type($key) === Redis::REDIS_NOT_FOUND) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
