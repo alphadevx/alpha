@@ -181,7 +181,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The forum display name of the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -190,7 +190,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The email address for the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -199,7 +199,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The password for the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -234,7 +234,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The state of the person (account status).
 	     *
-	     * @var Aplha\Model\Type\Enum
+	     * @var \Aplha\Model\Type\Enum
 	     *
 	     * @since 1.0
 	     */
@@ -367,7 +367,7 @@ All controllers in Alpha should inherit from the _Controller_ abstract class and
 
 	class HelloController extends Controller implements ControllerInterface
 	{
-		public function doGET($request)
+		public function doGET($request): \Alpha\Util\Http\Response
 		{
 			$name = $request->getParam('name');
 
