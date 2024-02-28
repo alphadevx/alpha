@@ -441,7 +441,7 @@ Here is an example where we are injecting in a count of the items in a given sho
 	{
 	    // ...
 
-	    public function detailedView($fields = array())
+	    public function detailedView($fields = array()): string
 	    {
 	        // this->record will be set to our cart at this stage during factory instantiation
 	        $items = $this->record->getItems();
