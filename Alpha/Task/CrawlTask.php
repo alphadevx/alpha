@@ -9,6 +9,7 @@ use Alpha\Util\Http\AlphaCrawler;
 use Crwlr\Crawler\Steps\Html;
 use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Loading\Http;
+use Crwlr\Url\Url;
 
 /**
  * A persistent task for crawing the webpages defined in config/seed-urls.ini and indexing
@@ -70,39 +71,68 @@ class CrawlTask implements TaskInterface
         $config = ConfigProvider::getInstance();
 
         self::$logger = new Logger('CrawlTask');
-        self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/tasks.log');
+        self::$logger->setLogProviderFile($config->get('app.file.store.dir').'logs/crawl.log');
 
         $seedfile = $config->get('app.root').'config/seed-urls.ini';
 
         if (file_exists($seedfile)) {
             $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
+            self::$logger->debug('Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
         } else {
             throw new AlphaException('Unable to find a seed-urls.ini file in the application!');
         }
 
-        foreach ($seedURLs as $seedURL) {
-            $crawler = new AlphaCrawler();
+        while (true) {
+            foreach ($seedURLs as $seedURL) {
+                $crawler = new AlphaCrawler();
 
-            $crawler->input($seedURL)
-                ->addStep(Http::get())
-                ->addStep(
-                    Html::first('html')
-                        ->extract([
-                            'title' => 'title',
-                            'content' => Dom::cssSelector('body')->formattedText(),
-                            'links' => Dom::cssSelector('a')->attribute('href')
-                        ])
-                        ->addToResult()
-                );
+                self::$logger->debug('Crawling URL ['.$seedURL.']');
 
-            foreach ($crawler->run() as $result) {
-                /* TODO:
-                    1. Check the DB for when this was last indexed
-                    2. Re-index to Solr and the DB as required
-                 */
-                $result->set('url', $seedURL);
-                $result->set('host', parse_url($seedURL, PHP_URL_HOST));
-                print_r($result);
+                // TODO if the crawler returns a 404, this URL should be deleted from the index
+                $crawler->input($seedURL)
+                    ->addStep(Http::get())
+                    ->addStep(
+                        Html::first('html')
+                            ->extract([
+                                'title' => 'title',
+                                'content' => Dom::cssSelector('body')->formattedText(),
+                                'links' => Dom::cssSelector('a')->attribute('href')
+                            ])
+                            ->addToResult()
+                    );
+
+                foreach ($crawler->run() as $result) {
+                    /* TODO:
+                        1. Check the DB for when this was last indexed
+                        2. Re-index to Solr and the DB as required
+                        3. Add links found on the page to seedURLs array for the next iteration
+                     */
+
+                    // 1. Check the DB for when this page was last indexed
+                    // TODO
+
+                    // 2. Re-index to Solr and the DB as required
+                    // TODO
+
+
+                    // 3. Add links found on the page to seedURLs array for the next iteration
+                    $host = parse_url($seedURL, PHP_URL_HOST);
+
+                    $result->set('url', $seedURL);
+                    $result->set('host', $host);
+                    self::$logger->debug('url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
+
+                    if (is_array($result->get('links'))) {
+                        $newURLs = $result->get('links');
+                        $pageURL = Url::parse($seedURL);
+
+                        $absoluteLinks = array_map(function ($newURL) use ($pageURL) {
+                            return $pageURL->resolve($newURL)->toString();
+                        }, $newURLs);
+
+                        $seedURLs = array_merge($seedURLs, $absoluteLinks);
+                    }
+                }
             }
         }
     }
