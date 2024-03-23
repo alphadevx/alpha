@@ -3,6 +3,9 @@
 namespace Alpha\Task;
 
 use Alpha\Exception\AlphaException;
+use Alpha\Exception\RecordNotFoundException;
+use Alpha\Model\IndexedPage;
+use Alpha\Model\Type\Timestamp;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\AlphaCrawler;
@@ -89,17 +92,14 @@ class CrawlTask implements TaskInterface
 
                 self::$logger->info('Crawling URL ['.$seedURL.']');
 
-                $crawler->input($seedURL)
-                    ->addStep(Screenshot::loadAndTake($config->get('app.file.store.dir').'/cache/images/screenshots'))
-                ;
-
-                $crawler->runAndDump();
-
                 $crawler = new AlphaCrawler();
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
-                    ->addStep(Http::get())
+                    ->addStep(
+                        Screenshot::loadAndTake($config->get('app.file.store.dir').'/cache/images/screenshots')
+                        ->addToResult(['url', 'screenshotPath'])
+                    )
                     ->addStep(
                         Html::first('html')
                             ->extract([
@@ -111,6 +111,12 @@ class CrawlTask implements TaskInterface
                     );
 
                 foreach ($crawler->run() as $result) {
+
+                    $host = parse_url($seedURL, PHP_URL_HOST);
+
+                    $result->set('url', $seedURL);
+                    $result->set('host', $host);
+
                     /* TODO:
                         1. Check the DB for when this was last indexed
                         2. Re-index to Solr and the DB as required
@@ -118,17 +124,25 @@ class CrawlTask implements TaskInterface
                      */
 
                     // 1. Check the DB for when this page was last indexed
-                    // TODO
+                    $page = new IndexedPage();
+
+                    try {
+                        $page->loadByAttribute('url', $seedURL);
+                    } catch (RecordNotFoundException $e) {
+                        $page->set('url', $seedURL);
+                        $page->set('host', $host);
+                    }
+
+                    $page->set('tstamp', new Timestamp());
+                    $page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
+                    $page->save();
+
 
                     // 2. Re-index to Solr and the DB as required
                     // TODO
 
 
                     // 3. Add links found on the page to seedURLs array for the next iteration
-                    $host = parse_url($seedURL, PHP_URL_HOST);
-
-                    $result->set('url', $seedURL);
-                    $result->set('host', $host);
                     self::$logger->debug('url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
 
                     if (is_array($result->get('links'))) {
