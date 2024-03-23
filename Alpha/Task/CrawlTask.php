@@ -9,6 +9,7 @@ use Alpha\Util\Http\AlphaCrawler;
 use Crwlr\Crawler\Steps\Html;
 use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Loading\Http;
+use Crwlr\CrawlerExtBrowser\Steps\Screenshot;
 use Crwlr\Url\Url;
 
 /**
@@ -86,7 +87,15 @@ class CrawlTask implements TaskInterface
             foreach ($seedURLs as $seedURL) {
                 $crawler = new AlphaCrawler();
 
-                self::$logger->debug('Crawling URL ['.$seedURL.']');
+                self::$logger->info('Crawling URL ['.$seedURL.']');
+
+                $crawler->input($seedURL)
+                    ->addStep(Screenshot::loadAndTake($config->get('app.file.store.dir').'/cache/images/screenshots'))
+                ;
+
+                $crawler->runAndDump();
+
+                $crawler = new AlphaCrawler();
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)

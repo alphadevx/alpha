@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dc8f5a093763defe639faae5bffe6320",
+    "content-hash": "a2a6c1f058a4efad6cb1c765e523094f",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -278,6 +278,68 @@
                 "source": "https://github.com/crwlrsoft/crawler"
             },
             "time": "2024-03-19T11:39:40+00:00"
+        },
+        {
+            "name": "crwlr/crawler-ext-browser",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crwlrsoft/crawler-ext-browser.git",
+                "reference": "a9064cc041cd27a3ef9db3287548cc79d0081650"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crwlrsoft/crawler-ext-browser/zipball/a9064cc041cd27a3ef9db3287548cc79d0081650",
+                "reference": "a9064cc041cd27a3ef9db3287548cc79d0081650",
+                "shasum": ""
+            },
+            "require": {
+                "crwlr/crawler": "^1.7.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.30",
+                "pestphp/pest": "^2.19",
+                "phpstan/phpstan": "^1.10"
+            },
+            "suggest": {
+                "ext-gd": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Crwlr\\CrawlerExtBrowser\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Olear",
+                    "homepage": "https://www.otsch.codes",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Extension for the crwlr/crawler package containing steps utilizing a headless browser.",
+            "homepage": "https://www.crwlr.software/packages/crawler-ext-browser",
+            "keywords": [
+                "Headless Browser",
+                "browser",
+                "chrome",
+                "crawler",
+                "crawling",
+                "crwlr",
+                "scraper",
+                "scraping"
+            ],
+            "support": {
+                "docs": "https://www.crwlr.software/packages/crawler-ext-browser",
+                "issues": "https://github.com/crwlrsoft/crawler-ext-browser/issues",
+                "source": "https://github.com/crwlrsoft/crawler-ext-browser"
+            },
+            "time": "2024-03-04T13:14:15+00:00"
         },
         {
             "name": "crwlr/html-2-text",
@@ -1804,12 +1866,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "3bb1e2c177c28f89f6a33b4b1084803d326aecfb"
+                "reference": "e88135810579dcb18c0a1e237ba4be09e9e6d807"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/3bb1e2c177c28f89f6a33b4b1084803d326aecfb",
-                "reference": "3bb1e2c177c28f89f6a33b4b1084803d326aecfb",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/e88135810579dcb18c0a1e237ba4be09e9e6d807",
+                "reference": "e88135810579dcb18c0a1e237ba4be09e9e6d807",
                 "shasum": ""
             },
             "require": {
@@ -1863,7 +1925,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-12T11:15:20+00:00"
+            "time": "2024-03-20T15:26:56+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -2417,12 +2479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "ef909caff8547b26f72dff049ea24f9b07a3701a"
+                "reference": "cebb2aec790b0fba2489af42a6c60933203e6390"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/ef909caff8547b26f72dff049ea24f9b07a3701a",
-                "reference": "ef909caff8547b26f72dff049ea24f9b07a3701a",
+                "url": "https://api.github.com/repos/symfony/process/zipball/cebb2aec790b0fba2489af42a6c60933203e6390",
+                "reference": "cebb2aec790b0fba2489af42a6c60933203e6390",
                 "shasum": ""
             },
             "require": {
@@ -2470,7 +2532,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-22T20:28:06+00:00"
+            "time": "2024-03-20T15:26:56+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -2822,12 +2884,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "1eb4e5270df9f432fa538a461ab65710a43bfe98"
+                "reference": "f9d251194d68e70686351a0d3ec7c35393f13a21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/1eb4e5270df9f432fa538a461ab65710a43bfe98",
-                "reference": "1eb4e5270df9f432fa538a461ab65710a43bfe98",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/f9d251194d68e70686351a0d3ec7c35393f13a21",
+                "reference": "f9d251194d68e70686351a0d3ec7c35393f13a21",
                 "shasum": ""
             },
             "require": {
@@ -2907,7 +2969,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-03-18T18:40:33+00:00"
+            "time": "2024-03-19T21:03:05+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -4877,12 +4939,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/finder.git",
-                "reference": "beeac2ba50a5dd729d8a23507ad09cdd0f82110c"
+                "reference": "9bfc6ffa24b1b66f7c3c9f71b2870e1413c1ce03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/beeac2ba50a5dd729d8a23507ad09cdd0f82110c",
-                "reference": "beeac2ba50a5dd729d8a23507ad09cdd0f82110c",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/9bfc6ffa24b1b66f7c3c9f71b2870e1413c1ce03",
+                "reference": "9bfc6ffa24b1b66f7c3c9f71b2870e1413c1ce03",
                 "shasum": ""
             },
             "require": {
@@ -4933,7 +4995,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-16T21:21:05+00:00"
+            "time": "2024-03-20T15:26:56+00:00"
         },
         {
             "name": "symfony/options-resolver",
@@ -5309,12 +5371,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/string.git",
-                "reference": "ef964850371aca5def9fc8a3059d9b1690bb3b6c"
+                "reference": "29dc30bf66fe1a2b70c31543012bc108a81dc3c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/string/zipball/ef964850371aca5def9fc8a3059d9b1690bb3b6c",
-                "reference": "ef964850371aca5def9fc8a3059d9b1690bb3b6c",
+                "url": "https://api.github.com/repos/symfony/string/zipball/29dc30bf66fe1a2b70c31543012bc108a81dc3c5",
+                "reference": "29dc30bf66fe1a2b70c31543012bc108a81dc3c5",
                 "shasum": ""
             },
             "require": {
@@ -5388,7 +5450,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-08T12:55:53+00:00"
+            "time": "2024-03-20T15:26:56+00:00"
         },
         {
             "name": "theseer/tokenizer",

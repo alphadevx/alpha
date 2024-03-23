@@ -78,13 +78,22 @@ class IndexedPage extends ActiveRecord
     protected $host;
 
     /**
+     * The optional filename for the screenshot of the page.
+     *
+     * @var \Alpha\Model\Type\SmallText
+     *
+     * @since 4.1.0
+     */
+    protected $screenshot;
+
+    /**
      * An array of data display labels for the class properties.
      *
      * @var array
      *
      * @since 4.1.0
      */
-    protected $dataLabels = array('ID' => 'Indexed Page ID#', 'url' => 'URL', 'tstamp' => 'Last index update', 'host' => 'Host');
+    protected $dataLabels = array('ID' => 'Indexed Page ID#', 'url' => 'URL', 'tstamp' => 'Last index update', 'host' => 'Host', 'screenshot' => 'Screenshot');
 
     /**
      * The name of the database table for the class.
@@ -92,6 +101,7 @@ class IndexedPage extends ActiveRecord
      * @var string
      *
      * @since 4.1.0
+     */
     public const TABLE_NAME = 'IndexedPage';
 
     /**
@@ -118,5 +128,6 @@ class IndexedPage extends ActiveRecord
         $this->url = new SmallText();
         $this->tstamp = new Timestamp();
         $this->host = new SmallText();
+        $this->screenshot = new SmallText();
     }
 }
