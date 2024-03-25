@@ -14,6 +14,9 @@ use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Loading\Http;
 use Crwlr\CrawlerExtBrowser\Steps\Screenshot;
 use Crwlr\Url\Url;
+use Solarium\Core\Client\Adapter\Curl;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Solarium\Client;
 
 /**
  * A persistent task for crawing the webpages defined in config/seed-urls.ini and indexing
@@ -86,6 +89,25 @@ class CrawlTask implements TaskInterface
             throw new AlphaException('Unable to find a seed-urls.ini file in the application!');
         }
 
+        $adapter = new Curl();
+        $eventDispatcher = new EventDispatcher();
+
+        $solrConfig = array(
+            'endpoint' => array(
+                'localhost' => array(
+                    'host' => $config->get('solr.host'),
+                    'port' => $config->get('solr.port'),
+                    'path' => $config->get('solr.path'),
+                    'core' => $config->get('solr.core'),
+                    'username' => $config->get('solr.username'),
+                    'password' => $config->get('solr.password')
+                )
+            )
+        );
+
+        // create a client instance
+        $client = new Client($adapter, $eventDispatcher, $solrConfig);
+
         while (true) {
             foreach ($seedURLs as $seedURL) {
                 $crawler = new AlphaCrawler();
@@ -96,15 +118,16 @@ class CrawlTask implements TaskInterface
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
-                    ->addStep(
+                    /*->addStep( // TODO wrap screenshot feature in config
                         Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
-                    )
+                    )*/
+                    ->addStep(Http::get())
                     ->addStep(
                         Html::first('html')
                             ->extract([
                                 'title' => 'title',
-                                'content' => Dom::cssSelector('body')->formattedText(),
+                                'content' => Dom::cssSelector('body')->text(),
                                 'links' => Dom::cssSelector('a')->attribute('href')
                             ])
                             ->addToResult()
@@ -134,12 +157,23 @@ class CrawlTask implements TaskInterface
                     }
 
                     $page->set('tstamp', new Timestamp());
-                    $page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
+                    // TODO wrap screenshot feature in config
+                    //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
                     $page->save();
 
-
                     // 2. Re-index to Solr and the DB as required
-                    // TODO
+                    $update = $client->createUpdate();
+                    $doc = $update->createDocument();
+                    $doc->id = $seedURL;
+                    $doc->url = $seedURL;
+                    $doc->host = $host;
+                    $doc->title = $result->get('title');
+                    $doc->content = $result->get('content');
+                    $doc->tstamp = gmdate("Y-m-d\TH:i:s\Z");
+                    $update->addDocuments(array($doc));
+                    $update->addCommit();
+
+                    $solrResult = $client->update($update);
 
 
                     // 3. Add links found on the page to seedURLs array for the next iteration
