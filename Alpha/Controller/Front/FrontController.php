@@ -526,6 +526,8 @@ class FrontController
      */
     public function getRouteCallback(string $URI): callable
     {
+        $URI = strtok($URI, '?');
+
         if (array_key_exists($URI, $this->routes)) { // direct hit due to URL containing no params
             $this->currentRoute = $URI;
 

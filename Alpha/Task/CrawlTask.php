@@ -97,7 +97,7 @@ class CrawlTask implements TaskInterface
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
                     ->addStep(
-                        Screenshot::loadAndTake($config->get('app.file.store.dir').'/cache/images/screenshots')
+                        Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
                     )
                     ->addStep(
