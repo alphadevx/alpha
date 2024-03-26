@@ -14,9 +14,11 @@ use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Loading\Http;
 use Crwlr\CrawlerExtBrowser\Steps\Screenshot;
 use Crwlr\Url\Url;
+use Crwlr\Url\Exceptions\InvalidUrlException
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Solarium\Client;
+use Solarium\Exception\HttpException;
 
 /**
  * A persistent task for crawing the webpages defined in config/seed-urls.ini and indexing
@@ -175,8 +177,11 @@ class CrawlTask implements TaskInterface
                     $update->addDocuments(array($doc));
                     $update->addCommit();
 
-                    $solrResult = $client->update($update);
-
+                    try {
+                        $solrResult = $client->update($update);
+                    } catch (HttpException $e) {
+                        self::$logger->error($e->getMessage());
+                    }
 
                     // 3. Add links found on the page to seedURLs array for the next iteration
                     self::$logger->debug('url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
@@ -186,7 +191,11 @@ class CrawlTask implements TaskInterface
                         $pageURL = Url::parse($seedURL);
 
                         $absoluteLinks = array_map(function ($newURL) use ($pageURL) {
-                            return $pageURL->resolve($newURL)->toString();
+                            try {
+                                return $pageURL->resolve($newURL)->toString();
+                            } catch (InvalidUrlException $e) {
+                                self::$logger->error($e->getMessage());
+                            }
                         }, $newURLs);
 
                         $seedURLs = array_merge($seedURLs, $absoluteLinks);
