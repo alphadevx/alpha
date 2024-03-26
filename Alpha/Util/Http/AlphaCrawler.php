@@ -3,8 +3,11 @@
 namespace Alpha\Util\Http;
 
 use Crwlr\Crawler\HttpCrawler;
+use Crwlr\Crawler\Loader\LoaderInterface;
+use Crwlr\Crawler\Loader\Http\HttpLoader;
 use Crwlr\Crawler\UserAgents\BotUserAgent;
 use Crwlr\Crawler\UserAgents\UserAgentInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * A web crawler HTTP client.
@@ -52,6 +55,14 @@ class AlphaCrawler extends HttpCrawler
 {
     protected function userAgent(): UserAgentInterface
     {
-        return BotUserAgent::make('Alpha Framework Bot / 4.1.0');
+        return BotUserAgent::make('Alpha Framework Web Crawler / 4.1.0');
+    }
+
+    public function loader(UserAgentInterface $userAgent, LoggerInterface $logger): LoaderInterface
+    {
+        return new HttpLoader($userAgent, logger: $logger, defaultGuzzleClientConfig: [
+            'connect_timeout' => 5,
+            'timeout' => 5,
+        ]);
     }
 }
