@@ -118,6 +118,14 @@ class CrawlTask implements TaskInterface
 
                 self::$logger->info('Crawling URL ['.$seedURL.']');
 
+                // if it's a .pdf, remove it and skip to next iteration
+                $path = parse_url($seedURL, PHP_URL_PATH);
+                $ext = pathinfo($path, PATHINFO_EXTENSION);
+                if ($ext == '.pdf') {
+                    unset($seedURLs[$seedURL]);
+                    continue;
+                }
+
                 $crawler = new AlphaCrawler();
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
@@ -200,6 +208,9 @@ class CrawlTask implements TaskInterface
 
                         $seedURLs = array_merge($seedURLs, $absoluteLinks);
                     }
+
+                    // remove the current link from the seed list as it's already indexed in this run.
+                    unset($seedURLs[$seedURL]);
                 }
             }
         }
