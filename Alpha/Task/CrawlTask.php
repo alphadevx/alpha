@@ -84,6 +84,8 @@ class CrawlTask implements TaskInterface
 
         if (file_exists($seedfile)) {
             $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
+            // random-sort the initial seed URLs for running this task in mulitple threads
+            shuffle($seedURLs);
             self::$logger->debug('Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
         } else {
             throw new AlphaException('Unable to find a seed-urls.ini file in the application!');
