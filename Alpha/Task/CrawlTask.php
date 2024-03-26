@@ -14,7 +14,7 @@ use Crwlr\Crawler\Steps\Dom;
 use Crwlr\Crawler\Steps\Loading\Http;
 use Crwlr\CrawlerExtBrowser\Steps\Screenshot;
 use Crwlr\Url\Url;
-use Crwlr\Url\Exceptions\InvalidUrlException
+use Crwlr\Url\Exceptions\InvalidUrlException;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Solarium\Client;

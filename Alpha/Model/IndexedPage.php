@@ -3,6 +3,7 @@
 namespace Alpha\Model;
 
 use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Text;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Util\Logging\Logger;
 
@@ -53,7 +54,7 @@ class IndexedPage extends ActiveRecord
     /**
      * The absolute URL for the page.
      *
-     * @var \Alpha\Model\Type\SmallText
+     * @var \Alpha\Model\Type\Text
      *
      * @since 4.1.0
      */
@@ -125,7 +126,8 @@ class IndexedPage extends ActiveRecord
         // ensure to call the parent constructor
         parent::__construct();
 
-        $this->url = new SmallText();
+        $this->url = new Text();
+        $this->url->setSize(1024);
         $this->tstamp = new Timestamp();
         $this->host = new SmallText();
         $this->screenshot = new SmallText();
