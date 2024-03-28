@@ -114,7 +114,6 @@ class CrawlTask implements TaskInterface
 
         while (true) {
             foreach ($seedURLs as $seedURL) {
-                $crawler = new AlphaCrawler();
 
                 self::$logger->info('Crawling URL ['.$seedURL.']');
 
@@ -127,6 +126,7 @@ class CrawlTask implements TaskInterface
                 }
 
                 $crawler = new AlphaCrawler();
+                AlphaCrawler::setMemoryLimit('1G');
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
