@@ -4,6 +4,7 @@ namespace Alpha\Task;
 
 use Alpha\Exception\AlphaException;
 use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\LockingException;
 use Alpha\Model\IndexedPage;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Util\Logging\Logger;
@@ -171,7 +172,12 @@ class CrawlTask implements TaskInterface
                     $page->set('tstamp', new Timestamp());
                     // TODO wrap screenshot feature in config
                     //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
-                    $page->save();
+
+                    try {
+                        $page->save();
+                    } catch (LockingException $e) {
+                        self::$logger->error($e->getMessage());
+                    }
 
                     // 2. Re-index to Solr and the DB as required
                     $update = $client->createUpdate();
