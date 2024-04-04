@@ -122,6 +122,7 @@ class CrawlTask implements TaskInterface
                 $path = parse_url($seedURL, PHP_URL_PATH);
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 if ($ext == '.pdf') {
+                    self::$logger->debug('Skipping .pdf file ['.$seedfile.']');
                     unset($seedURLs[$seedURL]);
                     continue;
                 }
@@ -164,6 +165,14 @@ class CrawlTask implements TaskInterface
 
                     try {
                         $page->loadByAttribute('url', $seedURL);
+
+                        $ts = $page->getPropObject('tstamp');
+
+                        if (time() - $ts->getUnixValue() < 3601) {
+                            self::$logger->info('Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
+                            unset($seedURLs[$seedURL]);
+                            continue;
+                        }
                     } catch (RecordNotFoundException $e) {
                         $page->set('url', $seedURL);
                         $page->set('host', $host);
