@@ -89,9 +89,9 @@ class CrawlTask implements TaskInterface
             $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
             // random-sort the initial seed URLs for running this task in mulitple threads
             shuffle($seedURLs);
-            self::$logger->debug('Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
+            self::$logger->debug('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
         } else {
-            throw new AlphaException('Unable to find a seed-urls.ini file in the application!');
+            throw new AlphaException('[worker '.getmypid().'] Unable to find a seed-urls.ini file in the application!');
         }
 
         $adapter = new Curl();
@@ -116,19 +116,19 @@ class CrawlTask implements TaskInterface
         while (true) {
             foreach ($seedURLs as $seedURL) {
 
-                self::$logger->info('Crawling URL ['.$seedURL.']');
+                self::$logger->debug('[worker '.getmypid().'] Crawling URL ['.$seedURL.']');
 
                 // if it's a .pdf, remove it and skip to next iteration
                 $path = parse_url($seedURL, PHP_URL_PATH);
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 if ($ext == '.pdf') {
-                    self::$logger->debug('Skipping .pdf file ['.$seedfile.']');
+                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf file ['.$seedfile.']');
                     unset($seedURLs[$seedURL]);
                     continue;
                 }
 
                 $crawler = new AlphaCrawler();
-                AlphaCrawler::setMemoryLimit('1G');
+                AlphaCrawler::setMemoryLimit('512m');
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
@@ -169,7 +169,7 @@ class CrawlTask implements TaskInterface
                         $ts = $page->getPropObject('tstamp');
 
                         if (time() - $ts->getUnixValue() < 3601) {
-                            self::$logger->info('Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
+                            self::$logger->debug('[worker '.getmypid().'] Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
                             unset($seedURLs[$seedURL]);
                             continue;
                         }
@@ -185,7 +185,7 @@ class CrawlTask implements TaskInterface
                     try {
                         $page->save();
                     } catch (LockingException $e) {
-                        self::$logger->error($e->getMessage());
+                        self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                     }
 
                     // 2. Re-index to Solr and the DB as required
@@ -203,11 +203,11 @@ class CrawlTask implements TaskInterface
                     try {
                         $solrResult = $client->update($update);
                     } catch (HttpException $e) {
-                        self::$logger->error($e->getMessage());
+                        self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                     }
 
                     // 3. Add links found on the page to seedURLs array for the next iteration
-                    self::$logger->debug('url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
+                    self::$logger->debug('[worker '.getmypid().'] url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
 
                     if (is_array($result->get('links'))) {
                         $newURLs = $result->get('links');
@@ -217,7 +217,7 @@ class CrawlTask implements TaskInterface
                             try {
                                 return $pageURL->resolve($newURL)->toString();
                             } catch (InvalidUrlException $e) {
-                                self::$logger->error($e->getMessage());
+                                self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                             }
                         }, $newURLs);
 
