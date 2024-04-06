@@ -89,7 +89,7 @@ class CrawlTask implements TaskInterface
             $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
             // random-sort the initial seed URLs for running this task in mulitple threads
             shuffle($seedURLs);
-            self::$logger->debug('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
+            self::$logger->info('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
         } else {
             throw new AlphaException('[worker '.getmypid().'] Unable to find a seed-urls.ini file in the application!');
         }
@@ -110,10 +110,17 @@ class CrawlTask implements TaskInterface
             )
         );
 
-        // create a client instance
+        // Solr client
         $client = new Client($adapter, $eventDispatcher, $solrConfig);
 
+        AlphaCrawler::setMemoryLimit('512m');
+
+        $iteration = 1;
+
         while (true) {
+            self::$logger->info('[worker '.getmypid().'] starting iteration ['.$iteration.'] with ['.count($seedURLs).'] URLs');
+            self::$logger->info('[worker '.getmypid().'] memory usage is ['.memory_get_usage().'] bytes');
+
             foreach ($seedURLs as $seedURL) {
 
                 self::$logger->debug('[worker '.getmypid().'] Crawling URL ['.$seedURL.']');
@@ -127,8 +134,8 @@ class CrawlTask implements TaskInterface
                     continue;
                 }
 
+                // web crawler client
                 $crawler = new AlphaCrawler();
-                AlphaCrawler::setMemoryLimit('512m');
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
                 $crawler->input($seedURL)
@@ -228,6 +235,8 @@ class CrawlTask implements TaskInterface
                     unset($seedURLs[$seedURL]);
                 }
             }
+
+            $iteration++;
         }
     }
 
