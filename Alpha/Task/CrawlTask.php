@@ -134,6 +134,24 @@ class CrawlTask implements TaskInterface
                     continue;
                 }
 
+                $page = new IndexedPage();
+                $host = parse_url($seedURL, PHP_URL_HOST);
+
+                try {
+                    $page->loadByAttribute('url', $seedURL);
+
+                    $ts = $page->getPropObject('tstamp');
+
+                    if (time() - $ts->getUnixValue() < 3601) {
+                        self::$logger->debug('[worker '.getmypid().'] Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
+                        unset($seedURLs[$seedURL]);
+                        continue;
+                    }
+                } catch (RecordNotFoundException $e) {
+                    $page->set('url', $seedURL);
+                    $page->set('host', $host);
+                }
+
                 // web crawler client
                 $crawler = new AlphaCrawler();
 
@@ -156,34 +174,8 @@ class CrawlTask implements TaskInterface
 
                 foreach ($crawler->run() as $result) {
 
-                    $host = parse_url($seedURL, PHP_URL_HOST);
-
                     $result->set('url', $seedURL);
                     $result->set('host', $host);
-
-                    /* TODO:
-                        1. Check the DB for when this was last indexed
-                        2. Re-index to Solr and the DB as required
-                        3. Add links found on the page to seedURLs array for the next iteration
-                     */
-
-                    // 1. Check the DB for when this page was last indexed
-                    $page = new IndexedPage();
-
-                    try {
-                        $page->loadByAttribute('url', $seedURL);
-
-                        $ts = $page->getPropObject('tstamp');
-
-                        if (time() - $ts->getUnixValue() < 3601) {
-                            self::$logger->debug('[worker '.getmypid().'] Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
-                            unset($seedURLs[$seedURL]);
-                            continue;
-                        }
-                    } catch (RecordNotFoundException $e) {
-                        $page->set('url', $seedURL);
-                        $page->set('host', $host);
-                    }
 
                     $page->set('tstamp', new Timestamp());
                     // TODO wrap screenshot feature in config
@@ -195,7 +187,7 @@ class CrawlTask implements TaskInterface
                         self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                     }
 
-                    // 2. Re-index to Solr and the DB as required
+                    // Re-index to Solr and the DB as required
                     $update = $client->createUpdate();
                     $doc = $update->createDocument();
                     $doc->id = $seedURL;
@@ -213,7 +205,7 @@ class CrawlTask implements TaskInterface
                         self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                     }
 
-                    // 3. Add links found on the page to seedURLs array for the next iteration
+                    // Add links found on the page to seedURLs array for the next iteration
                     self::$logger->debug('[worker '.getmypid().'] url ['.$seedURL.'] from host ['.$host.'] returned ['.(is_array($result->get('links')) ? count($result->get('links')) : '0').'] child links to add to the seedURL list');
 
                     if (is_array($result->get('links'))) {
