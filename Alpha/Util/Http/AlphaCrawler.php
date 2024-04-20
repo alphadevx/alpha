@@ -2,12 +2,20 @@
 
 namespace Alpha\Util\Http;
 
+use Alpha\Model\IndexedPage;
+use Alpha\Model\Type\Timestamp;
+use Alpha\Exception\RecordNotFoundException;
+use Alpha\Exception\LockingException;
 use Crwlr\Crawler\HttpCrawler;
 use Crwlr\Crawler\Loader\LoaderInterface;
 use Crwlr\Crawler\Loader\Http\HttpLoader;
 use Crwlr\Crawler\UserAgents\BotUserAgent;
 use Crwlr\Crawler\UserAgents\UserAgentInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Exception;
+use Error;
 
 /**
  * A web crawler HTTP client.
@@ -60,9 +68,43 @@ class AlphaCrawler extends HttpCrawler
 
     public function loader(UserAgentInterface $userAgent, LoggerInterface $logger): LoaderInterface
     {
-        return new HttpLoader($userAgent, logger: $logger, defaultGuzzleClientConfig: [
+        $loader = new HttpLoader($userAgent, logger: $logger, defaultGuzzleClientConfig: [
             'connect_timeout' => 5,
             'timeout' => 5,
         ]);
+
+        $loader->onError(function (RequestInterface $request, Exception|Error|ResponseInterface $exceptionOrResponse, $logger) {
+            $logMessage = 'Failed to load ' . $request->getUri()->__toString() . ': ';
+
+            if ($exceptionOrResponse instanceof ResponseInterface) {
+                $logMessage .= 'got response ' . $exceptionOrResponse->getStatusCode() . ' - ' .
+                    $exceptionOrResponse->getReasonPhrase();
+            } else {
+                $logMessage .= $exceptionOrResponse->getMessage();
+            }
+
+            $logger->error($logMessage);
+
+            if (method_exists($exceptionOrResponse, 'getStatusCode')) {
+                $page = new IndexedPage();
+                try {
+                    $page->loadByAttribute('url', $request->getUri()->__toString());
+                } catch (RecordNotFoundException $e) {
+                }
+
+                $host = parse_url($request->getUri()->__toString(), PHP_URL_HOST);
+                $page->set('url', $request->getUri()->__toString());
+                $page->set('host', $host);
+                $page->set('tstamp', new Timestamp());
+                $page->set('responseCode', $exceptionOrResponse->getStatusCode());
+
+                try {
+                    $page->save();
+                } catch (LockingException $e) {
+                }
+            }
+        });
+
+        return $loader;
     }
 }
