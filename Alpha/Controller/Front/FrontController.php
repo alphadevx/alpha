@@ -598,9 +598,9 @@ class FrontController
         try {
             $response = call_user_func($callback, $request);
         } catch (ResourceNotFoundException $rnfe) {
-            self::$logger->info('ResourceNotFoundException throw, source message ['.$rnfe->getMessage().']');
+            self::$logger->warn('ResourceNotFoundException throw, source message ['.$rnfe->getMessage().']');
 
-            return new Response(404, $rnfe->getMessage());
+            throw new ResourceNotFoundException('Resource not found');
         }
 
         if ($response instanceof Response) {

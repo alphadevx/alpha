@@ -161,7 +161,7 @@ class CrawlTask implements TaskInterface
                         Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
                     )*/
-                    ->addStep(Http::get())
+                    ->addStep(Http::get()->addToResult(['status']))
                     ->addStep(
                         Html::first('html')
                             ->extract([
@@ -178,6 +178,7 @@ class CrawlTask implements TaskInterface
                     $result->set('host', $host);
 
                     $page->set('tstamp', new Timestamp());
+                    $page->set('responseCode', $result->get('status'));
                     // TODO wrap screenshot feature in config
                     //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
 

@@ -2,6 +2,7 @@
 
 namespace Alpha\Model;
 
+use Alpha\Model\Type\Integer;
 use Alpha\Model\Type\SmallText;
 use Alpha\Model\Type\Text;
 use Alpha\Model\Type\Timestamp;
@@ -88,6 +89,15 @@ class IndexedPage extends ActiveRecord
     protected $screenshot;
 
     /**
+     * The the last response code received for this URL.
+     *
+     * @var \Alpha\Model\Type\Integer
+     *
+     * @since 4.1.0
+     */
+    protected $responseCode;
+
+    /**
      * An array of data display labels for the class properties.
      *
      * @var array
@@ -131,5 +141,6 @@ class IndexedPage extends ActiveRecord
         $this->tstamp = new Timestamp();
         $this->host = new SmallText();
         $this->screenshot = new SmallText();
+        $this->responseCode = new Integer();
     }
 }
