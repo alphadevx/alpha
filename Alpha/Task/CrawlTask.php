@@ -167,7 +167,8 @@ class CrawlTask implements TaskInterface
                             ->extract([
                                 'title' => 'title',
                                 'content' => Dom::cssSelector('body')->text(),
-                                'links' => Dom::cssSelector('a')->attribute('href')
+                                'links' => Dom::cssSelector('a')->attribute('href'),
+                                'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl()
                             ])
                             ->addToResult()
                     );
@@ -179,8 +180,12 @@ class CrawlTask implements TaskInterface
 
                     $page->set('tstamp', new Timestamp());
                     $page->set('responseCode', $result->get('status'));
+                    var_dump($result->get('image'));
                     // TODO wrap screenshot feature in config
                     //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
+                    if ($result->get('imageUrl') != '') {
+                        $page->set('imageUrl', $result->get('imageUrl'));
+                    }
 
                     try {
                         $page->save();

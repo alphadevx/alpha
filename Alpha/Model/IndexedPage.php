@@ -98,13 +98,22 @@ class IndexedPage extends ActiveRecord
     protected $responseCode;
 
     /**
+     * The absolute URL the first image extracted from the page
+     *
+     * @var \Alpha\Model\Type\Text
+     *
+     * @since 4.1.0
+     */
+    protected $imageUrl;
+
+    /**
      * An array of data display labels for the class properties.
      *
      * @var array
      *
      * @since 4.1.0
      */
-    protected $dataLabels = array('ID' => 'Indexed Page ID#', 'url' => 'URL', 'tstamp' => 'Last index update', 'host' => 'Host', 'screenshot' => 'Screenshot');
+    protected $dataLabels = array('ID' => 'Indexed Page ID#', 'url' => 'URL', 'tstamp' => 'Last index update', 'host' => 'Host', 'screenshot' => 'Screenshot', 'responseCode' => 'Response code', 'imageUrl' => 'First image URL');
 
     /**
      * The name of the database table for the class.
@@ -137,10 +146,12 @@ class IndexedPage extends ActiveRecord
         parent::__construct();
 
         $this->url = new Text();
-        $this->url->setSize(1024);
+        $this->url->setSize(2048);
         $this->tstamp = new Timestamp();
         $this->host = new SmallText();
         $this->screenshot = new SmallText();
         $this->responseCode = new Integer();
+        $this->imageUrl = new Text();
+        $this->imageUrl->setSize(2048);
     }
 }
