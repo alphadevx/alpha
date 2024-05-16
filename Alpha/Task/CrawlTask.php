@@ -134,6 +134,33 @@ class CrawlTask implements TaskInterface
                     continue;
                 }
 
+                // if it's an anchor URL, remove it and skip to next iteration
+                if (strpos($seedURL, '#') !== false) {
+                    self::$logger->info('[worker '.getmypid().'] Skipping anchor link ['.$seedURL.'] and removing it from the index');
+
+                    // delete from the database
+                    $page = new IndexedPage();
+                    try {
+                        $page->loadByAttribute('url', $seedURL);
+                        $page->delete();
+                    } catch (RecordNotFoundException $e) {
+                    }
+
+                    // delete from Solr
+                    $update = $client->createUpdate();
+                    $update->addDeleteById($seedURL);
+                    $update->addCommit();
+
+                    try {
+                        $solrResult = $client->update($update);
+                    } catch (HttpException $e) {
+                        self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
+                    }
+
+                    // skip
+                    continue;
+                }
+
                 $page = new IndexedPage();
                 $host = parse_url($seedURL, PHP_URL_HOST);
 
