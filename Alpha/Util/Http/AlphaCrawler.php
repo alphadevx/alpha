@@ -6,6 +6,8 @@ use Alpha\Model\IndexedPage;
 use Alpha\Model\Type\Timestamp;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\Exception\LockingException;
+use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Logging\Logger;
 use Crwlr\Crawler\HttpCrawler;
 use Crwlr\Crawler\Loader\LoaderInterface;
 use Crwlr\Crawler\Loader\Http\HttpLoader;
@@ -14,6 +16,10 @@ use Crwlr\Crawler\UserAgents\UserAgentInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Solarium\Core\Client\Adapter\Curl;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Solarium\Client;
+use Solarium\Exception\HttpException;
 use Exception;
 use Error;
 
@@ -61,6 +67,13 @@ use Error;
  */
 class AlphaCrawler extends HttpCrawler
 {
+    /**
+     * Trace logger.
+     *
+     * @var \Alpha\Util\Logging\Logger
+     */
+    private static $alphaLogger = null;
+
     protected function userAgent(): UserAgentInterface
     {
         return BotUserAgent::make('Alpha Framework Web Crawler / 4.1.0');
@@ -69,11 +82,36 @@ class AlphaCrawler extends HttpCrawler
     public function loader(UserAgentInterface $userAgent, LoggerInterface $logger): LoaderInterface
     {
         $loader = new HttpLoader($userAgent, logger: $logger, defaultGuzzleClientConfig: [
-            'connect_timeout' => 5,
-            'timeout' => 5,
-        ]);
+                'connect_timeout' => 5,
+                'timeout' => 5,
+            ]);
 
         $loader->onError(function (RequestInterface $request, Exception|Error|ResponseInterface $exceptionOrResponse, $logger) {
+
+            $config = ConfigProvider::getInstance();
+
+            self::$alphaLogger = new Logger('AlphaCrawler');
+            self::$alphaLogger->setLogProviderFile($config->get('app.file.store.dir').'logs/crawl.log');
+
+            $adapter = new Curl();
+            $eventDispatcher = new EventDispatcher();
+
+            $solrConfig = array(
+                'endpoint' => array(
+                    'localhost' => array(
+                        'host' => $config->get('solr.host'),
+                        'port' => $config->get('solr.port'),
+                        'path' => $config->get('solr.path'),
+                        'core' => $config->get('solr.core'),
+                        'username' => $config->get('solr.username'),
+                        'password' => $config->get('solr.password')
+                    )
+                )
+            );
+
+            // Solr client
+            $client = new Client($adapter, $eventDispatcher, $solrConfig);
+
             $logMessage = 'Failed to load ' . $request->getUri()->__toString() . ': ';
 
             if ($exceptionOrResponse instanceof ResponseInterface) {
@@ -83,10 +121,10 @@ class AlphaCrawler extends HttpCrawler
                 $logMessage .= $exceptionOrResponse->getMessage();
             }
 
-            $logger->error($logMessage);
+            self::$alphaLogger->error($logMessage);
 
             if (method_exists($exceptionOrResponse, 'getStatusCode')) {
-                $page = new IndexedPage();
+                /*$page = new IndexedPage();
                 try {
                     $page->loadByAttribute('url', $request->getUri()->__toString());
                 } catch (RecordNotFoundException $e) {
@@ -101,6 +139,26 @@ class AlphaCrawler extends HttpCrawler
                 try {
                     $page->save();
                 } catch (LockingException $e) {
+                }*/
+                self::$alphaLogger->info('Deleting the URL ['.$request->getUri()->__toString().'] due to an error response ['.$exceptionOrResponse->getStatusCode().']');
+
+                // delete from the database
+                $page = new IndexedPage();
+                try {
+                    $page->loadByAttribute('url', $request->getUri()->__toString());
+                    $page->delete();
+                } catch (RecordNotFoundException $e) {
+                }
+
+                // delete from Solr
+                $update = $client->createUpdate();
+                $update->addDeleteById($request->getUri()->__toString());
+                $update->addCommit();
+
+                try {
+                    $solrResult = $client->update($update);
+                } catch (HttpException $e) {
+                    self::$alphaLogger->error('[worker '.getmypid().'] '.$e->getMessage());
                 }
             }
         });
