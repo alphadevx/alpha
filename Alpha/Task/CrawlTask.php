@@ -125,18 +125,18 @@ class CrawlTask implements TaskInterface
 
                 self::$logger->debug('[worker '.getmypid().'] Crawling URL ['.$seedURL.']');
 
-                // if it's a .pdf, remove it and skip to next iteration
+                // if it's a .pdf/.xml, remove it and skip to next iteration
                 $path = parse_url($seedURL, PHP_URL_PATH);
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
-                if ($ext == '.pdf') {
-                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf file ['.$seedfile.']');
+                if ($ext == '.pdf' || $ext == '.xml') {
+                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf/.xml file ['.$seedfile.']');
                     unset($seedURLs[$seedURL]);
                     continue;
                 }
 
                 // if it's an anchor URL, remove it and skip to next iteration
                 if (strpos($seedURL, '#') !== false) {
-                    self::$logger->info('[worker '.getmypid().'] Skipping anchor link ['.$seedURL.'] and removing it from the index');
+                    self::$logger->debug('[worker '.getmypid().'] Skipping anchor link ['.$seedURL.'] and removing it from the index');
 
                     // delete from the database
                     $page = new IndexedPage();
