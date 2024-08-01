@@ -95,6 +95,7 @@ class CrawlTask implements TaskInterface
         }
 
         $adapter = new Curl();
+        $adapter->setTimeout(10);
         $eventDispatcher = new EventDispatcher();
 
         $solrConfig = array(
@@ -129,7 +130,7 @@ class CrawlTask implements TaskInterface
                 $path = parse_url($seedURL, PHP_URL_PATH);
                 $ext = pathinfo($path, PATHINFO_EXTENSION);
                 if ($ext == '.pdf' || $ext == '.xml') {
-                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf/.xml file ['.$seedfile.']');
+                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf/.xml file ['.$seedURL.']');
                     unset($seedURLs[$seedURL]);
                     continue;
                 }
@@ -207,7 +208,6 @@ class CrawlTask implements TaskInterface
 
                     $page->set('tstamp', new Timestamp());
                     $page->set('responseCode', $result->get('status'));
-                    var_dump($result->get('image'));
                     // TODO wrap screenshot feature in config
                     //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
                     if ($result->get('imageUrl') != '') {
