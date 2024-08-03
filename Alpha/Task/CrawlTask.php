@@ -227,7 +227,7 @@ class CrawlTask implements TaskInterface
                     $doc->url = $seedURL;
                     $doc->host = $host;
                     $doc->title = $result->get('title');
-                    $doc->content = $result->get('content');
+                    $doc->content = $this->stripHTML($result->get('content'));
                     $doc->tstamp = gmdate("Y-m-d\TH:i:s\Z");
                     $update->addDocuments(array($doc));
                     $update->addCommit();
@@ -271,5 +271,24 @@ class CrawlTask implements TaskInterface
     public function getMaxRunTime(): int
     {
         return 600;
+    }
+
+    /**
+     * Apply some rules to the HTML crawled to strip it of code before indexing it
+     *
+     * @since 4.1.0
+     */
+    private function stripHTML(string $content): string
+    {
+        // remove tags
+        $content = strip_tags($content);
+        // remove CDATA
+        $content = preg_replace('/<!\[CDATA\[.*?\]\]>/', '', $content);
+        // remove any remaining /* */ code blocks
+        $content = preg_replace('/\/\*.*?\*\//', '', $content);
+        // remove any remaining {} code blocks
+        $content = preg_replace('/{.*?}/', '', $content);
+
+        return $content;
     }
 }
