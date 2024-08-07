@@ -122,6 +122,8 @@ class CrawlTask implements TaskInterface
             self::$logger->info('[worker '.getmypid().'] starting iteration ['.$iteration.'] with ['.count($seedURLs).'] URLs');
             self::$logger->info('[worker '.getmypid().'] memory usage is ['.memory_get_usage().'] bytes');
 
+            $somethingIndexed = false;
+
             foreach ($seedURLs as $seedURL) {
 
                 self::$logger->debug('[worker '.getmypid().'] Crawling URL ['.$seedURL.']');
@@ -210,9 +212,9 @@ class CrawlTask implements TaskInterface
                     $page->set('responseCode', $result->get('status'));
                     // TODO wrap screenshot feature in config
                     //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
-                    if ($result->get('imageUrl') != '') {
-                        $page->set('imageUrl', $result->get('imageUrl'));
-                    }
+                    //if ($result->get('imageUrl') != '') {
+                    //    $page->set('imageUrl', $result->get('imageUrl'));
+                    //}
 
                     try {
                         $page->save();
@@ -227,13 +229,20 @@ class CrawlTask implements TaskInterface
                     $doc->url = $seedURL;
                     $doc->host = $host;
                     $doc->title = $result->get('title');
-                    $doc->content = $this->stripHTML($result->get('content'));
+                    if (is_string($result->get('content'))) {
+                        $doc->content = $this->stripHTML($result->get('content'));
+                    } else {
+                        // let's not index pages with no boby content
+                        unset($seedURLs[$seedURL]);
+                        continue;
+                    }
                     $doc->tstamp = gmdate("Y-m-d\TH:i:s\Z");
                     $update->addDocuments(array($doc));
                     $update->addCommit();
 
                     try {
                         $solrResult = $client->update($update);
+                        $somethingIndexed = true;
                     } catch (HttpException $e) {
                         self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
                     }
@@ -262,6 +271,20 @@ class CrawlTask implements TaskInterface
             }
 
             $iteration++;
+
+            /* If we made it this far without amything new being indexed, then
+            load the oldest 300 URLs from the database and re-index them
+            in the next iteration. */
+            if ($somethingIndexed === false) {
+                $page = new IndexedPage();
+                $pages = $page->query('select * from IndexedPage order by tstamp asc limit 300');
+
+                foreach ($pages as $page) {
+                    $seedURLs[] = $page['url'];
+                }
+
+                self::$logger->info('[worker '.getmypid().'] added 300 old URLs to the seed list as the previous iteration indexed nothing new');
+            }
         }
     }
 
