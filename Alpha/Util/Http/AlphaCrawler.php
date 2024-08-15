@@ -76,7 +76,9 @@ class AlphaCrawler extends HttpCrawler
 
     protected function userAgent(): UserAgentInterface
     {
-        return BotUserAgent::make('Alpha Framework Web Crawler / 4.1.0');
+        $config = ConfigProvider::getInstance();
+
+        return BotUserAgent::make($config->get('search.indexer.user.agent'));
     }
 
     public function loader(UserAgentInterface $userAgent, LoggerInterface $logger): LoaderInterface
@@ -99,12 +101,12 @@ class AlphaCrawler extends HttpCrawler
             $solrConfig = array(
                 'endpoint' => array(
                     'localhost' => array(
-                        'host' => $config->get('solr.host'),
-                        'port' => $config->get('solr.port'),
-                        'path' => $config->get('solr.path'),
-                        'core' => $config->get('solr.core'),
-                        'username' => $config->get('solr.username'),
-                        'password' => $config->get('solr.password')
+                        'host' => $config->get('search.solr.host'),
+                        'port' => $config->get('search.solr.port'),
+                        'path' => $config->get('search.solr.path'),
+                        'core' => $config->get('search.solr.core'),
+                        'username' => $config->get('search.solr.username'),
+                        'password' => $config->get('search.solr.password')
                     )
                 )
             );

@@ -101,12 +101,12 @@ class CrawlTask implements TaskInterface
         $solrConfig = array(
             'endpoint' => array(
                 'localhost' => array(
-                    'host' => $config->get('solr.host'),
-                    'port' => $config->get('solr.port'),
-                    'path' => $config->get('solr.path'),
-                    'core' => $config->get('solr.core'),
-                    'username' => $config->get('solr.username'),
-                    'password' => $config->get('solr.password')
+                    'host' => $config->get('search.solr.host'),
+                    'port' => $config->get('search.solr.port'),
+                    'path' => $config->get('search.solr.path'),
+                    'core' => $config->get('search.solr.core'),
+                    'username' => $config->get('search.solr.username'),
+                    'password' => $config->get('search.solr.password')
                 )
             )
         );
@@ -186,11 +186,12 @@ class CrawlTask implements TaskInterface
                 $crawler = new AlphaCrawler();
 
                 // TODO if the crawler returns a 404, this URL should be deleted from the index
-                $crawler->input($seedURL)
-                    /*->addStep( // TODO wrap screenshot feature in config
+                if ($config->get('search.indexer.take.screenshot') == true) {
+                    $crawler->input($seedURL)
+                    ->addStep( // screenshot capture feature is enabled in config
                         Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
-                    )*/
+                    )
                     ->addStep(Http::get()->addToResult(['status']))
                     ->addStep(
                         Html::first('html')
@@ -202,6 +203,21 @@ class CrawlTask implements TaskInterface
                             ])
                             ->addToResult()
                     );
+                } else {
+                    $crawler->input($seedURL)
+                    ->addStep(Http::get()->addToResult(['status']))
+                    ->addStep(
+                        Html::first('html')
+                            ->extract([
+                                'title' => 'title',
+                                'content' => Dom::cssSelector('body')->text(),
+                                'links' => Dom::cssSelector('a')->attribute('href'),
+                                'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl()
+                            ])
+                            ->addToResult()
+                    );
+                }
+
 
                 foreach ($crawler->run() as $result) {
 
@@ -210,11 +226,12 @@ class CrawlTask implements TaskInterface
 
                     $page->set('tstamp', new Timestamp());
                     $page->set('responseCode', $result->get('status'));
-                    // TODO wrap screenshot feature in config
-                    //$page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
-                    //if ($result->get('imageUrl') != '') {
-                    //    $page->set('imageUrl', $result->get('imageUrl'));
-                    //}
+                    if ($config->get('search.indexer.take.screenshot') == true) {
+                        $page->set('screenshot', $result->get('screenshotPath')); // TODO: delete old screenshot
+                        if ($result->get('imageUrl') != '') {
+                            $page->set('imageUrl', $result->get('imageUrl'));
+                        }
+                    }
 
                     try {
                         $page->save();
@@ -272,7 +289,7 @@ class CrawlTask implements TaskInterface
 
             $iteration++;
 
-            /* If we made it this far without amything new being indexed, then
+            /* If we made it this far without anything new being indexed, then
             load the oldest 300 URLs from the database and re-index them
             in the next iteration. */
             if ($somethingIndexed === false) {
