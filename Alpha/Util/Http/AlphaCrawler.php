@@ -125,44 +125,45 @@ class AlphaCrawler extends HttpCrawler
 
             self::$alphaLogger->error($logMessage);
 
-            if (method_exists($exceptionOrResponse, 'getStatusCode')) {
-                /*$page = new IndexedPage();
-                try {
-                    $page->loadByAttribute('url', $request->getUri()->__toString());
-                } catch (RecordNotFoundException $e) {
-                }
-
-                $host = parse_url($request->getUri()->__toString(), PHP_URL_HOST);
-                $page->set('url', $request->getUri()->__toString());
-                $page->set('host', $host);
-                $page->set('tstamp', new Timestamp());
-                $page->set('responseCode', $exceptionOrResponse->getStatusCode());
-
-                try {
-                    $page->save();
-                } catch (LockingException $e) {
-                }*/
-                self::$alphaLogger->info('Deleting the URL ['.$request->getUri()->__toString().'] due to an error response ['.$exceptionOrResponse->getStatusCode().']');
-
-                // delete from the database
-                $page = new IndexedPage();
-                try {
-                    $page->loadByAttribute('url', $request->getUri()->__toString());
-                    $page->delete();
-                } catch (RecordNotFoundException $e) {
-                }
-
-                // delete from Solr
-                $update = $client->createUpdate();
-                $update->addDeleteById($request->getUri()->__toString());
-                $update->addCommit();
-
-                try {
-                    $solrResult = $client->update($update);
-                } catch (HttpException $e) {
-                    self::$alphaLogger->error('[worker '.getmypid().'] '.$e->getMessage());
-                }
+            //if (method_exists($exceptionOrResponse, 'getStatusCode')) {
+            /*$page = new IndexedPage();
+            try {
+                $page->loadByAttribute('url', $request->getUri()->__toString());
+            } catch (RecordNotFoundException $e) {
             }
+
+            $host = parse_url($request->getUri()->__toString(), PHP_URL_HOST);
+            $page->set('url', $request->getUri()->__toString());
+            $page->set('host', $host);
+            $page->set('tstamp', new Timestamp());
+            $page->set('responseCode', $exceptionOrResponse->getStatusCode());
+
+            try {
+                $page->save();
+            } catch (LockingException $e) {
+            }*/
+            self::$alphaLogger->info('Deleting the URL ['.$request->getUri()->__toString().'] due to an error response');
+
+            // delete from the database
+            $page = new IndexedPage();
+            try {
+                $page->loadByAttribute('url', $request->getUri()->__toString());
+                $page->delete();
+            } catch (RecordNotFoundException $e) {
+                self::$alphaLogger->error('[worker '.getmypid().'] '.$e->getMessage());
+            }
+
+            // delete from Solr
+            $update = $client->createUpdate();
+            $update->addDeleteById($request->getUri()->__toString());
+            $update->addCommit();
+
+            try {
+                $solrResult = $client->update($update);
+            } catch (HttpException $e) {
+                self::$alphaLogger->error('[worker '.getmypid().'] '.$e->getMessage());
+            }
+            //}
         });
 
         return $loader;

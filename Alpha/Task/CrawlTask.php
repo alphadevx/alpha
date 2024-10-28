@@ -85,13 +85,31 @@ class CrawlTask implements TaskInterface
 
         $seedfile = $config->get('app.root').'config/seed-urls.ini';
 
-        if (file_exists($seedfile)) {
-            $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
-            // random-sort the initial seed URLs for running this task in mulitple threads
-            shuffle($seedURLs);
-            self::$logger->info('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
-        } else {
-            throw new AlphaException('[worker '.getmypid().'] Unable to find a seed-urls.ini file in the application!');
+        // randomly choose to use the seed file or the older entries in the DB that require re-indexing
+        $seedSource = array('file','database');
+        shuffle($seedSource);
+
+        if ($seedSource[0] == 'file') {
+            if (file_exists($seedfile)) {
+                $seedURLs = file($seedfile, FILE_IGNORE_NEW_LINES);
+                // random-sort the initial seed URLs for running this task in mulitple threads
+                shuffle($seedURLs);
+                self::$logger->info('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the file ['.$seedfile.']');
+            } else {
+                throw new AlphaException('[worker '.getmypid().'] Unable to find a seed-urls.ini file in the application!');
+            }
+        }
+
+        if ($seedSource[0] == 'database') {
+            $page = new IndexedPage();
+            $pages = $page->query('select url from IndexedPage order by tstamp asc limit 300');
+            $seedURLs = array();
+
+            foreach ($pages as $page) {
+                $seedURLs[] = $page['url'];
+            }
+
+            self::$logger->info('[worker '.getmypid().'] Read ['.count($seedURLs).'] seed URLs from the database for re-indexing');
         }
 
         $adapter = new Curl();
@@ -130,11 +148,14 @@ class CrawlTask implements TaskInterface
 
                 // if it's a .pdf/.xml, remove it and skip to next iteration
                 $path = parse_url($seedURL, PHP_URL_PATH);
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                if ($ext == '.pdf' || $ext == '.xml') {
-                    self::$logger->debug('[worker '.getmypid().'] Skipping .pdf/.xml file ['.$seedURL.']');
-                    unset($seedURLs[$seedURL]);
-                    continue;
+
+                if (isset($path)) {
+                    $ext = pathinfo($path, PATHINFO_EXTENSION);
+                    if ($ext == '.pdf' || $ext == '.xml') {
+                        self::$logger->debug('[worker '.getmypid().'] Skipping .pdf/.xml file ['.$seedURL.']');
+                        unset($seedURLs[$seedURL]);
+                        continue;
+                    }
                 }
 
                 // if it's an anchor URL, remove it and skip to next iteration
@@ -170,9 +191,11 @@ class CrawlTask implements TaskInterface
                 try {
                     $page->loadByAttribute('url', $seedURL);
 
+
                     $ts = $page->getPropObject('tstamp');
 
                     if (time() - $ts->getUnixValue() < 3601) {
+
                         self::$logger->debug('[worker '.getmypid().'] Skipping recently ['.$ts->getValue().'] indexed URL ['.$seedURL.']');
                         unset($seedURLs[$seedURL]);
                         continue;
@@ -217,7 +240,6 @@ class CrawlTask implements TaskInterface
                             ->addToResult()
                     );
                 }
-
 
                 foreach ($crawler->run() as $result) {
 
@@ -294,7 +316,7 @@ class CrawlTask implements TaskInterface
             in the next iteration. */
             if ($somethingIndexed === false) {
                 $page = new IndexedPage();
-                $pages = $page->query('select * from IndexedPage order by tstamp asc limit 300');
+                $pages = $page->query('select url from IndexedPage order by tstamp asc limit 300');
 
                 foreach ($pages as $page) {
                     $seedURLs[] = $page['url'];
