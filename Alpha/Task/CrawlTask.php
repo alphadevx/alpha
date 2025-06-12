@@ -132,7 +132,7 @@ class CrawlTask implements TaskInterface
         // Solr client
         $client = new Client($adapter, $eventDispatcher, $solrConfig);
 
-        AlphaCrawler::setMemoryLimit('512m');
+        AlphaCrawler::setMemoryLimit('8192m');
 
         $iteration = 1;
 
@@ -235,7 +235,8 @@ class CrawlTask implements TaskInterface
                                 'title' => 'title',
                                 'content' => Dom::cssSelector('body')->text(),
                                 'links' => Dom::cssSelector('a')->attribute('href'),
-                                'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl()
+                                'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl(),
+                                'canonical' => Dom::cssSelector('link[rel="canonical"]')->attribute('href')
                             ])
                             ->addToResult()
                     );
@@ -245,6 +246,34 @@ class CrawlTask implements TaskInterface
 
                     $result->set('url', $seedURL);
                     $result->set('host', $host);
+
+                    // for non-canonical pages, remove any duplicate from the index
+                    if ($result->get('canonical') != '' && $result->get('canonical') != $seedURL) {
+                        // delete any existing dupe
+                        self::$logger->warn('Removing the duplicate link ['.$seedURL.'] from the index, canonical link is ['.$result->get('canonical').']');
+
+                        // delete from the database
+                        $dupePage = new IndexedPage();
+                        try {
+                            $dupePage->loadByAttribute('url', $seedURL);
+                            $dupePage->delete();
+                        } catch (RecordNotFoundException $e) {
+                        }
+
+                        // delete from Solr
+                        $update = $client->createUpdate();
+                        $update->addDeleteById($seedURL);
+                        $update->addCommit();
+
+                        try {
+                            $solrResult = $client->update($update);
+                        } catch (HttpException $e) {
+                            self::$logger->error('[worker '.getmypid().'] '.$e->getMessage());
+                        }
+
+                        // we will always give preference to the canonical link
+                        $result->set('url', $result->get('canonical'));
+                    }
 
                     $page->set('tstamp', new Timestamp());
                     $page->set('responseCode', $result->get('status'));
@@ -271,7 +300,7 @@ class CrawlTask implements TaskInterface
                     if (is_string($result->get('content'))) {
                         $doc->content = $this->stripHTML($result->get('content'));
                     } else {
-                        // let's not index pages with no boby content
+                        // let's not index pages with no body content
                         unset($seedURLs[$seedURL]);
                         continue;
                     }
