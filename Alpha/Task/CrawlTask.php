@@ -215,7 +215,7 @@ class CrawlTask implements TaskInterface
                         Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
                     )
-                    ->addStep(Http::get()->addToResult(['status']))
+                    ->addStep(Http::get(['Accept-Language' => 'en-US,en;q=0.9'])->addToResult(['status']))
                     ->addStep(
                         Html::first('html')
                             ->extract([
@@ -228,7 +228,7 @@ class CrawlTask implements TaskInterface
                     );
                 } else {
                     $crawler->input($seedURL)
-                    ->addStep(Http::get()->addToResult(['status']))
+                    ->addStep(Http::get(['Accept-Language' => 'en-US,en;q=0.9'])->addToResult(['status']))
                     ->addStep(
                         Html::first('html')
                             ->extract([
