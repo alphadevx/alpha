@@ -5,33 +5,33 @@ on: [push]
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    
+
     services:
       redis:
         image: redis
         ports:
-        - 6379:6379
+          - 6379:6379
       memcached:
         image: memcached
         ports:
-        - 11211:11211
-    
+          - 11211:11211
+
     env:
       DB_DATABASE: unittests
       DB_USER: root
-      DB_PASSWORD: 'root'
+      DB_PASSWORD: "root"
       DB_HOST: localhost
       hostname: unittests
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup PHP with PECL extension
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-        extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
-        ini-values: apc.enable_cli=1, pcov.directory="./Alpha"
-    - run: |
+      - uses: actions/checkout@v2
+      - name: Setup PHP with PECL extension
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: gd, mysqli, redis, apcu, memcached, sqlite3, mbstring, iconv
+          ini-values: apc.enable_cli=1, pcov.directory="./Alpha"
+      - run: |
           sudo apt install sqlite3
           sqlite3 --version
           sudo systemctl start mysql.service
@@ -40,12 +40,12 @@ jobs:
           sudo hostname unittests
           hostname
           php -i
-    - name: Composer Install Project
-      run: composer install
-    - name: Run unit tests
-      run: vendor/bin/phpunit
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        files: clover.xml
+      - name: Composer Install Project
+        run: composer install
+      - name: Run unit tests
+        run: vendor/bin/phpunit
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: clover.xml

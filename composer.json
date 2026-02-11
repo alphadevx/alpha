@@ -1,57 +1,63 @@
 {
-    "name": "alphadevx/alpha",
-    "type": "library",
-    "description": "Alpha Framework is a full-stack MVC framework for PHP",
-    "keywords": ["mvc","rest","http","framework","fullstack"],
-    "homepage": "http://www.alphaframework.org/",
-    "license": "BSD-2-Clause",
-    "minimum-stability": "dev",
-    "authors": [
-        {
-            "name": "John Collins",
-            "email": "dev@alphaframework.org",
-            "role": "Developer"
-        }
-    ],
-    "support": {
-        "email": "dev@alphaframework.org",
-        "issues": "https://github.com/alphadevx/alpha/issues",
-        "wiki": "https://www.alphaframework.org/article/Documentation",
-        "source": "https://github.com/alphadevx/alpha"
-    },
-    "require": {
-        "php": ">=8.2.0",
-        "ext-openssl": "*",
-        "ext-mbstring": "*",
-        "ext-sqlite3": "*",
-        "ext-gd": "*",
-        "tecnickcom/tcpdf": "6.4.1",
-        "michelf/php-markdown": "1.9.0",
-        "geshi/geshi": "v1.0.9.1",
-        "twbs/bootstrap": "v5.2.0",
-        "crwlr/crawler": "v3.5",
-        "crwlr/crawler-ext-browser": "v2.2.3",
-        "solarium/solarium": "6.3.5",
-        "patrickschur/language-detection": "v5.3.1"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "11.0.3",
-        "friendsofphp/php-cs-fixer": "dev-master"
-    },
-    "autoload": {
-        "psr-0": {
-            "Alpha": ".",
-            "Alpha\\Test": "test",
-            "": "src/"
-        }
-    },
-    "config": {
-      "secure-http": false
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "rm -rf public/bootstrap",
-            "cp -R vendor/twbs/bootstrap/dist public/bootstrap"
-        ]
+  "name": "alphadevx/alpha",
+  "type": "library",
+  "description": "Alpha Framework is a full-stack MVC framework for PHP",
+  "keywords": [
+    "mvc",
+    "rest",
+    "http",
+    "framework",
+    "fullstack"
+  ],
+  "homepage": "http://www.alphaframework.org/",
+  "license": "BSD-2-Clause",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "John Collins",
+      "email": "dev@alphaframework.org",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "email": "dev@alphaframework.org",
+    "issues": "https://github.com/alphadevx/alpha/issues",
+    "wiki": "https://www.alphaframework.org/article/Documentation",
+    "source": "https://github.com/alphadevx/alpha"
+  },
+  "require": {
+    "php": ">=8.4.0",
+    "ext-openssl": "*",
+    "ext-mbstring": "*",
+    "ext-sqlite3": "*",
+    "ext-gd": "*",
+    "tecnickcom/tcpdf": "6.4.1",
+    "michelf/php-markdown": "1.9.0",
+    "geshi/geshi": "v1.0.9.1",
+    "twbs/bootstrap": "v5.2.0",
+    "crwlr/crawler": "v3.5",
+    "crwlr/crawler-ext-browser": "v2.2.3",
+    "solarium/solarium": "6.3.5",
+    "patrickschur/language-detection": "v5.3.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "11.0.3",
+    "friendsofphp/php-cs-fixer": "dev-master"
+  },
+  "autoload": {
+    "psr-0": {
+      "Alpha": ".",
+      "Alpha\\Test": "test",
+      "": "src/"
+    }
+  },
+  "config": {
+    "secure-http": false
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "rm -rf public/bootstrap",
+      "cp -R vendor/twbs/bootstrap/dist public/bootstrap"
+    ]
+  }
 }
