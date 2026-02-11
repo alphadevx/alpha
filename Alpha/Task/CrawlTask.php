@@ -215,7 +215,11 @@ class CrawlTask implements TaskInterface
                         Screenshot::loadAndTake($config->get('app.file.store.dir').'cache/images/screenshots')
                         ->addToResult(['url', 'screenshotPath'])
                     )
-                    ->addStep(Http::get(['Accept-Language' => 'en-US,en;q=0.9'])->addToResult(['status']))
+                    ->addStep(
+                        Http::get()
+                            ->header('Accept-Language', 'en-US,en;q=0.9')
+                            ->keep(['status'])
+                    )
                     ->addStep(
                         Html::first('html')
                             ->extract([
@@ -224,11 +228,13 @@ class CrawlTask implements TaskInterface
                                 'links' => Dom::cssSelector('a')->attribute('href'),
                                 'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl()
                             ])
-                            ->addToResult()
                     );
                 } else {
                     $crawler->input($seedURL)
-                    ->addStep(Http::get(['Accept-Language' => 'en-US,en;q=0.9'])->addToResult(['status']))
+                    ->addStep(
+                        Http::get(['headers' => ['Accept-Language' => 'en-US,en;q=0.9']])
+                            ->keep(['status'])
+                    )
                     ->addStep(
                         Html::first('html')
                             ->extract([
@@ -238,7 +244,6 @@ class CrawlTask implements TaskInterface
                                 'imageUrl' => Dom::cssSelector('img.mw-file-element')->attribute('src')->first()->toAbsoluteUrl(),
                                 'canonical' => Dom::cssSelector('link[rel="canonical"]')->attribute('href')
                             ])
-                            ->addToResult()
                     );
                 }
 

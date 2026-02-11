@@ -116,15 +116,18 @@ class CleanIndexTask implements TaskInterface
             $toDelete = [];
 
             foreach ($resultset as $document) {
-                $content = $document->content[0];//print_r($content);
+                $content = $document->content[0];
 
                 // Ensure we have enough text for a reliable detection
                 if (!empty($content)) {
-                    $detection = $ld->detect($content)->bestResults()->close();
+                    // 1. Detect all possible languages
+                    $detection = $ld->detect($content)->close();
 
-                    // If the top result isn't 'en', mark for deletion
-                    // Note: bestResults() returns an array where the key is the lang code
-                    if (!isset($detection['en'])) {
+                    // 2. Check if English exists AND has a high confidence score (e.g., > 0.5)
+                    $isEnglish = isset($detection['en']) && $detection['en'] > 0.3;
+
+                    if (!$isEnglish) {
+                        // This is NOT English (or English is too weak to trust)
                         $toDelete[] = $document->id;
                         // delete from the database
                         $page = new IndexedPage();
@@ -133,9 +136,9 @@ class CleanIndexTask implements TaskInterface
                             $page->delete();
                         } catch (RecordNotFoundException $e) {
                         }
-                        self::$logger->info("The following content is **not** English [".$content."]");
+                        self::$logger->info("Rejected: English score was ".($detection['en'] ?? 0)." for [".$document->id."]");
                     } else {
-                        self::$logger->debug("The following content is English [".$content."]");
+                        self::$logger->debug("Accepted: English score was ".$detection['en']." for [".$document->id."]");
                     }
                 } else {
                     // also delete documents with no content
