@@ -68,7 +68,8 @@ use Alpha\Controller\Front\FrontController;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * </pre>
  */
-class ArticleController extends ActiveRecordController implements ControllerInterface
+class ArticleController extends ActiveRecordController implements
+    ControllerInterface
 {
     /**
      * The Article record object that this controller is currently working with.
@@ -95,13 +96,13 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      */
     public function __construct()
     {
-        self::$logger = new Logger('ArticleController');
-        self::$logger->debug('>>__construct()');
+        self::$logger = new Logger("ArticleController");
+        self::$logger->debug(">>__construct()");
 
         // ensure that the super class constructor is called, indicating the rights group
-        parent::__construct('Public');
+        parent::__construct("Public");
 
-        self::$logger->debug('<<__construct');
+        self::$logger->debug("<<__construct");
     }
 
     /**
@@ -113,44 +114,64 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function doGET(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
-    {
-        self::$logger->debug('>>doGET($request=['.var_export($request, true).'])');
+    public function doGET(
+        \Alpha\Util\Http\Request $request,
+    ): \Alpha\Util\Http\Response {
+        self::$logger->debug(
+            '>>doGET($request=[' . var_export($request, true) . "])",
+        );
 
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
 
-        $body = '';
+        $body = "";
 
         // handle requests for PDFs
-        if (isset($params['title']) && (isset($params['pdf']) || $request->getHeader('Accept') == 'application/pdf')) {
+        if (
+            isset($params["title"]) &&
+            (isset($params["pdf"]) ||
+                $request->getHeader("Accept") == "application/pdf")
+        ) {
             try {
-                $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+                $title = str_replace(
+                    $config->get("cms.url.title.separator"),
+                    " ",
+                    $params["title"],
+                );
 
-                if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                    $record = new $params['ActiveRecordType']();
+                if (
+                    isset($params["ActiveRecordType"]) &&
+                    class_exists($params["ActiveRecordType"])
+                ) {
+                    $record = new ($params["ActiveRecordType"])();
                 } else {
                     $record = new Article();
                 }
-                $record->loadByAttribute('title', $title);
+                $record->loadByAttribute("title", $title);
                 $this->record = $record;
 
                 ActiveRecord::disconnect();
 
                 $pdf = new TCPDFFacade($record);
                 $pdfData = $pdf->getPDFData();
-                $pdfDownloadName = str_replace(' ', '-', $record->get('title').'.pdf');
-
-                $headers = array(
-                    'Pragma' => 'public',
-                    'Expires' => 0,
-                    'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-                    'Content-Transfer-Encoding' => 'binary',
-                    'Content-Type' => 'application/pdf',
-                    'Content-Length' => strlen($pdfData),
-                    'Content-Disposition' => 'attachment; filename="'.$pdfDownloadName.'";',
+                $pdfDownloadName = str_replace(
+                    " ",
+                    "-",
+                    $record->get("title") . ".pdf",
                 );
+
+                $headers = [
+                    "Pragma" => "public",
+                    "Expires" => 0,
+                    "Cache-Control" =>
+                        "must-revalidate, post-check=0, pre-check=0",
+                    "Content-Transfer-Encoding" => "binary",
+                    "Content-Type" => "application/pdf",
+                    "Content-Length" => strlen($pdfData),
+                    "Content-Disposition" =>
+                        'attachment; filename="' . $pdfDownloadName . '";',
+                ];
 
                 return new Response(200, $pdfData, $headers);
             } catch (IllegalArguementException $e) {
@@ -163,25 +184,41 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         }
 
         // view edit article requests
-        if ((isset($params['view']) && $params['view'] == 'edit') && (isset($params['title']) || isset($params['ActiveRecordID']))) {
-            if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                $record = new $params['ActiveRecordType']();
+        if (
+            isset($params["view"]) &&
+            $params["view"] == "edit" &&
+            (isset($params["title"]) || isset($params["ActiveRecordID"]))
+        ) {
+            if (
+                isset($params["ActiveRecordType"]) &&
+                class_exists($params["ActiveRecordType"])
+            ) {
+                $record = new ($params["ActiveRecordType"])();
             } else {
                 $record = new Article();
             }
 
             try {
-                if (isset($params['title'])) {
-                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
-                    $record->loadByAttribute('title', $title);
+                if (isset($params["title"])) {
+                    $title = str_replace(
+                        $config->get("cms.url.title.separator"),
+                        " ",
+                        $params["title"],
+                    );
+                    $record->loadByAttribute("title", $title);
                 } else {
-                    $record->load($params['ActiveRecordID']);
+                    $record->load($params["ActiveRecordID"]);
                 }
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
-                $body .= View::renderErrorPage(404, 'Failed to find the requested article!');
+                $body .= View::renderErrorPage(
+                    404,
+                    "Failed to find the requested article!",
+                );
 
-                return new Response(404, $body, array('Content-Type' => 'text/html'));
+                return new Response(404, $body, [
+                    "Content-Type" => "text/html",
+                ]);
             }
 
             ActiveRecord::disconnect();
@@ -190,9 +227,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $view = View::getInstance($record);
 
             // set up the title and meta details
-            $this->setTitle($record->get('title').' (editing)');
-            $this->setDescription('Page to edit '.$record->get('title').'.');
-            $this->setKeywords('edit,article');
+            $this->setTitle($record->get("title") . " (editing)");
+            $this->setDescription(
+                "Page to edit " . $record->get("title") . ".",
+            );
+            $this->setKeywords("edit,article");
 
             $body .= View::displayPageHead($this);
 
@@ -201,49 +240,72 @@ class ArticleController extends ActiveRecordController implements ControllerInte
                 $body .= $message;
             }
 
-            $body .= $view->editView(array('URI' => $request->getURI()));
+            $body .= $view->editView(["URI" => $request->getURI()]);
             $body .= View::renderDeleteForm($request->getURI());
 
             $body .= View::displayPageFoot($this);
-            self::$logger->debug('<<doGET');
+            self::$logger->debug("<<doGET");
 
-            return new Response(200, $body, array('Content-Type' => 'text/html'));
+            return new Response(200, $body, ["Content-Type" => "text/html"]);
         }
 
         // handle requests for viewing articles
-        if (isset($params['title']) || isset($params['ActiveRecordID'])) {
-            $KDP = new KPI('viewarticle');
-            if (isset($params['ActiveRecordType']) && class_exists($params['ActiveRecordType'])) {
-                $record = new $params['ActiveRecordType']();
+        if (isset($params["title"]) || isset($params["ActiveRecordID"])) {
+            $KDP = new KPI("viewarticle");
+            if (
+                isset($params["ActiveRecordType"]) &&
+                class_exists($params["ActiveRecordType"])
+            ) {
+                $record = new ($params["ActiveRecordType"])();
             } else {
                 $record = new Article();
             }
 
             try {
-                if (isset($params['title'])) {
-                    $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+                if (isset($params["title"])) {
+                    $title = str_replace(
+                        $config->get("cms.url.title.separator"),
+                        " ",
+                        $params["title"],
+                    );
 
-                    $record->loadByAttribute('title', $title, false, array('ID', 'version_num', 'created_ts', 'updated_ts', 'title', 'author', 'published', 'content', 'headerContent'));
+                    $record->loadByAttribute("title", $title, false, [
+                        "ID",
+                        "version_num",
+                        "created_ts",
+                        "updated_ts",
+                        "title",
+                        "author",
+                        "published",
+                        "content",
+                        "headerContent",
+                    ]);
                 } else {
-                    $record->load($params['ActiveRecordID']);
+                    $record->load($params["ActiveRecordID"]);
                 }
 
-                if (!$record->get('published')) {
-                    throw new RecordNotFoundException('Attempted to load an article which is not published yet');
+                if (!$record->get("published")) {
+                    throw new RecordNotFoundException(
+                        "Attempted to load an article which is not published yet",
+                    );
                 }
 
-                $record->set('tags', $record->getID());
+                $record->set("tags", $record->getID());
             } catch (IllegalArguementException $e) {
                 self::$logger->warn($e->getMessage());
-                throw new ResourceNotFoundException('The file that you have requested cannot be found!');
+                throw new ResourceNotFoundException(
+                    "The file that you have requested cannot be found!",
+                );
             } catch (RecordNotFoundException $e) {
                 self::$logger->warn($e->getMessage());
-                throw new ResourceNotFoundException('The article that you have requested cannot be found!');
+                throw new ResourceNotFoundException(
+                    "The article that you have requested cannot be found!",
+                );
             }
 
             $this->record = $record;
-            $this->setTitle($record->get('title'));
-            $this->setDescription($record->get('description'));
+            $this->setTitle($record->get("title"));
+            $this->setDescription($record->get("description"));
 
             $recordView = View::getInstance($record);
 
@@ -260,30 +322,39 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $KDP->log();
 
-            return new Response(200, $body, array('Content-Type' => 'text/html'));
+            return new Response(200, $body, ["Content-Type" => "text/html"]);
         }
 
         // handle requests to view an article stored in a file
-        if (isset($params['file'])) {
+        if (isset($params["file"])) {
             try {
                 $record = new Article();
 
                 // just checking to see if the file path is absolute or not
-                if (mb_substr($params['file'], 0, 1) == '/') {
-                    $record->loadContentFromFile($params['file']);
+                if (mb_substr($params["file"], 0, 1) == "/") {
+                    $record->loadContentFromFile($params["file"]);
                 } else {
-                    $record->loadContentFromFile($config->get('app.root').'docs/'.$params['file']);
+                    $record->loadContentFromFile(
+                        $config->get("app.root") . "docs/" . $params["file"],
+                    );
                 }
             } catch (IllegalArguementException $e) {
                 self::$logger->error($e->getMessage());
                 throw new ResourceNotFoundException($e->getMessage());
             } catch (FileNotFoundException $e) {
-                self::$logger->warn($e->getMessage().' File path is ['.$params['file'].']');
-                throw new ResourceNotFoundException('Failed to load the requested article from the file system!');
+                self::$logger->warn(
+                    $e->getMessage() .
+                        " File path is [" .
+                        $params["file"] .
+                        "]",
+                );
+                throw new ResourceNotFoundException(
+                    "Failed to load the requested article from the file system!",
+                );
             }
 
             $this->record = $record;
-            $this->setTitle($record->get('title'));
+            $this->setTitle($record->get("title"));
 
             $recordView = View::getInstance($record);
 
@@ -293,11 +364,11 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
             $body .= View::displayPageFoot($this);
 
-            return new Response(200, $body, array('Content-Type' => 'text/html'));
+            return new Response(200, $body, ["Content-Type" => "text/html"]);
         }
 
         // handle requests to view a list of articles
-        if (isset($params['start'])) {
+        if (isset($params["start"])) {
             return parent::doGET($request);
         }
 
@@ -306,9 +377,9 @@ class ArticleController extends ActiveRecordController implements ControllerInte
         $view = View::getInstance($record);
 
         // set up the title and meta details
-        $this->setTitle('Creating article');
-        $this->setDescription('Page to create a new article.');
-        $this->setKeywords('create,article');
+        $this->setTitle("Creating article");
+        $this->setDescription("Page to create a new article.");
+        $this->setKeywords("create,article");
 
         $body .= View::displayPageHead($this);
 
@@ -317,13 +388,13 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             $body .= $message;
         }
 
-        $fields = array('formAction' => $this->request->getURI());
+        $fields = ["formAction" => $this->request->getURI()];
         $body .= $view->createView($fields);
 
         $body .= View::displayPageFoot($this);
-        self::$logger->debug('<<doGET');
+        self::$logger->debug("<<doGET");
 
-        return new Response(200, $body, array('Content-Type' => 'text/html'));
+        return new Response(200, $body, ["Content-Type" => "text/html"]);
     }
 
     /**
@@ -333,41 +404,59 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      *
      * @since 1.0
      */
-    public function doPUT(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
-    {
-        self::$logger->debug('>>doPUT($request=['.var_export($request, true).'])');
+    public function doPUT(
+        \Alpha\Util\Http\Request $request,
+    ): \Alpha\Util\Http\Response {
+        self::$logger->debug(
+            '>>doPUT($request=[' . var_export($request, true) . "])",
+        );
 
         $config = ConfigProvider::getInstance();
-
         $params = $request->getParams();
 
-        if (!isset($params['ActiveRecordID']) && isset($params['title'])) {
-            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+        if (!isset($params["ActiveRecordID"]) && isset($params["title"])) {
+            $title = str_replace(
+                $config->get("cms.url.title.separator"),
+                " ",
+                $params["title"],
+            );
+            echo "title [$title]\n";
             $record = new Article();
-            $record->loadByAttribute('title', $title);
-            $params['ActiveRecordID'] = $record->getID();
+            $record->loadByAttribute("title", $title);
+            $params["ActiveRecordID"] = $record->getID();
 
-            $request->addParams(array('ActiveRecordID' => $params['ActiveRecordID']));
+            $request->addParams([
+                "ActiveRecordID" => $params["ActiveRecordID"],
+            ]);
         }
 
-        if (!isset($params['ActiveRecordType'])) {
-            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
+        if (!isset($params["ActiveRecordType"])) {
+            $request->addParams(["ActiveRecordType" => "Alpha\Model\Article"]);
         }
 
         $response = parent::doPUT($request);
 
-        if ($this->getNextJob() != '') {
-            $response->redirect($this->getNextJob());
+        if ($this->request->isSecureURI()) {
+            $response->redirect(
+                FrontController::generateSecureURL(
+                    "act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID=" .
+                        $this->record->getID() .
+                        "&view=edit",
+                ),
+            );
         } else {
-            if ($this->request->isSecureURI()) {
-                $response->redirect(FrontController::generateSecureURL('act=Alpha\\Controller\\ActiveRecordController&ActiveRecordType=Alpha\Model\Article&ActiveRecordID='.$this->record->getID().'&view=edit'));
-            } else {
-                $title = str_replace(' ', $config->get('cms.url.title.separator'), $this->record->get('title'));
-                $response->redirect($config->get('app.url').'/a/'.$title.'/edit');
-            }
+            $title = str_replace(
+                " ",
+                $config->get("cms.url.title.separator"),
+                $this->record->get("title"),
+            );
+
+            $response->redirect(
+                $config->get("app.url") . "/a/" . $title . "/edit",
+            );
         }
 
-        self::$logger->debug('<<doPUT');
+        self::$logger->debug("<<doPUT");
 
         return $response;
     }
@@ -381,28 +470,36 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      */
     public function doDELETE($request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('>>doDELETE($request=['.var_export($request, true).'])');
+        self::$logger->debug(
+            '>>doDELETE($request=[' . var_export($request, true) . "])",
+        );
 
         $config = ConfigProvider::getInstance();
 
         $params = $request->getParams();
 
-        $this->setUnitOfWork(array());
+        $this->setUnitOfWork([]);
 
-        if (!isset($params['ActiveRecordID']) && isset($params['title'])) {
-            $title = str_replace($config->get('cms.url.title.separator'), ' ', $params['title']);
+        if (!isset($params["ActiveRecordID"]) && isset($params["title"])) {
+            $title = str_replace(
+                $config->get("cms.url.title.separator"),
+                " ",
+                $params["title"],
+            );
             $record = new Article();
-            $record->loadByAttribute('title', $title);
-            $params['ActiveRecordID'] = $record->getID();
+            $record->loadByAttribute("title", $title);
+            $params["ActiveRecordID"] = $record->getID();
 
-            $request->addParams(array('ActiveRecordID' => $params['ActiveRecordID']));
+            $request->addParams([
+                "ActiveRecordID" => $params["ActiveRecordID"],
+            ]);
         }
 
-        if (!isset($params['ActiveRecordType'])) {
-            $request->addParams(array('ActiveRecordType' => 'Alpha\Model\Article'));
+        if (!isset($params["ActiveRecordType"])) {
+            $request->addParams(["ActiveRecordType" => "Alpha\Model\Article"]);
         }
 
-        self::$logger->debug('<<doDELETE');
+        self::$logger->debug("<<doDELETE");
 
         return parent::doDELETE($request);
     }
@@ -418,26 +515,41 @@ class ArticleController extends ActiveRecordController implements ControllerInte
 
         $params = $this->request->getParams();
 
-        $html = '';
+        $html = "";
 
-        if ((isset($params['view']) && ($params['view'] == 'edit' || $params['view'] == 'create')) || (isset($params['ActiveRecordType']) && !isset($params['ActiveRecordID']))) {
-            $fieldid = ($config->get('security.encrypt.http.fieldnames') ? 'text_field_'.base64_encode(SecurityUtils::encrypt('content')).'_0' : 'text_field_content_0');
+        if (
+            (isset($params["view"]) &&
+                ($params["view"] == "edit" || $params["view"] == "create")) ||
+            (isset($params["ActiveRecordType"]) &&
+                !isset($params["ActiveRecordID"]))
+        ) {
+            $fieldid = $config->get("security.encrypt.http.fieldnames")
+                ? "text_field_" .
+                    base64_encode(SecurityUtils::encrypt("content")) .
+                    "_0"
+                : "text_field_content_0";
 
-            $html .= '
+            $html .=
+                '
                 <script type="text/javascript">
                 $(document).ready(function() {
-                    $(\'[id="'.$fieldid.'"]\').pagedownBootstrap({
+                    $(\'[id="' .
+                $fieldid .
+                '"]\').pagedownBootstrap({
                         \'sanatize\': false
                     });
                 });
                 </script>';
-        } elseif (isset($params['view']) && $params['view'] == 'print') {
-            $html .= '<link rel="StyleSheet" type="text/css" href="'.$config->get('app.url').'/css/print.css">';
+        } elseif (isset($params["view"]) && $params["view"] == "print") {
+            $html .=
+                '<link rel="StyleSheet" type="text/css" href="' .
+                $config->get("app.url") .
+                '/css/print.css">';
         }
 
         if ($this->record instanceof Article) {
-            $headerContent = $this->record->get('headerContent');
-            if ($headerContent != '') {
+            $headerContent = $this->record->get("headerContent");
+            if ($headerContent != "") {
                 $html .= $headerContent;
             }
         }
@@ -452,26 +564,38 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      */
     public function insertCMSDisplayStandardHeader(): string
     {
-        if ($this->request->getParam('token') != null) {
-            return '';
+        if ($this->request->getParam("token") != null) {
+            return "";
         }
 
         if (!$this->record instanceof Article) {
-            return '';
+            return "";
         }
 
         $config = ConfigProvider::getInstance();
 
-        $html = '';
+        $html = "";
 
-        if ($config->get('cms.display.standard.header')) {
-            $html .= '<p><a href="'.$config->get('app.url').'">'.$config->get('app.title').'</a> &nbsp; &nbsp;';
-            $html .= 'Date Added: <em>'.$this->record->getCreateTS()->getDate().'</em> &nbsp; &nbsp;';
-            $html .= 'Last Updated: <em>'.$this->record->getUpdateTS()->getDate().'</em> &nbsp; &nbsp;';
-            $html .= 'Revision: <em>'.$this->record->getVersion().'</em></p>';
+        if ($config->get("cms.display.standard.header")) {
+            $html .=
+                '<p><a href="' .
+                $config->get("app.url") .
+                '">' .
+                $config->get("app.title") .
+                "</a> &nbsp; &nbsp;";
+            $html .=
+                "Date Added: <em>" .
+                $this->record->getCreateTS()->getDate() .
+                "</em> &nbsp; &nbsp;";
+            $html .=
+                "Last Updated: <em>" .
+                $this->record->getUpdateTS()->getDate() .
+                "</em> &nbsp; &nbsp;";
+            $html .=
+                "Revision: <em>" . $this->record->getVersion() . "</em></p>";
         }
 
-        $html .= $config->get('cms.header');
+        $html .= $config->get("cms.header");
 
         return $html;
     }
@@ -485,69 +609,109 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     public function beforeDisplayPageFoot(): string
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $html = '';
+        $html = "";
         $params = $this->request->getParams();
 
         // this will ensure that direct requests to ActiveRecordController will be re-directed here.
         if (isset($this->record) && !$this->record->isTransient()) {
-            $this->setName($config->get('app.url').$this->request->getURI());
-            $this->setUnitOfWork(array($config->get('app.url').$this->request->getURI(), $config->get('app.url').$this->request->getURI()));
+            $this->setName($config->get("app.url") . $this->request->getURI());
+            $this->setUnitOfWork([
+                $config->get("app.url") . $this->request->getURI(),
+                $config->get("app.url") . $this->request->getURI(),
+            ]);
         } else {
-            $this->setUnitOfWork(array());
+            $this->setUnitOfWork([]);
         }
 
         if ($this->record != null) {
-            if (isset($params['view']) && $params['view'] == 'detailed') {
-                if ($config->get('cms.display.comments')) {
+            if (isset($params["view"]) && $params["view"] == "detailed") {
+                if ($config->get("cms.display.comments")) {
                     $html .= $this->renderComments();
                 }
 
-                if ($config->get('cms.display.tags')) {
+                if ($config->get("cms.display.tags")) {
                     $html .= $this->renderTags();
                 }
 
-                if ($config->get('cms.display.votes')) {
+                if ($config->get("cms.display.votes")) {
                     $rating = $this->record->getArticleScore();
                     $votes = $this->record->getArticleVotes();
-                    $html .= '<p>Average Article User Rating: <strong>'.$rating.'</strong> out of 10 (based on <strong>'.count($votes).'</strong> votes)</p>';
+                    $html .=
+                        "<p>Average Article User Rating: <strong>" .
+                        $rating .
+                        "</strong> out of 10 (based on <strong>" .
+                        count($votes) .
+                        "</strong> votes)</p>";
                 }
 
-                if (!$this->record->checkUserVoted() && $config->get('cms.voting.allowed')) {
+                if (
+                    !$this->record->checkUserVoted() &&
+                    $config->get("cms.voting.allowed")
+                ) {
                     $html .= $this->renderVotes();
                 }
 
                 ActiveRecord::disconnect();
 
-                if ($config->get('cms.allow.print.versions')) {
-                    $html .= '&nbsp;&nbsp;';
-                    $temp = new Button("window.open('".$this->record->get('printURL')."')", 'Open Printer Version', 'printBut');
+                if ($config->get("cms.allow.print.versions")) {
+                    $html .= "&nbsp;&nbsp;";
+                    $temp = new Button(
+                        "window.open('" . $this->record->get("printURL") . "')",
+                        "Open Printer Version",
+                        "printBut",
+                    );
                     $html .= $temp->render();
                 }
 
-                $html .= '&nbsp;&nbsp;';
-                if ($config->get('cms.allow.pdf.versions')) {
-                    $html .= '&nbsp;&nbsp;';
-                    $temp = new Button("document.location = '".FrontController::generateSecureURL("act=Alpha\Controller\ArticleController&mode=pdf&title=".$this->record->get('title'))."';", 'Open PDF Version', 'pdfBut');
+                $html .= "&nbsp;&nbsp;";
+                if ($config->get("cms.allow.pdf.versions")) {
+                    $html .= "&nbsp;&nbsp;";
+                    $temp = new Button(
+                        "document.location = '" .
+                            FrontController::generateSecureURL(
+                                "act=Alpha\Controller\ArticleController&mode=pdf&title=" .
+                                    $this->record->get("title"),
+                            ) .
+                            "';",
+                        "Open PDF Version",
+                        "pdfBut",
+                    );
                     $html .= $temp->render();
                 }
 
                 // render edit button for admins only
-                if ($session->get('currentUser') instanceof \Alpha\Model\Person && $session->get('currentUser')->inGroup('Admin')) {
-                    $html .= '&nbsp;&nbsp;';
-                    $button = new Button("document.location = '".FrontController::generateSecureURL('act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordID='.$this->record->getID())."'", 'Edit', 'editBut');
+                if (
+                    $session->get("currentUser") instanceof
+                        \Alpha\Model\Person &&
+                    $session->get("currentUser")->inGroup("Admin")
+                ) {
+                    $html .= "&nbsp;&nbsp;";
+                    $button = new Button(
+                        "document.location = '" .
+                            FrontController::generateSecureURL(
+                                "act=Alpha\Controller\ArticleController&mode=edit&ActiveRecordID=" .
+                                    $this->record->getID(),
+                            ) .
+                            "'",
+                        "Edit",
+                        "editBut",
+                    );
                     $html .= $button->render();
                 }
             }
 
-            if ($config->get('cms.display.standard.footer')) {
+            if ($config->get("cms.display.standard.footer")) {
                 $html .= $this->renderStandardFooter();
             }
         }
 
-        $html .= $config->get('cms.footer');
+        $html .= $config->get("cms.footer");
 
         return $html;
     }
@@ -560,20 +724,28 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     private function renderComments(): string
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $html = '';
+        $html = "";
 
         $comments = $this->record->getArticleComments();
         $commentsCount = count($comments);
 
-        $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleComment');
+        $URL = FrontController::generateSecureURL(
+            "act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleComment",
+        );
 
-        $fields = array('formAction' => $URL);
+        $fields = ["formAction" => $URL];
 
-        if ($config->get('cms.display.comments') && $commentsCount > 0) {
-            $html .= '<h2>There are ['.$commentsCount.'] user comments for this article</h2>';
+        if ($config->get("cms.display.comments") && $commentsCount > 0) {
+            $html .=
+                "<h2>There are [" .
+                $commentsCount .
+                "] user comments for this article</h2>";
 
             for ($i = 0; $i < $commentsCount; ++$i) {
                 $view = View::getInstance($comments[$i]);
@@ -581,9 +753,12 @@ class ArticleController extends ActiveRecordController implements ControllerInte
             }
         }
 
-        if ($session->get('currentUser') != null && $config->get('cms.comments.allowed')) {
+        if (
+            $session->get("currentUser") != null &&
+            $config->get("cms.comments.allowed")
+        ) {
             $comment = new ArticleComment();
-            $comment->set('articleID', $this->record->getID());
+            $comment->set("articleID", $this->record->getID());
 
             $view = View::getInstance($comment);
             $html .= $view->createView($fields);
@@ -600,20 +775,27 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     private function renderTags(): string
     {
         $config = ConfigProvider::getInstance();
-        $relation = $this->record->getPropObject('tags');
+        $relation = $this->record->getPropObject("tags");
 
-        $html = '';
+        $html = "";
 
         if ($relation instanceof Relation) {
             $tags = $relation->getRelated();
 
             if (count($tags) > 0) {
-                $html .= '<p>Tags:';
+                $html .= "<p>Tags:";
 
                 foreach ($tags as $tag) {
-                    $html .= ' <a href="'.$config->get('app.url').'/search/'.$tag->get('content').'">'.$tag->get('content').'</a>';
+                    $html .=
+                        ' <a href="' .
+                        $config->get("app.url") .
+                        "/search/" .
+                        $tag->get("content") .
+                        '">' .
+                        $tag->get("content") .
+                        "</a>";
                 }
-                $html .= '</p>';
+                $html .= "</p>";
             }
         }
 
@@ -628,40 +810,70 @@ class ArticleController extends ActiveRecordController implements ControllerInte
     private function renderVotes(): string
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $URL = FrontController::generateSecureURL('act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote');
-        $html = '<form action="'.$URL.'" method="post" accept-charset="UTF-8">';
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('score')) : 'score');
-        $html .= '<p>Please rate this article from 1-10 (10 being the best):'.
-                '<select name="'.$fieldname.'">'.
-                '<option value="1">1'.
-                '<option value="2">2'.
-                '<option value="3">3'.
-                '<option value="4">4'.
-                '<option value="5">5'.
-                '<option value="6">6'.
-                '<option value="7">7'.
-                '<option value="8">8'.
-                '<option value="9">9'.
-                '<option value="10">10'.
-                '</select></p>&nbsp;&nbsp;';
+        $URL = FrontController::generateSecureURL(
+            "act=Alpha\Controller\ActiveRecordController&ActiveRecordType=Alpha\Model\ArticleVote",
+        );
+        $html =
+            '<form action="' . $URL . '" method="post" accept-charset="UTF-8">';
+        $fieldname = $config->get("security.encrypt.http.fieldnames")
+            ? base64_encode(SecurityUtils::encrypt("score"))
+            : "score";
+        $html .=
+            "<p>Please rate this article from 1-10 (10 being the best):" .
+            '<select name="' .
+            $fieldname .
+            '">' .
+            '<option value="1">1' .
+            '<option value="2">2' .
+            '<option value="3">3' .
+            '<option value="4">4' .
+            '<option value="5">5' .
+            '<option value="6">6' .
+            '<option value="7">7' .
+            '<option value="8">8' .
+            '<option value="9">9' .
+            '<option value="10">10' .
+            "</select></p>&nbsp;&nbsp;";
 
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('articleID')) : 'articleID');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$this->record->getID().'"/>';
+        $fieldname = $config->get("security.encrypt.http.fieldnames")
+            ? base64_encode(SecurityUtils::encrypt("articleID"))
+            : "articleID";
+        $html .=
+            '<input type="hidden" name="' .
+            $fieldname .
+            '" value="' .
+            $this->record->getID() .
+            '"/>';
 
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('personID')) : 'personID');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="'.$session->get('currentUser')->getID().'"/>';
+        $fieldname = $config->get("security.encrypt.http.fieldnames")
+            ? base64_encode(SecurityUtils::encrypt("personID"))
+            : "personID";
+        $html .=
+            '<input type="hidden" name="' .
+            $fieldname .
+            '" value="' .
+            $session->get("currentUser")->getID() .
+            '"/>';
 
-        $fieldname = ($config->get('security.encrypt.http.fieldnames') ? base64_encode(SecurityUtils::encrypt('statusMessage')) : 'statusMessage');
-        $html .= '<input type="hidden" name="'.$fieldname.'" value="Thank you for rating this article!"/>';
+        $fieldname = $config->get("security.encrypt.http.fieldnames")
+            ? base64_encode(SecurityUtils::encrypt("statusMessage"))
+            : "statusMessage";
+        $html .=
+            '<input type="hidden" name="' .
+            $fieldname .
+            '" value="Thank you for rating this article!"/>';
 
-        $temp = new Button('submit', 'Vote!', 'voteBut');
+        $temp = new Button("submit", "Vote!", "voteBut");
         $html .= $temp->render();
 
         $html .= View::renderSecurityFields();
-        $html .= '<form>';
+        $html .= "<form>";
 
         return $html;
     }
@@ -673,9 +885,14 @@ class ArticleController extends ActiveRecordController implements ControllerInte
      */
     private function renderStandardFooter(): string
     {
-        $html = '<p>Article URL: <a href="'.$this->record->get('URL').'">'.$this->record->get('URL').'</a><br>';
-        $html .= 'Title: '.$this->record->get('title').'<br>';
-        $html .= 'Author: '.$this->record->get('author').'</p>';
+        $html =
+            '<p>Article URL: <a href="' .
+            $this->record->get("URL") .
+            '">' .
+            $this->record->get("URL") .
+            "</a><br>";
+        $html .= "Title: " . $this->record->get("title") . "<br>";
+        $html .= "Author: " . $this->record->get("author") . "</p>";
 
         return $html;
     }
