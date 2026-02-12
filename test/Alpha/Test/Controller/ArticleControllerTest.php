@@ -4,6 +4,7 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\ArticleController;
 use Alpha\Controller\Front\FrontController;
+use Alpha\Exception\ResourceNotFoundException;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
@@ -70,7 +71,10 @@ class ArticleControllerTest extends TestCase
     protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $config->set(
+            "session.provider.name",
+            "Alpha\Util\Http\Session\SessionProviderArray",
+        );
 
         $action = new ActionLog();
         $action->rebuildTable();
@@ -98,11 +102,11 @@ class ArticleControllerTest extends TestCase
 
         $rights = new Rights();
         $rights->rebuildTable();
-        $rights->set('name', 'Standard');
+        $rights->set("name", "Standard");
         $rights->save();
 
         $rights = new Rights();
-        $rights->set('name', 'Admin');
+        $rights->set("name", "Admin");
         $rights->save();
     }
 
@@ -117,20 +121,26 @@ class ArticleControllerTest extends TestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $markdown = 'First Header  | Second Header
+        $markdown =
+            'First Header  | Second Header
 ------------- | -------------
 Content Cell  | Content Cell
 Content Cell  | Content Cell
 
-![Alpha logo]('.$config->get('app.root').'public/images/logo-small.png "Alpha logo")';
+![Alpha logo](' .
+            $config->get("app.root") .
+            'public/images/logo-small.png "Alpha logo")';
 
         $article = new Article();
-        $article->set('title', $name);
-        $article->set('description', 'unitTestArticleTagOneAA unitTestArticleTagTwo');
-        $article->set('author', 'unitTestArticleTagOneBB');
-        $article->set('content', $markdown);
-        $article->set('published', true);
-        $article->set('headerContent', '<script>alert();</script>');
+        $article->set("title", $name);
+        $article->set(
+            "description",
+            "unitTestArticleTagOneAA unitTestArticleTagTwo",
+        );
+        $article->set("author", "unitTestArticleTagOneBB");
+        $article->set("content", $markdown);
+        $article->set("published", true);
+        $article->set("headerContent", "<script>alert();</script>");
 
         return $article;
     }
@@ -146,9 +156,9 @@ Content Cell  | Content Cell
     {
         $person = new Person();
         $person->setUsername($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
+        $person->set("email", $name . "@test.com");
+        $person->set("password", "passwordTest");
+        $person->set("URL", "http://unitTestUser/");
 
         return $person;
     }
@@ -159,73 +169,123 @@ Content Cell  | Content Cell
     public function testDoGET()
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $oldSetting = $config->get('cache.provider.name');
-        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+        $oldSetting = $config->get("cache.provider.name");
+        $config->set(
+            "cache.provider.name",
+            "Alpha\Util\Cache\CacheProviderArray",
+        );
 
-        $person = $this->createPersonObject('test');
+        $person = $this->createPersonObject("test");
         $person->save();
-        $session->set('currentUser', $person);
+        $session->set("currentUser", $person);
 
-        $article = $this->createArticleObject('test article');
+        $article = $this->createArticleObject("test article");
         $article->save();
 
         $comment = new ArticleComment();
-        $comment->set('content', 'Test comment');
-        $comment->set('articleID', $article->getID());
+        $comment->set("content", "Test comment");
+        $comment->set("articleID", $article->getID());
         $comment->save();
 
         $vote = new ArticleVote();
-        $vote->set('score', 10);
-        $vote->set('articleID', $article->getID());
+        $vote->set("score", 10);
+        $vote->set("articleID", $article->getID());
         $vote->save();
 
-        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER["REQUEST_METHOD"] = "GET";
 
         $front = new FrontController();
+        $this->expectException(ResourceNotFoundException::class);
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-
-        $this->assertStringContainsString('<script>alert();</script>', $response->getBody(), 'Testing that the article header content was rendered');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/not-there'));
+        $request = new Request(["method" => "GET", "URI" => "/a/test-article"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/a', 'params' => array('file' => getcwd().'/README.md')));
+        $this->assertStringContainsString(
+            "<script>alert();</script>",
+            $response->getBody(),
+            "Testing that the article header content was rendered",
+        );
 
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article', 'headers' => array('Accept' => 'application/pdf')));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('application/pdf', $response->getHeader('Content-Type'), 'Testing the doGET method');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article/edit'));
+        $request = new Request(["method" => "GET", "URI" => "/a/not-there"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals(
+            404,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/a'));
+        $request = new Request([
+            "method" => "GET",
+            "URI" => "/a",
+            "params" => ["file" => getcwd() . "/README.md"],
+        ]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
 
-        $config->set('cache.provider.name', $oldSetting);
+        $request = new Request([
+            "method" => "GET",
+            "URI" => "/a/test-article",
+            "headers" => ["Accept" => "application/pdf"],
+        ]);
+
+        $response = $front->process($request);
+
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
+        $this->assertEquals(
+            "application/pdf",
+            $response->getHeader("Content-Type"),
+            "Testing the doGET method",
+        );
+
+        $request = new Request([
+            "method" => "GET",
+            "URI" => "/a/test-article/edit",
+        ]);
+
+        $response = $front->process($request);
+
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
+
+        $request = new Request(["method" => "GET", "URI" => "/a"]);
+
+        $response = $front->process($request);
+
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method",
+        );
+
+        $config->set("cache.provider.name", $oldSetting);
     }
 
     /**
@@ -234,36 +294,58 @@ Content Cell  | Content Cell
     public function testDoPUT()
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
         $front = new FrontController();
         $controller = new ArticleController();
 
-        $article = $this->createArticleObject('test article');
+        $article = $this->createArticleObject("test article");
         $article->save();
 
         if (!file_exists($article->getAttachmentsLocation())) {
             mkdir($article->getAttachmentsLocation(), 0774);
         }
 
-        $person = $this->createPersonObject('test');
+        $person = $this->createPersonObject("test");
         $person->save();
-        $session->set('currentUser', $person);
+        $session->set("currentUser", $person);
 
         $securityParams = $controller->generateSecurityFields();
 
-        $article->set('title', 'new put title');
+        $article->set("title", "new put title");
 
-        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1], 'ActiveRecordID' => $article->getID());
+        $params = [
+            "saveBut" => true,
+            "var1" => $securityParams[0],
+            "var2" => $securityParams[1],
+            "ActiveRecordID" => $article->getID(),
+        ];
         $params = array_merge($params, $article->toArray());
 
-        $request = new Request(array('method' => 'PUT', 'URI' => '/a/test-article', 'params' => $params));
+        $request = new Request([
+            "method" => "PUT",
+            "URI" => "/a/test-article",
+            "params" => $params,
+        ]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(301, $response->getStatus(), 'Testing the doPUT method');
-        $this->assertTrue(strpos($response->getHeader('Location'), '/a/new-put-title/edit') !== false, 'Testing the doPUT method');
+        $this->assertEquals(
+            301,
+            $response->getStatus(),
+            "Testing the doPUT method",
+        );
+        $this->assertTrue(
+            strpos(
+                $response->getHeader("Location"),
+                "/a/new-put-title/edit",
+            ) !== false,
+            "Testing the doPUT method",
+        );
     }
 
     /**
@@ -272,37 +354,56 @@ Content Cell  | Content Cell
     public function testDoDELETE()
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
         $front = new FrontController();
         $controller = new ArticleController();
 
-        $article = $this->createArticleObject('test article');
+        $article = $this->createArticleObject("test article");
         $article->save();
 
         $front = new FrontController();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+        $request = new Request(["method" => "GET", "URI" => "/a/test-article"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method with a hit');
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing the doGET method with a hit",
+        );
 
         $securityParams = $controller->generateSecurityFields();
 
-        $params = array('var1' => $securityParams[0], 'var2' => $securityParams[1]);
+        $params = ["var1" => $securityParams[0], "var2" => $securityParams[1]];
 
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/a/test-article', 'params' => $params));
-
-        $response = $front->process($request);
-
-        $this->assertEquals(301, $response->getStatus(), 'Testing the doDELETE method');
-
-        $request = new Request(array('method' => 'GET', 'URI' => '/a/test-article'));
+        $request = new Request([
+            "method" => "DELETE",
+            "URI" => "/a/test-article",
+            "params" => $params,
+        ]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(404, $response->getStatus(), 'Testing the doGET method with a miss');
+        $this->assertEquals(
+            301,
+            $response->getStatus(),
+            "Testing the doDELETE method",
+        );
+
+        $request = new Request(["method" => "GET", "URI" => "/a/test-article"]);
+
+        $response = $front->process($request);
+
+        $this->assertEquals(
+            404,
+            $response->getStatus(),
+            "Testing the doGET method with a miss",
+        );
     }
 }
