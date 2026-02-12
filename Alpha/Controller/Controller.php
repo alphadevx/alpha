@@ -84,7 +84,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    protected $visibility = 'Public';
+    protected $visibility = "Public";
 
     /**
      * Optionally, the main record object that this controller is currently working with.
@@ -167,7 +167,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    protected $dirtyObjects = array();
+    protected $dirtyObjects = [];
 
     /**
      * An array for storing new reord objects in a session (transient business objects that
@@ -177,7 +177,7 @@ abstract class Controller
      *
      * @since 1.0
      */
-    protected $newObjects = array();
+    protected $newObjects = [];
 
     /**
      * The title to be displayed on the controller page.
@@ -244,44 +244,56 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function __construct(string $visibility = 'Public')
+    public function __construct(string $visibility = "Public")
     {
-        self::$logger = new Logger('Controller');
-        self::$logger->debug('>>__construct(visibility=['.$visibility.'])');
+        self::$logger = new Logger("Controller");
+        self::$logger->debug(">>__construct(visibility=[" . $visibility . "])");
 
         $config = ConfigProvider::getInstance();
 
         // set the access rights to the group name indicated
         $this->visibility = $visibility;
 
-        $this->unitStartTime = new Timestamp(date('Y-m-d H:i:s'));
+        $this->unitStartTime = new Timestamp(date("Y-m-d H:i:s"));
         $this->unitEndTime = new Timestamp();
 
         // uses controller class name as the job name
-        if ($this->name == '') {
+        if ($this->name == "") {
             $this->setName(get_class($this));
         }
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        if ($session->get('unitOfWork') !== false && is_array($session->get('unitOfWork'))) {
-            $this->setUnitOfWork($session->get('unitOfWork'));
+        if (
+            $session->get("unitOfWork") !== false &&
+            is_array($session->get("unitOfWork"))
+        ) {
+            $this->setUnitOfWork($session->get("unitOfWork"));
         }
 
-        if ($session->get('dirtyObjects') !== false && is_array($session->get('dirtyObjects'))) {
-            $this->dirtyObjects = $session->get('dirtyObjects');
+        if (
+            $session->get("dirtyObjects") !== false &&
+            is_array($session->get("dirtyObjects"))
+        ) {
+            $this->dirtyObjects = $session->get("dirtyObjects");
         }
 
-        if ($session->get('newObjects') && is_array($session->get('newObjects'))) {
-            $this->newObjects = $session->get('newObjects');
+        if (
+            $session->get("newObjects") &&
+            is_array($session->get("newObjects"))
+        ) {
+            $this->newObjects = $session->get("newObjects");
         }
 
-        if ($session->get('statusMessage') !== false) {
-            $this->setStatusMessage($session->get('statusMessage'));
+        if ($session->get("statusMessage") !== false) {
+            $this->setStatusMessage($session->get("statusMessage"));
         }
 
-        self::$logger->debug('<<__construct');
+        self::$logger->debug("<<__construct");
     }
 
     /**
@@ -291,8 +303,10 @@ abstract class Controller
      */
     public function getRecord(): \Alpha\Model\ActiveRecord|null
     {
-        self::$logger->debug('>>getRecord()');
-        self::$logger->debug('<<getRecord ['.var_export($this->record, true).']');
+        self::$logger->debug(">>getRecord()");
+        self::$logger->debug(
+            "<<getRecord [" . var_export($this->record, true) . "]",
+        );
 
         return $this->record;
     }
@@ -306,25 +320,27 @@ abstract class Controller
      */
     public function setRecord(\Alpha\Model\ActiveRecord $record): void
     {
-        self::$logger->debug('>>setRecord(record=['.var_export($record, true).'])');
+        self::$logger->debug(
+            ">>setRecord(record=[" . var_export($record, true) . "])",
+        );
         $this->record = $record;
 
         // if the record has tags, use these as the meta keywords for this controller
         if ($this->record->isTagged()) {
-            $tags = $this->record->getPropObject('tags')->getRelated();
+            $tags = $this->record->getPropObject("tags")->getRelated();
 
-            $keywords = '';
+            $keywords = "";
 
             if (count($tags) > 0) {
                 foreach ($tags as $tag) {
-                    $keywords .= ','.$tag->get('content');
+                    $keywords .= "," . $tag->get("content");
                 }
             }
 
             $this->setKeywords(mb_substr($keywords, 1));
         }
 
-        self::$logger->debug('<<setRecord');
+        self::$logger->debug("<<setRecord");
     }
 
     /**
@@ -334,8 +350,8 @@ abstract class Controller
      */
     public function getName(): string
     {
-        self::$logger->debug('>>getName()');
-        self::$logger->debug('<<getName ['.$this->name.']');
+        self::$logger->debug(">>getName()");
+        self::$logger->debug("<<getName [" . $this->name . "]");
 
         return $this->name;
     }
@@ -349,9 +365,9 @@ abstract class Controller
      */
     public function setName(string $name): void
     {
-        self::$logger->debug('>>setName(name=['.$name.'])');
+        self::$logger->debug(">>setName(name=[" . $name . "])");
         $this->name = $name;
-        self::$logger->debug('<<setName');
+        self::$logger->debug("<<setName");
     }
 
     /**
@@ -361,8 +377,8 @@ abstract class Controller
      */
     public function getVisibility(): string
     {
-        self::$logger->debug('>>getVisibility()');
-        self::$logger->debug('<<getVisibility ['.$this->visibility.']');
+        self::$logger->debug(">>getVisibility()");
+        self::$logger->debug("<<getVisibility [" . $this->visibility . "]");
 
         return $this->visibility;
     }
@@ -376,9 +392,11 @@ abstract class Controller
      */
     public function setVisibility(string $visibility): void
     {
-        self::$logger->debug('>>setVisibility(visibility=['.$visibility.'])');
+        self::$logger->debug(
+            ">>setVisibility(visibility=[" . $visibility . "])",
+        );
         $this->visibility = $visibility;
-        self::$logger->debug('<<setVisibility');
+        self::$logger->debug("<<setVisibility");
     }
 
     /**
@@ -388,8 +406,8 @@ abstract class Controller
      */
     public function getFirstJob(): string|null
     {
-        self::$logger->debug('>>getFirstJob()');
-        self::$logger->debug('<<getFirstJob ['.$this->firstJob.']');
+        self::$logger->debug(">>getFirstJob()");
+        self::$logger->debug("<<getFirstJob [" . $this->firstJob . "]");
 
         return $this->firstJob;
     }
@@ -401,8 +419,8 @@ abstract class Controller
      */
     public function getNextJob(): string|null
     {
-        self::$logger->debug('>>getNextJob()');
-        self::$logger->debug('<<getNextJob ['.$this->nextJob.']');
+        self::$logger->debug(">>getNextJob()");
+        self::$logger->debug("<<getNextJob [" . $this->nextJob . "]");
 
         return $this->nextJob;
     }
@@ -414,8 +432,8 @@ abstract class Controller
      */
     public function getPreviousJob(): string|null
     {
-        self::$logger->debug('>>getPreviousJob()');
-        self::$logger->debug('<<getPreviousJob ['.$this->previousJob.']');
+        self::$logger->debug(">>getPreviousJob()");
+        self::$logger->debug("<<getPreviousJob [" . $this->previousJob . "]");
 
         return $this->previousJob;
     }
@@ -427,8 +445,8 @@ abstract class Controller
      */
     public function getLastJob(): string|null
     {
-        self::$logger->debug('>>getLastJob()');
-        self::$logger->debug('<<getLastJob ['.$this->lastJob.']');
+        self::$logger->debug(">>getLastJob()");
+        self::$logger->debug("<<getLastJob [" . $this->lastJob . "]");
 
         return $this->lastJob;
     }
@@ -445,30 +463,39 @@ abstract class Controller
      */
     public function setUnitOfWork(array $jobs): void
     {
-        self::$logger->debug('>>setUnitOfWork(jobs=['.var_export($jobs, true).'])');
+        self::$logger->debug(
+            ">>setUnitOfWork(jobs=[" . var_export($jobs, true) . "])",
+        );
 
-        if (method_exists($this, 'beforeSetUnitOfWork')) {
+        if (method_exists($this, "beforeSetUnitOfWork")) {
             $this->{'beforeSetUnitOfWork'}();
         }
 
         // validate that each controller name in the array actually exists
         foreach ($jobs as $job) {
             if (!Validator::isURL($job) && !class_exists($job)) {
-                throw new IllegalArguementException('The controller name ['.$job.'] provided in the jobs array is not defined anywhere!');
+                throw new IllegalArguementException(
+                    "The controller name [" .
+                        $job .
+                        "] provided in the jobs array is not defined anywhere!",
+                );
             }
         }
 
         // clear out any previous unit of work from the session
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-        $session->delete('unitOfWork');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
+        $session->delete("unitOfWork");
         $this->firstJob = null;
         $this->previousJob = null;
         $this->nextJob = null;
         $this->lastJob = null;
-        $this->dirtyObjects = array();
-        $this->newObjects = array();
+        $this->dirtyObjects = [];
+        $this->newObjects = [];
 
         $numOfJobs = count($jobs);
 
@@ -476,23 +503,25 @@ abstract class Controller
             // the first job in the sequence
             if ($i == 0) {
                 $this->firstJob = $jobs[$i];
-                self::$logger->debug('First job ['.$this->firstJob.']');
+                self::$logger->debug("First job [" . $this->firstJob . "]");
             }
             // found the current job
             if ($this->name == $jobs[$i]) {
-                if (isset($jobs[$i-1])) {
+                if (isset($jobs[$i - 1])) {
                     // set the previous job if it exists
-                    $this->previousJob = $jobs[$i-1];
-                    self::$logger->debug('Previous job ['.$this->previousJob.']');
+                    $this->previousJob = $jobs[$i - 1];
+                    self::$logger->debug(
+                        "Previous job [" . $this->previousJob . "]",
+                    );
                 }
-                if (isset($jobs[$i+1])) {
+                if (isset($jobs[$i + 1])) {
                     // set the next job if it exists
-                    $this->nextJob = $jobs[$i+1];
-                    self::$logger->debug('Next job ['.$this->nextJob.']');
+                    $this->nextJob = $jobs[$i + 1];
+                    self::$logger->debug("Next job [" . $this->nextJob . "]");
                 }
             }
             // the last job in the sequence
-            if ($i == ($numOfJobs-1)) {
+            if ($i == $numOfJobs - 1) {
                 $this->lastJob = $jobs[$i];
             }
         }
@@ -505,13 +534,13 @@ abstract class Controller
             $this->nextJob = $this->lastJob;
         }
 
-        $session->set('unitOfWork', $jobs);
+        $session->set("unitOfWork", $jobs);
 
-        if (method_exists($this, 'afterSetUnitOfWork')) {
+        if (method_exists($this, "afterSetUnitOfWork")) {
             $this->{'afterSetUnitOfWork'}();
         }
 
-        self::$logger->debug('<<setUnitOfWork');
+        self::$logger->debug("<<setUnitOfWork");
     }
 
     /**
@@ -521,8 +550,8 @@ abstract class Controller
      */
     public function getStartTime(): \Alpha\Model\Type\Timestamp
     {
-        self::$logger->debug('>>getStartTime()');
-        self::$logger->debug('<<getStartTime ['.$this->unitStartTime.']');
+        self::$logger->debug(">>getStartTime()");
+        self::$logger->debug("<<getStartTime [" . $this->unitStartTime . "]");
 
         return $this->unitStartTime;
     }
@@ -539,19 +568,49 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitStartTime(int $year, int $month, int $day, int $hour, int $minute, int $second): void
-    {
-        self::$logger->debug('>>setUnitStartTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
-            second=['.$second.'])');
+    public function setUnitStartTime(
+        int $year,
+        int $month,
+        int $day,
+        int $hour,
+        int $minute,
+        int $second,
+    ): void {
+        self::$logger->debug(
+            ">>setUnitStartTime(year=[" .
+                $year .
+                "], month=[" .
+                $month .
+                "], day=[" .
+                $day .
+                "], hour=[" .
+                $hour .
+                "], minute=[" .
+                $minute .
+                '],
+            second=[' .
+                $second .
+                "])",
+        );
 
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $this->unitStartTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
-        $session->set('unitStartTime', $this->unitStartTime->getValue());
+        $this->unitStartTime->setTimestampValue(
+            $year,
+            $month,
+            $day,
+            $hour,
+            $minute,
+            $second,
+        );
+        $session->set("unitStartTime", $this->unitStartTime->getValue());
 
-        self::$logger->debug('<<setUnitStartTime');
+        self::$logger->debug("<<setUnitStartTime");
     }
 
     /**
@@ -561,8 +620,8 @@ abstract class Controller
      */
     public function getEndTime(): \Alpha\Model\Type\Timestamp
     {
-        self::$logger->debug('>>getEndTime()');
-        self::$logger->debug('<<getEndTime ['.$this->unitEndTime.']');
+        self::$logger->debug(">>getEndTime()");
+        self::$logger->debug("<<getEndTime [" . $this->unitEndTime . "]");
 
         return $this->unitEndTime;
     }
@@ -579,19 +638,49 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public function setUnitEndTime(int $year, int $month, int $day, int $hour, int $minute, int $second): void
-    {
-        self::$logger->debug('>>setUnitEndTime(year=['.$year.'], month=['.$month.'], day=['.$day.'], hour=['.$hour.'], minute=['.$minute.'],
-         second=['.$second.'])');
+    public function setUnitEndTime(
+        int $year,
+        int $month,
+        int $day,
+        int $hour,
+        int $minute,
+        int $second,
+    ): void {
+        self::$logger->debug(
+            ">>setUnitEndTime(year=[" .
+                $year .
+                "], month=[" .
+                $month .
+                "], day=[" .
+                $day .
+                "], hour=[" .
+                $hour .
+                "], minute=[" .
+                $minute .
+                '],
+         second=[' .
+                $second .
+                "])",
+        );
 
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $this->unitEndTime->setTimestampValue($year, $month, $day, $hour, $minute, $second);
-        $session->set('unitEndTime', $this->unitEndTime->getValue());
+        $this->unitEndTime->setTimestampValue(
+            $year,
+            $month,
+            $day,
+            $hour,
+            $minute,
+            $second,
+        );
+        $session->set("unitEndTime", $this->unitEndTime->getValue());
 
-        self::$logger->debug('<<setUnitEndTime');
+        self::$logger->debug("<<setUnitEndTime");
     }
 
     /**
@@ -601,7 +690,7 @@ abstract class Controller
      */
     public function getUnitDuration(): int
     {
-        self::$logger->debug('>>getUnitDuration()');
+        self::$logger->debug(">>getUnitDuration()");
 
         $intStartTime = mktime(
             intval($this->unitStartTime->getHour()),
@@ -609,7 +698,7 @@ abstract class Controller
             intval($this->unitStartTime->getSecond()),
             intval($this->unitStartTime->getMonth()),
             intval($this->unitStartTime->getDay()),
-            intval($this->unitStartTime->getYear())
+            intval($this->unitStartTime->getYear()),
         );
 
         $intEndTime = mktime(
@@ -618,12 +707,14 @@ abstract class Controller
             intval($this->unitEndTime->getSecond()),
             intval($this->unitEndTime->getMonth()),
             intval($this->unitEndTime->getDay()),
-            intval($this->unitEndTime->getYear())
+            intval($this->unitEndTime->getYear()),
         );
 
-        self::$logger->debug('<<getUnitDuration ['.($intEndTime-$intStartTime).']');
+        self::$logger->debug(
+            "<<getUnitDuration [" . ($intEndTime - $intStartTime) . "]",
+        );
 
-        return $intEndTime-$intStartTime;
+        return $intEndTime - $intStartTime;
     }
 
     /**
@@ -635,25 +726,30 @@ abstract class Controller
      */
     public function markDirty(\Alpha\Model\ActiveRecord $object): void
     {
-        self::$logger->debug('>>markDirty(object=['.var_export($object, true).'])');
+        self::$logger->debug(
+            ">>markDirty(object=[" . var_export($object, true) . "])",
+        );
 
-        if (method_exists($this, 'beforeMarkDirty')) {
+        if (method_exists($this, "beforeMarkDirty")) {
             $this->{'beforeMarkDirty'}();
         }
 
         $this->dirtyObjects[count($this->dirtyObjects)] = $object;
 
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $session->set('dirtyObjects', $this->dirtyObjects);
+        $session->set("dirtyObjects", $this->dirtyObjects);
 
-        if (method_exists($this, 'afterMarkDirty')) {
+        if (method_exists($this, "afterMarkDirty")) {
             $this->{'afterMarkDirty'}();
         }
 
-        self::$logger->debug('<<markDirty');
+        self::$logger->debug("<<markDirty");
     }
 
     /**
@@ -663,8 +759,10 @@ abstract class Controller
      */
     public function getDirtyObjects(): array
     {
-        self::$logger->debug('>>getDirtyObjects()');
-        self::$logger->debug('<<getDirtyObjects ['.var_export($this->dirtyObjects, true).']');
+        self::$logger->debug(">>getDirtyObjects()");
+        self::$logger->debug(
+            "<<getDirtyObjects [" . var_export($this->dirtyObjects, true) . "]",
+        );
 
         return $this->dirtyObjects;
     }
@@ -678,25 +776,30 @@ abstract class Controller
      */
     public function markNew(\Alpha\Model\ActiveRecord $object): void
     {
-        self::$logger->debug('>>markNew(object=['.var_export($object, true).'])');
+        self::$logger->debug(
+            ">>markNew(object=[" . var_export($object, true) . "])",
+        );
 
-        if (method_exists($this, 'beforeMarkNew')) {
+        if (method_exists($this, "beforeMarkNew")) {
             $this->{'beforeMarkNew'}();
         }
 
         $this->newObjects[count($this->newObjects)] = $object;
 
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $session->set('newObjects', $this->newObjects);
+        $session->set("newObjects", $this->newObjects);
 
-        if (method_exists($this, 'afterMarkNew')) {
+        if (method_exists($this, "afterMarkNew")) {
             $this->{'afterMarkNew'}();
         }
 
-        self::$logger->debug('<<markNew');
+        self::$logger->debug("<<markNew");
     }
 
     /**
@@ -706,8 +809,10 @@ abstract class Controller
      */
     public function getNewObjects(): array
     {
-        self::$logger->debug('>>getNewObjects()');
-        self::$logger->debug('<<getNewObjects ['.var_export($this->newObjects, true).']');
+        self::$logger->debug(">>getNewObjects()");
+        self::$logger->debug(
+            "<<getNewObjects [" . var_export($this->newObjects, true) . "]",
+        );
 
         return $this->newObjects;
     }
@@ -721,9 +826,9 @@ abstract class Controller
      */
     public function commit(): void
     {
-        self::$logger->debug('>>commit()');
+        self::$logger->debug(">>commit()");
 
-        if (method_exists($this, 'beforeCommit')) {
+        if (method_exists($this, "beforeCommit")) {
             $this->{'beforeCommit'}();
         }
 
@@ -737,12 +842,20 @@ abstract class Controller
             try {
                 $newObjects[$i]->save();
             } catch (FailedSaveException $e) {
-                self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
+                self::$logger->error(
+                    "Failed to save new object of type [" .
+                        get_class($newObjects[$i]) .
+                        "], aborting...",
+                );
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());
             } catch (LockingException $e) {
-                self::$logger->error('Failed to save new object of type ['.get_class($newObjects[$i]).'], aborting...');
+                self::$logger->error(
+                    "Failed to save new object of type [" .
+                        get_class($newObjects[$i]) .
+                        "], aborting...",
+                );
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());
@@ -757,12 +870,24 @@ abstract class Controller
             try {
                 $dirtyObjects[$i]->save();
             } catch (FailedSaveException $e) {
-                self::$logger->error('Failed to save ID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
+                self::$logger->error(
+                    "Failed to save ID [" .
+                        $dirtyObjects[$i]->getID() .
+                        "] of type [" .
+                        get_class($dirtyObjects[$i]) .
+                        "], aborting...",
+                );
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());
             } catch (LockingException $e) {
-                self::$logger->error('Failed to save ID ['.$dirtyObjects[$i]->getID().'] of type ['.get_class($dirtyObjects[$i]).'], aborting...');
+                self::$logger->error(
+                    "Failed to save ID [" .
+                        $dirtyObjects[$i]->getID() .
+                        "] of type [" .
+                        get_class($dirtyObjects[$i]) .
+                        "], aborting...",
+                );
                 $this->abort();
 
                 throw new FailedUnitCommitException($e->getMessage());
@@ -774,14 +899,18 @@ abstract class Controller
 
             $this->clearUnitOfWorkAttributes();
 
-            if (method_exists($this, 'afterCommit')) {
+            if (method_exists($this, "afterCommit")) {
                 $this->{'afterCommit'}();
             }
 
-            self::$logger->debug('<<commit');
+            self::$logger->debug("<<commit");
         } catch (FailedSaveException $e) {
-            self::$logger->debug('<<commit');
-            throw new FailedUnitCommitException('Failed to commit the transaction, error is ['.$e->getMessage().']');
+            self::$logger->debug("<<commit");
+            throw new FailedUnitCommitException(
+                "Failed to commit the transaction, error is [" .
+                    $e->getMessage() .
+                    "]",
+            );
         }
     }
 
@@ -794,9 +923,9 @@ abstract class Controller
      */
     public function abort(): void
     {
-        self::$logger->debug('>>abort()');
+        self::$logger->debug(">>abort()");
 
-        if (method_exists($this, 'beforeAbort')) {
+        if (method_exists($this, "beforeAbort")) {
             $this->{'beforeAbort'}();
         }
 
@@ -805,14 +934,18 @@ abstract class Controller
 
             $this->clearUnitOfWorkAttributes();
 
-            if (method_exists($this, 'afterAbort')) {
+            if (method_exists($this, "afterAbort")) {
                 $this->{'afterAbort'}();
             }
 
-            self::$logger->debug('<<abort');
+            self::$logger->debug("<<abort");
         } catch (AlphaException $e) {
-            self::$logger->debug('<<abort');
-            throw new AlphaException('Failed to rollback the transaction, error is ['.$e->getMessage().']');
+            self::$logger->debug("<<abort");
+            throw new AlphaException(
+                "Failed to rollback the transaction, error is [" .
+                    $e->getMessage() .
+                    "]",
+            );
         }
     }
 
@@ -824,15 +957,18 @@ abstract class Controller
     public function clearUnitOfWorkAttributes(): void
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $session->delete('unitOfWork');
+        $session->delete("unitOfWork");
         $this->unitOfWork = null;
-        $session->delete('dirtyObjects');
-        $this->dirtyObjects = array();
-        $session->delete('newObjects');
-        $this->newObjects = array();
+        $session->delete("dirtyObjects");
+        $this->dirtyObjects = [];
+        $session->delete("newObjects");
+        $this->newObjects = [];
     }
 
     /**
@@ -842,8 +978,8 @@ abstract class Controller
      */
     public function getTitle(): string
     {
-        self::$logger->debug('>>getTitle()');
-        self::$logger->debug('<<getTitle ['.$this->title.']');
+        self::$logger->debug(">>getTitle()");
+        self::$logger->debug("<<getTitle [" . $this->title . "]");
 
         return $this->title;
     }
@@ -857,8 +993,8 @@ abstract class Controller
      */
     public function setTitle(string $title): void
     {
-        self::$logger->debug('>>setTitle(title=['.$title.'])');
-        self::$logger->debug('<<setTitle');
+        self::$logger->debug(">>setTitle(title=[" . $title . "])");
+        self::$logger->debug("<<setTitle");
         $this->title = $title;
     }
 
@@ -869,8 +1005,8 @@ abstract class Controller
      */
     public function getDescription(): string|null
     {
-        self::$logger->debug('>>getDescription()');
-        self::$logger->debug('<<getDescription ['.$this->description.']');
+        self::$logger->debug(">>getDescription()");
+        self::$logger->debug("<<getDescription [" . $this->description . "]");
 
         return $this->description;
     }
@@ -884,8 +1020,10 @@ abstract class Controller
      */
     public function setDescription(string $description): void
     {
-        self::$logger->debug('>>setDescription(description=['.$description.'])');
-        self::$logger->debug('<<setDescription');
+        self::$logger->debug(
+            ">>setDescription(description=[" . $description . "])",
+        );
+        self::$logger->debug("<<setDescription");
         $this->description = $description;
     }
 
@@ -896,8 +1034,8 @@ abstract class Controller
      */
     public function getKeywords(): string|null
     {
-        self::$logger->debug('>>getKeywords()');
-        self::$logger->debug('<<getKeywords ['.$this->keywords.']');
+        self::$logger->debug(">>getKeywords()");
+        self::$logger->debug("<<getKeywords [" . $this->keywords . "]");
 
         return $this->keywords;
     }
@@ -911,8 +1049,8 @@ abstract class Controller
      */
     public function setKeywords(string $keywords): void
     {
-        self::$logger->debug('>>setKeywords(keywords=['.$keywords.'])');
-        self::$logger->debug('<<setKeywords');
+        self::$logger->debug(">>setKeywords(keywords=[" . $keywords . "])");
+        self::$logger->debug("<<setKeywords");
         $this->keywords = $keywords;
     }
 
@@ -923,31 +1061,49 @@ abstract class Controller
      */
     public function accessError(): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('>>accessError()');
+        self::$logger->debug(">>accessError()");
 
-        if (method_exists($this, 'beforeAccessError')) {
+        if (method_exists($this, "beforeAccessError")) {
             $this->{'beforeAccessError'}();
         }
 
         $config = ConfigProvider::getInstance();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        if ($session->get('currentUser') !== false) {
-            self::$logger->warn('The user ['.$session->get('currentUser')->get('email').'] attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
+        if ($session->get("currentUser") !== false) {
+            self::$logger->warn(
+                "The user [" .
+                    $session->get("currentUser")->get("email") .
+                    "] attempted to access the resource [" .
+                    $this->request->getURI() .
+                    "] but was denied due to insufficient rights",
+            );
         } else {
-            self::$logger->warn('An unknown user attempted to access the resource ['.$this->request->getURI().'] but was denied due to insufficient rights');
+            self::$logger->warn(
+                "An unknown user attempted to access the resource [" .
+                    $this->request->getURI() .
+                    "] but was denied due to insufficient rights",
+            );
         }
 
         $response = new Response(403);
-        $response->setBody(View::renderErrorPage(403, 'You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.'));
+        $response->setBody(
+            View::renderErrorPage(
+                403,
+                "You do not have the correct access rights to view this page.  If you have not logged in yet, try going back to the home page and logging in from there.",
+            ),
+        );
 
-        if (method_exists($this, 'afterAccessError')) {
+        if (method_exists($this, "afterAccessError")) {
             $this->{'afterAccessError'}();
         }
 
-        self::$logger->debug('<<accessError');
+        self::$logger->debug("<<accessError");
 
         return $response;
     }
@@ -961,74 +1117,86 @@ abstract class Controller
      */
     public function checkRights(): bool
     {
-        self::$logger->debug('>>checkRights()');
+        self::$logger->debug(">>checkRights()");
 
         $config = ConfigProvider::getInstance();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        if (method_exists($this, 'beforeCheckRights')) {
+        if (method_exists($this, "beforeCheckRights")) {
             $this->{'beforeCheckRights'}();
         }
 
         // firstly if the page is Public then there is no issue
-        if ($this->getVisibility() == 'Public') {
-            if (method_exists($this, 'afterCheckRights')) {
+        if ($this->getVisibility() == "Public") {
+            if (method_exists($this, "afterCheckRights")) {
                 $this->{'afterCheckRights'}();
             }
 
-            self::$logger->debug('<<checkRights [true]');
+            self::$logger->debug("<<checkRights [true]");
 
             return true;
         } else {
             // the person is logged in?
-            if ($session->get('currentUser') !== false) {
-
+            if ($session->get("currentUser") !== false) {
                 // if the visibility is 'Session', just being logged in enough
-                if ($this->getVisibility() == 'Session') {
-                    if (method_exists($this, 'afterCheckRights')) {
+                if ($this->getVisibility() == "Session") {
+                    if (method_exists($this, "afterCheckRights")) {
                         $this->{'afterCheckRights'}();
                     }
 
-                    self::$logger->debug('<<checkRights [true]');
+                    self::$logger->debug("<<checkRights [true]");
 
                     return true;
                 }
 
                 // checking for admins (can access everything)
-                if ($session->get('currentUser')->inGroup('Admin')) {
-                    if (method_exists($this, 'afterCheckRights')) {
+                if ($session->get("currentUser")->inGroup("Admin")) {
+                    if (method_exists($this, "afterCheckRights")) {
                         $this->{'afterCheckRights'}();
                     }
 
-                    self::$logger->debug('<<checkRights [true]');
+                    self::$logger->debug("<<checkRights [true]");
 
                     return true;
-                } elseif ($session->get('currentUser')->inGroup($this->getVisibility())) {
-                    if (method_exists($this, 'afterCheckRights')) {
+                } elseif (
+                    $session
+                        ->get("currentUser")
+                        ->inGroup($this->getVisibility())
+                ) {
+                    if (method_exists($this, "afterCheckRights")) {
                         $this->{'afterCheckRights'}();
                     }
 
-                    self::$logger->debug('<<checkRights [true]');
+                    self::$logger->debug("<<checkRights [true]");
 
                     return true;
-                // the person is editing their own profile which is allowed
-                } elseif ((isset($this->record) && get_class($this->record) == 'Alpha\Model\Person') && $session->get('currentUser')->getUsername() == $this->record->getUsername()) {
-                    if (method_exists($this, 'afterCheckRights')) {
+                    // the person is editing their own profile which is allowed
+                } elseif (
+                    isset($this->record) &&
+                    get_class($this->record) == "Alpha\Model\Person" &&
+                    $session->get("currentUser")->getUsername() ==
+                        $this->record->getUsername()
+                ) {
+                    if (method_exists($this, "afterCheckRights")) {
                         $this->{'afterCheckRights'}();
                     }
 
-                    self::$logger->debug('<<checkRights [true]');
+                    self::$logger->debug("<<checkRights [true]");
 
                     return true;
                 } else {
-                    self::$logger->debug('<<checkRights [false]');
+                    self::$logger->debug("<<checkRights [false]");
 
                     return false;
                 }
-            } else { // the person is NOT logged in
-                self::$logger->debug('<<checkRights [false]');
+            } else {
+                // the person is NOT logged in
+                self::$logger->debug("<<checkRights [false]");
 
                 return false;
             }
@@ -1044,25 +1212,47 @@ abstract class Controller
      */
     public function checkSecurityFields(): bool
     {
-        self::$logger->debug('>>checkSecurityFields()');
+        self::$logger->debug(">>checkSecurityFields()");
 
         $host = $this->request->getHost();
         $ip = $this->request->getIP();
 
         // the server hostname + today's date
-        $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd'))), '+/', '-_'), '=');
+        $var1 = rtrim(
+            strtr(
+                base64_encode(SecurityUtils::encrypt($host . date("Ymd"))),
+                "+/",
+                "-_",
+            ),
+            "=",
+        );
         // the server's IP plus $var1
-        $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
+        $var2 = rtrim(
+            strtr(
+                base64_encode(SecurityUtils::encrypt($ip . $var1)),
+                "+/",
+                "-_",
+            ),
+            "=",
+        );
 
-        if ($this->request->getParam('var1') === null || $this->request->getParam('var2') === null) {
-            self::$logger->warn('The required var1/var2 params where not provided on the HTTP request');
-            self::$logger->debug('<<checkSecurityFields [false]');
+        if (
+            $this->request->getParam("var1") === null ||
+            $this->request->getParam("var2") === null
+        ) {
+            self::$logger->warn(
+                "The required var1/var2 params where not provided on the HTTP request",
+            );
+            self::$logger->debug("<<checkSecurityFields [false]");
 
             return false;
         }
 
-        if ($var1 == $this->request->getParam('var1') && $var2 == $this->request->getParam('var2')) {
-            self::$logger->debug('<<checkSecurityFields [true]');
+        if (
+            $var1 == $this->request->getParam("var1") &&
+            $var2 == $this->request->getParam("var2")
+        ) {
+            self::$logger->debug("<<checkSecurityFields [true]");
 
             return true;
         } else {
@@ -1073,17 +1263,44 @@ abstract class Controller
              */
 
             // the server hostname + today's date less 1 hour (i.e. yesterday where time is < 1:00AM)
-            $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd', (time()-3600)))), '+/', '-_'), '=');
+            $var1 = rtrim(
+                strtr(
+                    base64_encode(
+                        SecurityUtils::encrypt(
+                            $host . date("Ymd", time() - 3600),
+                        ),
+                    ),
+                    "+/",
+                    "-_",
+                ),
+                "=",
+            );
             // the server's IP plus $var1
-            $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
+            $var2 = rtrim(
+                strtr(
+                    base64_encode(SecurityUtils::encrypt($ip . $var1)),
+                    "+/",
+                    "-_",
+                ),
+                "=",
+            );
 
-            if ($var1 == $this->request->getParam('var1') && $var2 == $this->request->getParam('var2')) {
-                self::$logger->debug('<<checkSecurityFields [true]');
+            if (
+                $var1 == $this->request->getParam("var1") &&
+                $var2 == $this->request->getParam("var2")
+            ) {
+                self::$logger->debug("<<checkSecurityFields [true]");
 
                 return true;
             } else {
-                self::$logger->warn('The var1/var2 params provided are invalid, values: var1=['.$this->request->getParam('var1').'] var2=['.$this->request->getParam('var2').']');
-                self::$logger->debug('<<checkSecurityFields [false]');
+                self::$logger->warn(
+                    "The var1/var2 params provided are invalid, values: var1=[" .
+                        $this->request->getParam("var1") .
+                        "] var2=[" .
+                        $this->request->getParam("var2") .
+                        "]",
+                );
+                self::$logger->debug("<<checkSecurityFields [false]");
 
                 return false;
             }
@@ -1098,23 +1315,39 @@ abstract class Controller
     public static function generateSecurityFields(): array
     {
         if (self::$logger == null) {
-            self::$logger = new Logger('Controller');
+            self::$logger = new Logger("Controller");
         }
-        self::$logger->debug('>>generateSecurityFields()');
+        self::$logger->debug(">>generateSecurityFields()");
 
-        $request = new Request(array('method' => 'GET'));
+        $request = new Request(["method" => "GET"]);
 
         $host = $request->getHost();
         $ip = $request->getIP();
 
         // the server hostname + today's date
-        $var1 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($host.date('Ymd'))), '+/', '-_'), '=');
+        $var1 = rtrim(
+            strtr(
+                base64_encode(SecurityUtils::encrypt($host . date("Ymd"))),
+                "+/",
+                "-_",
+            ),
+            "=",
+        );
         // the server's IP plus $var1
-        $var2 = rtrim(strtr(base64_encode(SecurityUtils::encrypt($ip.$var1)), '+/', '-_'), '=');
+        $var2 = rtrim(
+            strtr(
+                base64_encode(SecurityUtils::encrypt($ip . $var1)),
+                "+/",
+                "-_",
+            ),
+            "=",
+        );
 
-        self::$logger->debug('<<generateSecurityFields [array('.$var1.', '.$var2.')]');
+        self::$logger->debug(
+            "<<generateSecurityFields [array(" . $var1 . ", " . $var2 . ")]",
+        );
 
-        return array($var1, $var2);
+        return [$var1, $var2];
     }
 
     /**
@@ -1124,38 +1357,67 @@ abstract class Controller
      *
      * @since 1.0
      */
-    public static function getCustomControllerName(string $ActiveRecordType): string|null
-    {
+    public static function getCustomControllerName(
+        string $ActiveRecordType,
+    ): string|null {
         if (self::$logger == null) {
-            self::$logger = new Logger('Controller');
+            self::$logger = new Logger("Controller");
         }
-        self::$logger->debug('>>getCustomControllerName(ActiveRecordType=['.$ActiveRecordType.']');
+        self::$logger->debug(
+            ">>getCustomControllerName(ActiveRecordType=[" .
+                $ActiveRecordType .
+                "]",
+        );
 
         $config = ConfigProvider::getInstance();
 
         try {
             $class = new ReflectionClass($ActiveRecordType);
-            $controllerName = $class->getShortname().'Controller';
+            $controllerName = $class->getShortname() . "Controller";
         } catch (Exception $e) {
-            self::$logger->warn('Bad active record name ['.$ActiveRecordType.'] passed to getCustomControllerName()');
+            self::$logger->warn(
+                "Bad active record name [" .
+                    $ActiveRecordType .
+                    "] passed to getCustomControllerName()",
+            );
 
             return null;
         }
 
-        self::$logger->debug('Custom controller name is ['.$controllerName.']');
+        self::$logger->debug(
+            "Custom controller name is [" . $controllerName . "]",
+        );
 
-        if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php')) {
-            $controllerName = 'Controller\\'.$controllerName;
-            self::$logger->debug('<<getCustomControllerName ['.$controllerName.']');
+        if (
+            file_exists(
+                $config->get("app.root") .
+                    "Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
+            $controllerName = "Controller\\" . $controllerName;
+            self::$logger->debug(
+                "<<getCustomControllerName [" . $controllerName . "]",
+            );
 
             return $controllerName;
-        } elseif (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php')) {
-            $controllerName = 'Alpha\Controller\\'.$controllerName;
-            self::$logger->debug('<<getCustomControllerName ['.$controllerName.']');
+        } elseif (
+            file_exists(
+                $config->get("app.root") .
+                    "Alpha/Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
+            $controllerName = "Alpha\Controller\\" . $controllerName;
+            self::$logger->debug(
+                "<<getCustomControllerName [" . $controllerName . "]",
+            );
 
             return $controllerName;
         } else {
-            self::$logger->debug('<<getCustomControllerName');
+            self::$logger->debug("<<getCustomControllerName");
 
             return null;
         }
@@ -1171,11 +1433,14 @@ abstract class Controller
     public function setStatusMessage(string $message): void
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
         $this->statusMessage = $message;
-        $session->set('statusMessage', $message);
+        $session->set("statusMessage", $message);
     }
 
     /**
@@ -1188,10 +1453,13 @@ abstract class Controller
     public function getStatusMessage(): string|null
     {
         $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
 
-        $session->delete('statusMessage');
+        $session->delete("statusMessage");
 
         return $this->statusMessage;
     }
@@ -1205,28 +1473,47 @@ abstract class Controller
      * @since 1.0
      * @deprecated
      */
-    public static function checkControllerDefExists(string $controllerName): bool
-    {
+    public static function checkControllerDefExists(
+        string $controllerName,
+    ): bool {
         if (self::$logger == null) {
-            self::$logger = new Logger('Controller');
+            self::$logger = new Logger("Controller");
         }
-        self::$logger->debug('>>checkControllerDefExists(controllerName=['.$controllerName.'])');
+        self::$logger->debug(
+            ">>checkControllerDefExists(controllerName=[" .
+                $controllerName .
+                "])",
+        );
 
         $config = ConfigProvider::getInstance();
 
         $exists = false;
 
-        if ($controllerName == '/') {
+        if ($controllerName == "/") {
             $exists = true;
         }
-        if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php')) {
+        if (
+            file_exists(
+                $config->get("app.root") .
+                    "Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
             $exists = true;
         }
-        if (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php')) {
+        if (
+            file_exists(
+                $config->get("app.root") .
+                    "Alpha/Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
             $exists = true;
         }
 
-        self::$logger->debug('<<checkControllerDefExists ['.$exists.']');
+        self::$logger->debug("<<checkControllerDefExists [" . $exists . "]");
 
         return $exists;
     }
@@ -1243,21 +1530,45 @@ abstract class Controller
     public static function loadControllerDef(string $controllerName): void
     {
         if (self::$logger == null) {
-            self::$logger = new Logger('Controller');
+            self::$logger = new Logger("Controller");
         }
-        self::$logger->debug('>>loadControllerDef(controllerName=['.$controllerName.'])');
+        self::$logger->debug(
+            ">>loadControllerDef(controllerName=[" . $controllerName . "])",
+        );
 
         $config = ConfigProvider::getInstance();
 
-        if (file_exists($config->get('app.root').'Controller/'.$controllerName.'.php')) {
-            require_once $config->get('app.root').'Controller/'.$controllerName.'.php';
-        } elseif (file_exists($config->get('app.root').'Alpha/Controller/'.$controllerName.'.php')) {
-            require_once $config->get('app.root').'Alpha/Controller/'.$controllerName.'.php';
+        if (
+            file_exists(
+                $config->get("app.root") .
+                    "Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
+            require_once $config->get("app.root") .
+                "Controller/" .
+                $controllerName .
+                ".php";
+        } elseif (
+            file_exists(
+                $config->get("app.root") .
+                    "Alpha/Controller/" .
+                    $controllerName .
+                    ".php",
+            )
+        ) {
+            require_once $config->get("app.root") .
+                "Alpha/Controller/" .
+                $controllerName .
+                ".php";
         } else {
-            throw new IllegalArguementException('The class ['.$controllerName.'] is not defined anywhere!');
+            throw new IllegalArguementException(
+                "The class [" . $controllerName . "] is not defined anywhere!",
+            );
         }
 
-        self::$logger->debug('<<loadControllerDef');
+        self::$logger->debug("<<loadControllerDef");
     }
 
     /**
@@ -1267,7 +1578,10 @@ abstract class Controller
      */
     public function checkIfAccessingFromSecureURL(): bool
     {
-        if ($this->request->getParam('tk') != null || mb_strpos($this->request->getURI(), '/tk/') !== false) {
+        if (
+            $this->request->getParam("tk") != null ||
+            mb_strpos($this->request->getURI(), "/tk/") !== false
+        ) {
             return true;
         } else {
             return false;
@@ -1283,13 +1597,14 @@ abstract class Controller
      */
     private function decryptFieldNames($params): array
     {
-        $decrypted = array();
+        $decrypted = [];
 
         foreach (array_keys($params) as $fieldname) {
-
             // set request params where fieldnames provided are based64 encoded and encrypted
             if (Validator::isBase64($fieldname)) {
-                $decrypted[SecurityUtils::decrypt(base64_decode($fieldname, true))] = $params[$fieldname];
+                $decrypted[
+                    SecurityUtils::decrypt(base64_decode($fieldname, true))
+                ] = $params[$fieldname];
             }
         }
 
@@ -1306,21 +1621,25 @@ abstract class Controller
      *
      * @since 1.2.4
      */
-    public static function generateURLSlug(string $URLPart, string $seperator = '-', array $filter = array(), bool $crc32Prefix = false): string
-    {
+    public static function generateURLSlug(
+        string $URLPart,
+        string $seperator = "-",
+        array $filter = [],
+        bool $crc32Prefix = false,
+    ): string {
         $URLPart = trim($URLPart);
 
         if (count($filter) > 0) {
-            $URLPart = str_replace($filter, '', $URLPart);
+            $URLPart = str_replace($filter, "", $URLPart);
         }
 
-        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $URLPart);
-        $clean = preg_replace("/[^a-zA-Z0-9\/\._|+ -]/", '', $clean);
-        $clean = strtolower(trim($clean, '-'));
+        $clean = iconv("UTF-8", "ASCII//TRANSLIT", $URLPart);
+        $clean = preg_replace("/[^a-zA-Z0-9\/\._|+ -]/", "", $clean);
+        $clean = strtolower(trim($clean, "-"));
         $clean = preg_replace("/[\.\/_|+ -]+/", $seperator, $clean);
 
         if ($crc32Prefix) {
-            $clean = hexdec(hash('crc32b', $URLPart)).$seperator.$clean;
+            $clean = hexdec(hash("crc32b", $URLPart)) . $seperator . $clean;
         }
 
         return $clean;
@@ -1336,8 +1655,14 @@ abstract class Controller
      */
     public function doHEAD(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doHEAD() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The HEAD method is not supported by this controller');
+        self::$logger->debug(
+            "doHEAD() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The HEAD method is not supported by this controller",
+        );
     }
 
     /**
@@ -1350,8 +1675,14 @@ abstract class Controller
      */
     public function doGET(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doGET() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The GET method is not supported by this controller');
+        self::$logger->debug(
+            "doGET() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The GET method is not supported by this controller",
+        );
     }
 
     /**
@@ -1364,8 +1695,14 @@ abstract class Controller
      */
     public function doPOST(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doPOST() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The POST method is not supported by this controller');
+        self::$logger->debug(
+            "doPOST() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The POST method is not supported by this controller",
+        );
     }
 
     /**
@@ -1378,8 +1715,14 @@ abstract class Controller
      */
     public function doPUT(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doPUT() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The PUT method is not supported by this controller');
+        self::$logger->debug(
+            "doPUT() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The PUT method is not supported by this controller",
+        );
     }
 
     /**
@@ -1392,8 +1735,14 @@ abstract class Controller
      */
     public function doPATCH(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doPATCH() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The PATCH method is not supported by this controller');
+        self::$logger->debug(
+            "doPATCH() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The PATCH method is not supported by this controller",
+        );
     }
 
     /**
@@ -1406,8 +1755,14 @@ abstract class Controller
      */
     public function doDELETE(Request $request): \Alpha\Util\Http\Response
     {
-        self::$logger->debug('doDELETE() called but not implement in child class, request URI ['.$request->getURI().']');
-        throw new NotImplementedException('The DELETE method is not supported by this controller');
+        self::$logger->debug(
+            "doDELETE() called but not implement in child class, request URI [" .
+                $request->getURI() .
+                "]",
+        );
+        throw new NotImplementedException(
+            "The DELETE method is not supported by this controller",
+        );
     }
 
     /**
@@ -1418,22 +1773,31 @@ abstract class Controller
      */
     public function doOPTIONS(Request $request): \Alpha\Util\Http\Response
     {
-        $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
-        $supported = array();
+        $HTTPMethods = [
+            "HEAD",
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+        ];
+        $supported = [];
 
         foreach ($HTTPMethods as $HTTPMethod) {
-            $reflector = new \ReflectionMethod($this, 'do'.$HTTPMethod);
-            $isOverridden = ($reflector->getDeclaringClass()->getName() === get_class($this));
+            $reflector = new \ReflectionMethod($this, "do" . $HTTPMethod);
+            $isOverridden =
+                $reflector->getDeclaringClass()->getName() === get_class($this);
 
             if ($isOverridden) {
                 $supported[] = $HTTPMethod;
             }
         }
 
-        $supported = implode(',', $supported);
+        $supported = implode(",", $supported);
 
         $response = new Response(200);
-        $response->setHeader('Allow', $supported);
+        $response->setHeader("Allow", $supported);
 
         return $response;
     }
@@ -1446,22 +1810,31 @@ abstract class Controller
      */
     public function doTRACE(Request $request): \Alpha\Util\Http\Response
     {
-        $HTTPMethods = array('HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS');
-        $supported = array();
+        $HTTPMethods = [
+            "HEAD",
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "OPTIONS",
+        ];
+        $supported = [];
 
         foreach ($HTTPMethods as $HTTPMethod) {
-            $reflector = new \ReflectionMethod($this, 'do'.$HTTPMethod);
-            $isOverridden = ($reflector->getDeclaringClass()->getName() === get_class($this));
+            $reflector = new \ReflectionMethod($this, "do" . $HTTPMethod);
+            $isOverridden =
+                $reflector->getDeclaringClass()->getName() === get_class($this);
 
             if ($isOverridden) {
                 $supported[] = $HTTPMethod;
             }
         }
 
-        $supported = implode(',', $supported);
+        $supported = implode(",", $supported);
 
         $response = new Response(405);
-        $response->setHeader('Allow', $supported);
+        $response->setHeader("Allow", $supported);
 
         return $response;
     }
@@ -1474,32 +1847,37 @@ abstract class Controller
      *
      * @since 2.0
      */
-    public function process(\Alpha\Util\Http\Request $request): \Alpha\Util\Http\Response
-    {
+    public function process(
+        \Alpha\Util\Http\Request $request,
+    ): \Alpha\Util\Http\Response {
         if (!$request instanceof Request) {
-            throw new IllegalArguementException('The request passed to process is not a valid Request object');
+            throw new IllegalArguementException(
+                "The request passed to process is not a valid Request object",
+            );
         }
 
         $config = ConfigProvider::getInstance();
 
         $method = $request->getMethod();
 
-        if (in_array($method, array('POST', 'PUT', 'PATCH'), true)) {
-            if ($config->get('security.encrypt.http.fieldnames')) {
-                $decryptedParams = $this->decryptFieldNames($request->getParams());
+        if (in_array($method, ["POST", "PUT", "PATCH"], true)) {
+            if ($config->get("security.encrypt.http.fieldnames")) {
+                $decryptedParams = $this->decryptFieldNames(
+                    $request->getParams(),
+                );
                 $request->addParams($decryptedParams);
 
-                if ($request->getParam('_METHOD') != null) {
-                    $request->setMethod($request->getParam('_METHOD'));
+                if ($request->getParam("_METHOD") != null) {
+                    $request->setMethod($request->getParam("_METHOD"));
                     $method = $request->getMethod();
                 }
             }
         }
 
-        $ProviderClassName = $config->get('app.renderer.provider.name');
+        $ProviderClassName = $config->get("app.renderer.provider.name");
 
-        if ($ProviderClassName == 'auto' && $request->getAccept() != null) {
-            View::setProvider('auto', $request->getAccept());
+        if ($ProviderClassName == "auto" && $request->getAccept() != null) {
+            View::setProvider("auto", $request->getAccept());
         }
 
         $this->request = $request;
@@ -1510,30 +1888,30 @@ abstract class Controller
         }
 
         switch ($method) {
-            case 'HEAD':
+            case "HEAD":
                 $response = $this->doHEAD($request);
-            break;
-            case 'GET':
+                break;
+            case "GET":
                 $response = $this->doGET($request);
-            break;
-            case 'POST':
+                break;
+            case "POST":
                 $response = $this->doPOST($request);
-            break;
-            case 'PUT':
+                break;
+            case "PUT":
                 $response = $this->doPUT($request);
-            break;
-            case 'PATCH':
+                break;
+            case "PATCH":
                 $response = $this->doPATCH($request);
-            break;
-            case 'DELETE':
+                break;
+            case "DELETE":
                 $response = $this->doDELETE($request);
-            break;
-            case 'OPTIONS':
+                break;
+            case "OPTIONS":
                 $response = $this->doOPTIONS($request);
-            break;
-            case 'TRACE':
+                break;
+            case "TRACE":
                 $response = $this->doTRACE($request);
-            break;
+                break;
             default:
                 $response = $this->doGET($request);
         }
@@ -1563,7 +1941,11 @@ abstract class Controller
         if ($request instanceof Request) {
             $this->request = $request;
         } else {
-            throw new IllegalArguementException('Invalid request object ['.print_r($request, true).'] passed');
+            throw new IllegalArguementException(
+                "Invalid request object [" .
+                    print_r($request, true) .
+                    "] passed",
+            );
         }
     }
 
@@ -1576,27 +1958,39 @@ abstract class Controller
     {
         $accept = $this->request->getAccept();
 
-        if ($accept != 'application/json' && $this->checkIfAccessingFromSecureURL()) {
+        if (
+            $accept != "application/json" &&
+            $this->checkIfAccessingFromSecureURL()
+        ) {
             $viewState = ViewState::getInstance();
-            $menu = '';
+            $menu = "";
 
-            if ($viewState->get('renderAdminMenu')) {
+            if ($viewState->get("renderAdminMenu")) {
                 $config = ConfigProvider::getInstance();
 
-                $sessionProvider = $config->get('session.provider.name');
-                $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+                $sessionProvider = $config->get("session.provider.name");
+                $session = ServiceFactory::getInstance(
+                    $sessionProvider,
+                    "Alpha\Util\Http\Session\SessionProviderInterface",
+                );
 
-                if ($session->get('currentUser') !== false) {
-                    $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault($session->get('currentUser')->get('password'));
-                    $menu = View::loadTemplateFragment('html', 'adminmenu.phtml', array('passwordResetRequired' => $passwordResetRequired));
+                if ($session->get("currentUser") !== false) {
+                    $passwordResetRequired = SecurityUtils::checkAdminPasswordIsDefault(
+                        $session->get("currentUser")->get("password"),
+                    );
+                    $menu = View::loadTemplateFragment(
+                        "html",
+                        "adminmenu.phtml",
+                        ["passwordResetRequired" => $passwordResetRequired],
+                    );
                 } else {
-                    $menu = '';
+                    $menu = "";
                 }
 
                 return $menu;
             }
         }
 
-        return '';
+        return "";
     }
 }

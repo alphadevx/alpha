@@ -363,6 +363,8 @@ Content Cell  | Content Cell
         $front = new FrontController();
         $controller = new ArticleController();
 
+        $this->expectException(ResourceNotFoundException::class);
+
         $article = $this->createArticleObject("test article");
         $article->save();
 

@@ -113,7 +113,10 @@ class ControllerTest extends TestCase
     protected function setUp(): void
     {
         $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $config->set(
+            "session.provider.name",
+            "Alpha\Util\Http\Session\SessionProviderArray",
+        );
         $tag = new Tag();
         $tag->rebuildTable();
 
@@ -128,23 +131,23 @@ class ControllerTest extends TestCase
 
         $this->controller = new ImageController();
 
-        $this->person = $this->createPersonObject('unitTestUser');
+        $this->person = $this->createPersonObject("unitTestUser");
         $this->person->rebuildTable();
 
-        $this->article = $this->createArticleObject('unitTestArticle');
+        $this->article = $this->createArticleObject("unitTestArticle");
         $this->article->rebuildTable();
 
         $this->group = new Rights();
         $this->group->rebuildTable();
-        $this->group->set('name', 'Admin');
+        $this->group->set("name", "Admin");
         $this->group->save();
 
         $this->group = new Rights();
-        $this->group->set('name', 'Standard');
+        $this->group->set("name", "Standard");
         $this->group->save();
 
         $lookup = $this->group->getMembers()->getLookup();
-        $lookup->setValue('00000000001', $this->group->getID());
+        $lookup->setValue("00000000001", $this->group->getID());
         $lookup->save();
     }
 
@@ -157,7 +160,10 @@ class ControllerTest extends TestCase
     protected function tearDown(): void
     {
         $config = ConfigProvider::getInstance();
-        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $config->set(
+            "session.provider.name",
+            "Alpha\Util\Http\Session\SessionProviderArray",
+        );
         $this->controller->abort();
 
         $this->article->dropTable();
@@ -169,7 +175,7 @@ class ControllerTest extends TestCase
         unset($this->person);
 
         $this->group->dropTable();
-        $this->group->dropTable('Person2Rights');
+        $this->group->dropTable("Person2Rights");
         unset($this->group);
 
         $article = new Article();
@@ -196,9 +202,9 @@ class ControllerTest extends TestCase
     {
         $person = new Person();
         $person->setUsername($name);
-        $person->set('email', $name.'@test.com');
-        $person->set('password', 'passwordTest');
-        $person->set('URL', 'http://unitTestUser/');
+        $person->set("email", $name . "@test.com");
+        $person->set("password", "passwordTest");
+        $person->set("URL", "http://unitTestUser/");
 
         return $person;
     }
@@ -213,10 +219,13 @@ class ControllerTest extends TestCase
     private function createArticleObject($name)
     {
         $article = new Article();
-        $article->set('title', $name);
-        $article->set('description', 'unitTestArticleTagOne unitTestArticleTagTwo');
-        $article->set('author', 'unitTestArticleTagOne');
-        $article->set('content', 'unitTestArticleTagOne');
+        $article->set("title", $name);
+        $article->set(
+            "description",
+            "unitTestArticleTagOne unitTestArticleTagTwo",
+        );
+        $article->set("author", "unitTestArticleTagOne");
+        $article->set("content", "unitTestArticleTagOne unitTestArticleTagTwo");
 
         return $article;
     }
@@ -232,7 +241,11 @@ class ControllerTest extends TestCase
 
         $dirtyObjects = $this->controller->getDirtyObjects();
 
-        $this->assertEquals('http://unitTestUser/', $dirtyObjects[0]->get('URL'), 'Testing that objects are being added to the dirtyObject array correctly');
+        $this->assertEquals(
+            "http://unitTestUser/",
+            $dirtyObjects[0]->get("URL"),
+            "Testing that objects are being added to the dirtyObject array correctly",
+        );
     }
 
     /**
@@ -243,7 +256,7 @@ class ControllerTest extends TestCase
      */
     public function testMarkDirtySession()
     {
-        $this->person->set('email', 'changed@test.com');
+        $this->person->set("email", "changed@test.com");
         $this->controller->markDirty($this->person);
 
         // calling the constructor of the other controller will check the session
@@ -251,7 +264,11 @@ class ControllerTest extends TestCase
 
         $dirty = $controller2->getDirtyObjects();
 
-        $this->assertEquals('changed@test.com', $dirty[0]->get('email'), 'Testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers');
+        $this->assertEquals(
+            "changed@test.com",
+            $dirty[0]->get("email"),
+            "Testing that objects are being added to the dirtyObject array correctly and that this array is in the session being shared by controllers",
+        );
     }
 
     /**
@@ -265,7 +282,11 @@ class ControllerTest extends TestCase
 
         $newObjects = $this->controller->getNewObjects();
 
-        $this->assertEquals('http://unitTestUser/', $newObjects[0]->get('URL'), 'Testing that objects are being added to the newObject array correctly');
+        $this->assertEquals(
+            "http://unitTestUser/",
+            $newObjects[0]->get("URL"),
+            "Testing that objects are being added to the newObject array correctly",
+        );
     }
 
     /**
@@ -276,8 +297,8 @@ class ControllerTest extends TestCase
      */
     public function testMarkNewSession()
     {
-        $person = $this->createPersonObject('newuser');
-        $person->set('email', 'newuser@test.com');
+        $person = $this->createPersonObject("newuser");
+        $person->set("email", "newuser@test.com");
         $this->controller->markNew($person);
 
         // calling the constructor of the other controller will check the session
@@ -285,7 +306,11 @@ class ControllerTest extends TestCase
 
         $new = $controller2->getNewObjects();
 
-        $this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
+        $this->assertEquals(
+            "newuser@test.com",
+            $new[0]->get("email"),
+            "Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers",
+        );
     }
 
     /**
@@ -298,57 +323,81 @@ class ControllerTest extends TestCase
         $config = ConfigProvider::getInstance();
 
         $this->group = new Rights();
-        $this->group->set('name', 'testgroup');
+        $this->group->set("name", "testgroup");
         $this->group->save();
 
         $this->group = new Rights();
-        $this->group->set('name', 'testgroup2');
+        $this->group->set("name", "testgroup2");
         $this->group->save();
 
         $this->person->save();
 
-        $lookup = $this->person->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($this->person->getID(), $this->group->getID()));
+        $lookup = $this->person->getPropObject("rights")->getLookup();
+        $lookup->setValue([$this->person->getID(), $this->group->getID()]);
         $lookup->save();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-        $session->set('currentUser', $this->person);
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
+        $session->set("currentUser", $this->person);
 
         try {
-            $controller = new ImageController('testgroup');
+            $controller = new ImageController("testgroup");
         } catch (PHPException $e) {
-            $this->fail('failed to access a controller that I have access to by rights group membership');
+            $this->fail(
+                "failed to access a controller that I have access to by rights group membership",
+            );
         }
 
         $front = new FrontController();
-        $request = new Request(array('method' => 'GET', 'URI' => '/gensecure'));
+        $request = new Request(["method" => "GET", "URI" => "/gensecure"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(403, $response->getStatus(), 'Testing that an admin page request is rejected');
-        $this->assertTrue(strpos($response->getBody(), 'not have the correct access rights') !== false, 'Testing that an admin page request is rejected');
-
+        $this->assertEquals(
+            403,
+            $response->getStatus(),
+            "Testing that an admin page request is rejected",
+        );
+        $this->assertTrue(
+            strpos(
+                $response->getBody(),
+                "not have the correct access rights",
+            ) !== false,
+            "Testing that an admin page request is rejected",
+        );
 
         // Testing that a group that the user is not a member of request is rejected
-        $person = $this->createPersonObject('unitTestUser2');
+        $person = $this->createPersonObject("unitTestUser2");
         $person->save();
 
-        $session->set('currentUser', $person);
+        $session->set("currentUser", $person);
 
-        $front->addRoute('/logintest', function ($request) {
+        $front->addRoute("/logintest", function ($request) {
             $controller = new LoginController();
-            $controller->setVisibility('testgroup2');
+            $controller->setVisibility("testgroup2");
 
             return $controller->process($request);
         });
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/logintest'));
+        $request = new Request(["method" => "GET", "URI" => "/logintest"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(403, $response->getStatus(), 'Testing that a group that the user is not a member of request is rejected');
-        $this->assertTrue(strpos($response->getBody(), 'not have the correct access rights') !== false, 'Testing that a group that the user is not a member of request is rejected');
+        $this->assertEquals(
+            403,
+            $response->getStatus(),
+            "Testing that a group that the user is not a member of request is rejected",
+        );
+        $this->assertTrue(
+            strpos(
+                $response->getBody(),
+                "not have the correct access rights",
+            ) !== false,
+            "Testing that a group that the user is not a member of request is rejected",
+        );
     }
 
     /**
@@ -363,7 +412,11 @@ class ControllerTest extends TestCase
         $controller1->setUnitEndTime(2005, 10, 30, 21, 15, 15);
         $controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
-        $this->assertEquals($controller1->getUnitDuration(), $controller2->getUnitDuration(), 'test the getUnitDuration method for equality');
+        $this->assertEquals(
+            $controller1->getUnitDuration(),
+            $controller2->getUnitDuration(),
+            "test the getUnitDuration method for equality",
+        );
     }
 
     /**
@@ -378,7 +431,10 @@ class ControllerTest extends TestCase
         $controller1->setUnitEndTime(2006, 10, 30, 21, 15, 15);
         $controller2->setUnitEndTime(2005, 10, 30, 21, 15, 15);
 
-        $this->assertTrue($controller1->getUnitDuration() > $controller2->getUnitDuration(), 'Test the getUnitDuration method for greater than');
+        $this->assertTrue(
+            $controller1->getUnitDuration() > $controller2->getUnitDuration(),
+            "Test the getUnitDuration method for greater than",
+        );
 
         $this->assertEquals(2006, $controller1->getEndTime()->getYear());
         $this->assertEquals(30, $controller1->getEndTime()->getDay());
@@ -393,10 +449,20 @@ class ControllerTest extends TestCase
     public function testSetUnitOfWorkBadControllerName()
     {
         try {
-            $this->controller->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController', 'Alpha\Controller\BadControllerName'));
-            $this->fail('Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!');
+            $this->controller->setUnitOfWork([
+                "Alpha\Controller\ImageController",
+                "Alpha\Controller\LogController",
+                "Alpha\Controller\BadControllerName",
+            ]);
+            $this->fail(
+                "Passed a bad controller name BadControllerName to setUnitOfWork() and did not get the expected exception!",
+            );
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method with a bad controller name');
+            $this->assertEquals(
+                "",
+                $this->controller->getFirstJob(),
+                "Testing the setUnitOfWork method with a bad controller name",
+            );
         }
     }
 
@@ -407,10 +473,17 @@ class ControllerTest extends TestCase
      */
     public function testSetUnitOfWorkNext()
     {
-        $this->controller->setName('Alpha\Controller\ImageController');
-        $this->controller->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController'));
+        $this->controller->setName("Alpha\Controller\ImageController");
+        $this->controller->setUnitOfWork([
+            "Alpha\Controller\ImageController",
+            "Alpha\Controller\LogController",
+        ]);
 
-        $this->assertEquals('Alpha\Controller\LogController', $this->controller->getNextJob(), 'Testing the setUnitOfWork method and getNextJob');
+        $this->assertEquals(
+            "Alpha\Controller\LogController",
+            $this->controller->getNextJob(),
+            "Testing the setUnitOfWork method and getNextJob",
+        );
     }
 
     /**
@@ -420,10 +493,17 @@ class ControllerTest extends TestCase
      */
     public function testSetUnitOfWorkFirst()
     {
-        $this->controller->setName('Alpha\Controller\ImageController');
-        $this->controller->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController'));
+        $this->controller->setName("Alpha\Controller\ImageController");
+        $this->controller->setUnitOfWork([
+            "Alpha\Controller\ImageController",
+            "Alpha\Controller\LogController",
+        ]);
 
-        $this->assertEquals('Alpha\Controller\ImageController', $this->controller->getFirstJob(), 'Testing the setUnitOfWork method and getFirstJob');
+        $this->assertEquals(
+            "Alpha\Controller\ImageController",
+            $this->controller->getFirstJob(),
+            "Testing the setUnitOfWork method and getFirstJob",
+        );
     }
 
     /**
@@ -433,10 +513,17 @@ class ControllerTest extends TestCase
      */
     public function testSetUnitOfWorkPrevious()
     {
-        $this->controller->setName('Alpha\Controller\LogController');
-        $this->controller->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController'));
+        $this->controller->setName("Alpha\Controller\LogController");
+        $this->controller->setUnitOfWork([
+            "Alpha\Controller\ImageController",
+            "Alpha\Controller\LogController",
+        ]);
 
-        $this->assertEquals('Alpha\Controller\ImageController', $this->controller->getPreviousJob(), 'Testing the setUnitOfWork method and getPreviousJob');
+        $this->assertEquals(
+            "Alpha\Controller\ImageController",
+            $this->controller->getPreviousJob(),
+            "Testing the setUnitOfWork method and getPreviousJob",
+        );
     }
 
     /**
@@ -446,10 +533,17 @@ class ControllerTest extends TestCase
      */
     public function testSetUnitOfWorkLast()
     {
-        $this->controller->setName('Alpha\Controller\ImageController');
-        $this->controller->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController'));
+        $this->controller->setName("Alpha\Controller\ImageController");
+        $this->controller->setUnitOfWork([
+            "Alpha\Controller\ImageController",
+            "Alpha\Controller\LogController",
+        ]);
 
-        $this->assertEquals('Alpha\Controller\LogController', $this->controller->getLastJob(), 'Testing the setUnitOfWork method and getLastJob');
+        $this->assertEquals(
+            "Alpha\Controller\LogController",
+            $this->controller->getLastJob(),
+            "Testing the setUnitOfWork method and getLastJob",
+        );
     }
 
     /**
@@ -459,20 +553,22 @@ class ControllerTest extends TestCase
      */
     public function testCommit()
     {
-        $this->person->set('email', 'changed@test.com');
+        $this->person->set("email", "changed@test.com");
         $this->controller->markDirty($this->person);
 
-        $person = $this->createPersonObject('newuser');
-        $person->set('email', 'newuser@test.com');
+        $person = $this->createPersonObject("newuser");
+        $person->set("email", "newuser@test.com");
         $this->controller->markNew($person);
 
         $this->controller->setUnitStartTime(2006, 10, 30, 21, 15, 15);
 
         try {
             $this->controller->commit();
-            $this->assertEquals('', $this->controller->getNextJob());
+            $this->assertEquals("", $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
-            $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
+            $this->fail(
+                "Failed to commit the unit of work transaction for new and dirty objects",
+            );
         }
 
         $this->assertEquals(2006, $this->controller->getStartTime()->getYear());
@@ -487,34 +583,40 @@ class ControllerTest extends TestCase
      */
     public function testPostCommitLoad()
     {
-        $this->person->set('email', 'changed@test.com');
+        $this->person->set("email", "changed@test.com");
         $this->controller->markDirty($this->person);
 
-        $person = $this->createPersonObject('newuser');
-        $person->set('email', 'newuser@test.com');
+        $person = $this->createPersonObject("newuser");
+        $person->set("email", "newuser@test.com");
         $this->controller->markNew($person);
 
         try {
             $this->controller->commit();
-            $this->assertEquals('', $this->controller->getNextJob());
+            $this->assertEquals("", $this->controller->getNextJob());
         } catch (FailedUnitCommitException $e) {
-            $this->fail('Failed to commit the unit of work transaction for new and dirty objects');
+            $this->fail(
+                "Failed to commit the unit of work transaction for new and dirty objects",
+            );
         }
 
         $newPerson = new Person();
         try {
-            $newPerson->loadByAttribute('email', 'newuser@test.com');
-            $this->assertEquals('newuser@test.com', $newPerson->get('email'));
+            $newPerson->loadByAttribute("email", "newuser@test.com");
+            $this->assertEquals("newuser@test.com", $newPerson->get("email"));
         } catch (RecordNotFoundException $e) {
-            $this->fail('Failed to load the new person that we commited in the unit of work');
+            $this->fail(
+                "Failed to load the new person that we commited in the unit of work",
+            );
         }
 
         $dirtyPerson = new Person();
         try {
-            $dirtyPerson->loadByAttribute('email', 'changed@test.com');
-            $this->assertEquals('changed@test.com', $dirtyPerson->get('email'));
+            $dirtyPerson->loadByAttribute("email", "changed@test.com");
+            $this->assertEquals("changed@test.com", $dirtyPerson->get("email"));
         } catch (RecordNotFoundException $e) {
-            $this->fail('Failed to load the dirty person that we commited in the unit of work');
+            $this->fail(
+                "Failed to load the dirty person that we commited in the unit of work",
+            );
         }
     }
 
@@ -525,8 +627,8 @@ class ControllerTest extends TestCase
      */
     public function testAbort()
     {
-        $person = $this->createPersonObject('newuser');
-        $person->set('email', 'newuser@test.com');
+        $person = $this->createPersonObject("newuser");
+        $person->set("email", "newuser@test.com");
         $this->controller->markNew($person);
 
         // calling the constructor of the other controller will check the session
@@ -534,14 +636,22 @@ class ControllerTest extends TestCase
 
         $new = $controller2->getNewObjects();
 
-        $this->assertEquals('newuser@test.com', $new[0]->get('email'), 'Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers');
+        $this->assertEquals(
+            "newuser@test.com",
+            $new[0]->get("email"),
+            "Testing that objects are being added to the newObjects array correctly and that this array is in the session being shared by controllers",
+        );
 
         // now abort the unit of work from the second controller, and confirm that the new object array is empty
         $controller2->abort();
 
         $new = $controller2->getNewObjects();
 
-        $this->assertEquals(0, count($new), 'Testing that aborting a unit of work clears the list of new objects');
+        $this->assertEquals(
+            0,
+            count($new),
+            "Testing that aborting a unit of work clears the list of new objects",
+        );
     }
 
     /**
@@ -551,7 +661,11 @@ class ControllerTest extends TestCase
      */
     public function testConstructorJobControllerName()
     {
-        $this->assertEquals('Alpha\Controller\ImageController', $this->controller->getName(), 'Testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller');
+        $this->assertEquals(
+            "Alpha\Controller\ImageController",
+            $this->controller->getName(),
+            "Testing that the AlphaController constructor defaults to using the controller name as the AlphaController->name of the controller",
+        );
     }
 
     /**
@@ -561,7 +675,10 @@ class ControllerTest extends TestCase
      */
     public function testGetCustomControllerName()
     {
-        $this->assertNull(Controller::getCustomControllerName('DoesNotExistObject'), 'Testing that providing a bad BO name returns null');
+        $this->assertNull(
+            Controller::getCustomControllerName("DoesNotExistObject"),
+            "Testing that providing a bad BO name returns null",
+        );
     }
 
     /**
@@ -572,16 +689,25 @@ class ControllerTest extends TestCase
     public function testCheckRights()
     {
         $config = ConfigProvider::getInstance();
-        $_SERVER['REQUEST_URI'] = 'ImageController';
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $controller = new ImageController('Admin');
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-        $session->delete('currentUser');
+        $_SERVER["REQUEST_URI"] = "ImageController";
+        $_SERVER["REQUEST_METHOD"] = "GET";
+        $controller = new ImageController("Admin");
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
+        $session->delete("currentUser");
 
-        $this->assertFalse($controller->checkRights(), 'Testing that a user with no session cannot access an Admin controller');
-        $controller = new ImageController('Public');
-        $this->assertTrue($controller->checkRights(), 'Testing that a user with no session can access a Public controller');
+        $this->assertFalse(
+            $controller->checkRights(),
+            "Testing that a user with no session cannot access an Admin controller",
+        );
+        $controller = new ImageController("Public");
+        $this->assertTrue(
+            $controller->checkRights(),
+            "Testing that a user with no session can access a Public controller",
+        );
     }
 
     /**
@@ -594,16 +720,29 @@ class ControllerTest extends TestCase
         $controller = new ImageController();
         $securityFields = $controller->generateSecurityFields();
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/hello', 'params' => array('var1' => $securityFields[0], 'var2' => $securityFields[1])));
+        $request = new Request([
+            "method" => "GET",
+            "URI" => "/hello",
+            "params" => [
+                "var1" => $securityFields[0],
+                "var2" => $securityFields[1],
+            ],
+        ]);
 
         $controller->setRequest($request);
 
-        $this->assertTrue($controller->checkSecurityFields(), 'Testing the checkSecurityFields method with valid security params');
+        $this->assertTrue(
+            $controller->checkSecurityFields(),
+            "Testing the checkSecurityFields method with valid security params",
+        );
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/hello'));
+        $request = new Request(["method" => "GET", "URI" => "/hello"]);
         $controller->setRequest($request);
 
-        $this->assertFalse($controller->checkSecurityFields(), 'Testing the checkSecurityFields method with invalid security params');
+        $this->assertFalse(
+            $controller->checkSecurityFields(),
+            "Testing the checkSecurityFields method with invalid security params",
+        );
     }
 
     /**
@@ -614,10 +753,16 @@ class ControllerTest extends TestCase
     public function testLoadControllerDef()
     {
         try {
-            $this->controller->loadControllerDef('DoesNotExist');
-            $this->fail('Testing that a bad controller name passed to loadControllerDef will cause an exception');
+            $this->controller->loadControllerDef("DoesNotExist");
+            $this->fail(
+                "Testing that a bad controller name passed to loadControllerDef will cause an exception",
+            );
         } catch (IllegalArguementException $e) {
-            $this->assertEquals('The class [DoesNotExist] is not defined anywhere!', $e->getMessage(), 'Testing that a bad controller name passed to loadControllerDef will cause an exception');
+            $this->assertEquals(
+                "The class [DoesNotExist] is not defined anywhere!",
+                $e->getMessage(),
+                "Testing that a bad controller name passed to loadControllerDef will cause an exception",
+            );
         }
     }
 
@@ -628,11 +773,15 @@ class ControllerTest extends TestCase
      */
     public function testStatusMessages()
     {
-        $this->controller->setStatusMessage('test message');
+        $this->controller->setStatusMessage("test message");
 
         $controller = new ImageController();
 
-        $this->assertEquals('test message', $controller->getStatusMessage(), 'Testing that status messages can be shared between controllers via the session');
+        $this->assertEquals(
+            "test message",
+            $controller->getStatusMessage(),
+            "Testing that status messages can be shared between controllers via the session",
+        );
     }
 
     /**
@@ -645,20 +794,27 @@ class ControllerTest extends TestCase
         ActiveRecord::begin();
         $this->article->save();
         ActiveRecord::commit();
-        $tags = $this->article->getPropObject('tags')->getRelated();
+        $tags = $this->article->getPropObject("tags")->getRelated();
 
         $found = false;
         foreach ($tags as $tag) {
-            if ($tag->get('content') == 'unittestarticle') {
+            if ($tag->get("content") == "unittestarticle") {
                 $found = true;
                 break;
             }
         }
-        $this->assertTrue($found, 'Testing the Tag::tokenize method returns a tag called "unittestarticle"');
+        $this->assertTrue(
+            $found,
+            'Testing the Tag::tokenize method returns a tag called "unittestarticle"',
+        );
 
         $this->controller->setRecord($this->article);
 
-        $this->assertEquals('unittestarticle,unittestarticletagone,unittestarticletagtwo', $this->controller->getKeywords(), 'Testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords');
+        $this->assertEquals(
+            "unittestarticle,unittestarticletagone,unittestarticletagtwo",
+            $this->controller->getKeywords(),
+            'Testing that a BO attached to a controller that contains tags will have those tags mapped to the controller\'s keywords',
+        );
     }
 
     /**
@@ -668,9 +824,18 @@ class ControllerTest extends TestCase
      */
     public function testCheckControllerDefExists()
     {
-        $this->assertTrue(Controller::checkControllerDefExists('/'), 'Testing that the / controller always exists');
-        $this->assertTrue(Controller::checkControllerDefExists('ImageController'), 'Testing that a good controller classname returns true');
-        $this->assertFalse(Controller::checkControllerDefExists('DoesNotExist'), 'Testing that a bad controller classname returns false');
+        $this->assertTrue(
+            Controller::checkControllerDefExists("/"),
+            "Testing that the / controller always exists",
+        );
+        $this->assertTrue(
+            Controller::checkControllerDefExists("ImageController"),
+            "Testing that a good controller classname returns true",
+        );
+        $this->assertFalse(
+            Controller::checkControllerDefExists("DoesNotExist"),
+            "Testing that a bad controller classname returns false",
+        );
     }
 
     /**
@@ -684,25 +849,37 @@ class ControllerTest extends TestCase
 
         $controller = new ImageController();
 
-        $_GET['tk'] = null;
-        $_SERVER['REQUEST_URI'] = '/search';
-        $request = new Request(array('method' => 'GET'));
+        $_GET["tk"] = null;
+        $_SERVER["REQUEST_URI"] = "/search";
+        $request = new Request(["method" => "GET"]);
         $controller->setRequest($request);
 
-        $this->assertFalse($controller->checkIfAccessingFromSecureURL(), 'Testing that the false is returned when tk is unavailable');
+        $this->assertFalse(
+            $controller->checkIfAccessingFromSecureURL(),
+            "Testing that the false is returned when tk is unavailable",
+        );
 
-        $_GET['tk'] = '8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
-        $request = new Request(array('method' => 'GET'));
+        $_GET["tk"] =
+            "8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==";
+        $request = new Request(["method" => "GET"]);
         $controller->setRequest($request);
 
-        $this->assertTrue($controller->checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is set in global _GET array');
+        $this->assertTrue(
+            $controller->checkIfAccessingFromSecureURL(),
+            "Testing that the true is returned when tk is set in global _GET array",
+        );
 
-        $_GET['tk'] = null;
-        $_SERVER['REQUEST_URI'] = $config->get('app.url').'/tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==';
-        $request = new Request(array('method' => 'GET'));
+        $_GET["tk"] = null;
+        $_SERVER["REQUEST_URI"] =
+            $config->get("app.url") .
+            "/tk/8kqoeebEej0V-FN5-DOdA1HBDDieFcNWTib2yLSUNjq0B0FWzAupIA==";
+        $request = new Request(["method" => "GET"]);
         $controller->setRequest($request);
 
-        $this->assertTrue($controller->checkIfAccessingFromSecureURL(), 'Testing that the true is returned when tk is part of the mod_rewrite style URL');
+        $this->assertTrue(
+            $controller->checkIfAccessingFromSecureURL(),
+            "Testing that the true is returned when tk is part of the mod_rewrite style URL",
+        );
     }
 
     /**
@@ -710,21 +887,24 @@ class ControllerTest extends TestCase
      */
     public function testProcess()
     {
-        $_SERVER['REQUEST_URI'] = '/';
+        $_SERVER["REQUEST_URI"] = "/";
         $front = new FrontController();
-        $front->addRoute('/hello', function ($request) {
+        $front->addRoute("/hello", function ($request) {
             $controller = new ImageController();
 
             return $controller->process($request);
         });
 
-        $request = new Request(array('method' => 'OPTIONS', 'URI' => '/hello'));
+        $request = new Request(["method" => "OPTIONS", "URI" => "/hello"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals('GET', $response->getHeader('Allow'), 'Testing the process method');
+        $this->assertEquals(
+            "GET",
+            $response->getHeader("Allow"),
+            "Testing the process method",
+        );
     }
-
 
     /**
      * Testing that a TRACE request is rejected.
@@ -732,18 +912,26 @@ class ControllerTest extends TestCase
     public function testTraceRequest()
     {
         $front = new FrontController();
-        $front->addRoute('/hello', function ($request) {
+        $front->addRoute("/hello", function ($request) {
             $controller = new ImageController();
 
             return $controller->process($request);
         });
 
-        $request = new Request(array('method' => 'TRACE', 'URI' => '/hello'));
+        $request = new Request(["method" => "TRACE", "URI" => "/hello"]);
 
         $response = $front->process($request);
 
-        $this->assertEquals(405, $response->getStatus(), 'Testing that a TRACE request is rejected');
-        $this->assertEquals('Method Not Allowed', $response->getStatusMessage(), 'Testing that a TRACE request is rejected');
+        $this->assertEquals(
+            405,
+            $response->getStatus(),
+            "Testing that a TRACE request is rejected",
+        );
+        $this->assertEquals(
+            "Method Not Allowed",
+            $response->getStatusMessage(),
+            "Testing that a TRACE request is rejected",
+        );
     }
 
     /**
@@ -752,33 +940,47 @@ class ControllerTest extends TestCase
     public function testHTTPMethodOverride()
     {
         $front = new FrontController();
-        $front->addRoute('/image', function ($request) {
+        $front->addRoute("/image", function ($request) {
             $controller = new ImageController();
 
             return $controller->process($request);
         });
 
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+        $request = new Request(["method" => "DELETE", "URI" => "/image"]);
 
         try {
             $response = $front->process($request);
-            $this->fail('Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+            $this->fail(
+                "Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD",
+            );
         } catch (\Exception $e) {
-            $this->assertEquals('The DELETE method is not supported by this controller', $e->getMessage(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+            $this->assertEquals(
+                "The DELETE method is not supported by this controller",
+                $e->getMessage(),
+                "Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD",
+            );
         }
 
-        $_POST['_METHOD'] = 'OPTIONS';
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+        $_POST["_METHOD"] = "OPTIONS";
+        $request = new Request(["method" => "DELETE", "URI" => "/image"]);
         $response = $front->process($request);
-        $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD",
+        );
 
-        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = 'OPTIONS';
-        $request = new Request(array('method' => 'DELETE', 'URI' => '/image'));
+        $_SERVER["HTTP_X_HTTP_METHOD_OVERRIDE"] = "OPTIONS";
+        $request = new Request(["method" => "DELETE", "URI" => "/image"]);
         $response = $front->process($request);
-        $this->assertEquals(200, $response->getStatus(), 'Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD');
+        $this->assertEquals(
+            200,
+            $response->getStatus(),
+            "Testing that we can override the HTTP method via X-HTTP-Method-Override or _METHOD",
+        );
 
-        $_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] = '';
-        $_POST['_METHOD'] = '';
+        $_SERVER["HTTP_X_HTTP_METHOD_OVERRIDE"] = "";
+        $_POST["_METHOD"] = "";
     }
 
     /**
@@ -786,21 +988,26 @@ class ControllerTest extends TestCase
      */
     public function testGenerateURLSlug()
     {
-        $slug1 = Controller::generateURLSlug('A new blog entry');
+        $slug1 = Controller::generateURLSlug("A new blog entry");
 
-        $this->assertEquals('a-new-blog-entry', $slug1);
+        $this->assertEquals("a-new-blog-entry", $slug1);
 
-        $slug2 = Controller::generateURLSlug('A new blog entry', '_');
+        $slug2 = Controller::generateURLSlug("A new blog entry", "_");
 
-        $this->assertEquals('a_new_blog_entry', $slug2);
+        $this->assertEquals("a_new_blog_entry", $slug2);
 
-        $slug3 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'));
+        $slug3 = Controller::generateURLSlug("/A new blog entry ", "-", ["/"]);
 
-        $this->assertEquals('a-new-blog-entry', $slug3);
+        $this->assertEquals("a-new-blog-entry", $slug3);
 
-        $slug4 = Controller::generateURLSlug('/A new blog entry ', '-', array('/'), true);
+        $slug4 = Controller::generateURLSlug(
+            "/A new blog entry ",
+            "-",
+            ["/"],
+            true,
+        );
 
-        $this->assertEquals('2760658738-a-new-blog-entry', $slug4);
+        $this->assertEquals("2760658738-a-new-blog-entry", $slug4);
     }
 
     /**
@@ -809,29 +1016,37 @@ class ControllerTest extends TestCase
     public function testProcessEncrypted()
     {
         $config = ConfigProvider::getInstance();
-        $config->set('security.encrypt.http.fieldnames', true);
+        $config->set("security.encrypt.http.fieldnames", true);
 
         $front = new FrontController();
 
-        $front->addRoute('/login', function ($request) {
+        $front->addRoute("/login", function ($request) {
             $controller = new LoginController();
             return $controller->process($request);
         });
 
         $securityFields = $this->controller->generateSecurityFields();
 
-        $request = new Request(array('method' => 'POST', 'URI' => '/login', 'params' => array(
-            'var1' => $securityFields[0],
-            'var2' => $securityFields[1],
-            base64_encode(SecurityUtils::encrypt('resetBut')) => true,
-            base64_encode(SecurityUtils::encrypt('email')) => 'test@test.com')
-        ));
+        $request = new Request([
+            "method" => "POST",
+            "URI" => "/login",
+            "params" => [
+                "var1" => $securityFields[0],
+                "var2" => $securityFields[1],
+                base64_encode(SecurityUtils::encrypt("resetBut")) => true,
+                base64_encode(
+                    SecurityUtils::encrypt("email"),
+                ) => "test@test.com",
+            ],
+        ]);
 
         $response = $front->process($request);
 
-        $this->assertTrue(strpos($response->getBody(), 'test@test.com') !== false);
+        $this->assertTrue(
+            strpos($response->getBody(), "test@test.com") !== false,
+        );
 
-        $config->set('security.encrypt.http.fieldnames', false);
+        $config->set("security.encrypt.http.fieldnames", false);
     }
 
     /**
@@ -840,43 +1055,57 @@ class ControllerTest extends TestCase
     public function testAfterDisplayPageHead()
     {
         $config = ConfigProvider::getInstance();
-        $config->set('security.encrypt.http.fieldnames', true);
+        $config->set("security.encrypt.http.fieldnames", true);
 
         $viewState = ViewState::getInstance();
-        $viewState->set('renderAdminMenu', true);
+        $viewState->set("renderAdminMenu", true);
 
         $front = new FrontController();
 
-        $oldKey = $config->get('security.encryption.key');
-        $oldRewriteSetting = $config->get('app.use.pretty.urls');
+        $oldKey = $config->get("security.encryption.key");
+        $oldRewriteSetting = $config->get("app.use.pretty.urls");
 
-        $config->set('security.encryption.key', 'testkey12345678901234567');
-        $params = 'act=\Alpha\Controller\ListActiveRecordsController';
+        $config->set("security.encryption.key", "testkey12345678901234567");
+        $params = "act=\Alpha\Controller\ListActiveRecordsController";
 
-        $config->set('app.use.pretty.urls', true);
-        $this->assertEquals($config->get('app.url').'/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ==', FrontController::generateSecureURL($params), 'Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled');
+        $config->set("app.use.pretty.urls", true);
+        $this->assertEquals(
+            $config->get("app.url") .
+                "/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ==",
+            FrontController::generateSecureURL($params),
+            "Testing the generateSecureURL() returns the correct URL with mod_rewrite style URLs enabled",
+        );
 
         $group = new Rights();
-        $group->loadByAttribute('name', 'Admin');
+        $group->loadByAttribute("name", "Admin");
 
         $this->person->save();
 
-        $lookup = $this->person->getPropObject('rights')->getLookup();
-        $lookup->setValue(array($this->person->getID(), $group->getID()));
+        $lookup = $this->person->getPropObject("rights")->getLookup();
+        $lookup->setValue([$this->person->getID(), $group->getID()]);
         $lookup->save();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-        $session->set('currentUser', $this->person);
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
+        $session->set("currentUser", $this->person);
 
-        $request = new Request(array('method' => 'GET', 'URI' => '/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ=='));
+        $request = new Request([
+            "method" => "GET",
+            "URI" =>
+                "/tk/R2R6VkNLVFVaZE5Pc25Cdm8zQ0xuQjFZTVFzSS9nd1JkcUFFMER3ejNmeGpJWmZqeWp4SCsxYldEeXlFdVpIMVlMSmdxYTNLQmFrdy9wditRYklxMHc9PQ==",
+        ]);
 
         $response = $front->process($request);
 
-        $this->assertTrue(strpos($response->getBody(), 'navbar-expand-lg') !== false);
+        $this->assertTrue(
+            strpos($response->getBody(), "navbar-expand-lg") !== false,
+        );
 
-        $config->set('security.encryption.key', $oldKey);
-        $config->set('app.use.pretty.urls', $oldRewriteSetting);
-        $config->set('security.encrypt.http.fieldnames', false);
+        $config->set("security.encryption.key", $oldKey);
+        $config->set("app.use.pretty.urls", $oldRewriteSetting);
+        $config->set("security.encrypt.http.fieldnames", false);
     }
 }
