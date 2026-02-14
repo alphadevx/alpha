@@ -31,7 +31,7 @@
     "ext-mbstring": "*",
     "ext-sqlite3": "*",
     "ext-gd": "*",
-    "tecnickcom/tcpdf": "6.4.1",
+    "tecnickcom/tcpdf": "6.10.1",
     "michelf/php-markdown": "1.9.0",
     "geshi/geshi": "v1.0.9.1",
     "twbs/bootstrap": "v5.2.0",
