@@ -78,33 +78,39 @@ class ActiveRecordTest extends ModelTestCase
 
         $config = ConfigProvider::getInstance();
 
-        set_exception_handler('Alpha\Util\ErrorHandlers::catchException');
+        set_exception_handler("Alpha\Util\ErrorHandlers::catchException");
         //restore_exception_handler();
 
-        set_error_handler('Alpha\Util\ErrorHandlers::catchError', $config->get('php.error.log.level'));
+        set_error_handler(
+            "Alpha\Util\ErrorHandlers::catchError",
+            $config->get("php.error.log.level"),
+        );
         //restore_error_handler();
 
         foreach ($this->getActiveRecordProviders() as $provider) {
-            $config->set('db.provider.name', $provider[0]);
+            $config->set("db.provider.name", $provider[0]);
 
             $rights = new Rights();
             $rights->rebuildTable();
 
             $standardGroup = new Rights();
-            $standardGroup->set('name', 'Standard');
+            $standardGroup->set("name", "Standard");
             $standardGroup->save();
 
             $request = new BadRequest();
             $request->rebuildTable();
 
-            $this->person = $this->createPersonObject('unitTestUser');
+            $this->person = $this->createPersonObject("unitTestUser");
             $this->person->rebuildTable();
 
-            $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
+            $lookup = new RelationLookup(
+                "Alpha\Model\Person",
+                "Alpha\Model\Rights",
+            );
 
             // just making sure no previous test user is in the DB
-            $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/');
-            $this->person->deleteAllByAttribute('username', 'unitTestUser');
+            $this->person->deleteAllByAttribute("URL", "http://unitTestUser/");
+            $this->person->deleteAllByAttribute("username", "unitTestUser");
 
             $article = new Article();
             $article->rebuildTable();
@@ -136,17 +142,24 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testCreateForeignIndex(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $article = new Article();
 
-        $article->createForeignIndex('author', 'Alpha\Model\Person', 'username');
+        $article->createForeignIndex(
+            "author",
+            "Alpha\Model\Person",
+            "username",
+        );
 
-        $this->assertTrue(in_array('Article_author_fk_idx', $article->getIndexes(), true), 'Testing the createForeignIndex method');
+        $this->assertTrue(
+            in_array("Article_author_fk_idx", $article->getIndexes(), true),
+            "Testing the createForeignIndex method",
+        );
     }
 
     /**
@@ -154,32 +167,35 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testDefaultHouseKeepingValues(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
 
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-        $session->set('currentUser', $this->person);
+        $sessionProvider = $config->get("session.provider.name");
+        $session = ServiceFactory::getInstance(
+            $sessionProvider,
+            "Alpha\Util\Http\Session\SessionProviderInterface",
+        );
+        $session->set("currentUser", $this->person);
 
         $request = new BadRequest();
-        $request->set('IP', '127.0.0.1');
+        $request->set("IP", "127.0.0.1");
         $request->save();
 
         // make sure the person logged in is the same person to create/update the object
         $this->assertEquals(
-            $session->get('currentUser')->getID(),
+            $session->get("currentUser")->getID(),
             $request->getCreatorId()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes'
+            'test that the constructor sets the correct values of the "house keeping" attributes',
         );
         $this->assertEquals(
-            $session->get('currentUser')->getID(),
+            $session->get("currentUser")->getID(),
             $request->getUpdatorId()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes'
+            'test that the constructor sets the correct values of the "house keeping" attributes',
         );
 
         $request = new BadRequest();
@@ -188,24 +204,27 @@ class ActiveRecordTest extends ModelTestCase
         $this->assertEquals(
             0,
             $request->getVersionNumber()->getValue(),
-            'test that the constructor sets the correct values of the "house keeping" attributes'
+            'test that the constructor sets the correct values of the "house keeping" attributes',
         );
 
         // check that the date created and updated equal to today
-        $today = date('Y-m-d');
+        $today = date("Y-m-d");
         $this->assertEquals(
             $today,
             $request->getCreateTS()->getDate(),
-            'test that the constructor sets the correct values of the "house keeping" attributes'
+            'test that the constructor sets the correct values of the "house keeping" attributes',
         );
         $this->assertEquals(
             $today,
             $request->getUpdateTS()->getDate(),
-            'test that the constructor sets the correct values of the "house keeping" attributes'
+            'test that the constructor sets the correct values of the "house keeping" attributes',
         );
 
         // make sure the object is transient
-        $this->assertTrue($request->isTransient(), 'test that the constructor sets the correct values of the "house keeping" attributes');
+        $this->assertTrue(
+            $request->isTransient(),
+            'test that the constructor sets the correct values of the "house keeping" attributes',
+        );
     }
 
     /**
@@ -213,16 +232,20 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testBasicLoadSave(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
         $id = $this->person->getMAX();
         $this->person->load($id);
-        $this->assertEquals('unitTestUser', $this->person->getUsername()->getValue(), 'Testing the basic load/save functionality');
+        $this->assertEquals(
+            "unitTestUser",
+            $this->person->getUsername()->getValue(),
+            "Testing the basic load/save functionality",
+        );
     }
 
     /**
@@ -230,24 +253,39 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadCreatesMissingTable(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+        $this->assertTrue(
+            $this->person->checkTableExists(),
+            "Testing that load will create a table if it does not already exist",
+        );
         $this->person->dropTable();
-        $this->assertFalse($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+        $this->assertFalse(
+            $this->person->checkTableExists(),
+            "Testing that load will create a table if it does not already exist",
+        );
 
         try {
-            $this->person->load('123');
-            $this->fail('Testing that load will create a table if it does not already exist');
+            $this->person->load("123");
+            $this->fail(
+                "Testing that load will create a table if it does not already exist",
+            );
         } catch (RecordNotFoundException $e) {
-            $this->assertEquals('Failed to load object of ID [123], table [Person] did not exist so had to create!', $e->getMessage(), 'Testing that load will create a table if it does not already exist');
+            $this->assertEquals(
+                "Failed to load object of ID [123], table [Person] did not exist so had to create!",
+                $e->getMessage(),
+                "Testing that load will create a table if it does not already exist",
+            );
         }
 
-        $this->assertTrue($this->person->checkTableExists(), 'Testing that load will create a table if it does not already exist');
+        $this->assertTrue(
+            $this->person->checkTableExists(),
+            "Testing that load will create a table if it does not already exist",
+        );
     }
 
     /**
@@ -255,15 +293,18 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testCheckRecordExists(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
         $person = new Person();
-        $this->assertTrue($person->checkRecordExists($this->person->getID()), 'Testing the checkRecordExists method');
+        $this->assertTrue(
+            $person->checkRecordExists($this->person->getID()),
+            "Testing the checkRecordExists method",
+        );
     }
 
     /**
@@ -271,17 +312,25 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadByAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $this->person->loadByAttribute('username', 'unitTestUser');
-        $this->assertEquals('unitTestUser@test.com', $this->person->get('email'), 'Testing the loadByAttribute method');
-        $this->person->loadByAttribute('email', 'unitTestUser@test.com');
-        $this->assertEquals('unitTestUser', $this->person->getUsername()->getValue(), 'Testing the loadByAttribute method');
+        $this->person->loadByAttribute("username", "unitTestUser");
+        $this->assertEquals(
+            "unitTestUser@test.com",
+            $this->person->get("email"),
+            "Testing the loadByAttribute method",
+        );
+        $this->person->loadByAttribute("email", "unitTestUser@test.com");
+        $this->assertEquals(
+            "unitTestUser",
+            $this->person->getUsername()->getValue(),
+            "Testing the loadByAttribute method",
+        );
     }
 
     /**
@@ -289,28 +338,55 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAllOldVersions(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->setMaintainHistory(true);
         $this->person->rebuildTable();
 
-        $this->person->set('username', 'unitTestUser1');
+        $this->person->set("username", "unitTestUser1");
         $this->person->save();
 
-        $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getID())[0]->getUsername()->getValue());
+        $this->assertEquals(
+            1,
+            $this->person->getHistoryCount(),
+            "Testing loadAllOldVersions method",
+        );
+        $this->assertEquals(
+            "unitTestUser1",
+            $this->person
+                ->loadAllOldVersions($this->person->getID())[0]
+                ->getUsername()
+                ->getValue(),
+        );
 
-        $this->person->saveAttribute('username', 'unitTestUser2');
+        $this->person->saveAttribute("username", "unitTestUser2");
 
-        $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing loadAllOldVersions method');
-        $this->assertEquals('unitTestUser1', $this->person->loadAllOldVersions($this->person->getID())[0]->getUsername()->getValue());
-        $this->assertEquals('unitTestUser2', $this->person->loadAllOldVersions($this->person->getID())[1]->getUsername()->getValue());
+        $this->assertEquals(
+            2,
+            $this->person->getHistoryCount(),
+            "Testing loadAllOldVersions method",
+        );
 
-        $this->person->dropTable('Person_history');
+        $this->assertEquals(
+            "unitTestUser1",
+            $this->person
+                ->loadAllOldVersions($this->person->getID())[0]
+                ->getUsername()
+                ->getValue(),
+        );
+        $this->assertEquals(
+            "unitTestUser2",
+            $this->person
+                ->loadAllOldVersions($this->person->getID())[1]
+                ->getUsername()
+                ->getValue(),
+        );
+
+        $this->person->dropTable("Person_history");
     }
 
     /**
@@ -318,19 +394,23 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAll(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
         $peopleCount = $this->person->getCount();
         $people = $this->person->loadAll();
-        $this->assertEquals($peopleCount, count($people), 'Testing loadAll method');
+        $this->assertEquals(
+            $peopleCount,
+            count($people),
+            "Testing loadAll method",
+        );
         // only load 1
         $people = $this->person->loadAll(0, 1);
-        $this->assertEquals(1, count($people), 'Testing loadAll method');
+        $this->assertEquals(1, count($people), "Testing loadAll method");
     }
 
     /**
@@ -338,16 +418,27 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAllByAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $people = $this->person->loadAllByAttribute('email', 'unitTestUser@test.com');
-        $this->assertEquals(1, count($people), 'Testing the loadAllByAttribute method');
-        $this->assertEquals('unitTestUser', $people[0]->getUsername()->getValue(), 'Testing the loadAllByAttribute method');
+        $people = $this->person->loadAllByAttribute(
+            "email",
+            "unitTestUser@test.com",
+        );
+        $this->assertEquals(
+            1,
+            count($people),
+            "Testing the loadAllByAttribute method",
+        );
+        $this->assertEquals(
+            "unitTestUser",
+            $people[0]->getUsername()->getValue(),
+            "Testing the loadAllByAttribute method",
+        );
         $people[0]->delete();
     }
 
@@ -356,16 +447,27 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAllByAttributes(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $people = $this->person->loadAllByAttributes(array('ID'), array($this->person->getID()));
-        $this->assertEquals(1, count($people), 'Testing the loadAllByAttribute method');
-        $this->assertEquals('unitTestUser', $people[0]->getUsername()->getValue(), 'Testing the loadAllByAttributes method');
+        $people = $this->person->loadAllByAttributes(
+            ["ID"],
+            [$this->person->getID()],
+        );
+        $this->assertEquals(
+            1,
+            count($people),
+            "Testing the loadAllByAttribute method",
+        );
+        $this->assertEquals(
+            "unitTestUser",
+            $people[0]->getUsername()->getValue(),
+            "Testing the loadAllByAttributes method",
+        );
         $people[0]->delete();
     }
 
@@ -374,15 +476,19 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAllByDayUpdated(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $people = $this->person->loadAllByDayUpdated(date('Y-m-d'));
-        $this->assertGreaterThan(0, count($people), 'Testing the loadAllByDayUpdated method');
+        $people = $this->person->loadAllByDayUpdated(date("Y-m-d"));
+        $this->assertGreaterThan(
+            0,
+            count($people),
+            "Testing the loadAllByDayUpdated method",
+        );
         $people[0]->delete();
     }
 
@@ -391,15 +497,23 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadAllFieldValuesByAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $emails = $this->person->loadAllFieldValuesByAttribute('email', $this->person->get('email'), 'email');
-        $this->assertEquals($this->person->get('email'), $emails[0], 'Testing the loadAllFieldValuesByAttribute method');
+        $emails = $this->person->loadAllFieldValuesByAttribute(
+            "email",
+            $this->person->get("email"),
+            "email",
+        );
+        $this->assertEquals(
+            $this->person->get("email"),
+            $emails[0],
+            "Testing the loadAllFieldValuesByAttribute method",
+        );
     }
 
     /**
@@ -407,19 +521,33 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveTransientOrPersistent(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue($this->person->isTransient(), 'Testing the save method on transient and non-transient objects');
-        $this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 'Testing the save method on transient and non-transient objects');
+        $this->assertTrue(
+            $this->person->isTransient(),
+            "Testing the save method on transient and non-transient objects",
+        );
+        $this->assertEquals(
+            0,
+            $this->person->getVersionNumber()->getValue(),
+            "Testing the save method on transient and non-transient objects",
+        );
 
         $this->person->save();
 
-        $this->assertFalse($this->person->isTransient(), 'Testing the save method on transient and non-transient objects');
-        $this->assertEquals(1, $this->person->getVersionNumber()->getValue(), 'Testing the save method on transient and non-transient objects');
+        $this->assertFalse(
+            $this->person->isTransient(),
+            "Testing the save method on transient and non-transient objects",
+        );
+        $this->assertEquals(
+            1,
+            $this->person->getVersionNumber()->getValue(),
+            "Testing the save method on transient and non-transient objects",
+        );
     }
 
     /**
@@ -427,16 +555,26 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveTransientID(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an ID');
+        $this->assertTrue(
+            $this->person->isTransient(),
+            "Testing to ensure that a transient object, once saved, will have an ID",
+        );
         $this->person->save();
-        $this->assertGreaterThan(0, $this->person->getID(), 'Testing to ensure that a transient object, once saved, will have an ID');
-        $this->assertFalse($this->person->isTransient(), 'Testing to ensure that a transient object, once saved, will have an ID');
+        $this->assertGreaterThan(
+            0,
+            $this->person->getID(),
+            "Testing to ensure that a transient object, once saved, will have an ID",
+        );
+        $this->assertFalse(
+            $this->person->isTransient(),
+            "Testing to ensure that a transient object, once saved, will have an ID",
+        );
     }
 
     /**
@@ -444,11 +582,11 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveObjectLocking(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         try {
             $this->person->save();
@@ -460,12 +598,12 @@ class ActiveRecordTest extends ModelTestCase
 
             $personInstance1->save();
             $personInstance2->save();
-            $this->fail('Testing optimistic locking mechanism');
+            $this->fail("Testing optimistic locking mechanism");
         } catch (LockingException $e) {
             $this->assertEquals(
-                'Could not save the object as it has been updated by another user.  Please try saving again.',
+                "Could not save the object as it has been updated by another user.  Please try saving again.",
                 $e->getMessage(),
-                'Testing optimistic locking mechanism'
+                "Testing optimistic locking mechanism",
             );
         }
     }
@@ -475,21 +613,21 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testValidation(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         try {
             $person = new Person();
             $person->save();
-            $this->fail('Testing the validation method');
+            $this->fail("Testing the validation method");
         } catch (ValidationException $e) {
             $this->assertEquals(
-                'Failed to save, validation error is:',
+                "Failed to save, validation error is:",
                 mb_substr($e->getMessage(), 0, 36),
-                'Testing the validation method'
+                "Testing the validation method",
             );
         }
     }
@@ -499,28 +637,35 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testDelete(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $this->assertFalse($this->person->isTransient(), 'Testing the delete method');
+        $this->assertFalse(
+            $this->person->isTransient(),
+            "Testing the delete method",
+        );
         $id = $this->person->getID();
         $this->person->delete();
         // gone from memory (all attributes null)
-        $this->assertEquals(0, count(get_object_vars($this->person)), 'Testing the delete method');
+        $this->assertEquals(
+            0,
+            count(get_object_vars($this->person)),
+            "Testing the delete method",
+        );
         // gone from the database
         try {
             $this->person = new Person();
             $this->person->load($id);
-            $this->fail('Testing the delete method');
+            $this->fail("Testing the delete method");
         } catch (RecordNotFoundException $e) {
             $this->assertEquals(
-                'Failed to load object',
+                "Failed to load object",
                 mb_substr($e->getMessage(), 0, 21),
-                'Testing the delete method'
+                "Testing the delete method",
             );
         }
     }
@@ -530,61 +675,80 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testDeleteRelatedTags(string $provider)
     {
         $article = new Article();
         $tag = new Tag();
-        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+        $this->assertEquals(
+            0,
+            $tag->getCount(),
+            "Testing the delete method also removes Tags related to the deleted record.",
+        );
 
-        $article->set('title', 'Unit test');
-        $article->set('description', 'Unit test');
-        $article->set('author', 'Unit test');
-        $article->set('content', 'jupiter neptune venus');
+        $article->set("title", "Unit test");
+        $article->set("description", "Unit test");
+        $article->set("author", "Unit test");
+        $article->set("content", "jupiter neptune venus");
         $article->save();
 
-        $this->assertEquals(3, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+        $this->assertEquals(
+            3,
+            $tag->getCount(),
+            "Testing the delete method also removes Tags related to the deleted record.",
+        );
 
         $article->delete();
 
-        $this->assertEquals(0, $article->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
-        $this->assertEquals(0, $tag->getCount(), 'Testing the delete method also removes Tags related to the deleted record.');
+        $this->assertEquals(
+            0,
+            $article->getCount(),
+            "Testing the delete method also removes Tags related to the deleted record.",
+        );
+        $this->assertEquals(
+            0,
+            $tag->getCount(),
+            "Testing the delete method also removes Tags related to the deleted record.",
+        );
     }
-
 
     /**
      * Testing the deleteAllByAttribute method.
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testDeleteAllByAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $person1 = new Person();
-        $person1->setUsername('unitTestUser1');
-        $person1->set('email', 'unitTestUser1@test.com');
-        $person1->set('password', 'passwordTest');
-        $person1->set('URL', 'http://unitTestUser/');
+        $person1->setUsername("unitTestUser1");
+        $person1->set("email", "unitTestUser1@test.com");
+        $person1->set("password", "passwordTest");
+        $person1->set("URL", "http://unitTestUser/");
 
         $person2 = new Person();
-        $person2->setUsername('unitTestUser2');
-        $person2->set('email', 'unitTestUser2@test.com');
-        $person2->set('password', 'passwordTest');
-        $person2->set('URL', 'http://unitTestUser/');
+        $person2->setUsername("unitTestUser2");
+        $person2->set("email", "unitTestUser2@test.com");
+        $person2->set("password", "passwordTest");
+        $person2->set("URL", "http://unitTestUser/");
 
         $person3 = new Person();
-        $person3->setUsername('unitTestUser3');
-        $person3->set('email', 'unitTestUser3@test.com');
-        $person3->set('password', 'passwordTest');
-        $person3->set('URL', 'http://unitTestUser/');
+        $person3->setUsername("unitTestUser3");
+        $person3->set("email", "unitTestUser3@test.com");
+        $person3->set("password", "passwordTest");
+        $person3->set("URL", "http://unitTestUser/");
 
         $person1->save();
         $person2->save();
         $person3->save();
-        $this->assertEquals(3, $this->person->deleteAllByAttribute('URL', 'http://unitTestUser/'), 'Testing the deleteAllByAttribute method');
+        $this->assertEquals(
+            3,
+            $this->person->deleteAllByAttribute("URL", "http://unitTestUser/"),
+            "Testing the deleteAllByAttribute method",
+        );
     }
 
     /**
@@ -592,20 +756,44 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetVersion(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertEquals(0, $this->person->getVersion(), 'Testing the version numbers of business objects');
-        $this->assertEquals(0, $this->person->getVersionNumber()->getValue(), 'Testing the version numbers of business objects');
+        $this->assertEquals(
+            0,
+            $this->person->getVersion(),
+            "Testing the version numbers of business objects",
+        );
+        $this->assertEquals(
+            0,
+            $this->person->getVersionNumber()->getValue(),
+            "Testing the version numbers of business objects",
+        );
         $this->person->save();
-        $this->assertEquals(1, $this->person->getVersion(), 'Testing the version numbers of business objects');
-        $this->assertEquals(1, $this->person->getVersionNumber()->getValue(), 'Testing the version numbers of business objects');
+        $this->assertEquals(
+            1,
+            $this->person->getVersion(),
+            "Testing the version numbers of business objects",
+        );
+        $this->assertEquals(
+            1,
+            $this->person->getVersionNumber()->getValue(),
+            "Testing the version numbers of business objects",
+        );
         $this->person->save();
-        $this->assertEquals(2, $this->person->getVersion(), 'Testing the version numbers of business objects');
-        $this->assertEquals(2, $this->person->getVersionNumber()->getValue(), 'Testing the version numbers of business objects');
+        $this->assertEquals(
+            2,
+            $this->person->getVersion(),
+            "Testing the version numbers of business objects",
+        );
+        $this->assertEquals(
+            2,
+            $this->person->getVersionNumber()->getValue(),
+            "Testing the version numbers of business objects",
+        );
     }
 
     /**
@@ -613,17 +801,21 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetMAX(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
         $max = $this->person->getMAX();
-        $person2 = $this->createPersonObject('unitTestUser2');
+        $person2 = $this->createPersonObject("unitTestUser2");
         $person2->save();
-        $this->assertEquals($max + 1, $this->person->getMAX(), 'Testing the getMAX method');
+        $this->assertEquals(
+            $max + 1,
+            $this->person->getMAX(),
+            "Testing the getMAX method",
+        );
     }
 
     /**
@@ -631,15 +823,19 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetCount(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $count = $this->person->getCount();
         $this->person->save();
-        $this->assertEquals($count + 1, $this->person->getCount(), 'Testing the getCount method');
+        $this->assertEquals(
+            $count + 1,
+            $this->person->getCount(),
+            "Testing the getCount method",
+        );
     }
 
     /**
@@ -647,18 +843,22 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSetEnumOptions(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
         $id = $this->person->getMAX();
         $this->person->load($id);
         $this->assertTrue(
-            in_array('Active', $this->person->getPropObject('state')->getOptions(), true),
-            'Testing the setEnumOptions method is loading enum options correctly'
+            in_array(
+                "Active",
+                $this->person->getPropObject("state")->getOptions(),
+                true,
+            ),
+            "Testing the setEnumOptions method is loading enum options correctly",
         );
     }
 
@@ -667,13 +867,16 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testCheckTableExists(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue($this->person->checkTableExists(), 'Testing that checkTableExists returns true for the person BO');
+        $this->assertTrue(
+            $this->person->checkTableExists(),
+            "Testing that checkTableExists returns true for the person BO",
+        );
     }
 
     /**
@@ -681,13 +884,16 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testCheckTableNeedsUpdate(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertFalse($this->person->checkTableNeedsUpdate(), 'Testing that checkTableNeedsUpdate returns false for the person BO');
+        $this->assertFalse(
+            $this->person->checkTableNeedsUpdate(),
+            "Testing that checkTableNeedsUpdate returns false for the person BO",
+        );
     }
 
     /**
@@ -695,16 +901,16 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetTableName(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->assertEquals(
-            'Person',
+            "Person",
             $this->person->getTableName(),
-            'Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class'
+            "Testing to ensure that the getTableName method can read the TABLE_NAME constant declared in the child class",
         );
     }
 
@@ -713,13 +919,17 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetDataLabel(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertEquals('E-mail Address', $this->person->getDataLabel('email'), 'Testing the getDataLabel method');
+        $this->assertEquals(
+            "E-mail Address",
+            $this->person->getDataLabel("email"),
+            "Testing the getDataLabel method",
+        );
     }
 
     /**
@@ -727,15 +937,19 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetNoChildMethod(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $email = $this->person->get('email');
+        $email = $this->person->get("email");
 
-        $this->assertEquals('unitTestUser@test.com', $email, 'Testing get on a String attribute with no child get method available');
+        $this->assertEquals(
+            "unitTestUser@test.com",
+            $email,
+            "Testing get on a String attribute with no child get method available",
+        );
     }
 
     /**
@@ -743,23 +957,23 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetNoChildMethodsDisabled(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $state = $this->person->getPropObject('state');
+        $state = $this->person->getPropObject("state");
 
         $this->assertEquals(
-            'Alpha\Model\Type\Enum',
+            "Alpha\Model\Type\Enum",
             get_class($state),
-            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)',
         );
         $this->assertEquals(
-            'Active',
+            "Active",
             $state->getValue(),
-            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)',
         );
     }
 
@@ -768,15 +982,19 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetNoChildMethodsEnabled(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $state = $this->person->get('state', true);
+        $state = $this->person->get("state", true);
 
-        $this->assertEquals('Active', $state, 'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods enabled');
+        $this->assertEquals(
+            "Active",
+            $state,
+            'Testing get on an Enum attribute with a child method avaialble, with $noChildMethods enabled',
+        );
     }
 
     /**
@@ -784,15 +1002,18 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetSimpleType(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $labels = $this->person->get('dataLabels');
+        $labels = $this->person->get("dataLabels");
 
-        $this->assertTrue(is_array($labels), 'Testing get on a simple data type');
+        $this->assertTrue(
+            is_array($labels),
+            "Testing get on a simple data type",
+        );
     }
 
     /**
@@ -802,9 +1023,13 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testSetNoChildMethod()
     {
-        $this->person->set('email', 'test@test.com');
+        $this->person->set("email", "test@test.com");
 
-        $this->assertEquals('test@test.com', $this->person->get('email'), 'Testing set on a String attribute with no child get method available');
+        $this->assertEquals(
+            "test@test.com",
+            $this->person->get("email"),
+            "Testing set on a String attribute with no child get method available",
+        );
     }
 
     /**
@@ -814,12 +1039,12 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testSetNoChildMethodsDisabled()
     {
-        $this->person->set('state', 'Active');
+        $this->person->set("state", "Active");
 
         $this->assertEquals(
-            'Active',
-            $this->person->get('state'),
-            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)'
+            "Active",
+            $this->person->get("state"),
+            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods disabled (default)',
         );
     }
 
@@ -830,12 +1055,12 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testSetNoChildMethodsEnabled()
     {
-        $this->person->set('state', 'Active', true);
+        $this->person->set("state", "Active", true);
 
         $this->assertEquals(
-            'Active',
-            $this->person->get('state'),
-            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled'
+            "Active",
+            $this->person->get("state"),
+            'Testing set on an Enum attribute with a child method avaialble, with $noChildMethods enabled',
         );
     }
 
@@ -846,12 +1071,19 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testSetSimpleType()
     {
-        $this->person->set('dataLabels', array('key' => 'value'));
+        $this->person->set("dataLabels", ["key" => "value"]);
 
-        $labels = $this->person->get('dataLabels');
+        $labels = $this->person->get("dataLabels");
 
-        $this->assertTrue(is_array($labels), 'Testing set on a simple data type');
-        $this->assertEquals('value', $labels['key'], 'Testing set on a simple data type');
+        $this->assertTrue(
+            is_array($labels),
+            "Testing set on a simple data type",
+        );
+        $this->assertEquals(
+            "value",
+            $labels["key"],
+            "Testing set on a simple data type",
+        );
     }
 
     /**
@@ -861,10 +1093,18 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testGetPropObjectComplexType()
     {
-        $state = $this->person->getPropObject('state');
+        $state = $this->person->getPropObject("state");
 
-        $this->assertEquals('Alpha\Model\Type\Enum', get_class($state), 'Testing getPropObject on a complex type');
-        $this->assertEquals('Active', $state->getValue(), 'Testing getPropObject on a complex type');
+        $this->assertEquals(
+            "Alpha\Model\Type\Enum",
+            get_class($state),
+            "Testing getPropObject on a complex type",
+        );
+        $this->assertEquals(
+            "Active",
+            $state->getValue(),
+            "Testing getPropObject on a complex type",
+        );
     }
 
     /**
@@ -874,10 +1114,17 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testGetPropObjectSimpleType()
     {
-        $labels = $this->person->getPropObject('dataLabels');
+        $labels = $this->person->getPropObject("dataLabels");
 
-        $this->assertTrue(is_array($labels), 'Testing getPropObject on a simple type');
-        $this->assertEquals('E-mail Address', $labels['email'], 'Testing getPropObject on a simple type');
+        $this->assertTrue(
+            is_array($labels),
+            "Testing getPropObject on a simple type",
+        );
+        $this->assertEquals(
+            "E-mail Address",
+            $labels["email"],
+            "Testing getPropObject on a simple type",
+        );
     }
 
     /**
@@ -885,28 +1132,38 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testMarkTransientPersistent(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         // initial save
         $this->person->save();
 
         // now mark the URL transient, and save again (old URL value should not be overwritten)
-        $this->person->markTransient('URL');
-        $this->assertTrue(in_array('URL', $this->person->getTransientAttributes(), true), 'Testing that markTransient and markPersistent methods');
-        $this->person->set('URL', 'http://www.alphaframework.org/');
+        $this->person->markTransient("URL");
+        $this->assertTrue(
+            in_array("URL", $this->person->getTransientAttributes(), true),
+            "Testing that markTransient and markPersistent methods",
+        );
+        $this->person->set("URL", "http://www.alphaframework.org/");
         $this->person->save();
 
         // used to ensure that we attempt to reload it from the DB
-        $this->person->markPersistent('URL');
-        $this->assertFalse(in_array('URL', $this->person->getTransientAttributes(), true), 'Testing that markTransient and markPersistent methods');
+        $this->person->markPersistent("URL");
+        $this->assertFalse(
+            in_array("URL", $this->person->getTransientAttributes(), true),
+            "Testing that markTransient and markPersistent methods",
+        );
         // reload from DB
         $this->person->reload();
 
-        $this->assertEquals('http://unitTestUser/', $this->person->get('URL'), 'Testing that markTransient and markPersistent methods');
+        $this->assertEquals(
+            "http://unitTestUser/",
+            $this->person->get("URL"),
+            "Testing that markTransient and markPersistent methods",
+        );
     }
 
     /**
@@ -916,10 +1173,19 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testGetDataLabels()
     {
-        $this->assertTrue(is_array($this->person->getDataLabels()), 'Testing the getDataLabels method');
+        $this->assertTrue(
+            is_array($this->person->getDataLabels()),
+            "Testing the getDataLabels method",
+        );
         $labels = $this->person->getDataLabels();
-        $this->assertTrue(in_array('ID', array_keys($labels), true), 'Testing the getDataLabels method');
-        $this->assertTrue(in_array('E-mail Address', $labels, true), 'Testing the getDataLabels method');
+        $this->assertTrue(
+            in_array("ID", array_keys($labels), true),
+            "Testing the getDataLabels method",
+        );
+        $this->assertTrue(
+            in_array("E-mail Address", $labels, true),
+            "Testing the getDataLabels method",
+        );
     }
 
     /**
@@ -931,17 +1197,17 @@ class ActiveRecordTest extends ModelTestCase
     {
         $this->assertTrue(
             is_array($this->person->getTransientAttributes()),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+            "Testing the getTransientAttributes method in conjunction with markTransient/markPersistent",
         );
-        $this->person->markTransient('URL');
+        $this->person->markTransient("URL");
         $this->assertTrue(
-            in_array('URL', $this->person->getTransientAttributes(), true),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+            in_array("URL", $this->person->getTransientAttributes(), true),
+            "Testing the getTransientAttributes method in conjunction with markTransient/markPersistent",
         );
-        $this->person->markPersistent('URL');
+        $this->person->markPersistent("URL");
         $this->assertFalse(
-            in_array('URL', $this->person->getTransientAttributes(), true),
-            'Testing the getTransientAttributes method in conjunction with markTransient/markPersistent'
+            in_array("URL", $this->person->getTransientAttributes(), true),
+            "Testing the getTransientAttributes method in conjunction with markTransient/markPersistent",
         );
     }
 
@@ -950,15 +1216,21 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testIsTransient(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue($this->person->isTransient(), 'Testing isTransient before and after save');
+        $this->assertTrue(
+            $this->person->isTransient(),
+            "Testing isTransient before and after save",
+        );
         $this->person->save();
-        $this->assertFalse($this->person->isTransient(), 'Testing isTransient before and after save');
+        $this->assertFalse(
+            $this->person->isTransient(),
+            "Testing isTransient before and after save",
+        );
     }
 
     /**
@@ -966,75 +1238,81 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testGetLastQuery(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
 
-        if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
+        if (
+            $config->get("db.provider.name") ==
+            "Alpha\Model\ActiveRecordProviderMySQL"
+        ) {
             $this->assertEquals(
-                'INSERT INTO Person',
+                "INSERT INTO Person",
                 mb_substr($this->person->getLastQuery(), 0, 18),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->checkTableNeedsUpdate();
             $this->assertEquals(
-                'SHOW INDEX FROM Person',
+                "SHOW INDEX FROM Person",
                 mb_substr($this->person->getLastQuery(), 0, 22),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->getCount();
             $this->assertEquals(
-                'SELECT COUNT(ID)',
+                "SELECT COUNT(ID)",
                 mb_substr($this->person->getLastQuery(), 0, 16),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->getMAX();
             $this->assertEquals(
-                'SELECT MAX(ID)',
+                "SELECT MAX(ID)",
                 mb_substr($this->person->getLastQuery(), 0, 14),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->load($this->person->getID());
             $this->assertEquals(
                 'SHOW COLUMNS FROM Person LIKE \'state\'',
                 $this->person->getLastQuery(),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
         }
 
-        if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderSQLite') {
+        if (
+            $config->get("db.provider.name") ==
+            "Alpha\Model\ActiveRecordProviderSQLite"
+        ) {
             $this->assertEquals(
-                'PRAGMA table_info(Person)',
+                "PRAGMA table_info(Person)",
                 mb_substr($this->person->getLastQuery(), 0, 25),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->checkTableNeedsUpdate();
             $this->assertEquals(
-                'PRAGMA foreign_key_list(Person)',
+                "PRAGMA foreign_key_list(Person)",
                 mb_substr($this->person->getLastQuery(), 0, 49),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->getCount();
             $this->assertEquals(
-                'SELECT COUNT(ID)',
+                "SELECT COUNT(ID)",
                 mb_substr($this->person->getLastQuery(), 0, 16),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->getMAX();
             $this->assertEquals(
-                'SELECT MAX(ID)',
+                "SELECT MAX(ID)",
                 mb_substr($this->person->getLastQuery(), 0, 14),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
             $this->person->load($this->person->getID());
             $this->assertEquals(
-                'SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;',
+                "SELECT username,email,password,state,URL,ID,version_num,created_ts,created_by,updated_ts,updated_by FROM Person WHERE ID = :ID LIMIT 1;",
                 $this->person->getLastQuery(),
-                'Testing the getLastQuery method after various persistance calls'
+                "Testing the getLastQuery method after various persistance calls",
             );
         }
     }
@@ -1044,22 +1322,39 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testClear(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $state = $this->person->get('state');
-        $this->assertTrue(!empty($state), 'Testing the clear method for unsetting the attributes of an object');
+        $state = $this->person->get("state");
+        $this->assertTrue(
+            !empty($state),
+            "Testing the clear method for unsetting the attributes of an object",
+        );
 
         $reflection = new \ReflectionClass(get_class($this->person));
         $properties = $reflection->getProperties();
 
         foreach ($properties as $propObj) {
             $propName = $propObj->name;
-            if (!in_array($propName, $this->person->getDefaultAttributes(), true) && !in_array($propName, $this->person->getTransientAttributes(), true)) {
-                $this->assertNotNull($this->person->get($propName), 'Testing the clear method for unsetting the attributes of an object');
+            if (
+                !in_array(
+                    $propName,
+                    $this->person->getDefaultAttributes(),
+                    true,
+                ) &&
+                !in_array(
+                    $propName,
+                    $this->person->getTransientAttributes(),
+                    true,
+                )
+            ) {
+                $this->assertNotNull(
+                    $this->person->get($propName),
+                    "Testing the clear method for unsetting the attributes of an object",
+                );
             }
         }
 
@@ -1067,8 +1362,10 @@ class ActiveRecordTest extends ModelTestCase
         $this->person->delete();
 
         try {
-            $state = $this->person->get('state');
-            $this->fail('Testing the clear method for unsetting the attributes of an object');
+            $state = $this->person->get("state");
+            $this->fail(
+                "Testing the clear method for unsetting the attributes of an object",
+            );
         } catch (AlphaException $e) {
             $reflection = new \ReflectionClass(get_class($this->person));
             $properties = $reflection->getProperties();
@@ -1080,15 +1377,17 @@ class ActiveRecordTest extends ModelTestCase
                     $this->person->get($propName);
                 } catch (PHPException $e) {
                     $this->assertEquals(
-                        preg_match('/Undefined property/', $e->getMessage()),
+                        preg_match("/Undefined property/", $e->getMessage()),
                         1,
-                        'Testing the clear method for unsetting the attributes of an object'
+                        "Testing the clear method for unsetting the attributes of an object",
                     );
                 } catch (AlphaException $e) {
                     $this->assertEquals(
-                        'Could not access the property ['.$propName.'] on the object of class [Alpha\Model\Person]',
+                        "Could not access the property [" .
+                            $propName .
+                            "] on the object of class [Alpha\Model\Person]",
                         $e->getMessage(),
-                        'Testing the clear method for unsetting the attributes of an object'
+                        "Testing the clear method for unsetting the attributes of an object",
                     );
                 }
             }
@@ -1100,41 +1399,55 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveAttribute(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
-        $this->person->saveAttribute('username', 'unitTestUserNew');
+        $this->person->saveAttribute("username", "unitTestUserNew");
 
         $this->assertEquals(
-            'unitTestUserNew',
+            "unitTestUserNew",
             $this->person->getUsername()->getValue(),
-            'Testing that the value was set on the object in memory along with saving to the database'
+            "Testing that the value was set on the object in memory along with saving to the database",
         );
 
         $person = new Person();
 
         try {
-            $person->loadByAttribute('username', 'unitTestUserNew');
-            $this->assertEquals('unitTestUserNew', $person->getUsername()->getValue(), 'Testing that the value was saved to the database');
+            $person->loadByAttribute("username", "unitTestUserNew");
+            $this->assertEquals(
+                "unitTestUserNew",
+                $person->getUsername()->getValue(),
+                "Testing that the value was saved to the database",
+            );
         } catch (RecordNotFoundException $e) {
-            $this->fail('Failed to load the BO that was updated with the saveAttribute method');
+            $this->fail(
+                "Failed to load the BO that was updated with the saveAttribute method",
+            );
         }
 
-        $oldTimestamp = $person->get('updated_ts');
+        $oldTimestamp = $person->get("updated_ts");
 
         sleep(1);
 
-        $person->saveAttribute('username', 'unitTestUserNew');
+        $person->saveAttribute("username", "unitTestUserNew");
 
-        $this->assertNotEquals($oldTimestamp, $person->get('updated_ts'), 'Testing that updated_ts changed');
+        $this->assertNotEquals(
+            $oldTimestamp,
+            $person->get("updated_ts"),
+            "Testing that updated_ts changed",
+        );
 
         $person->reload();
 
-        $this->assertNotEquals($oldTimestamp, $person->get('updated_ts'), 'Testing that updated_ts changed');
+        $this->assertNotEquals(
+            $oldTimestamp,
+            $person->get("updated_ts"),
+            "Testing that updated_ts changed",
+        );
     }
 
     /**
@@ -1142,18 +1455,21 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testHistoryTableCreated(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->setMaintainHistory(true);
         $this->person->rebuildTable(); // this should result in the _history table being created
 
-        $this->assertTrue($this->person->checkTableExists(true), 'Testing to ensure that a history table was created automatically');
+        $this->assertTrue(
+            $this->person->checkTableExists(true),
+            "Testing to ensure that a history table was created automatically",
+        );
 
-        $this->person->dropTable('Person_history');
+        $this->person->dropTable("Person_history");
     }
 
     /**
@@ -1161,24 +1477,32 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveHistory(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->setMaintainHistory(true);
         $this->person->rebuildTable(); // this should result in the _history table being created
 
-        $this->person->set('password', 'passwordhist1');
+        $this->person->set("password", "passwordhist1");
         $this->person->save();
 
-        $this->assertEquals(1, $this->person->getHistoryCount(), 'Testing that a normal save is propegated to the history table for this class');
-        $this->person->saveAttribute('password', 'passwordhist2');
+        $this->assertEquals(
+            1,
+            $this->person->getHistoryCount(),
+            "Testing that a normal save is propegated to the history table for this class",
+        );
+        $this->person->saveAttribute("password", "passwordhist2");
 
-        $this->assertEquals(2, $this->person->getHistoryCount(), 'Testing that an attribute save is propegated to the history table for this class');
+        $this->assertEquals(
+            2,
+            $this->person->getHistoryCount(),
+            "Testing that an attribute save is propegated to the history table for this class",
+        );
 
-        $this->person->dropTable('Person_history');
+        $this->person->dropTable("Person_history");
     }
 
     /**
@@ -1188,8 +1512,14 @@ class ActiveRecordTest extends ModelTestCase
      */
     public function testHasAttribute()
     {
-        $this->assertTrue($this->person->hasAttribute('password'), 'testing the hasAttribute method for true');
-        $this->assertFalse($this->person->hasAttribute('doesnotexist'), 'testing the hasAttribute method for false');
+        $this->assertTrue(
+            $this->person->hasAttribute("password"),
+            "testing the hasAttribute method for true",
+        );
+        $this->assertFalse(
+            $this->person->hasAttribute("doesnotexist"),
+            "testing the hasAttribute method for false",
+        );
     }
 
     /**
@@ -1201,19 +1531,29 @@ class ActiveRecordTest extends ModelTestCase
     {
         $config = ConfigProvider::getInstance();
 
-        $oldSetting = $config->get('cache.provider.name');
-        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+        $oldSetting = $config->get("cache.provider.name");
+        $config->set(
+            "cache.provider.name",
+            "Alpha\Util\Cache\CacheProviderArray",
+        );
 
-        $this->person->setID('123');
+        $this->person->setID("123");
         $this->person->addToCache();
 
         $fromCache = new Person();
         $fromCache->setID($this->person->getID());
 
-        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
-        $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that you can add a DAO directly to the cache without saving');
+        $this->assertTrue(
+            $fromCache->loadFromCache(),
+            "testing that the item loads from the cache",
+        );
+        $this->assertEquals(
+            "unitTestUser",
+            $fromCache->get("username", true),
+            "testing that you can add a DAO directly to the cache without saving",
+        );
 
-        $config->set('cache.provider.name', $oldSetting);
+        $config->set("cache.provider.name", $oldSetting);
     }
 
     /**
@@ -1221,24 +1561,34 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testLoadFromCache(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $oldSetting = $config->get('cache.provider.name');
-        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+        $oldSetting = $config->get("cache.provider.name");
+        $config->set(
+            "cache.provider.name",
+            "Alpha\Util\Cache\CacheProviderArray",
+        );
 
         $this->person->save();
 
         $fromCache = new Person();
         $fromCache->setID($this->person->getID());
 
-        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
-        $this->assertEquals('unitTestUser', $fromCache->get('username', true), 'testing that a saved record is subsequently retrievable from the cache');
+        $this->assertTrue(
+            $fromCache->loadFromCache(),
+            "testing that the item loads from the cache",
+        );
+        $this->assertEquals(
+            "unitTestUser",
+            $fromCache->get("username", true),
+            "testing that a saved record is subsequently retrievable from the cache",
+        );
 
-        $config->set('cache.provider.name', $oldSetting);
+        $config->set("cache.provider.name", $oldSetting);
     }
 
     /**
@@ -1246,27 +1596,36 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testRemoveFromCache(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $oldSetting = $config->get('cache.provider.name');
-        $config->set('cache.provider.name', 'Alpha\Util\Cache\CacheProviderArray');
+        $oldSetting = $config->get("cache.provider.name");
+        $config->set(
+            "cache.provider.name",
+            "Alpha\Util\Cache\CacheProviderArray",
+        );
 
         $this->person->save();
 
         $fromCache = new Person();
         $fromCache->setID($this->person->getID());
 
-        $this->assertTrue($fromCache->loadFromCache(), 'testing that the item loads from the cache');
+        $this->assertTrue(
+            $fromCache->loadFromCache(),
+            "testing that the item loads from the cache",
+        );
 
         $fromCache->removeFromCache();
 
-        $this->assertFalse($fromCache->loadFromCache(), 'testing that the item is gone from the cache');
+        $this->assertFalse(
+            $fromCache->loadFromCache(),
+            "testing that the item is gone from the cache",
+        );
 
-        $config->set('cache.provider.name', $oldSetting);
+        $config->set("cache.provider.name", $oldSetting);
     }
 
     /**
@@ -1280,9 +1639,21 @@ class ActiveRecordTest extends ModelTestCase
         $article = new Article();
         $comment = new ArticleComment();
 
-        $this->assertEquals('Person', $person->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
-        $this->assertEquals('Article', $article->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
-        $this->assertEquals('ArticleComment', $comment->getFriendlyClassName(), 'testing the getFriendlyClassName() method');
+        $this->assertEquals(
+            "Person",
+            $person->getFriendlyClassName(),
+            "testing the getFriendlyClassName() method",
+        );
+        $this->assertEquals(
+            "Article",
+            $article->getFriendlyClassName(),
+            "testing the getFriendlyClassName() method",
+        );
+        $this->assertEquals(
+            "ArticleComment",
+            $comment->getFriendlyClassName(),
+            "testing the getFriendlyClassName() method",
+        );
     }
 
     /**
@@ -1293,12 +1664,22 @@ class ActiveRecordTest extends ModelTestCase
     public function testCast()
     {
         $original = new BadRequest();
-        $original->set('IP', '127.0.0.1');
-        $copy = $original->cast('Alpha\Model\BlacklistedIP', $original);
+        $original->set("IP", "127.0.0.1");
+        $copy = $original->cast("Alpha\Model\BlacklistedIP", $original);
 
-        $this->assertTrue($copy instanceof BlacklistedIP, 'testing the cast() method');
-        $this->assertTrue($copy->hasAttribute('IP'), 'testing the cast() method');
-        $this->assertEquals($original->get('IP'), $copy->get('IP'), 'testing the cast() method');
+        $this->assertTrue(
+            $copy instanceof BlacklistedIP,
+            "testing the cast() method",
+        );
+        $this->assertTrue(
+            $copy->hasAttribute("IP"),
+            "testing the cast() method",
+        );
+        $this->assertEquals(
+            $original->get("IP"),
+            $copy->get("IP"),
+            "testing the cast() method",
+        );
     }
 
     /**
@@ -1309,15 +1690,26 @@ class ActiveRecordTest extends ModelTestCase
     public function testToArray()
     {
         $record = new BadRequest();
-        $record->set('IP', '127.0.0.1');
+        $record->set("IP", "127.0.0.1");
 
-        $this->assertTrue($record instanceof BadRequest, 'Testing the toArray() method');
-        $this->assertEquals('127.0.0.1', $record->get('IP'), 'Testing the toArray() method');
+        $this->assertTrue(
+            $record instanceof BadRequest,
+            "Testing the toArray() method",
+        );
+        $this->assertEquals(
+            "127.0.0.1",
+            $record->get("IP"),
+            "Testing the toArray() method",
+        );
 
         $hashArray = $record->toArray();
 
-        $this->assertTrue(is_array($hashArray), 'Testing the toArray() method');
-        $this->assertEquals('127.0.0.1', $hashArray['IP'], 'Testing the toArray() method');
+        $this->assertTrue(is_array($hashArray), "Testing the toArray() method");
+        $this->assertEquals(
+            "127.0.0.1",
+            $hashArray["IP"],
+            "Testing the toArray() method",
+        );
     }
 
     /**
@@ -1325,59 +1717,71 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testAddProperty(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $record = new BadRequest();
         $record->newStringField = new SmallText();
 
-        $record->addProperty('newStringField');
+        $record->addProperty("newStringField");
 
         $enum = new Enum();
-        $enum->setOptions(array('a', 'b', 'c'));
+        $enum->setOptions(["a", "b", "c"]);
         $record->newEnumField = $enum;
 
-        $record->addProperty('newEnumField');
+        $record->addProperty("newEnumField");
 
-        $denum = new DEnum('Alpha\Model\BadRequest::newDEnumField');
+        $denum = new DEnum("Alpha\Model\BadRequest::newDEnumField");
         $record->newDEnumField = $denum;
         $item = new DEnumItem();
-        $item->set('DEnumID', $denum->getID());
-        $item->set('value', 'Test');
+        $item->set("DEnumID", $denum->getID());
+        $item->set("value", "Test");
         $item->save();
 
-        $record->addProperty('newDEnumField');
+        $record->addProperty("newDEnumField");
 
-        $record->set('newStringField', 'test value');
-        $record->set('newEnumField', 'a');
+        $record->set("newStringField", "test value");
+        $record->set("newEnumField", "a");
 
         $options = $denum->getOptions();
         $optionIDs = array_keys($options);
-        $record->set('newDEnumField', $optionIDs[0]);
+        $record->set("newDEnumField", $optionIDs[0]);
 
         $record->save();
 
         $record->reload();
 
-        $this->assertEquals('test value', $record->get('newStringField'), 'Testing that we can save and retrieve from a newly-added SmallText column');
-        $this->assertEquals('a', $record->get('newEnumField'), 'Testing that we can save and retrieve from a newly-added Enum column');
+        $this->assertEquals(
+            "test value",
+            $record->get("newStringField"),
+            "Testing that we can save and retrieve from a newly-added SmallText column",
+        );
+        $this->assertEquals(
+            "a",
+            $record->get("newEnumField"),
+            "Testing that we can save and retrieve from a newly-added Enum column",
+        );
 
         $record = new BadRequest();
         $record->setMaintainHistory(true);
         $record->rebuildTable();
         $record->anotherNewStringField = new SmallText();
 
-        $record->addProperty('anotherNewStringField');
+        $record->addProperty("anotherNewStringField");
 
-        $record->set('anotherNewStringField', 'test value');
+        $record->set("anotherNewStringField", "test value");
         $record->save();
 
         $record->load($record->getID(), 1);
 
-        $this->assertEquals('test value', $record->get('anotherNewStringField'), 'Testing that the new column was added to the _history table');
+        $this->assertEquals(
+            "test value",
+            $record->get("anotherNewStringField"),
+            "Testing that the new column was added to the _history table",
+        );
     }
 
     /**
@@ -1388,13 +1792,28 @@ class ActiveRecordTest extends ModelTestCase
     public function testPopulateFromArray()
     {
         $record = new BadRequest();
-        $record->populateFromArray(array('client' => 'SomeBot', 'IP' => '127.0.0.1', 'resource' => '/test'));
+        $record->populateFromArray([
+            "client" => "SomeBot",
+            "IP" => "127.0.0.1",
+            "resource" => "/test",
+        ]);
 
-        $this->assertEquals('SomeBot', $record->get('client'), 'Testing the populateFromArray() method');
+        $this->assertEquals(
+            "SomeBot",
+            $record->get("client"),
+            "Testing the populateFromArray() method",
+        );
 
-        $record->populateFromArray(array('client' => 'SomeBot', 'updated_ts' => '2001-01-01 20:20:20'));
+        $record->populateFromArray([
+            "client" => "SomeBot",
+            "updated_ts" => "2001-01-01 20:20:20",
+        ]);
 
-        $this->assertEquals('2001-01-01 20:20:20', $record->getUpdateTS()->getValue(), 'Testing the populateFromArray() method');
+        $this->assertEquals(
+            "2001-01-01 20:20:20",
+            $record->getUpdateTS()->getValue(),
+            "Testing the populateFromArray() method",
+        );
     }
 
     /**
@@ -1402,21 +1821,28 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 3.1
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testSaveRelations(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $group = new Rights();
-        $group->set('name', 'unittestgroup');
+        $group->set("name", "unittestgroup");
         $group->save();
 
-        $group->getPropObject('members')->setRelatedIDs(array(1, 2, 3));
+        $group->getPropObject("members")->setRelatedIDs([1, 2, 3]);
         $group->saveRelations();
 
-        $lookup = new RelationLookup('Alpha\Model\Person', 'Alpha\Model\Rights');
-        $this->assertEquals(3, count($lookup->loadAllbyAttribute('rightID', $group->getID())), 'testing the loadAllbyAttribute() method');
+        $lookup = new RelationLookup(
+            "Alpha\Model\Person",
+            "Alpha\Model\Rights",
+        );
+        $this->assertEquals(
+            3,
+            count($lookup->loadAllbyAttribute("rightID", $group->getID())),
+            "testing the loadAllbyAttribute() method",
+        );
     }
 
     /**
@@ -1424,13 +1850,16 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 4.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testCheckDatabaseExists(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
-        $this->assertTrue(ActiveRecord::checkDatabaseExists(), 'Testing the checkDatabaseExists() method');
+        $this->assertTrue(
+            ActiveRecord::checkDatabaseExists(),
+            "Testing the checkDatabaseExists() method",
+        );
     }
 
     /**
@@ -1438,15 +1867,18 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 4.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testFindMissingFields(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $missingFields = $this->person->findMissingFields();
 
-        $this->assertTrue(count($missingFields) == 0, 'Testing the findMissingFields() method');
+        $this->assertTrue(
+            count($missingFields) == 0,
+            "Testing the findMissingFields() method",
+        );
     }
 
     /**
@@ -1454,36 +1886,47 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 4.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testTransactions(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
 
-        $this->person->set('username', 'test1');
+        $this->person->set("username", "test1");
 
         ActiveRecord::begin();
 
         $this->person->save();
 
-        $this->assertEquals('test1', $this->person->get('username'), 'Testing transactions');
+        $this->assertEquals(
+            "test1",
+            $this->person->get("username"),
+            "Testing transactions",
+        );
 
         ActiveRecord::rollback();
 
         $person = new Person();
         $person->load($this->person->getID());
-        $this->assertEquals('unitTestUser', $person->get('username'), 'Testing transactions');
+        $this->assertEquals(
+            "unitTestUser",
+            $person->get("username"),
+            "Testing transactions",
+        );
 
-
-        $person->set('username', 'test2');
+        $person->set("username", "test2");
         ActiveRecord::begin();
         $person->save();
         ActiveRecord::commit();
         $person->reload();
 
-        $this->assertEquals('test2', $person->get('username'), 'Testing transactions');
+        $this->assertEquals(
+            "test2",
+            $person->get("username"),
+            "Testing transactions",
+        );
     }
 
     /**
@@ -1491,20 +1934,28 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 4.0
      */
-    #[DataProvider('getActiveRecordProviders')]
+    #[DataProvider("getActiveRecordProviders")]
     public function testReload(string $provider)
     {
         $config = ConfigProvider::getInstance();
-        $config->set('db.provider.name', $provider);
+        $config->set("db.provider.name", $provider);
 
         $this->person->save();
 
-        $this->person->set('username', 'test1');
+        $this->person->set("username", "test1");
 
-        $this->assertEquals('test1', $this->person->get('username'), 'Testing reload');
+        $this->assertEquals(
+            "test1",
+            $this->person->get("username"),
+            "Testing reload",
+        );
 
         $this->person->reload();
 
-        $this->assertEquals('unitTestUser', $this->person->get('username'), 'Testing reload');
+        $this->assertEquals(
+            "unitTestUser",
+            $this->person->get("username"),
+            "Testing reload",
+        );
     }
 }
