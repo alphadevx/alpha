@@ -87,7 +87,12 @@ class BadRequest extends ActiveRecord
      *
      * @since 1.0
      */
-    protected $dataLabels = array('ID' => 'Bad request ID#', 'client' => 'Client string', 'IP' => 'IP', 'requestedResource' => 'Requested resource');
+    protected $dataLabels = [
+        "ID" => "Bad request ID#",
+        "client" => "Client string",
+        "IP" => "IP",
+        "requestedResource" => "Requested resource",
+    ];
 
     /**
      * The name of the database table for the class.
@@ -96,7 +101,7 @@ class BadRequest extends ActiveRecord
      *
      * @since 1.0
      */
-    public const TABLE_NAME = 'BadRequest';
+    public const TABLE_NAME = "BadRequest";
 
     /**
      * Trace logger.
@@ -114,8 +119,8 @@ class BadRequest extends ActiveRecord
      */
     public function __construct()
     {
-        self::$logger = new Logger('BadRequest');
-        self::$logger->debug('>>__construct()');
+        self::$logger = new Logger("BadRequest");
+        self::$logger->debug(">>__construct()");
 
         // ensure to call the parent constructor
         parent::__construct();
@@ -124,7 +129,7 @@ class BadRequest extends ActiveRecord
         $this->IP = new SmallText();
         $this->requestedResource = new SmallText();
 
-        self::$logger->debug('<<__construct');
+        self::$logger->debug("<<__construct");
     }
 
     /**
@@ -140,10 +145,31 @@ class BadRequest extends ActiveRecord
         $config = ConfigProvider::getInstance();
 
         // the datetime interval syntax between MySQL and SQLite3 is a little different
-        if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
+        if (
+            $config->get("db.provider.name") ==
+            "Alpha\Model\ActiveRecordProviderMySQL"
+        ) {
+            $sqlQuery =
+                "SELECT COUNT(ID) AS request_count FROM " .
+                $this->getTableName() .
+                " WHERE IP = '" .
+                $this->IP->getValue() .
+                "' AND client = '" .
+                addslashes($this->client->getValue()) .
+                "' AND STR_TO_DATE(created_ts, '%Y-%m-%d %H:%i:%s') > UTC_TIMESTAMP()-INTERVAL '" .
+                $config->get("security.client.temp.blacklist.filter.period") .
+                "' MINUTE";
         } else {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > datetime('now', '-".$config->get('security.client.temp.blacklist.filter.period')." MINUTES')";
+            $sqlQuery =
+                "SELECT COUNT(ID) AS request_count FROM " .
+                $this->getTableName() .
+                " WHERE IP = '" .
+                $this->IP->getValue() .
+                "' AND client = '" .
+                addslashes($this->client->getValue()) .
+                "' AND created_ts > datetime('now', '-" .
+                $config->get("security.client.temp.blacklist.filter.period") .
+                " MINUTES')";
         }
 
         $result = $this->query($sqlQuery);
@@ -151,11 +177,13 @@ class BadRequest extends ActiveRecord
         if (isset($result[0])) {
             $row = $result[0];
         } else {
-            throw new AlphaException('No result set returned when querying the bad request table');
+            throw new AlphaException(
+                "No result set returned when querying the bad request table",
+            );
         }
 
-        if (isset($row['request_count'])) {
-            return $row['request_count'];
+        if (isset($row["request_count"])) {
+            return $row["request_count"];
         } else {
             return 0;
         }

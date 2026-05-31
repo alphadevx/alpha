@@ -7,3 +7,5 @@
 .phpdoc/
 clover.xml
 public/bootstrap/
+setup.md
+.aider*
