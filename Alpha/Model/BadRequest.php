@@ -140,10 +140,11 @@ class BadRequest extends ActiveRecord
         $config = ConfigProvider::getInstance();
 
         // the datetime interval syntax between MySQL and SQLite3 is a little different
+        $period = $config->get('security.client.temp.blacklist.filter.period');
         if ($config->get('db.provider.name') == 'Alpha\Model\ActiveRecordProviderMySQL') {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > NOW()-INTERVAL '".$config->get('security.client.temp.blacklist.filter.period')."' MINUTE";
+            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts >= NOW()-INTERVAL '".$period."' MINUTE";
         } else {
-            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts > datetime('now', '-".$config->get('security.client.temp.blacklist.filter.period')." MINUTES')";
+            $sqlQuery = 'SELECT COUNT(ID) AS request_count FROM '.$this->getTableName()." WHERE IP = '".$this->IP->getValue()."' AND client = '".addslashes($this->client->getValue())."' AND created_ts >= datetime('now', '-".$period." MINUTES')";
         }
 
         $result = $this->query($sqlQuery);

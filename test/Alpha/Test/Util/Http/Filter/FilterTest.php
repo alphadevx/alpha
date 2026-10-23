@@ -219,7 +219,23 @@ class FilterTest extends ModelTestCase
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
         $config->set('security.client.temp.blacklist.filter.limit', 1);
-        $config->set('security.client.temp.blacklist.filter.period', 5);
+        $config->set('security.client.temp.blacklist.filter.period', 60); // Use 60 minutes to avoid timing issues
+
+        // Create bad requests with current timestamp to ensure they're within the time window
+        $badRequest1 = new BadRequest();
+        $badRequest1->set('client', $this->badAgent);
+        $badRequest1->set('IP', $this->badIP);
+        $badRequest1->save();
+
+        $badRequest2 = new BadRequest();
+        $badRequest2->set('client', $this->badAgent);
+        $badRequest2->set('IP', $this->badIP);
+        $badRequest2->save();
+
+        $badRequest3 = new BadRequest();
+        $badRequest3->set('client', $this->badAgent);
+        $badRequest3->set('IP', $this->badIP);
+        $badRequest3->save();
 
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
