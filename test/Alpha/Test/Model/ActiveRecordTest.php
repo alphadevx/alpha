@@ -8,7 +8,6 @@ use Alpha\Model\Rights;
 use Alpha\Model\BadRequest;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
-use Alpha\Model\ArticleVote;
 use Alpha\Model\BlacklistedIP;
 use Alpha\Model\Tag;
 use Alpha\Model\Type\RelationLookup;
@@ -137,7 +136,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 2.0.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testCreateForeignIndex(string $provider)
+    public function testCreateForeignIndex(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -155,7 +154,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testDefaultHouseKeepingValues(string $provider)
+    public function testDefaultHouseKeepingValues(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -214,7 +213,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testBasicLoadSave(string $provider)
+    public function testBasicLoadSave(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -231,7 +230,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 2.0.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadCreatesMissingTable(string $provider)
+    public function testLoadCreatesMissingTable(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -256,7 +255,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testCheckRecordExists(string $provider)
+    public function testCheckRecordExists(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -272,7 +271,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadByAttribute(string $provider)
+    public function testLoadByAttribute(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -290,7 +289,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 2.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAllOldVersions(string $provider)
+    public function testLoadAllOldVersions(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -319,7 +318,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAll(string $provider)
+    public function testLoadAll(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -339,7 +338,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAllByAttribute(string $provider)
+    public function testLoadAllByAttribute(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -357,7 +356,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAllByAttributes(string $provider)
+    public function testLoadAllByAttributes(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -375,7 +374,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAllByDayUpdated(string $provider)
+    public function testLoadAllByDayUpdated(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -392,7 +391,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadAllFieldValuesByAttribute(string $provider)
+    public function testLoadAllFieldValuesByAttribute(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -408,7 +407,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveTransientOrPersistent(string $provider)
+    public function testSaveTransientOrPersistent(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -428,7 +427,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveTransientID(string $provider)
+    public function testSaveTransientID(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -445,7 +444,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveObjectLocking(string $provider)
+    public function testSaveObjectLocking(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -476,7 +475,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testValidation(string $provider)
+    public function testValidation(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -500,7 +499,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testDelete(string $provider)
+    public function testDelete(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -531,7 +530,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 2.0.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testDeleteRelatedTags(string $provider)
+    public function testDeleteRelatedTags(string $provider): void
     {
         $article = new Article();
         $tag = new Tag();
@@ -558,7 +557,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testDeleteAllByAttribute(string $provider)
+    public function testDeleteAllByAttribute(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -593,7 +592,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetVersion(string $provider)
+    public function testGetVersion(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -614,7 +613,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetMAX(string $provider)
+    public function testGetMAX(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -632,7 +631,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetCount(string $provider)
+    public function testGetCount(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -648,7 +647,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSetEnumOptions(string $provider)
+    public function testSetEnumOptions(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -668,7 +667,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testCheckTableExists(string $provider)
+    public function testCheckTableExists(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -682,7 +681,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testCheckTableNeedsUpdate(string $provider)
+    public function testCheckTableNeedsUpdate(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -696,7 +695,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetTableName(string $provider)
+    public function testGetTableName(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -714,7 +713,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetDataLabel(string $provider)
+    public function testGetDataLabel(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -728,7 +727,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetNoChildMethod(string $provider)
+    public function testGetNoChildMethod(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -744,7 +743,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetNoChildMethodsDisabled(string $provider)
+    public function testGetNoChildMethodsDisabled(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -769,7 +768,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetNoChildMethodsEnabled(string $provider)
+    public function testGetNoChildMethodsEnabled(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -785,7 +784,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetSimpleType(string $provider)
+    public function testGetSimpleType(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -800,7 +799,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testSetNoChildMethod()
+    public function testSetNoChildMethod(): void
     {
         $this->person->set('email', 'test@test.com');
 
@@ -812,7 +811,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testSetNoChildMethodsDisabled()
+    public function testSetNoChildMethodsDisabled(): void
     {
         $this->person->set('state', 'Active');
 
@@ -828,7 +827,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testSetNoChildMethodsEnabled()
+    public function testSetNoChildMethodsEnabled(): void
     {
         $this->person->set('state', 'Active', true);
 
@@ -844,7 +843,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testSetSimpleType()
+    public function testSetSimpleType(): void
     {
         $this->person->set('dataLabels', array('key' => 'value'));
 
@@ -859,7 +858,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testGetPropObjectComplexType()
+    public function testGetPropObjectComplexType(): void
     {
         $state = $this->person->getPropObject('state');
 
@@ -872,7 +871,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testGetPropObjectSimpleType()
+    public function testGetPropObjectSimpleType(): void
     {
         $labels = $this->person->getPropObject('dataLabels');
 
@@ -886,7 +885,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testMarkTransientPersistent(string $provider)
+    public function testMarkTransientPersistent(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -914,7 +913,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testGetDataLabels()
+    public function testGetDataLabels(): void
     {
         $this->assertTrue(is_array($this->person->getDataLabels()), 'Testing the getDataLabels method');
         $labels = $this->person->getDataLabels();
@@ -927,7 +926,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.0
      */
-    public function testGetTransientAttributes()
+    public function testGetTransientAttributes(): void
     {
         $this->assertTrue(
             is_array($this->person->getTransientAttributes()),
@@ -951,7 +950,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testIsTransient(string $provider)
+    public function testIsTransient(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -967,7 +966,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testGetLastQuery(string $provider)
+    public function testGetLastQuery(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1045,7 +1044,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testClear(string $provider)
+    public function testClear(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1101,7 +1100,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveAttribute(string $provider)
+    public function testSaveAttribute(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1143,7 +1142,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.2.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testHistoryTableCreated(string $provider)
+    public function testHistoryTableCreated(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1162,7 +1161,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.2.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveHistory(string $provider)
+    public function testSaveHistory(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1186,7 +1185,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    public function testHasAttribute()
+    public function testHasAttribute(): void
     {
         $this->assertTrue($this->person->hasAttribute('password'), 'testing the hasAttribute method for true');
         $this->assertFalse($this->person->hasAttribute('doesnotexist'), 'testing the hasAttribute method for false');
@@ -1197,7 +1196,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.3
      */
-    public function testAddToCache()
+    public function testAddToCache(): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -1222,7 +1221,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.2.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLoadFromCache(string $provider)
+    public function testLoadFromCache(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1247,7 +1246,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 1.2.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testRemoveFromCache(string $provider)
+    public function testRemoveFromCache(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1274,7 +1273,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    public function testGetFriendlyClassName()
+    public function testGetFriendlyClassName(): void
     {
         $person = new Person();
         $article = new Article();
@@ -1290,7 +1289,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 1.2.1
      */
-    public function testCast()
+    public function testCast(): void
     {
         $original = new BadRequest();
         $original->set('IP', '127.0.0.1');
@@ -1306,7 +1305,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 2.0
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $record = new BadRequest();
         $record->set('IP', '127.0.0.1');
@@ -1326,7 +1325,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 2.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testAddProperty(string $provider)
+    public function testAddProperty(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1385,7 +1384,7 @@ class ActiveRecordTest extends ModelTestCase
      *
      * @since 3.0.0
      */
-    public function testPopulateFromArray()
+    public function testPopulateFromArray(): void
     {
         $record = new BadRequest();
         $record->populateFromArray(array('client' => 'SomeBot', 'IP' => '127.0.0.1', 'resource' => '/test'));
@@ -1403,7 +1402,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 3.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testSaveRelations(string $provider)
+    public function testSaveRelations(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1425,7 +1424,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 4.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testCheckDatabaseExists(string $provider)
+    public function testCheckDatabaseExists(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1439,7 +1438,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 4.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testFindMissingFields(string $provider)
+    public function testFindMissingFields(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1455,7 +1454,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 4.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testTransactions(string $provider)
+    public function testTransactions(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
@@ -1492,7 +1491,7 @@ class ActiveRecordTest extends ModelTestCase
      * @since 4.0
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testReload(string $provider)
+    public function testReload(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
