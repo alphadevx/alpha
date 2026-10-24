@@ -173,4 +173,15 @@ class CacheProviderRedis implements CacheProviderInterface
             return true;
         }
     }
+
+    /**
+     * Get the native Redis connection instance for advanced operations like Sorted Sets.
+     *
+     * @return \Redis
+     * @since 4.1.0
+     */
+    public function getNativeConnection(): \Redis
+    {
+        return $this->connection;
+    }
 }

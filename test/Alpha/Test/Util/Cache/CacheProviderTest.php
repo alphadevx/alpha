@@ -76,7 +76,7 @@ class CacheProviderTest extends TestCase
      * @since 2.0
      */
     #[DataProvider('getCacheProviders')]
-    public function testSetGetDelete(string $provider)
+    public function testSetGetDelete(string $provider): void
     {
         $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
 
@@ -115,7 +115,7 @@ class CacheProviderTest extends TestCase
      * @since 3.0
      */
     #[DataProvider('getCacheProviders')]
-    public function testKeyPrefix(string $provider)
+    public function testKeyPrefix(string $provider): void
     {
         $config = ConfigProvider::getInstance();
 
@@ -134,5 +134,19 @@ class CacheProviderTest extends TestCase
         $config->set('app.title', 'Application 2');
         $cache = ServiceFactory::getInstance($provider, 'Alpha\Util\Cache\CacheProviderInterface');
         $this->assertEquals('testkey value for application 2', $cache->get('testkey'));
+    }
+
+    /**
+     * Testing the getNativeConnection() method for Redis provider.
+     *
+     * @since 4.1.0
+     */
+    public function testGetNativeConnectionRedis(): void
+    {
+        $cache = ServiceFactory::getInstance('Alpha\Util\Cache\CacheProviderRedis', 'Alpha\Util\Cache\CacheProviderInterface');
+
+        $nativeConnection = $cache->getNativeConnection();
+
+        $this->assertInstanceOf('Redis', $nativeConnection);
     }
 }
