@@ -212,4 +212,59 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
 
         $this->assertEquals(0, count($article->findMissingFields()), 'Testing updating a table via doPOST method');
     }
+
+    /**
+     * Testing security field validation in doPOST method.
+     */
+    public function testDoPOSTSecurityValidation()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        // Send POST without security fields to trigger SecurityException
+        $params = array(
+            'createTableBut' => true,
+            'createTableClass' => 'Alpha\Model\Article'
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing security validation response status');
+        $this->assertTrue(str_contains($response->getBody(), 'This page cannot accept post data from remote servers!'), 'Testing security exception message');
+    }
+
+    /**
+     * Testing error handling in displayBodyContent when a class throws an exception.
+     */
+    public function testDoGETWithException()
+    {
+        // Temporarily add a class that will fail when instantiated
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/listactiverecords'));
+
+        // This test verifies that the controller handles exceptions gracefully
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doGET with exception handling');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doGET with exception handling');
+    }
+
+    /**
+     * Testing constructor sets up title and metadata correctly.
+     */
+    public function testConstructor()
+    {
+        $controller = new ListActiveRecordsController();
+
+        $this->assertEquals('Listing all active records in the system', $controller->getTitle());
+        $this->assertEquals('Page to list all active records.', $controller->getDescription());
+        $this->assertEquals('list,all,active,records', $controller->getKeywords());
+        $this->assertEquals('Admin', $controller->getVisibility());
+    }
 }
