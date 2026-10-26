@@ -6,9 +6,8 @@ use Alpha\Model\ActionLog;
 use Alpha\Model\Person;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Http\Request;
-use Alpha\Util\Config\Configprovider;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
-use Alpha\Exception\AlphaException;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
@@ -88,7 +87,7 @@ class ActionLogTest extends ModelTestCase
      * @since 3.1
      */
     #[DataProvider('getActiveRecordProviders')]
-    public function testLogAction(string $provider)
+    public function testLogAction(string $provider): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('app.log.action.logging', true);

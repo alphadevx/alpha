@@ -116,7 +116,7 @@ class DEnumControllerTest extends ControllerTestCase
     /**
      * Testing the doPOST method.
      */
-    public function testDoPOST()
+    public function testDoPOST(): void
     {
         $config = ConfigProvider::getInstance();
         $sessionProvider = $config->get('session.provider.name');
@@ -140,5 +140,164 @@ class DEnumControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doPOST method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doPOST method');
+    }
+
+    /**
+     * Testing doGET method with a specific DEnum ID.
+     */
+    public function testDoGETWithID(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/denum', 'params' => array('denumID' => $this->denum->getID())));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doGET with DEnum ID');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doGET with DEnum ID');
+    }
+
+    /**
+     * Testing doGET method with non-existent DEnum ID.
+     */
+    public function testDoGETWithInvalidID(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/denum', 'params' => array('denumID' => 99999)));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doGET with invalid DEnum ID');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doGET with invalid DEnum ID');
+    }
+
+    /**
+     * Testing doPOST method without security fields.
+     */
+    public function testDoPOSTWithoutSecurityFields(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new DEnumController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        // POST without security fields (using wrong hash values)
+        $params = array('saveBut' => true, 'var1' => 'wrong', 'var2' => 'wrong', 'denumID' => $this->denum->getID());
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST without security fields');
+        $this->assertStringContainsString('This page cannot accept post data from remote servers', $response->getBody(), 'Testing doPOST without security fields');
+    }
+
+    /**
+     * Testing doPOST method with no denumID provided.
+     */
+    public function testDoPOSTWithNoDenumID(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new DEnumController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        // POST with no denumID
+        $params = array('saveBut' => true, 'var1' => $securityParams[0], 'var2' => $securityParams[1]);
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with no denumID');
+        $this->assertStringContainsString('Could not load the DEnum object', $response->getBody(), 'Testing doPOST with no denumID');
+    }
+
+    /**
+     * Testing doPOST method with new DEnumItem creation.
+     */
+    public function testDoPOSTWithNewDenumItem(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new DEnumController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        // Create a new DEnum with an item
+        $newDenum = new DEnum('Test::NewDenum');
+        $newDenum->save();
+
+        $params = array(
+            'saveBut' => true,
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'denumID' => $newDenum->getID(),
+            'value_1' => 'Existing Item',
+            'new_value' => 'New Item', // This should create a new DEnumItem
+            'oid' => $newDenum->getID(),
+            'name' => 'Test::NewDenum',
+            'description' => ''
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with new DEnumItem');
+        $this->assertStringContainsString('saved successfully', $response->getBody(), 'Testing doPOST with new DEnumItem');
+    }
+
+    /**
+     * Testing doPOST method with a non-existent DEnum ID.
+     */
+    public function testDoPOSTWithNonExistentDenumID(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new DEnumController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        // POST with a non-existent DEnum ID
+        $params = array(
+            'saveBut' => true,
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'denumID' => 99999,
+            'oid' => 99999,
+            'name' => 'Test::NonExistent',
+            'description' => ''
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/denum', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with non-existent DEnum ID');
+        $this->assertStringContainsString('Failed to load the requested item', $response->getBody(), 'Testing doPOST with non-existent DEnum ID');
     }
 }

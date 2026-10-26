@@ -3,12 +3,11 @@
 namespace Alpha\Model;
 
 use Alpha\Model\Type\SmallText;
-use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\Text;
 use Alpha\Model\Type\LargeText;
 use Alpha\Model\Type\Boolean;
 use Alpha\Model\Type\Relation;
-use Alpha\Util\Config\Configprovider;
+use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Logging\Logger;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Exception\ValidationException;
@@ -429,7 +428,7 @@ class Article extends ActiveRecord
         }
 
         if ($vote_count > 0) {
-            $score = $total_score/$vote_count;
+            $score = $total_score / $vote_count;
         }
 
         return sprintf('%01.2f', $score);

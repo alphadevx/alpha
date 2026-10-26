@@ -99,23 +99,22 @@ class Atom extends Feed
     /**
      * Constructor to create a new Atom feed.
      *
+     * @param string $RecordName
      * @param string $title
      * @param string $url
      * @param string $description
      * @param string $pubDate
      * @param int    $id
+     * @param int    $limit
      *
      * @since 1.0
      */
-    public function __construct(string $title, string $url, string $description, string $pubDate = null, int $id = null)
+    public function __construct(string $RecordName, string $title, string $url, string $description, string $pubDate = null, ?int $id = null, int $limit = 10)
     {
-        if (empty($id)) {
-            $id = $url;
-        }
         if (empty($pubDate)) {
             $pubDate = date('Y-m-d');
         }
-        parent::__construct($title, $url, $description, $pubDate, $id);
+        parent::__construct($RecordName, $title, $url, $description, $pubDate, $id, $limit);
     }
 
     /**

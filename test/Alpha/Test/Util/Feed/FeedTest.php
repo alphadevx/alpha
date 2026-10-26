@@ -5,7 +5,6 @@ namespace Alpha\Test\Util\Feed;
 use Alpha\Model\Article;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
-use Alpha\Util\Feed\Feed;
 use Alpha\Util\Feed\Atom;
 use Alpha\Util\Feed\RSS;
 use Alpha\Util\Feed\RSS2;
@@ -103,7 +102,7 @@ class FeedTest extends TestCase
         $item->dropTable();
     }
 
-    public function testAddItemToRSSandParse()
+    public function testAddItemToRSSandParse(): void
     {
         $feed = new RSS('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
@@ -128,11 +127,16 @@ class FeedTest extends TestCase
         $this->assertEquals('2011-01-01T00:00:00+00:00', (string) $items[0]->updated, 'Testing that the feed item publish time is present');
     }
 
-    public function testAddItemToRSS2andParse()
+    /**
+     * Test adding an item to an RSS2 feed and parsing the result.
+     *
+     * @since 1.0
+     */
+    public function testAddItemToRSS2andParse(): void
     {
         $feed = new RSS2('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
-        $feed->addrecord($this->record);
+        $feed->addRecord($this->record);
         $xml = $feed->render();
 
         $reader = new XMLReader();
@@ -152,11 +156,16 @@ class FeedTest extends TestCase
         $this->assertEquals('2011-01-01T00:00:00+00:00', (string) $items[0]->updated, 'Testing that the feed item publish time is present');
     }
 
-    public function testAddItemToAtomandParse()
+    /**
+     * Test adding an item to an Atom feed and parsing the result.
+     *
+     * @since 1.0
+     */
+    public function testAddItemToAtomandParse(): void
     {
         $feed = new Atom('Alpha\Model\Article', 'Test Feed Title', 'http://www.alphaframework.org/', 'Test Feed Description');
         $feed->setFieldMappings('title', 'URL', 'description', 'created_ts', 'ID');
-        $feed->addrecord($this->record);
+        $feed->addRecord($this->record);
         $xml = $feed->render();
 
         $reader = new XMLReader();
