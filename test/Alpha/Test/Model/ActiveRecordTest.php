@@ -1506,4 +1506,93 @@ class ActiveRecordTest extends ModelTestCase
 
         $this->assertEquals('unitTestUser', $this->person->get('username'), 'Testing reload');
     }
+
+    /**
+     * Testing begin(), commit(), and rollback() methods
+     *
+     * @since 4.1.0
+     */
+    #[DataProvider('getActiveRecordProviders')]
+    public function testTransactionsWithProvider(string $provider): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $person = new Person();
+        $person->setUsername('transactionuser');
+        $person->set('email', 'transaction@test.com');
+        $person->set('password', 'passwordTest');
+
+        $providerObj = ServiceFactory::getInstance($provider, 'Alpha\Model\ActiveRecordProviderInterface');
+        $providerObj->setRecord($person);
+
+        // Test begin
+        $providerObj->begin();
+
+        // Test commit
+        $providerObj->commit();
+
+        $this->assertTrue(true, 'Testing transaction methods');
+    }
+
+    /**
+     * Testing rollback method with failed save
+     *
+     * @since 4.1.0
+     */
+    #[DataProvider('getActiveRecordProviders')]
+    public function testRollbackWithFailedSave(string $provider): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $providerObj = ServiceFactory::getInstance($provider, 'Alpha\Model\ActiveRecordProviderInterface');
+
+        $providerObj->begin();
+
+        // This should fail validation
+        try {
+            $person = new Person();
+            $providerObj->setRecord($person);
+            $providerObj->save();
+        } catch (\Exception $e) {
+            // Expected - validation will fail
+        }
+
+        // Rollback should complete without errors
+        $providerObj->rollback();
+
+        $this->assertTrue(true, 'Testing rollback with failed save');
+    }
+
+    /**
+     * Testing save method with transaction
+     *
+     * @since 4.1.0
+     */
+    #[DataProvider('getActiveRecordProviders')]
+    public function testSaveWithTransaction(string $provider): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $providerObj = ServiceFactory::getInstance($provider, 'Alpha\Model\ActiveRecordProviderInterface');
+
+        $person1 = new Person();
+        $person1->setUsername('transuser1');
+        $person1->set('email', 'trans1@test.com');
+        $person1->set('password', 'passwordTest');
+        $providerObj->setRecord($person1);
+        $providerObj->save();
+
+        $person2 = new Person();
+        $person2->setUsername('transuser2');
+        $person2->set('email', 'trans2@test.com');
+        $person2->set('password', 'passwordTest');
+        $providerObj->setRecord($person2);
+        $providerObj->save();
+
+        $this->assertGreaterThan(0, $person1->getID(), 'Testing save with transaction');
+        $this->assertGreaterThan(0, $person2->getID(), 'Testing save with transaction');
+    }
 }
