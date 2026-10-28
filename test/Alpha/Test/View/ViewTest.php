@@ -437,4 +437,370 @@ class ViewTest extends TestCase
         $this->assertTrue(strpos($html, 'Relation field') > 0);
         $this->assertTrue(strpos($html, 'Test comment') > 0);
     }
+
+    /**
+     * Testing that a custom view class defined in src/View for a Record is
+     * returned by getInstance and that the before/after render hooks defined
+     * on the custom view are triggered.
+     *
+     * @since 4.1
+     */
+    public function testGetInstanceCustomChildViewWithHooks(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $appRoot = $config->get('app.root');
+
+        $modelDir = $appRoot . 'src/Model';
+        $viewDir = $appRoot . 'src/View';
+
+        if (!is_dir($modelDir)) {
+            mkdir($modelDir, 0777, true);
+        }
+        if (!is_dir($viewDir)) {
+            mkdir($viewDir, 0777, true);
+        }
+
+        $recordFile = $modelDir . '/ViewTestStub.php';
+        $viewFile = $viewDir . '/ViewTestStubView.php';
+
+        file_put_contents($recordFile, <<<'PHP'
+<?php
+
+namespace Model;
+
+/**
+ * Temporary test record used by the View tests.
+ *
+ * @since 4.1
+ */
+class ViewTestStub extends \Alpha\Model\ActiveRecord
+{
+}
+PHP);
+
+        file_put_contents($viewFile, <<<'PHP'
+<?php
+
+namespace View;
+
+/**
+ * Temporary test view used by the View tests, defines all of the optional
+ * before and after render hook methods.
+ *
+ * @since 4.1
+ */
+class ViewTestStubView extends \Alpha\View\View
+{
+    /**
+     * Counter of the hook methods that were triggered.
+     *
+     * @var int
+     *
+     * @since 4.1
+     */
+    public static int $hooks = 0;
+
+    /**
+     * Constructor.
+     *
+     * @since 4.1
+     */
+    public function __construct(\Alpha\Model\ActiveRecord $record, string $acceptHeader = null)
+    {
+        parent::__construct($record, $acceptHeader);
+    }
+
+    public function beforeCreateView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function afterCreateView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function beforeEditView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function afterEditView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function beforeListView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function afterListView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function beforeDetailedView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function afterDetailedView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function beforeAdminView(): void
+    {
+        self::$hooks++;
+    }
+
+    public function afterAdminView(): void
+    {
+        self::$hooks++;
+    }
+}
+PHP);
+
+        try {
+            $record = new \Model\ViewTestStub();
+
+            $view = View::getInstance($record);
+
+            $this->assertTrue($view instanceof \View\ViewTestStubView, 'Testing that a custom child view in src/View is returned by getInstance');
+
+            // use the JSON renderer so that no HTML templates or DB tables are required
+            View::setProvider('Alpha\View\Renderer\Json\RendererProviderJSON');
+            View::getProvider()->setRecord($record);
+
+            $this->assertEquals('', $view->createView());
+            $this->assertEquals('', $view->editView());
+            $this->assertIsString($view->listView());
+            $this->assertIsString($view->detailedView());
+            $this->assertEquals('', $view->adminView());
+
+            $this->assertEquals(10, \View\ViewTestStubView::$hooks, 'Testing that the before and after render hooks were all triggered');
+        } finally {
+            @unlink($recordFile);
+            @unlink($viewFile);
+
+            View::setProvider('Alpha\View\Renderer\Html\RendererProviderHTML');
+        }
+    }
+
+    /**
+     * Testing that a custom template in src/View is loaded by the loadTemplate method.
+     *
+     * @since 4.1
+     */
+    public function testLoadTemplateCustomTemplate(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $templateDir = $config->get('app.root') . 'src/View/Html/Templates/Article';
+
+        if (!is_dir($templateDir)) {
+            mkdir($templateDir, 0777, true);
+        }
+
+        $templateFile = $templateDir . '/zzzcustomtest.phtml';
+
+        file_put_contents($templateFile, 'custom template for [<?php echo $summary ?>]');
+
+        try {
+            $article = new Article();
+
+            $html = View::loadTemplate($article, 'zzzcustomtest', array('summary' => 'abc123'));
+
+            $this->assertTrue(str_contains($html, 'custom template for [abc123]'), 'Testing that a custom template in src/View is loaded by loadTemplate');
+        } finally {
+            @unlink($templateFile);
+        }
+    }
+
+    /**
+     * Testing that a custom fragment in src/View is loaded by the
+     * loadTemplateFragment method and that a missing fragment throws an
+     * exception.
+     *
+     * @since 4.1
+     */
+    public function testLoadTemplateFragmentCustomAndMissing(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $fragmentDir = $config->get('app.root') . 'src/View/Html/Fragments';
+
+        if (!is_dir($fragmentDir)) {
+            mkdir($fragmentDir, 0777, true);
+        }
+
+        $fragmentFile = $fragmentDir . '/zzzcustomfragment.phtml';
+
+        file_put_contents($fragmentFile, 'custom fragment content');
+
+        try {
+            $html = View::loadTemplateFragment('html', 'zzzcustomfragment.phtml', array());
+
+            $this->assertEquals('custom fragment content', $html, 'Testing that a custom fragment in src/View is loaded');
+        } finally {
+            @unlink($fragmentFile);
+        }
+
+        $this->expectException(IllegalArguementException::class);
+
+        View::loadTemplateFragment('html', 'zzzdoesnotexist.phtml', array());
+    }
+
+    /**
+     * Testing the lazy initialization of the logger and renderer provider in
+     * the static View methods, and the before/after hooks on the controller
+     * used by the page head and foot rendering.
+     *
+     * @since 4.1
+     */
+    public function testViewStaticsLazyInitAndControllerHooks(): void
+    {
+        $loggerProperty = new \ReflectionProperty(View::class, 'logger');
+        $providerProperty = new \ReflectionProperty(View::class, 'provider');
+
+        $savedLogger = $loggerProperty->getValue();
+        $savedProvider = $providerProperty->getValue();
+
+        $config = ConfigProvider::getInstance();
+        $savedRenderer = $config->get('app.renderer.provider.name');
+        $config->set('app.renderer.provider.name', 'Alpha\View\Renderer\Html\RendererProviderHTML');
+
+        $controller = new ViewTestHookedController();
+
+        try {
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::displayPageHead($controller), 'Testing displayPageHead lazy initialization and controller hooks');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::displayPageFoot($controller), 'Testing displayPageFoot lazy initialization and controller hooks');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::displayUpdateMessage('a message'), 'Testing displayUpdateMessage lazy initialization');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::displayErrorMessage('a message'), 'Testing displayErrorMessage lazy initialization');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::renderErrorPage('404', 'an error'), 'Testing renderErrorPage lazy initialization');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::renderDeleteForm('/test'), 'Testing renderDeleteForm lazy initialization');
+
+            $loggerProperty->setValue(null, null);
+            $providerProperty->setValue(null, null);
+
+            $this->assertNotEmpty(View::renderSecurityFields(), 'Testing renderSecurityFields lazy initialization');
+
+            $providerProperty->setValue(null, null);
+
+            $this->assertTrue(View::getProvider() instanceof \Alpha\View\Renderer\RendererProviderInterface, 'Testing that getProvider lazily loads the configured provider');
+
+            $this->assertEquals(4, ViewTestHookedController::$hooks, 'Testing that the controller display hooks were all triggered');
+        } finally {
+            $loggerProperty->setValue(null, $savedLogger);
+            $providerProperty->setValue(null, $savedProvider);
+
+            $config->set('app.renderer.provider.name', $savedRenderer);
+        }
+    }
+}
+
+/**
+ * A stub controller that defines all of the optional before and after hooks
+ * checked by the View page head and foot rendering.
+ *
+ * @since 4.1
+ */
+class ViewTestHookedController extends \Alpha\Controller\Controller
+{
+    /**
+     * Counter of the hook methods that were triggered.
+     *
+     * @var int
+     *
+     * @since 4.1
+     */
+    public static int $hooks = 0;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function getTitle(): string
+    {
+        return 'Hooked controller';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function getDescription(): string
+    {
+        return 'A controller with render hooks';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function beforeDisplayPageHead(): void
+    {
+        self::$hooks++;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function afterDisplayPageHead(): string
+    {
+        self::$hooks++;
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function beforeDisplayPageFoot(): string
+    {
+        self::$hooks++;
+
+        return '';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function afterDisplayPageFoot(): string
+    {
+        self::$hooks++;
+
+        return '';
+    }
 }

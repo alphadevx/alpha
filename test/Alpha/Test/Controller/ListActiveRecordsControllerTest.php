@@ -4,6 +4,8 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\ListActiveRecordsController;
+use Alpha\Exception\AlphaException;
+use Alpha\Model\ActiveRecord;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
@@ -375,5 +377,357 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with mismatched update button value');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doPOST with mismatched update button value');
+    }
+
+    /**
+     * Testing that a failure while creating a table is handled gracefully by doPOST.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTCreateTableFailure(): void
+    {
+        ListARCTestStubRecord::$failMode = 'makeTable';
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'createTableBut' => true,
+            'createTableClass' => ListARCTestStubRecord::class
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing that a table creation failure is handled gracefully');
+        $this->assertTrue(str_contains($response->getBody(), 'check the log'), 'Testing that the error message is displayed when table creation fails');
+    }
+
+    /**
+     * Testing that a failure while creating a history table is handled gracefully by doPOST.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTCreateHistoryTableFailure(): void
+    {
+        ListARCTestStubRecord::$failMode = 'makeHistoryTable';
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'createHistoryTableBut' => true,
+            'createTableClass' => ListARCTestStubRecord::class
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing that a history table creation failure is handled gracefully');
+        $this->assertTrue(str_contains($response->getBody(), 'check the log'), 'Testing that the error message is displayed when history table creation fails');
+    }
+
+    /**
+     * Testing that a failure while recreating a table is handled gracefully by doPOST.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTRecreateTableFailure(): void
+    {
+        ListARCTestStubRecord::$failMode = 'rebuildTable';
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaTestControllerListARCTestStubRecord_button_pressed' => 'recreateTableBut',
+            'recreateTableClass' => ListARCTestStubRecord::class
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing that a table recreation failure is handled gracefully');
+        $this->assertTrue(str_contains($response->getBody(), 'check the log'), 'Testing that the error message is displayed when table recreation fails');
+    }
+
+    /**
+     * Testing that missing fields are added to a table when doPOST updates a class.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTUpdateTableAddsMissingFields(): void
+    {
+        ListARCTestStubRecord::$failMode = '';
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaTestControllerListARCTestStubRecord_button_pressed' => 'updateTableBut',
+            'updateTableClass' => ListARCTestStubRecord::class
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing that missing fields are added when updating a table');
+        $this->assertTrue(str_contains($response->getBody(), 'successfully updated'), 'Testing that the update message is displayed after adding missing fields');
+    }
+
+    /**
+     * Testing that a failure while updating a table is handled gracefully by doPOST.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTUpdateTableFailure(): void
+    {
+        ListARCTestStubRecord::$failMode = 'findMissingFields';
+
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaTestControllerListARCTestStubRecord_button_pressed' => 'updateTableBut',
+            'updateTableClass' => ListARCTestStubRecord::class
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing that a table update failure is handled gracefully');
+        $this->assertTrue(str_contains($response->getBody(), 'check the log'), 'Testing that the error message is displayed when table update fails');
+    }
+
+    /**
+     * Testing that classes that fail while rendering the admin views are
+     * handled gracefully by displayBodyContent. Two temporary stub record
+     * classes are dropped into src/Model (which ActiveRecord::getRecordClassNames
+     * scans) for the duration of the request only.
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithRecordClassFailures(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $modelDir = $config->get('app.root') . 'src/Model';
+
+        if (!is_dir($modelDir)) {
+            mkdir($modelDir, 0777, true);
+        }
+
+        $alphaThrower = $modelDir . '/LARTAlphaThrower.php';
+        $exceptionThrower = $modelDir . '/LARTRuntThrower.php';
+
+        file_put_contents($alphaThrower, <<<'PHP'
+<?php
+
+namespace Model;
+
+/**
+ * Temporary test stub that fails during admin rendering.
+ *
+ * @since 4.1
+ */
+class LARTAlphaThrower extends \Alpha\Model\ActiveRecord
+{
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function getTableName(): string
+    {
+        throw new \Alpha\Exception\AlphaException('Stub admin view failure');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function checkTableExists(bool $checkHistoryTable = false): bool
+    {
+        return false;
+    }
+}
+PHP);
+
+        file_put_contents($exceptionThrower, <<<'PHP'
+<?php
+
+namespace Model;
+
+/**
+ * Temporary test stub that fails during instantiation.
+ *
+ * @since 4.1
+ */
+class LARTRuntThrower extends \Alpha\Model\ActiveRecord
+{
+    /**
+     * Constructor.
+     *
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        throw new \Exception('Stub instantiation failure');
+    }
+}
+PHP);
+
+        try {
+            $front = new FrontController();
+
+            $request = new Request(array('method' => 'GET', 'URI' => '/listactiverecords'));
+
+            $response = $front->process($request);
+
+            $this->assertEquals(200, $response->getStatus(), 'Testing that failing record classes are handled gracefully by displayBodyContent');
+            $this->assertTrue(str_contains($response->getBody(), 'Error accessing the class'), 'Testing that an error message is rendered for the failing class');
+        } finally {
+            @unlink($alphaThrower);
+            @unlink($exceptionThrower);
+        }
+    }
+
+    /**
+     * Resetting the failure mode of the stub record after each test.
+     *
+     * @since 4.1
+     */
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        ListARCTestStubRecord::$failMode = '';
+    }
+}
+
+/**
+ * A stub ActiveRecord used to trigger the error handling branches of the
+ * ListActiveRecordsController. The class is never scanned by
+ * ActiveRecord::getRecordClassNames() as it does not live in a scanned
+ * model directory.
+ *
+ * @since 4.1
+ */
+class ListARCTestStubRecord extends ActiveRecord
+{
+    /**
+     * The name of the method that should throw an exception, or an empty string for none.
+     *
+     * @var string
+     *
+     * @since 4.1
+     */
+    public static string $failMode = '';
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function makeTable(bool $checkIndexes = true): void
+    {
+        if (self::$failMode == 'makeTable') {
+            throw new AlphaException('Stub makeTable failure');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function makeHistoryTable(): void
+    {
+        if (self::$failMode == 'makeHistoryTable') {
+            throw new AlphaException('Stub makeHistoryTable failure');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function rebuildTable(): void
+    {
+        if (self::$failMode == 'rebuildTable') {
+            throw new AlphaException('Stub rebuildTable failure');
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function findMissingFields(): array
+    {
+        if (self::$failMode == 'findMissingFields') {
+            throw new AlphaException('Stub findMissingFields failure');
+        }
+
+        return array('stubField1', 'stubField2');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function addProperty(string $propName): void
+    {
+        // no-op, we do not want the stub to touch the database
     }
 }

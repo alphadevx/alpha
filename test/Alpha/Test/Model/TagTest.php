@@ -412,4 +412,131 @@ class TagTest extends ModelTestCase
         $this->assertArrayHasKey('taggedID', $labels);
         $this->assertArrayHasKey('ID', $labels);
     }
+
+    /**
+     * Testing that tokenizing throws an exception when no stopwords file can be
+     * found for the configured size.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithMissingStopwordsFile(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedSize = $config->get('search.stop.words.size');
+
+        $config->set('search.stop.words.size', 'zzzdoesnotexist');
+
+        try {
+            $this->expectException(AlphaException::class);
+
+            Tag::tokenize('some alpha content');
+        } finally {
+            $config->set('search.stop.words.size', $savedSize);
+        }
+    }
+
+    /**
+     * Testing that a failed query in the getPopularTagsArray method is wrapped
+     * in an AlphaException.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArrayQueryFailure(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedProvider = $config->get('db.provider.name');
+
+        // the SQLite provider wraps SQL syntax errors in a CustomQueryException, which Tag
+        // converts to an AlphaException; the MySQL provider leaks a raw mysqli_sql_exception
+        $config->set('db.provider.name', 'Alpha\Model\ActiveRecordProviderSQLite');
+
+        try {
+            $this->expectException(AlphaException::class);
+
+            Tag::getPopularTagsArray("'");
+        } finally {
+            $config->set('db.provider.name', $savedProvider);
+        }
+    }
+
+    /**
+     * Testing that the afterSave hook of a Tag logs and swallows errors thrown
+     * by the configured cache provider. The hook is invoked directly via
+     * reflection because a failing cache provider during a full save would hit
+     * the documented exit; in ActiveRecord::removeFromCache().
+     *
+     * @since 4.1
+     */
+    public function testAfterSaveWithFailingCacheProvider(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedCacheProvider = $config->get('cache.provider.name');
+
+        $config->set('cache.provider.name', TagTestBogusCacheProvider::class);
+
+        try {
+            // ensure the Tag class logger has been lazily initialized
+            Tag::tokenize('warm up the logger');
+
+            $tag = new Tag();
+            $tag->set('content', 'boguscachetest');
+
+            $afterSave = new \ReflectionMethod($tag, 'afterSave');
+            $afterSave->setAccessible(true);
+            $afterSave->invoke($tag);
+
+            $this->assertTrue(true, 'Testing that afterSave swallows cache provider failures');
+        } finally {
+            $config->set('cache.provider.name', $savedCacheProvider);
+        }
+    }
+}
+
+/**
+ * A stub cache provider that throws an exception when a key is deleted, used
+ * to exercise the error handling of the Tag::afterSave method.
+ *
+ * @since 4.1
+ */
+class TagTestBogusCacheProvider implements \Alpha\Util\Cache\CacheProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function get($key): mixed
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function set($key, $value, $expiry = 0): void
+    {
+        // no-op
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function delete($key): void
+    {
+        throw new \Exception('stub cache provider failure');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function check($key): bool
+    {
+        return false;
+    }
 }

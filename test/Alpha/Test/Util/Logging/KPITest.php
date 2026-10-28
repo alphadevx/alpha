@@ -7,6 +7,7 @@ use Alpha\Model\Type\Timestamp;
 use Alpha\Util\Logging\KPI;
 use Alpha\Util\Http\Session\SessionProviderInterface;
 use Alpha\Util\Config\ConfigProvider;
+use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Logging\LogProviderFile;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -574,5 +575,36 @@ class KPITest extends TestCase
         $this->expectExceptionMessage('The KPI name can only contain letters and numbers');
 
         new KPI('Test_KPI');
+    }
+
+    /**
+     * Testing that a KPI start time can be stored in the session and picked up
+     * by a KPI object created during a later request.
+     *
+     * @since 4.1
+     */
+    public function testStoreStartTimeInSessionAndRestore(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedProvider = $config->get('session.provider.name');
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+
+        try {
+            $name = 'PHPUnitKPI' . mt_rand(1000, 9999);
+
+            $kpi = new KPI($name);
+            $kpi->storeStartTimeInSession();
+
+            $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+            $this->assertNotFalse($session->get($name . '-startTime'), 'Testing that the start time was stored in the session');
+
+            // a new KPI with the same name should pick up and delete the stored start time
+            new KPI($name);
+
+            $this->assertFalse($session->get($name . '-startTime'), 'Testing that the stored start time was consumed by the new KPI');
+        } finally {
+            $config->set('session.provider.name', $savedProvider);
+        }
     }
 }

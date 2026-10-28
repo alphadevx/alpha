@@ -155,4 +155,56 @@ class SequenceTest extends ModelTestCase
     {
         $this->assertEquals('TEST-1', $this->sequence->__toString(), 'Testing the toString method');
     }
+
+    /**
+     * Testing the getRule and setHelper methods.
+     *
+     * @since 4.1
+     */
+    public function testGetRuleAndHelper(): void
+    {
+        $this->assertIsString($this->sequence->getRule(), 'Testing that the validation rule is returned as a string');
+
+        $this->sequence->setHelper('a brand new helper string');
+
+        $this->assertEquals('a brand new helper string', $this->sequence->getHelper(), 'Testing that the helper text can be set and got');
+    }
+
+    /**
+     * Testing that setSequenceToNext starts at 1 for a previously unseen prefix.
+     *
+     * @since 4.1
+     */
+    public function testSetSequenceToNextWithNewPrefix(): void
+    {
+        $sequence = new Sequence();
+        $sequence->set('prefix', 'NEWPFX');
+        $sequence->setSequenceToNext();
+
+        $this->assertEquals('NEWPFX-1', $sequence->getValue(), 'Testing that a new sequence prefix starts at 1');
+    }
+
+    /**
+     * Testing that the value of an empty Sequence is an empty string.
+     *
+     * @since 4.1
+     */
+    public function testGetValueOfEmptySequence(): void
+    {
+        $sequence = new Sequence();
+
+        $this->assertEquals('', $sequence->getValue(), 'Testing that the value of an empty Sequence is an empty string');
+    }
+
+    /**
+     * Testing that setting a value longer than the allowable size throws an exception.
+     *
+     * @since 4.1
+     */
+    public function testSetValueTooLong(): void
+    {
+        $this->expectException(IllegalArguementException::class);
+
+        $this->sequence->setValue(str_repeat('A', 300));
+    }
 }
