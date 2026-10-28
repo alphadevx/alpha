@@ -6,8 +6,18 @@ use Alpha\View\View;
 use Alpha\Model\Article;
 use Alpha\Model\ArticleComment;
 use Alpha\Model\BlacklistedClient;
+use Alpha\Model\Tag;
+use Alpha\Model\Type\Boolean;
+use Alpha\Model\Type\Date;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
+use Alpha\Model\Type\Double as AlphaDouble;
+use Alpha\Model\Type\Enum;
+use Alpha\Model\Type\Integer;
+use Alpha\Model\Type\LargeText;
+use Alpha\Model\Type\SmallText;
+use Alpha\Model\Type\Text;
+use Alpha\Model\Type\Timestamp;
 use Alpha\Exception\IllegalArguementException;
 use Alpha\Util\Config\ConfigProvider;
 use PHPUnit\Framework\TestCase;
@@ -719,6 +729,155 @@ PHP);
             $config->set('app.renderer.provider.name', $savedRenderer);
         }
     }
+
+    /**
+     * Testing the renderAllFields view/create/edit modes across all of the
+     * common Alpha types using a rich record stub.
+     *
+     * @since 4.1
+     */
+    public function testRenderAllFieldsAllTypesAllModes(): void
+    {
+        $view = View::getInstance(new ViewTestRichRecord());
+
+        $html = $view->renderAllFields('view');
+        $this->assertStringContainsString('Int attr', $html);
+        $this->assertStringContainsString('Date attr', $html);
+
+        $html = $view->renderAllFields('create');
+        $this->assertStringContainsString('intAttr', $html);
+        $this->assertStringContainsString('enumAttr', $html);
+
+        $html = $view->renderAllFields('edit', array(), array('intAttr'));
+        $this->assertStringContainsString('Int attr', $html);
+        $this->assertStringContainsString('dblAttr', $html);
+    }
+
+    /**
+     * Testing the create mode, the selected option and the encrypted field
+     * name branches of the renderDEnumField method.
+     *
+     * @since 4.1
+     */
+    public function testRenderDEnumFieldModesAndEncryptedNames(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $old = $config->get('security.encrypt.http.fieldnames');
+
+        try {
+            $html = $this->view->renderDEnumField('fieldname', 'DEnum field', 'create', array('red', 'green'));
+            $this->assertStringContainsString('<option value="1">green</option>', $html);
+
+            $html = $this->view->renderDEnumField('fieldname', 'DEnum field', 'edit', array('red', 'green'), '1');
+            $this->assertStringContainsString('selected', $html);
+
+            $config->set('security.encrypt.http.fieldnames', true);
+
+            $html = $this->view->renderDEnumField('fieldname', 'DEnum field', 'edit', array('red'));
+            $this->assertStringContainsString('<select', $html);
+
+            $html = $this->view->renderDefaultField('fieldname', 'Default field', 'create');
+            $this->assertStringContainsString('textarea', $html);
+        } finally {
+            $config->set('security.encrypt.http.fieldnames', $old);
+        }
+    }
+
+    /**
+     * Testing the create and edit views with custom cancel button URLs.
+     *
+     * @since 4.1
+     */
+    public function testCreateAndEditViewsWithCustomCancelURLs(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $old = $config->get('security.encrypt.http.fieldnames');
+        $config->set('security.encrypt.http.fieldnames', false);
+
+        try {
+            $rec = new ViewTestRichRecord();
+            $view = View::getInstance($rec);
+
+            $html = $view->createView(array('cancelButtonURL' => '/cancel/here'));
+            $this->assertStringContainsString('/cancel/here', $html);
+
+            $html = $view->editView(array('cancelButtonURL' => '/back/there'));
+            $this->assertStringContainsString('/back/there', $html);
+        } finally {
+            $config->set('security.encrypt.http.fieldnames', $old);
+        }
+    }
+
+    /**
+     * Testing the various view button branches of the listView method.
+     *
+     * @since 4.1
+     */
+    public function testListViewViewButtonVariants(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('security.encrypt.http.fieldnames', false);
+
+        $savedURI = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null;
+
+        try {
+            $rec = new ViewTestRichRecord();
+
+            $html = View::getInstance($rec)->listView();
+            $this->assertStringContainsString('...', $html);
+
+            // simulate a tokenized request URI to take the secure URL branches
+            $_SERVER['REQUEST_URI'] = '/tk/abc123';
+
+            $html = View::getInstance($rec)->listView();
+            $this->assertStringContainsString('View', $html);
+
+            $html = View::getInstance($rec)->listView(array('viewButtonURL' => '/see/this'));
+            $this->assertStringContainsString('/see/this', $html);
+        } finally {
+            if ($savedURI === null) {
+                unset($_SERVER['REQUEST_URI']);
+            } else {
+                $_SERVER['REQUEST_URI'] = $savedURI;
+            }
+        }
+    }
+
+    /**
+     * Testing the MANY-TO-ONE view mode branch of the renderRelationField method.
+     *
+     * @since 4.1
+     */
+    public function testRenderRelationFieldManyToOneViewMode(): void
+    {
+        $tag = new Tag();
+        $tag->rebuildTable();
+
+        $article = new Article();
+        $article->set('title', 'Related Article');
+        $article->set('description', 'desc');
+        $article->set('author', 'author');
+        $article->set('content', 'content');
+        $article->save();
+
+        $comment = new ArticleComment();
+        $comment->set('content', 'A reply');
+        $comment->set('articleID', $article->getID());
+        $comment->save();
+
+        $view = View::getInstance($comment);
+
+        try {
+            $html = $view->renderRelationField('articleID', 'Article', 'view');
+
+            $this->assertStringContainsString('<strong>Article:</strong>', $html);
+            $this->assertStringContainsString('desc', $html);
+        } finally {
+            $comment->dropTable();
+            $article->dropTable();
+            $tag->dropTable();
+        }
+    }
 }
 
 /**
@@ -802,5 +961,84 @@ class ViewTestHookedController extends \Alpha\Controller\Controller
         self::$hooks++;
 
         return '';
+    }
+}
+
+/**
+ * Record stub carrying one attribute of most Alpha types so the renderAllFields
+ * switch statement can be exercised in every mode without touching the database.
+ *
+ * @since 4.1
+ */
+class ViewTestRichRecord extends \Alpha\Model\ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    protected $intAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $dblAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $dateAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $tsAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $stAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $txtAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $ltAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $boolAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $enumAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $dataLabels = array('ID' => 'ID', 'intAttr' => 'Int attr', 'dblAttr' => 'Dbl attr', 'dateAttr' => 'Date attr', 'tsAttr' => 'Ts attr', 'stAttr' => 'St attr', 'txtAttr' => 'Txt attr', 'ltAttr' => 'Lt attr', 'boolAttr' => 'Bool attr', 'enumAttr' => 'Enum attr');
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->intAttr = new Integer(1);
+        $this->dblAttr = new AlphaDouble(1.5);
+        $this->dateAttr = new Date('2026-01-02');
+        $this->tsAttr = new Timestamp('2026-01-02 10:11:12');
+        $this->stAttr = new SmallText('small');
+        $this->txtAttr = new Text('medium');
+        $this->ltAttr = new LargeText('large');
+        $this->boolAttr = new Boolean(0);
+        $this->enumAttr = new Enum();
+        $this->enumAttr->setOptions(array('one', 'two'));
+        $this->ltAttr->setValue('a very long piece of text that is definitely longer than the seventy characters that get truncated in the list views of records');
     }
 }
