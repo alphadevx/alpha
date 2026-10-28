@@ -1952,7 +1952,10 @@ class ActiveRecordTestHookRecord extends ActiveRecord
 
         $this->name = new \Alpha\Model\Type\SmallText('x');
         $this->intAttr = new \Alpha\Model\Type\Integer(1);
-        $this->tsAttr = new \Alpha\Model\Type\Timestamp();
+        // Seed an explicit valid datetime: an empty Timestamp defaults to
+        // '0000-00-00 00:00:00', which strict sql_mode (NO_ZERO_DATE) on
+        // GitHub Actions MySQL rejects, even though local MySQL tolerates it.
+        $this->tsAttr = new \Alpha\Model\Type\Timestamp(date('Y-m-d H:i:s'));
     }
 
     /**
