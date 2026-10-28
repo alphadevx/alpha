@@ -1595,4 +1595,1009 @@ class ActiveRecordTest extends ModelTestCase
         $this->assertGreaterThan(0, $person1->getID(), 'Testing save with transaction');
         $this->assertGreaterThan(0, $person2->getID(), 'Testing save with transaction');
     }
+
+    /**
+     * Testing that the optional before and after hook methods defined on a
+     * Record class get triggered by the matching ActiveRecord methods.
+     *
+     * @since 4.1
+     */
+    #[DataProvider('getActiveRecordProviders')]
+    public function testRecordHookMethodsFire(string $provider): void
+    {
+        ActiveRecordTestHookSink::$log = array();
+
+        $config = ConfigProvider::getInstance();
+        $config->set('db.provider.name', $provider);
+
+        $rec = new ActiveRecordTestHookRecord();
+        $rec->makeTable();
+        $rec->set('name', 'hooky');
+        $rec->set('intAttr', 5);
+        $rec->save();
+        $id = $rec->getID();
+        $this->assertGreaterThan(0, $id);
+
+        $rec->save();
+        $rec->get('name');
+        $rec->getPropObject('name');
+        $rec->getVersion();
+        $rec->checkTableExists();
+        $rec->checkRecordExists($id);
+        $rec->getCount();
+        $rec->getMAX();
+        $rec->saveAttribute('name', 'hooky2');
+
+        $probe = new ActiveRecordTestHookRecord();
+        $probe->load($id);
+        $probe->loadByAttribute('name', 'hooky2');
+        $probe->loadAll();
+        $probe->loadAllByAttribute('name', 'hooky2');
+        $probe->loadAllByAttributes(array('name'), array('hooky2'));
+        $probe->loadAllByDayUpdated(date('Y-m-d'));
+
+        try {
+            $rec->addProperty('bogusAttr');
+        } catch (\Exception $e) {
+        }
+
+        try {
+            $rec->createUniqueIndex('name');
+        } catch (AlphaException $e) {
+        }
+
+        $this->assertEquals(0, $rec->deleteAllByAttribute('name', 'notThere'));
+
+        $rec->checkTableNeedsUpdate();
+        $rec->findMissingFields();
+        $rec->rebuildTable();
+        $rec->makeHistoryTable();
+        $rec->setMaintainHistory(true);
+        $rec->saveHistory();
+        $rec->getHistoryCount();
+        $rec->delete();
+        $rec->dropTable();
+
+        $expected = array('beforeSave', 'afterSave', 'beforeSet', 'afterSet', 'beforeGet', 'afterGet', 'beforeGetPropObject', 'afterGetPropObject', 'beforeGetVersion', 'afterGetVersion', 'beforeCheckTableExists', 'afterCheckTableExists', 'beforeCheckRecordExists', 'afterCheckRecordExists', 'beforeGetCount', 'afterGetCount', 'beforeGetMAX', 'afterGetMAX', 'beforeMakeTable', 'afterMakeTable', 'beforeMakeHistoryTable', 'afterMakeHistoryTable', 'beforeSaveHistory', 'afterSaveHistory', 'beforeGetHistoryCount', 'afterGetHistoryCount', 'beforeLoad', 'afterLoad', 'beforeLoadByAttribute', 'afterLoadByAttribute', 'beforeLoadAll', 'afterLoadAll', 'beforeLoadAllByAttribute', 'afterLoadAllByAttribute', 'beforeLoadAllByAttributes', 'afterLoadAllByAttributes', 'beforeLoadAllByDayUpdated', 'afterLoadAllByDayUpdated', 'beforeSaveAttribute', 'afterSaveAttribute', 'beforeAddProperty', 'beforeDeleteAllByAttribute', 'afterDeleteAllByAttribute', 'beforeCheckTableNeedsUpdate', 'afterCheckTableNeedsUpdate', 'beforeFindMissingFields', 'afterFindMissingFields', 'beforeRebuildTable', 'afterRebuildTable', 'beforeDelete', 'afterDelete', 'beforeDropTable', 'afterDropTable');
+
+        $fired = ActiveRecordTestHookSink::$log;
+
+        foreach ($expected as $hook) {
+            $this->assertContains($hook, $fired, 'hook ['.$hook.'] did not fire');
+        }
+    }
+
+    /**
+     * Testing the Date/Timestamp, version_num and MANY-TO-MANY relation
+     * branches of the populateFromArray method.
+     *
+     * @since 4.1
+     */
+    public function testPopulateFromArraySpecialBranches(): void
+    {
+        $article = new Article();
+
+        $article->populateFromArray(array('title' => 'pop test', 'created_ts' => '2026-01-02 03:04:05', 'version_num' => '3'));
+
+        $this->assertEquals('pop test', $article->get('title'));
+        $this->assertEquals(3, $article->getVersionNumber()->getValue());
+
+        // a non transient MANY-TO-MANY relation gets its related IDs set from the array
+        $m2m = new ActiveRecordTestM2MRecord();
+        $m2m->populateFromArray(array('relAttr' => '00000000001'));
+        $this->assertCount(1, $m2m->getPropObject('relAttr')->getRelatedIDs());
+    }
+
+    /**
+     * Testing the cast method in both size directions.
+     *
+     * @since 4.1
+     */
+    public function testCastRecordBetweenTypes(): void
+    {
+        $small = new ActiveRecordTestCastSmall();
+        $small->makeTable();
+        $small->set('name', 'cast me');
+        $small->setID(99);
+
+        try {
+            $big = $small->cast('Alpha\Test\Model\ActiveRecordTestCastBig', $small);
+            $this->assertInstanceOf('Alpha\Test\Model\ActiveRecordTestCastBig', $big);
+            $this->assertEquals(99, $big->getID());
+
+            $big2 = new ActiveRecordTestCastBig();
+            $big2->makeTable();
+            $big2->set('name', 'shrink me');
+            $big2->set('num', 2);
+            $big2->setID(100);
+
+            try {
+                $small2 = $big2->cast('Alpha\Test\Model\ActiveRecordTestCastSmall', $big2);
+                $this->assertInstanceOf('Alpha\Test\Model\ActiveRecordTestCastSmall', $small2);
+                $this->assertEquals(100, $small2->getID());
+            } finally {
+                $big2->dropTable();
+            }
+        } finally {
+            $small->dropTable();
+        }
+    }
+
+    /**
+     * Testing the static transaction helpers with an explicit record and the
+     * lazy initialization of the static logger.
+     *
+     * @since 4.1
+     */
+    public function testStaticTransactionHelpersWithRecord(): void
+    {
+        $loggerProperty = new \ReflectionProperty(ActiveRecord::class, 'logger');
+        $loggerProperty->setAccessible(true);
+        $savedLogger = $loggerProperty->getValue();
+
+        $article = new Article();
+
+        try {
+            $loggerProperty->setValue(null, null);
+            ActiveRecord::begin($article);
+            ActiveRecord::rollback($article);
+
+            $loggerProperty->setValue(null, null);
+            ActiveRecord::begin($article);
+            ActiveRecord::commit($article);
+
+            $loggerProperty->setValue(null, null);
+            ActiveRecord::isInstalled();
+
+            $this->assertTrue(true);
+        } finally {
+            $loggerProperty->setValue(null, $savedLogger);
+        }
+    }
+
+    /**
+     * Testing the cache helper methods take their error paths when the
+     * configured cache provider cannot be created and round trip through the
+     * array cache provider.
+     *
+     * @since 4.1
+     */
+    public function testCacheHelpersErrorPathsAndRoundTrip(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $old = $config->get('cache.provider.name');
+
+        try {
+            $config->set('cache.provider.name', 'No\\Such\\Cache\\Provider');
+
+            $article = new Article();
+            $article->setID(999001);
+
+            $article->addToCache();
+            $this->assertFalse($article->loadFromCache());
+        } finally {
+            $config->set('cache.provider.name', $old);
+        }
+    }
+
+    /**
+     * Testing that the wakeup magic method re-initializes the static logger
+     * after de-serialization.
+     *
+     * @since 4.1
+     */
+    public function testWakeupInitializesLogger(): void
+    {
+        $loggerProperty = new \ReflectionProperty(ActiveRecord::class, 'logger');
+        $loggerProperty->setAccessible(true);
+        $savedLogger = $loggerProperty->getValue();
+
+        try {
+            $serialized = serialize(new Article());
+
+            $loggerProperty->setValue(null, null);
+            $article = unserialize($serialized);
+
+            $this->assertInstanceOf('Alpha\Model\Article', $article);
+            $this->assertNotNull($loggerProperty->getValue());
+        } finally {
+            $loggerProperty->setValue(null, $savedLogger);
+        }
+    }
+
+    /**
+     * Testing that set() routes Date and Timestamp properties through their
+     * string setters (setValue() delegates to populateFromString()).  Note the
+     * dedicated populateFromString() branch in set() is unreachable dead code
+     * since get_class() returns the fully qualified class name, so the
+     * uppercase class name comparison never matches.
+     *
+     * @since 4.1
+     */
+    public function testSetDateAndTimestampPropertiesUsePopulateFromString(): void
+    {
+        $rec = new ActiveRecordTestSetProbe();
+
+        $rec->set('stamp', '2026-03-04 05:06:07');
+        $this->assertSame('2026-03-04 05:06:07', $rec->get('stamp'));
+
+        $rec->set('day', '2026-03-04');
+        $this->assertSame('2026-03-04', $rec->get('day'));
+    }
+
+    /**
+     * Testing that populateFromString() exceptions raised while setting an
+     * invalid Date or Timestamp string propagate out of set() and leave the
+     * existing values untouched.
+     *
+     * @since 4.1
+     */
+    public function testSetInvalidDateStringThrowsAndLeavesValueUntouched(): void
+    {
+        $rec = new ActiveRecordTestSetProbe();
+
+        try {
+            $rec->set('day', 'bogus');
+            $this->fail('Expected an IllegalArguementException for an invalid Date string');
+        } catch (\Alpha\Exception\IllegalArguementException $e) {
+            $this->assertStringContainsString('Invalid Date value', $e->getMessage());
+            $this->assertSame('2026-01-01', $rec->get('day'));
+        }
+
+        try {
+            $rec->set('stamp', 'bogus');
+            $this->fail('Expected an IllegalArguementException for an invalid Timestamp string');
+        } catch (\Alpha\Exception\IllegalArguementException $e) {
+            $this->assertSame('2026-01-01 01:01:01', $rec->get('stamp'));
+        }
+    }
+
+    /**
+     * Testing that set() assigns simple (non-object) properties directly.
+     *
+     * @since 4.1
+     */
+    public function testSetSimplePropertySetsDirectly(): void
+    {
+        $rec = new ActiveRecordTestSetProbe();
+
+        $rec->set('plain', 'y');
+        $this->assertSame('y', $rec->get('plain'));
+    }
+
+    /**
+     * Testing that set() throws an AlphaException for a non-existent property
+     * and for a private child property that is invisible to the parent scope.
+     *
+     * @since 4.1
+     */
+    public function testSetMissingOrPrivatePropertyThrows(): void
+    {
+        $rec = new ActiveRecordTestSetProbe();
+
+        try {
+            $rec->set('doesNotExist', 'x');
+            $this->fail('Expected an AlphaException for a non-existent property');
+        } catch (AlphaException $e) {
+            $this->assertStringContainsString('Could not set the property', $e->getMessage());
+        }
+
+        try {
+            $rec->set('hidden', 'x');
+            $this->fail('Expected an AlphaException for a private property');
+        } catch (AlphaException $e) {
+            $this->assertStringContainsString('Could not set the property [hidden]', $e->getMessage());
+        }
+    }
+}
+
+/**
+ * External sink that collects the names of the hook methods that fired;
+ * deliberately not a Record property so provider property loops never see it.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestHookSink
+{
+    /**
+     * @since 4.1
+     */
+    public static $log = array();
+}
+
+/**
+ * Record stub that defines every optional hook method checked by ActiveRecord
+ * so tests can assert each one is triggered by its matching method.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestHookRecord extends ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    public const TABLE_NAME = 'ActiveRecordTestHookRecord';
+
+    /**
+     * @since 4.1
+     */
+    protected $transientAttributes = array('lastQuery', 'dataLabels', 'defaultAttributes', 'transientAttributes', 'uniqueAttributes', 'TABLE_NAME', 'logger');
+
+    /**
+     * @since 4.1
+     */
+    protected $name;
+
+    /**
+     * @since 4.1
+     */
+    protected $intAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $tsAttr;
+
+    /**
+     * @since 4.1
+     */
+    protected $dataLabels = array('ID' => 'ID', 'name' => 'Name', 'intAttr' => 'Int attr', 'tsAttr' => 'Ts attr');
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->name = new \Alpha\Model\Type\SmallText('x');
+        $this->intAttr = new \Alpha\Model\Type\Integer(1);
+        // Seed an explicit valid datetime: an empty Timestamp defaults to
+        // '0000-00-00 00:00:00', which strict sql_mode (NO_ZERO_DATE) on
+        // GitHub Actions MySQL rejects, even though local MySQL tolerates it.
+        $this->tsAttr = new \Alpha\Model\Type\Timestamp(date('Y-m-d H:i:s'));
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeAddProperty(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeAddProperty';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterAddProperty(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterAddProperty';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCheckRecordExists(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeCheckRecordExists';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCheckRecordExists(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterCheckRecordExists';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCheckTableExists(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeCheckTableExists';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCheckTableExists(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterCheckTableExists';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCheckTableNeedsUpdate(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeCheckTableNeedsUpdate';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCheckTableNeedsUpdate(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterCheckTableNeedsUpdate';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCreateForeignIndex(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeCreateForeignIndex';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCreateForeignIndex(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterCreateForeignIndex';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCreateUniqueIndex(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeCreateUniqueIndex';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCreateUniqueIndex(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterCreateUniqueIndex';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeDelete(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeDelete';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterDelete(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterDelete';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeDeleteAllByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeDeleteAllByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterDeleteAllByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterDeleteAllByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeDropTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeDropTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterDropTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterDropTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeFindMissingFields(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeFindMissingFields';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterFindMissingFields(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterFindMissingFields';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGet(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGet';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGet(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGet';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGetCount(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGetCount';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGetCount(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGetCount';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGetHistoryCount(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGetHistoryCount';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGetHistoryCount(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGetHistoryCount';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGetMAX(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGetMAX';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGetMAX(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGetMAX';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGetPropObject(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGetPropObject';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGetPropObject(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGetPropObject';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeGetVersion(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeGetVersion';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterGetVersion(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterGetVersion';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoad(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoad';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoad(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoad';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoadAll(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoadAll';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoadAll(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoadAll';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoadAllByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoadAllByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoadAllByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoadAllByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoadAllByAttributes(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoadAllByAttributes';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoadAllByAttributes(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoadAllByAttributes';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoadAllByDayUpdated(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoadAllByDayUpdated';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoadAllByDayUpdated(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoadAllByDayUpdated';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeLoadByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeLoadByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterLoadByAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterLoadByAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeMakeHistoryTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeMakeHistoryTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterMakeHistoryTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterMakeHistoryTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeMakeTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeMakeTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterMakeTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterMakeTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeRebuildTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeRebuildTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterRebuildTable(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterRebuildTable';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSave(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeSave';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSave(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterSave';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSaveAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeSaveAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSaveAttribute(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterSaveAttribute';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSaveHistory(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeSaveHistory';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSaveHistory(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterSaveHistory';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSet(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeSet';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSet(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterSet';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSetEnumOptions(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeSetEnumOptions';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSetEnumOptions(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterSetEnumOptions';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeValidate(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'beforeValidate';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterValidate(): void
+    {
+        ActiveRecordTestHookSink::$log[] = 'afterValidate';
+    }
+}
+
+/**
+ * Small record stub for testing the cast method.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestCastSmall extends ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    public const TABLE_NAME = 'ActiveRecordTestCastSmall';
+
+    /**
+     * @since 4.1
+     */
+    protected $name;
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->name = new \Alpha\Model\Type\SmallText('x');
+    }
+}
+
+/**
+ * Larger record stub for testing the cast method.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestCastBig extends ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    public const TABLE_NAME = 'ActiveRecordTestCastBig';
+
+    /**
+     * @since 4.1
+     */
+    protected $name;
+
+    /**
+     * @since 4.1
+     */
+    protected $num;
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->name = new \Alpha\Model\Type\SmallText('x');
+        $this->num = new \Alpha\Model\Type\Integer(1);
+    }
+}
+
+/**
+ * Record stub carrying a non transient MANY-TO-MANY relation for testing the
+ * related IDs branch of populateFromArray.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestM2MRecord extends ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    public const TABLE_NAME = 'ActiveRecordTestM2MRecord';
+
+    /**
+     * @since 4.1
+     */
+    protected $relAttr;
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $rel = new \Alpha\Model\Type\Relation();
+        $rc = new \ReflectionProperty(\Alpha\Model\Type\Relation::class, 'relatedClass');
+        $rc->setAccessible(true);
+        $rc->setValue($rel, 'Alpha\Model\Tag');
+        $rf = new \ReflectionProperty(\Alpha\Model\Type\Relation::class, 'relatedClassField');
+        $rf->setAccessible(true);
+        $rf->setValue($rel, 'ID');
+        $rt = new \ReflectionProperty(\Alpha\Model\Type\Relation::class, 'relationType');
+        $rt->setAccessible(true);
+        $rt->setValue($rel, 'MANY-TO-MANY');
+        $this->relAttr = $rel;
+    }
+}
+
+/**
+ * Record stub carrying Date, Timestamp, simple, and private properties for
+ * exercising the remaining branches of the ActiveRecord::set method.
+ *
+ * @since 4.1
+ */
+class ActiveRecordTestSetProbe extends ActiveRecord
+{
+    /**
+     * @since 4.1
+     */
+    public const TABLE_NAME = 'ActiveRecordTestSetProbe';
+
+    /**
+     * @since 4.1
+     */
+    protected $stamp;
+
+    /**
+     * @since 4.1
+     */
+    protected $day;
+
+    /**
+     * @since 4.1
+     */
+    protected $plain;
+
+    /**
+     * @since 4.1
+     */
+    private $hidden = 'secret';
+
+    /**
+     * @since 4.1
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->stamp = new \Alpha\Model\Type\Timestamp('2026-01-01 01:01:01');
+        $this->day = new \Alpha\Model\Type\Date('2026-01-01');
+        $this->plain = 'x';
+    }
 }

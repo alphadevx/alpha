@@ -57,12 +57,13 @@ class PHPServerUtilsTest extends TestCase
     public function testStart(): void
     {
         $pid = PHPServerUtils::start('localhost', '8713', '.');
-        sleep(1); // wait a second to give the server time to start...
+        sleep(1);
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://localhost:8713/');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         ob_start();
         $result = curl_exec($ch);
         ob_end_clean();
@@ -82,7 +83,7 @@ class PHPServerUtilsTest extends TestCase
     public function testStop(): void
     {
         $pid = PHPServerUtils::start('localhost', '8713', '.');
-        sleep(1); // wait a second to give the server time to start...
+        sleep(1);
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
@@ -97,7 +98,7 @@ class PHPServerUtilsTest extends TestCase
 
         if (!empty($pid)) {
             PHPServerUtils::stop($pid);
-            sleep(1); // wait a second to give the server time to stop...
+            sleep(1);
         }
 
         $result = curl_exec($ch);
@@ -130,7 +131,6 @@ class PHPServerUtilsTest extends TestCase
      */
     public function testStatusNonExistentPID(): void
     {
-        // Use a very high PID that is unlikely to exist
         $nonExistentPID = 999999;
         $this->assertFalse(PHPServerUtils::status($nonExistentPID), 'Testing that status returns false for a non-existent PID');
     }
@@ -142,9 +142,8 @@ class PHPServerUtilsTest extends TestCase
      */
     public function testStopNonExistentPID(): void
     {
-        // Use a very high PID that is unlikely to exist
         $nonExistentPID = 999998;
-        // Should not throw any exception
+        PHPServerUtils::stop($nonExistentPID);
         $this->assertTrue(true, 'Testing that stop method does not throw exception for non-existent PID');
     }
 
@@ -206,7 +205,7 @@ class PHPServerUtilsTest extends TestCase
             PHPServerUtils::stop($pid);
         }
 
-        sleep(1); // Give the server time to stop
+        sleep(1);
 
         $this->assertFalse(PHPServerUtils::status($pid), 'Testing that server is stopped after stop method called');
     }
@@ -220,11 +219,34 @@ class PHPServerUtilsTest extends TestCase
     {
         $pid = PHPServerUtils::start('localhost', '8718', '.');
 
-        // Status should be true even immediately after start
         $this->assertTrue(PHPServerUtils::status($pid), 'Testing that status is true immediately after start');
 
         if (!empty($pid)) {
             PHPServerUtils::stop($pid);
         }
+    }
+
+    /**
+     * Testing that start returns a valid PID on Linux.
+     *
+     * @since 4.1
+     */
+    public function testStartReturnsPositivePID(): void
+    {
+        $pid = PHPServerUtils::start('127.0.0.1', '8720', '.');
+        $this->assertIsInt($pid);
+        $this->assertGreaterThan(0, $pid);
+        PHPServerUtils::stop($pid);
+    }
+
+    /**
+     * Testing status with PID 0.
+     *
+     * @since 4.1
+     */
+    public function testStatusWithZeroPID(): void
+    {
+        $result = PHPServerUtils::status(0);
+        $this->assertIsBool($result);
     }
 }

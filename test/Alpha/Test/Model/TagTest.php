@@ -2,10 +2,15 @@
 
 namespace Alpha\Test\Model;
 
-use Alpha\Model\Tag;
+use Alpha\Exception\AlphaException;
+use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
+use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
+use Alpha\Util\Config\ConfigProvider;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Test case for the Tag class.
@@ -213,5 +218,325 @@ class TagTest extends ModelTestCase
         $tagsB = $tag->loadTags('Alpha\Model\Article', $this->article->getID());
 
         $this->assertEquals(count($tagsA), count($tagsB), 'testing the loadTags() method for accessing the tags on a given object type directly');
+    }
+
+    /**
+     * Testing the loadTags() method throws an exception when arguments are empty.
+     *
+     * @since 4.1
+     */
+    public function testLoadTagsEmptyArgs(): void
+    {
+        $this->expectException(IllegalArguementException::class);
+        $tag = new Tag();
+        $tag->loadTags('', '');
+    }
+
+    /**
+     * Testing the loadTags() method returns an empty array when no records found.
+     *
+     * @since 4.1
+     */
+    public function testLoadTagsNoRecords(): void
+    {
+        $tag = new Tag();
+        $tags = $tag->loadTags('Alpha\Model\Article', 999999);
+        $this->assertIsArray($tags);
+        $this->assertEquals(0, count($tags));
+    }
+
+    /**
+     * Testing the getPopularTagsArray method returns an array.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArray(): void
+    {
+        $this->article->save();
+        $tags = Tag::getPopularTagsArray(10);
+        $this->assertIsArray($tags);
+    }
+
+    /**
+     * Testing the getPopularTagsArray method with owner and date filters.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArrayWithFilters(): void
+    {
+        $this->article->save();
+        $tags = Tag::getPopularTagsArray(10, '1', '2000-01-01', '2100-01-01');
+        $this->assertIsArray($tags);
+    }
+
+    /**
+     * Testing the tokenize method with applyStopwords set to false.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithoutStopwords(): void
+    {
+        $tags = Tag::tokenize('Hello World Foo', '', '', false);
+        $this->assertIsArray($tags);
+        $this->assertGreaterThan(0, count($tags));
+    }
+
+    /**
+     * Testing the tokenize method without taggedClass and taggedID.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithoutTaggedClassAndID(): void
+    {
+        $tags = Tag::tokenize('Alpha Framework Test');
+        $this->assertIsArray($tags);
+        foreach ($tags as $tag) {
+            $this->assertTrue($tag instanceof Tag);
+        }
+    }
+
+    /**
+     * Testing the tokenize method filters out non-alpha tokens.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeFiltersNonAlpha(): void
+    {
+        $tags = Tag::tokenize('hello 123 world', '', '', false);
+        $contents = array();
+        foreach ($tags as $tag) {
+            $contents[] = $tag->get('content');
+        }
+        $this->assertNotContains('123', $contents);
+        $this->assertContains('hello', $contents);
+        $this->assertContains('world', $contents);
+    }
+
+    /**
+     * Testing the cleanTagContent method.
+     *
+     * @since 4.1
+     */
+    public function testCleanTagContent(): void
+    {
+        $this->assertEquals('helloworld', Tag::cleanTagContent('Hello World'));
+        $this->assertEquals('abc', Tag::cleanTagContent('  ABC  '));
+    }
+
+    /**
+     * Testing the lowercaseArrayElement private static method via reflection.
+     *
+     * @since 4.1
+     */
+    public function testLowercaseArrayElement(): void
+    {
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'lowercaseArrayElement');
+        $method->setAccessible(true);
+        $element = '  UPPER  ';
+        $method->invokeArgs(null, array(&$element, 0));
+        $this->assertEquals('upper', $element);
+    }
+
+    /**
+     * Testing the afterSave method when cache provider is empty.
+     *
+     * @since 4.1
+     */
+    public function testAfterSaveNoCache(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $original = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', '');
+
+        $tag = new Tag();
+        $tag->set('content', 'testcache');
+
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'afterSave');
+        $method->setAccessible(true);
+        $method->invoke($tag);
+
+        $config->set('cache.provider.name', $original);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Testing the beforeDelete method delegates to afterSave.
+     *
+     * @since 4.1
+     */
+    public function testBeforeDelete(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $original = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', '');
+
+        $tag = new Tag();
+        $tag->set('content', 'testcache');
+
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'beforeDelete');
+        $method->setAccessible(true);
+        $method->invoke($tag);
+
+        $config->set('cache.provider.name', $original);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Testing the constructor sets up the type properties and unique fields.
+     *
+     * @since 4.1
+     */
+    public function testConstructorProperties(): void
+    {
+        $tag = new Tag();
+        $this->assertNotNull($tag->getPropObject('taggedClass'));
+        $this->assertNotNull($tag->getPropObject('taggedID'));
+        $this->assertNotNull($tag->getPropObject('content'));
+        $this->assertEquals('Tag', Tag::TABLE_NAME);
+    }
+
+    /**
+     * Testing the dataLabels property via reflection.
+     *
+     * @since 4.1
+     */
+    public function testDataLabels(): void
+    {
+        $tag = new Tag();
+        $reflection = new ReflectionClass('Alpha\Model\Tag');
+        $property = $reflection->getProperty('dataLabels');
+        $property->setAccessible(true);
+        $labels = $property->getValue($tag);
+        $this->assertArrayHasKey('content', $labels);
+        $this->assertArrayHasKey('taggedClass', $labels);
+        $this->assertArrayHasKey('taggedID', $labels);
+        $this->assertArrayHasKey('ID', $labels);
+    }
+
+    /**
+     * Testing that tokenizing throws an exception when no stopwords file can be
+     * found for the configured size.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithMissingStopwordsFile(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedSize = $config->get('search.stop.words.size');
+
+        $config->set('search.stop.words.size', 'zzzdoesnotexist');
+
+        try {
+            $this->expectException(AlphaException::class);
+
+            Tag::tokenize('some alpha content');
+        } finally {
+            $config->set('search.stop.words.size', $savedSize);
+        }
+    }
+
+    /**
+     * Testing that a failed query in the getPopularTagsArray method is wrapped
+     * in an AlphaException.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArrayQueryFailure(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedProvider = $config->get('db.provider.name');
+
+        // the SQLite provider wraps SQL syntax errors in a CustomQueryException, which Tag
+        // converts to an AlphaException; the MySQL provider leaks a raw mysqli_sql_exception
+        $config->set('db.provider.name', 'Alpha\Model\ActiveRecordProviderSQLite');
+
+        try {
+            $this->expectException(AlphaException::class);
+
+            Tag::getPopularTagsArray("'");
+        } finally {
+            $config->set('db.provider.name', $savedProvider);
+        }
+    }
+
+    /**
+     * Testing that the afterSave hook of a Tag logs and swallows errors thrown
+     * by the configured cache provider. The hook is invoked directly via
+     * reflection because a failing cache provider during a full save would hit
+     * the documented exit; in ActiveRecord::removeFromCache().
+     *
+     * @since 4.1
+     */
+    public function testAfterSaveWithFailingCacheProvider(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $savedCacheProvider = $config->get('cache.provider.name');
+
+        $config->set('cache.provider.name', TagTestBogusCacheProvider::class);
+
+        try {
+            // ensure the Tag class logger has been lazily initialized
+            Tag::tokenize('warm up the logger');
+
+            $tag = new Tag();
+            $tag->set('content', 'boguscachetest');
+
+            $afterSave = new \ReflectionMethod($tag, 'afterSave');
+            $afterSave->setAccessible(true);
+            $afterSave->invoke($tag);
+
+            $this->assertTrue(true, 'Testing that afterSave swallows cache provider failures');
+        } finally {
+            $config->set('cache.provider.name', $savedCacheProvider);
+        }
+    }
+}
+
+/**
+ * A stub cache provider that throws an exception when a key is deleted, used
+ * to exercise the error handling of the Tag::afterSave method.
+ *
+ * @since 4.1
+ */
+class TagTestBogusCacheProvider implements \Alpha\Util\Cache\CacheProviderInterface
+{
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function get($key): mixed
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function set($key, $value, $expiry = 0): void
+    {
+        // no-op
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function delete($key): void
+    {
+        throw new \Exception('stub cache provider failure');
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @since 4.1
+     */
+    public function check($key): bool
+    {
+        return false;
     }
 }

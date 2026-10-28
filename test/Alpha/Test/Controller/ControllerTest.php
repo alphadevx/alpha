@@ -14,6 +14,7 @@ use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
 use Alpha\Model\ActiveRecord;
+use Alpha\Model\ActiveRecordProviderSQLite;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Util\Http\Request;
@@ -21,6 +22,7 @@ use Alpha\Util\Security\SecurityUtils;
 use Alpha\Exception\PHPException;
 use Alpha\Exception\FailedUnitCommitException;
 use Alpha\Exception\IllegalArguementException;
+use Alpha\Exception\NotImplementedException;
 use Alpha\Exception\RecordNotFoundException;
 use Alpha\View\ViewState;
 use PHPUnit\Framework\TestCase;
@@ -878,5 +880,303 @@ class ControllerTest extends TestCase
         $config->set('security.encryption.key', $oldKey);
         $config->set('app.use.pretty.urls', $oldRewriteSetting);
         $config->set('security.encrypt.http.fieldnames', false);
+    }
+
+    /**
+     * Testing that all of the hook methods defined on a controller get called.
+     *
+     * @since 4.1
+     */
+    public function testControllerHookMethodsAreFired(): void
+    {
+        $c = new ControllerTestHooksStub();
+
+        $c->setName('Alpha\Controller\ImageController');
+        $c->setUnitOfWork(array('Alpha\Controller\ImageController', 'Alpha\Controller\LogController'));
+
+        $c->markDirty($this->person);
+        $c->markNew($this->article);
+
+        $this->assertTrue($c->checkRights());
+
+        $c->commit();
+        $c->abort();
+
+        $c->setRequest(new Request(array('method' => 'GET', 'URI' => '/hooktest')));
+        $response = $c->accessError();
+        $this->assertEquals(403, $response->getStatus());
+
+        foreach (array('beforeSetUnitOfWork', 'afterSetUnitOfWork', 'beforeMarkDirty', 'afterMarkDirty', 'beforeMarkNew', 'afterMarkNew', 'beforeCommit', 'afterCommit', 'beforeAbort', 'afterAbort', 'beforeAccessError', 'afterAccessError', 'beforeCheckRights', 'afterCheckRights') as $hook) {
+            $this->assertContains($hook, $c->hookCalls, 'hook ['.$hook.'] was not fired');
+        }
+    }
+
+    /**
+     * Testing that the unimplemented HTTP method handlers throw NotImplementedException.
+     *
+     * @since 4.1
+     */
+    public function testUnimplementedHTTPMethodsThrow(): void
+    {
+        $c = new ControllerTestHooksStub();
+        $request = new Request(array('method' => 'GET', 'URI' => '/hooktest'));
+
+        foreach (array('doHEAD', 'doGET', 'doPOST', 'doPUT', 'doPATCH', 'doDELETE') as $method) {
+            try {
+                $c->$method($request);
+                $this->fail($method.' should have thrown NotImplementedException');
+            } catch (NotImplementedException $e) {
+                $this->assertStringContainsString('not', $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Testing the doTRACE method returns a 405 with the Allow header.
+     *
+     * @since 4.1
+     */
+    public function testProcessTraceRequest(): void
+    {
+        $c = new ControllerTestHooksStub();
+        $request = new Request(array('method' => 'TRACE', 'URI' => '/hooktest'));
+
+        $response = $c->process($request);
+
+        $this->assertEquals(405, $response->getStatus());
+    }
+
+    /**
+     * Testing the session, group membership and own profile branches of checkRights.
+     *
+     * @since 4.1
+     */
+    public function testCheckRightsSessionGroupAndProfileBranches(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $session = ServiceFactory::getInstance($config->get('session.provider.name'), 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        // session visibility only requires a logged in user
+        $c = new ControllerTestHooksStub();
+        $c->setVisibility('Session');
+        $session->set('currentUser', $this->person);
+        $this->assertTrue($c->checkRights());
+
+        // user in the Admin group can access Admin pages
+        $this->person->save();
+        $admin = new Rights();
+        $admin->loadByAttribute('name', 'Admin');
+        $lookup = $this->person->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($this->person->getID(), $admin->getID()));
+        $lookup->save();
+
+        $c->setVisibility('Admin');
+        $this->assertTrue($c->checkRights());
+
+        // user in a named group can access pages with that visibility
+        $group = new Rights();
+        $group->set('name', 'HookTestGroup');
+        $group->save();
+
+        $person2 = $this->createPersonObject('hookTestUser2');
+        $person2->save();
+        $lookup = $person2->getPropObject('rights')->getLookup();
+        $lookup->setValue(array($person2->getID(), $group->getID()));
+        $lookup->save();
+
+        $session->set('currentUser', $person2);
+
+        $c2 = new ControllerTestHooksStub();
+        $c2->setVisibility('HookTestGroup');
+        $this->assertTrue($c2->checkRights());
+
+        // a user editing their own profile is allowed even without group rights
+        $c2->setVisibility('SomeGroupIMissing');
+        $c2->setRecord($person2);
+        $this->assertTrue($c2->checkRights());
+
+        $session->delete('currentUser');
+        $group->dropTable();
+        $person2->dropTable();
+    }
+
+    /**
+     * Testing commit aborts with FailedUnitCommitException when a dirty object cannot be saved.
+     *
+     * @since 4.1
+     */
+    public function testCommitDirtyObjectSaveFailure(): void
+    {
+        $this->person->save();
+
+        // remove a column so the UPDATE prepared statement fails during save
+        $conn = ActiveRecordProviderSQLite::getConnection();
+        $conn->exec('ALTER TABLE Person DROP COLUMN URL');
+
+        $c = new ControllerTestHooksStub();
+        $c->markDirty($this->person);
+
+        try {
+            $this->expectException(FailedUnitCommitException::class);
+            $c->commit();
+        } finally {
+            $this->person->rebuildTable();
+        }
+    }
+
+    /**
+     * Testing commit aborts with FailedUnitCommitException when a dirty object has a stale version.
+     *
+     * @since 4.1
+     */
+    public function testCommitDirtyObjectLockingFailure(): void
+    {
+        $person = $this->createPersonObject('lockingUser');
+        $person->save();
+
+        $stale = new Person();
+        $stale->load($person->getID());
+
+        // push the version on in the database using a second object
+        $fresh = new Person();
+        $fresh->load($person->getID());
+        $fresh->set('email', 'bumped@test.com');
+        $fresh->save();
+
+        $c = new ControllerTestHooksStub();
+        $c->markDirty($stale);
+
+        try {
+            $this->expectException(FailedUnitCommitException::class);
+            $c->commit();
+        } finally {
+            $person->rebuildTable();
+        }
+    }
+}
+
+/**
+ * Controller stub that defines every hook method supported by the base
+ * Controller class so tests can assert each one gets fired.
+ *
+ * @since 4.1
+ */
+class ControllerTestHooksStub extends Controller
+{
+    /**
+     * @since 4.1
+     */
+    public $hookCalls = array();
+
+    /**
+     * @since 4.1
+     */
+    public function beforeSetUnitOfWork(): void
+    {
+        $this->hookCalls[] = 'beforeSetUnitOfWork';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterSetUnitOfWork(): void
+    {
+        $this->hookCalls[] = 'afterSetUnitOfWork';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeMarkDirty(): void
+    {
+        $this->hookCalls[] = 'beforeMarkDirty';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterMarkDirty(): void
+    {
+        $this->hookCalls[] = 'afterMarkDirty';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeMarkNew(): void
+    {
+        $this->hookCalls[] = 'beforeMarkNew';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterMarkNew(): void
+    {
+        $this->hookCalls[] = 'afterMarkNew';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCommit(): void
+    {
+        $this->hookCalls[] = 'beforeCommit';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCommit(): void
+    {
+        $this->hookCalls[] = 'afterCommit';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeAbort(): void
+    {
+        $this->hookCalls[] = 'beforeAbort';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterAbort(): void
+    {
+        $this->hookCalls[] = 'afterAbort';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeAccessError(): void
+    {
+        $this->hookCalls[] = 'beforeAccessError';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterAccessError(): void
+    {
+        $this->hookCalls[] = 'afterAccessError';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function beforeCheckRights(): void
+    {
+        $this->hookCalls[] = 'beforeCheckRights';
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function afterCheckRights(): void
+    {
+        $this->hookCalls[] = 'afterCheckRights';
     }
 }

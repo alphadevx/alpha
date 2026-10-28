@@ -278,4 +278,67 @@ class FilterTest extends ModelTestCase
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
         }
     }
+
+    /**
+     * Testing that a request with no user agent string is skipped by the ClientBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testClientBlacklistFilterWithNullUserAgent(): void
+    {
+        $request = new Request(array('method' => 'GET', 'URI' => '/', 'headers' => array()));
+
+        $filter = new ClientBlacklistFilter();
+
+        $filter->process($request);
+
+        $this->assertTrue(true, 'Testing that a request with no user agent string is skipped by the ClientBlacklistFilter');
+    }
+
+    /**
+     * Testing that a client that is not on the blacklist can pass the ClientBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testClientBlacklistFilterWithUnknownClient(): void
+    {
+        $goodAgent = 'GoodClient/1.0-' . mt_rand();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/', 'headers' => array('User-Agent' => $goodAgent)));
+
+        $filter = new ClientBlacklistFilter();
+
+        $filter->process($request);
+
+        $this->assertTrue(true, 'Testing that a client that is not on the blacklist can pass the ClientBlacklistFilter');
+    }
+
+    /**
+     * Testing that an IP address that is not on the blacklist can pass the IPBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testIPBlacklistFilterWithUnknownIP(): void
+    {
+        $oldIP = $_SERVER['REMOTE_ADDR'] ?? null;
+
+        $_SERVER['REMOTE_ADDR'] = '203.0.113.' . mt_rand(2, 254);
+        $_SERVER['REQUEST_URI'] = '/';
+
+        try {
+            $request = new Request(array('method' => 'GET'));
+
+            $filter = new IPBlacklistFilter();
+
+            $filter->process($request);
+
+            $this->assertTrue(true, 'Testing that an IP address that is not on the blacklist can pass the IPBlacklistFilter');
+        } finally {
+            if ($oldIP === null) {
+                unset($_SERVER['REMOTE_ADDR']);
+            } else {
+                $_SERVER['REMOTE_ADDR'] = $oldIP;
+            }
+        }
+    }
 }
