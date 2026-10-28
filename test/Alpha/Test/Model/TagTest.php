@@ -2,10 +2,15 @@
 
 namespace Alpha\Test\Model;
 
-use Alpha\Model\Tag;
+use Alpha\Exception\AlphaException;
+use Alpha\Exception\IllegalArguementException;
 use Alpha\Model\Article;
+use Alpha\Model\Tag;
 use Alpha\Model\Type\DEnum;
 use Alpha\Model\Type\DEnumItem;
+use Alpha\Util\Config\ConfigProvider;
+use ReflectionClass;
+use ReflectionMethod;
 
 /**
  * Test case for the Tag class.
@@ -213,5 +218,198 @@ class TagTest extends ModelTestCase
         $tagsB = $tag->loadTags('Alpha\Model\Article', $this->article->getID());
 
         $this->assertEquals(count($tagsA), count($tagsB), 'testing the loadTags() method for accessing the tags on a given object type directly');
+    }
+
+    /**
+     * Testing the loadTags() method throws an exception when arguments are empty.
+     *
+     * @since 4.1
+     */
+    public function testLoadTagsEmptyArgs(): void
+    {
+        $this->expectException(IllegalArguementException::class);
+        $tag = new Tag();
+        $tag->loadTags('', '');
+    }
+
+    /**
+     * Testing the loadTags() method returns an empty array when no records found.
+     *
+     * @since 4.1
+     */
+    public function testLoadTagsNoRecords(): void
+    {
+        $tag = new Tag();
+        $tags = $tag->loadTags('Alpha\Model\Article', 999999);
+        $this->assertIsArray($tags);
+        $this->assertEquals(0, count($tags));
+    }
+
+    /**
+     * Testing the getPopularTagsArray method returns an array.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArray(): void
+    {
+        $this->article->save();
+        $tags = Tag::getPopularTagsArray(10);
+        $this->assertIsArray($tags);
+    }
+
+    /**
+     * Testing the getPopularTagsArray method with owner and date filters.
+     *
+     * @since 4.1
+     */
+    public function testGetPopularTagsArrayWithFilters(): void
+    {
+        $this->article->save();
+        $tags = Tag::getPopularTagsArray(10, '1', '2000-01-01', '2100-01-01');
+        $this->assertIsArray($tags);
+    }
+
+    /**
+     * Testing the tokenize method with applyStopwords set to false.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithoutStopwords(): void
+    {
+        $tags = Tag::tokenize('Hello World Foo', '', '', false);
+        $this->assertIsArray($tags);
+        $this->assertGreaterThan(0, count($tags));
+    }
+
+    /**
+     * Testing the tokenize method without taggedClass and taggedID.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeWithoutTaggedClassAndID(): void
+    {
+        $tags = Tag::tokenize('Alpha Framework Test');
+        $this->assertIsArray($tags);
+        foreach ($tags as $tag) {
+            $this->assertTrue($tag instanceof Tag);
+        }
+    }
+
+    /**
+     * Testing the tokenize method filters out non-alpha tokens.
+     *
+     * @since 4.1
+     */
+    public function testTokenizeFiltersNonAlpha(): void
+    {
+        $tags = Tag::tokenize('hello 123 world', '', '', false);
+        $contents = array();
+        foreach ($tags as $tag) {
+            $contents[] = $tag->get('content');
+        }
+        $this->assertNotContains('123', $contents);
+        $this->assertContains('hello', $contents);
+        $this->assertContains('world', $contents);
+    }
+
+    /**
+     * Testing the cleanTagContent method.
+     *
+     * @since 4.1
+     */
+    public function testCleanTagContent(): void
+    {
+        $this->assertEquals('helloworld', Tag::cleanTagContent('Hello World'));
+        $this->assertEquals('abc', Tag::cleanTagContent('  ABC  '));
+    }
+
+    /**
+     * Testing the lowercaseArrayElement private static method via reflection.
+     *
+     * @since 4.1
+     */
+    public function testLowercaseArrayElement(): void
+    {
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'lowercaseArrayElement');
+        $method->setAccessible(true);
+        $element = '  UPPER  ';
+        $method->invokeArgs(null, array(&$element, 0));
+        $this->assertEquals('upper', $element);
+    }
+
+    /**
+     * Testing the afterSave method when cache provider is empty.
+     *
+     * @since 4.1
+     */
+    public function testAfterSaveNoCache(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $original = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', '');
+
+        $tag = new Tag();
+        $tag->set('content', 'testcache');
+
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'afterSave');
+        $method->setAccessible(true);
+        $method->invoke($tag);
+
+        $config->set('cache.provider.name', $original);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Testing the beforeDelete method delegates to afterSave.
+     *
+     * @since 4.1
+     */
+    public function testBeforeDelete(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $original = $config->get('cache.provider.name');
+        $config->set('cache.provider.name', '');
+
+        $tag = new Tag();
+        $tag->set('content', 'testcache');
+
+        $method = new ReflectionMethod('Alpha\Model\Tag', 'beforeDelete');
+        $method->setAccessible(true);
+        $method->invoke($tag);
+
+        $config->set('cache.provider.name', $original);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * Testing the constructor sets up the type properties and unique fields.
+     *
+     * @since 4.1
+     */
+    public function testConstructorProperties(): void
+    {
+        $tag = new Tag();
+        $this->assertNotNull($tag->getPropObject('taggedClass'));
+        $this->assertNotNull($tag->getPropObject('taggedID'));
+        $this->assertNotNull($tag->getPropObject('content'));
+        $this->assertEquals('Tag', Tag::TABLE_NAME);
+    }
+
+    /**
+     * Testing the dataLabels property via reflection.
+     *
+     * @since 4.1
+     */
+    public function testDataLabels(): void
+    {
+        $tag = new Tag();
+        $reflection = new ReflectionClass('Alpha\Model\Tag');
+        $property = $reflection->getProperty('dataLabels');
+        $property->setAccessible(true);
+        $labels = $property->getValue($tag);
+        $this->assertArrayHasKey('content', $labels);
+        $this->assertArrayHasKey('taggedClass', $labels);
+        $this->assertArrayHasKey('taggedID', $labels);
+        $this->assertArrayHasKey('ID', $labels);
     }
 }

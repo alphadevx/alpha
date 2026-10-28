@@ -9,6 +9,7 @@ use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Service\ServiceFactory;
 use Alpha\Model\Article;
 use Alpha\Model\ActiveRecordProviderSQLite;
+use Alpha\View\ViewState;
 
 /**
  * Test cases for the ListActiveRecordsController class.
@@ -266,5 +267,113 @@ class ListActiveRecordsControllerTest extends ControllerTestCase
         $this->assertEquals('Page to list all active records.', $controller->getDescription());
         $this->assertEquals('list,all,active,records', $controller->getKeywords());
         $this->assertEquals('Admin', $controller->getVisibility());
+    }
+
+    /**
+     * Testing that the constructor sets the renderAdminMenu view state flag.
+     *
+     * @since 4.1
+     */
+    public function testConstructorViewState(): void
+    {
+        $controller = new ListActiveRecordsController();
+
+        $viewState = ViewState::getInstance();
+
+        $this->assertTrue((bool) $viewState->get('renderAdminMenu'), 'Testing that the admin menu render flag is set by the constructor');
+    }
+
+    /**
+     * Testing a POST request that passes security validation but triggers no
+     * table action buttons, exercising the fall-through path of doPOST.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTNoActions(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1]
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with valid security fields and no actions');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doPOST with valid security fields and no actions');
+    }
+
+    /**
+     * Testing that a POST request with a recreate button pressed but a
+     * mismatched button value does not trigger the recreate branch.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTRecreateButtonMismatch(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaModelArticle_button_pressed' => 'someOtherButton',
+            'recreateTableClass' => 'Alpha\Model\Article'
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with mismatched recreate button value');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doPOST with mismatched recreate button value');
+    }
+
+    /**
+     * Testing that a POST request with an update button pressed but a
+     * mismatched button value does not trigger the update branch.
+     *
+     * @since 4.1
+     */
+    public function testDoPOSTUpdateButtonMismatch(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+        $controller = new ListActiveRecordsController();
+
+        $securityParams = $controller->generateSecurityFields();
+
+        $params = array(
+            'var1' => $securityParams[0],
+            'var2' => $securityParams[1],
+            'admin_AlphaModelArticle_button_pressed' => 'someOtherButton',
+            'updateTableClass' => 'Alpha\Model\Article'
+        );
+
+        $request = new Request(array('method' => 'POST', 'URI' => '/listactiverecords', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(200, $response->getStatus(), 'Testing doPOST with mismatched update button value');
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing doPOST with mismatched update button value');
     }
 }
