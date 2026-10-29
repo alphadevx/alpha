@@ -1,5 +1,30 @@
 # Changelog
 
+## [4.1.0](https://github.com/alphadevx/alpha/tree/4.1.0) (2026-10-29)
+
+[Full Changelog](https://github.com/alphadevx/alpha/compare/4.0.0...4.1.0)
+
+**Implemented enhancements:**
+
+- Expose the native Redis connection from the CacheProviderRedis class [\#390](https://github.com/alphadevx/alpha/issues/390)
+- Add support for 429 HTTP responses [\#389](https://github.com/alphadevx/alpha/issues/389)
+- Get unit test coverage to 90% [\#397](https://github.com/alphadevx/alpha/issues/397)
+- Upgraded the minimum required PHP version from 8.2 to 8.4 [\#392](https://github.com/alphadevx/alpha/issues/392)
+
+**Fixed bugs:**
+
+- Fix Dependbot issues [\#394](https://github.com/alphadevx/alpha/issues/394)
+- Fix broken unit tests [\#391](https://github.com/alphadevx/alpha/issues/391)
+- Bump phpunit/phpunit from 11.0.3 to 11.5.50 [\#402](https://github.com/alphadevx/alpha/pull/402) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump tecnickcom/tcpdf from 6.4.1 to 6.7.4 [\#388](https://github.com/alphadevx/alpha/pull/388) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump tecnickcom/tcpdf from 6.7.4 to 6.8.0 [\#401](https://github.com/alphadevx/alpha/pull/401) ([dependabot[bot]](https://github.com/apps/dependabot))
+
+**Closed issues:**
+
+- Get unit test coverage to 90% [\#397](https://github.com/alphadevx/alpha/issues/397)
+- Upgrade to PHP 8.4 [\#392](https://github.com/alphadevx/alpha/issues/392)
+- Update the code examples in README.md for Alpha 4.0.0 and PHP 8.3 [\#386](https://github.com/alphadevx/alpha/issues/386)
+
 ## [4.0.0](https://github.com/alphadevx/alpha/tree/4.0.0) (2024-02-19)
 
 [Full Changelog](https://github.com/alphadevx/alpha/compare/3.1.0...4.0.0)
@@ -15,11 +40,13 @@
 
 **Closed issues:**
 
+- Switch from Travis CI to Github Actions for building [\#369](https://github.com/alphadevx/alpha/issues/369)
+- Release Alpha 3.1.0 [\#366](https://github.com/alphadevx/alpha/issues/366)
+- Release Alpha 4.0.0 [\#377](https://github.com/alphadevx/alpha/issues/377)
 - Grow unit test coverage to 85% [\#376](https://github.com/alphadevx/alpha/issues/376)
 - Add return types to all core methods in Alpha [\#375](https://github.com/alphadevx/alpha/issues/375)
 - Add type hints to all parameters on all core methods [\#374](https://github.com/alphadevx/alpha/issues/374)
 - Remove underscore seperator from all callback methods [\#373](https://github.com/alphadevx/alpha/issues/373)
-- Switch from Travis CI to Github Actions for building [\#369](https://github.com/alphadevx/alpha/issues/369)
 
 ## [3.1.0](https://github.com/alphadevx/alpha/tree/3.1.0) (2021-04-19)
 
