@@ -1,7 +1,7 @@
 [![Install and unit tests](https://github.com/alphadevx/alpha/actions/workflows/php.yml/badge.svg)](https://github.com/alphadevx/alpha/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/alphadevx/alpha/branch/develop/graph/badge.svg?token=ASL3NLDW1F)](https://codecov.io/gh/alphadevx/alpha)
 
-Alpha Framework (4.0.0)
+Alpha Framework (4.1.0)
 =================================================================
 
 Introduction
@@ -700,6 +700,4 @@ _catchError()_ method captures a general PHP error and converts it to an _Alpha\
 Contact
 -------
 
-For bug reports and feature requests, please e-mail: dev@alphaframework.org
-
-On Twitter: [@alphaframework](https://twitter.com/alphaframework)
+For bug reports and feature requests, please raise a ticket on Github here: [https://github.com/alphadevx/alpha](https://github.com/alphadevx/alpha)
