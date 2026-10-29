@@ -120,4 +120,84 @@ class RecordSelectorControllerTest extends TestCase
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method for ONE-TO-MANY relation');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
     }
+
+    /**
+     * Testing that missing base parameters cause a ResourceNotFoundException.
+     *
+     * @since 4.1
+     */
+    public function testDoGETMissingBaseParams(): void
+    {
+        set_error_handler(function (int $severity, string $message): bool {
+            throw new \ErrorException($message);
+        });
+
+        try {
+            $controller = new RecordSelectorController();
+
+            $request = new Request(array('method' => 'GET', 'URI' => '/recordselector', 'params' => array()));
+
+            $this->expectException(\Alpha\Exception\ResourceNotFoundException::class);
+
+            $controller->doGET($request);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    /**
+     * Testing that missing MANY-TO-MANY relation parameters cause a ResourceNotFoundException.
+     *
+     * @since 4.1
+     */
+    public function testDoGETMissingManyToManyParams(): void
+    {
+        set_error_handler(function (int $severity, string $message): bool {
+            throw new \ErrorException($message);
+        });
+
+        try {
+            $controller = new RecordSelectorController();
+
+            $request = new Request(array('method' => 'GET', 'URI' => '/recordselector', 'params' => array(
+                'relationType' => 'MANY-TO-MANY',
+                'ActiveRecordID' => '1',
+                'field' => 'someField'
+            )));
+
+            $this->expectException(\Alpha\Exception\ResourceNotFoundException::class);
+
+            $controller->doGET($request);
+        } finally {
+            restore_error_handler();
+        }
+    }
+
+    /**
+     * Testing that missing ONE-TO-MANY relation parameters cause a ResourceNotFoundException.
+     *
+     * @since 4.1
+     */
+    public function testDoGETMissingOneToManyParams(): void
+    {
+        set_error_handler(function (int $severity, string $message): bool {
+            throw new \ErrorException($message);
+        });
+
+        try {
+            $controller = new RecordSelectorController();
+
+            $request = new Request(array('method' => 'GET', 'URI' => '/recordselector', 'params' => array(
+                'relationType' => 'ONE-TO-MANY',
+                'ActiveRecordID' => '1',
+                'field' => 'someField'
+            )));
+
+            $this->expectException(\Alpha\Exception\ResourceNotFoundException::class);
+
+            $controller->doGET($request);
+        } finally {
+            restore_error_handler();
+        }
+    }
 }

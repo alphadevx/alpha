@@ -1,4 +1,4 @@
- Copyright (c) 2021, John Collins (founder of Alpha Framework).
+ Copyright (c) 2024, John Collins (founder of Alpha Framework).
  All rights reserved.
 
  Redistribution and use in source and binary forms, with or

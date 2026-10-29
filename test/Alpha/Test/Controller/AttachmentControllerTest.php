@@ -258,4 +258,69 @@ class AttachmentControllerTest extends TestCase
         $this->assertTrue(strpos($response->getHeader('Location'), '/a/test-article') !== false, 'Testing the doPUT method');
         $this->assertFalse(file_exists($article->getAttachmentsLocation().'/logo.png'));
     }
+
+    /**
+     * Testing doGET method with missing parameters.
+     */
+    public function testDoGETMissingParams()
+    {
+        $front = new FrontController();
+
+        // Test with missing articleID and filename
+        $request = new Request(array('method' => 'GET', 'URI' => '/attach'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing doGET with missing parameters');
+    }
+
+    /**
+     * Testing doGET method with invalid articleID.
+     */
+    public function testDoGETInvalidArticleID()
+    {
+        $front = new FrontController();
+
+        // Test with invalid articleID (non-integer)
+        $request = new Request(array('method' => 'GET', 'URI' => '/attach/abc/logo.png'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing doGET with invalid articleID');
+    }
+
+    /**
+     * Testing doGET method with file not found.
+     */
+    public function testDoGETFileNotFound()
+    {
+        $front = new FrontController();
+
+        // Test with valid articleID but non-existent file
+        $request = new Request(array('method' => 'GET', 'URI' => '/attach/99999/nonexistent.png'));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing doGET with file not found');
+    }
+
+    /**
+     * Testing doPUT method with missing articleID.
+     */
+    public function testDoPUTMissingArticleID()
+    {
+        $config = ConfigProvider::getInstance();
+        $sessionProvider = $config->get('session.provider.name');
+        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
+
+        $front = new FrontController();
+
+        $params = array('uploadBut' => true);
+
+        $request = new Request(array('method' => 'PUT', 'URI' => '/attach', 'params' => $params));
+
+        $response = $front->process($request);
+
+        $this->assertEquals(404, $response->getStatus(), 'Testing doPUT with missing articleID');
+    }
 }

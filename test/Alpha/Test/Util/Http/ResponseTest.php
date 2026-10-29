@@ -106,12 +106,12 @@ class ResponseTest extends TestCase
         $response = new Response(200, '', array('Content-Type' => 'application/json'));
 
         $this->assertEquals('application/json', $response->getHeader('Content-Type'), 'Testing the getting and setting of the HTTP headers');
-        $this->assertTrue(in_array('application/json', $response->getHeaders()), 'Testing the getting and setting of the HTTP headers');
+        $this->assertTrue(in_array('application/json', $response->getHeaders(), true), 'Testing the getting and setting of the HTTP headers');
 
         $response->setHeader('Content-Type', 'text/html');
 
-        $this->assertTrue(in_array('text/html', $response->getHeaders()), 'Testing the getting and setting of the HTTP headers');
-        $this->assertTrue(in_array('Content-Type', array_keys($response->getHeaders())), 'Testing the getting and setting of the HTTP headers');
+        $this->assertTrue(in_array('text/html', $response->getHeaders(), true), 'Testing the getting and setting of the HTTP headers');
+        $this->assertTrue(in_array('Content-Type', array_keys($response->getHeaders()), true), 'Testing the getting and setting of the HTTP headers');
     }
 
     /**
@@ -124,8 +124,8 @@ class ResponseTest extends TestCase
         $response->setCookie('username', 'bob');
 
         $this->assertEquals('bob', $response->getCookie('username'), 'Testing the getting and setting of the HTTP cookies');
-        $this->assertTrue(in_array('bob', $response->getCookies()), 'Testing the getting and setting of the HTTP cookies');
-        $this->assertTrue(in_array('username', array_keys($response->getCookies())), 'Testing the getting and setting of the HTTP cookies');
+        $this->assertTrue(in_array('bob', $response->getCookies(), true), 'Testing the getting and setting of the HTTP cookies');
+        $this->assertTrue(in_array('username', array_keys($response->getCookies()), true), 'Testing the getting and setting of the HTTP cookies');
     }
 
     /**
@@ -160,5 +160,43 @@ class ResponseTest extends TestCase
 
         $this->assertEquals('http://alphaframework.org/', $response->getHeader('Location'), 'Testing the redirect method');
         $this->assertEquals(1, count($response->getHeaders()), 'Testing the redirect method');
+    }
+
+    /**
+     * Testing the send() method outputs the response correctly.
+     */
+    public function testSend()
+    {
+        $response = new Response(200, 'Hello World', array('Content-Type' => 'text/plain'));
+
+        // Start output buffering to capture the output
+        ob_start();
+
+        $response->send();
+
+        $output = ob_get_clean();
+
+        $this->assertEquals('Hello World', $output);
+        $this->assertEquals(200, $response->getStatus(), 'Testing the send method status');
+        $this->assertEquals('text/plain', $response->getHeader('Content-Type'), 'Testing the send method headers');
+    }
+
+    /**
+     * Testing the send() method with 429 status code.
+     */
+    public function testSendWith429Status()
+    {
+        $response = new Response(429, 'Too Many Requests', array('Content-Type' => 'text/plain'));
+
+        // Start output buffering to capture the output
+        ob_start();
+
+        $response->send();
+
+        $output = ob_get_clean();
+
+        $this->assertEquals('Too Many Requests', $output);
+        $this->assertEquals(429, $response->getStatus(), 'Testing the send method with 429 status');
+        $this->assertEquals('Too Many Requests', $response->getStatusMessage(), 'Testing the send method with 429 status message');
     }
 }

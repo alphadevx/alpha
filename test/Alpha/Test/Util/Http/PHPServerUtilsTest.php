@@ -6,7 +6,7 @@ use Alpha\Util\Http\PHPServerUtils;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test cases for implementations of the AlphaFilterInterface.
+ * Test cases for the PHPServerUtils class.
  *
  * @since 1.2.2
  *
@@ -54,15 +54,16 @@ class PHPServerUtilsTest extends TestCase
      *
      * @since 1.2.2
      */
-    public function testStart()
+    public function testStart(): void
     {
         $pid = PHPServerUtils::start('localhost', '8713', '.');
-        sleep(1); // wait a second to give the server time to start...
+        sleep(1);
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'http://localhost:8713/');
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);
         ob_start();
         $result = curl_exec($ch);
         ob_end_clean();
@@ -79,10 +80,10 @@ class PHPServerUtilsTest extends TestCase
      *
      * @since 1.2.2
      */
-    public function testStop()
+    public function testStop(): void
     {
         $pid = PHPServerUtils::start('localhost', '8713', '.');
-        sleep(1); // wait a second to give the server time to start...
+        sleep(1);
 
         $this->assertTrue($pid > 0, 'Testing that a PID was returned after starting the server');
 
@@ -97,7 +98,7 @@ class PHPServerUtilsTest extends TestCase
 
         if (!empty($pid)) {
             PHPServerUtils::stop($pid);
-            sleep(1); // wait a second to give the server time to stop...
+            sleep(1);
         }
 
         $result = curl_exec($ch);
@@ -110,7 +111,7 @@ class PHPServerUtilsTest extends TestCase
      *
      * @since 1.2.2
      */
-    public function testStatus()
+    public function testStatus(): void
     {
         $pid = PHPServerUtils::start('localhost', '8713', '.');
 
@@ -121,5 +122,131 @@ class PHPServerUtilsTest extends TestCase
         }
 
         $this->assertFalse(PHPServerUtils::status($pid), 'Testing that the status of the server is false when it is stopped');
+    }
+
+    /**
+     * Testing that we can check the status of a non-existent process.
+     *
+     * @since 4.1
+     */
+    public function testStatusNonExistentPID(): void
+    {
+        $nonExistentPID = 999999;
+        $this->assertFalse(PHPServerUtils::status($nonExistentPID), 'Testing that status returns false for a non-existent PID');
+    }
+
+    /**
+     * Testing the stop method with a non-existent PID (should not throw exception).
+     *
+     * @since 4.1
+     */
+    public function testStopNonExistentPID(): void
+    {
+        $nonExistentPID = 999998;
+        PHPServerUtils::stop($nonExistentPID);
+        $this->assertTrue(true, 'Testing that stop method does not throw exception for non-existent PID');
+    }
+
+    /**
+     * Testing that we can call status multiple times on the same PID.
+     *
+     * @since 4.1
+     */
+    public function testStatusMultipleCalls(): void
+    {
+        $pid = PHPServerUtils::start('localhost', '8714', '.');
+
+        $this->assertTrue(PHPServerUtils::status($pid), 'Testing that status returns true on first call');
+        $this->assertTrue(PHPServerUtils::status($pid), 'Testing that status returns true on second call');
+        $this->assertTrue(PHPServerUtils::status($pid), 'Testing that status returns true on third call');
+
+        if (!empty($pid)) {
+            PHPServerUtils::stop($pid);
+        }
+    }
+
+    /**
+     * Testing that we can start multiple servers on different ports.
+     *
+     * @since 4.1
+     */
+    public function testStartMultipleServers(): void
+    {
+        $pid1 = PHPServerUtils::start('localhost', '8715', '.');
+        $pid2 = PHPServerUtils::start('localhost', '8716', '.');
+
+        $this->assertTrue($pid1 > 0, 'Testing that first server started successfully');
+        $this->assertTrue($pid2 > 0, 'Testing that second server started successfully');
+        $this->assertNotEquals($pid1, $pid2, 'Testing that different PIDs are returned for different servers');
+
+        $this->assertTrue(PHPServerUtils::status($pid1), 'Testing that first server is running');
+        $this->assertTrue(PHPServerUtils::status($pid2), 'Testing that second server is running');
+
+        if (!empty($pid1)) {
+            PHPServerUtils::stop($pid1);
+        }
+        if (!empty($pid2)) {
+            PHPServerUtils::stop($pid2);
+        }
+    }
+
+    /**
+     * Testing that the stop method properly stops a server.
+     *
+     * @since 4.1
+     */
+    public function testStopMethodStopsServer(): void
+    {
+        $pid = PHPServerUtils::start('localhost', '8717', '.');
+
+        $this->assertTrue(PHPServerUtils::status($pid), 'Testing that server is running before stop');
+
+        if (!empty($pid)) {
+            PHPServerUtils::stop($pid);
+        }
+
+        sleep(1);
+
+        $this->assertFalse(PHPServerUtils::status($pid), 'Testing that server is stopped after stop method called');
+    }
+
+    /**
+     * Testing that we can check status immediately after starting.
+     *
+     * @since 4.1
+     */
+    public function testStatusImmediateAfterStart(): void
+    {
+        $pid = PHPServerUtils::start('localhost', '8718', '.');
+
+        $this->assertTrue(PHPServerUtils::status($pid), 'Testing that status is true immediately after start');
+
+        if (!empty($pid)) {
+            PHPServerUtils::stop($pid);
+        }
+    }
+
+    /**
+     * Testing that start returns a valid PID on Linux.
+     *
+     * @since 4.1
+     */
+    public function testStartReturnsPositivePID(): void
+    {
+        $pid = PHPServerUtils::start('127.0.0.1', '8720', '.');
+        $this->assertIsInt($pid);
+        $this->assertGreaterThan(0, $pid);
+        PHPServerUtils::stop($pid);
+    }
+
+    /**
+     * Testing status with PID 0.
+     *
+     * @since 4.1
+     */
+    public function testStatusWithZeroPID(): void
+    {
+        $result = PHPServerUtils::status(0);
+        $this->assertIsBool($result);
     }
 }

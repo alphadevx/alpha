@@ -3,6 +3,7 @@
   <coverage>
     <report>
       <clover outputFile="clover.xml"/>
+      <html outputDirectory="coverage-report/"/>
     </report>
   </coverage>
   <php>

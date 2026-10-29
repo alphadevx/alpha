@@ -117,4 +117,56 @@ class LogProviderFileTest extends TestCase
 
         $this->assertTrue(file_exists($backName));
     }
+
+    /**
+     * Testing that the writeLine method recovers from a missing log directory
+     * by falling back to the directory configured in app.file.store.dir. A
+     * unique directory is used to ensure the failure path is always exercised.
+     *
+     * @since 4.1
+     */
+    public function testWriteLineRecoversFromMissingDirectory(): void
+    {
+        $dir = sys_get_temp_dir() . '/alpha-logrc-' . uniqid();
+
+        $config = ConfigProvider::getInstance();
+        $savedDir = $config->get('app.file.store.dir');
+
+        $config->set('app.file.store.dir', $dir . '/');
+
+        $logFile = new LogProviderFile();
+        $logFile->setPath($dir . '/logs/recovered.log');
+
+        try {
+            $logFile->writeLine(array('recovered entry'));
+
+            $this->assertTrue(file_exists($dir . '/logs/recovered.log'), 'Testing that the log line was written after the directory fallback');
+        } finally {
+            $config->set('app.file.store.dir', $savedDir);
+
+            @unlink($dir . '/logs/recovered.log');
+            @rmdir($dir . '/logs');
+            @rmdir($dir);
+        }
+    }
+
+    /**
+     * Testing that the renderLog method renders SQL level entries and unknown
+     * log levels appropriately.
+     *
+     * @since 4.1
+     */
+    public function testRenderLogSqlAndUnknownLevels(): void
+    {
+        $logFile = new LogProviderFile();
+        $logFile->setPath($this->logPath);
+
+        $logFile->writeLine(array('2026-01-01 00:00:00', 'SQL', 'a sql entry'));
+        $logFile->writeLine(array('2026-01-01 00:00:01', 'BOGUS', 'a weird entry'));
+
+        $html = $logFile->renderLog(array(0 => 'Timestamp', 1 => 'Level', 2 => 'Message'));
+
+        $this->assertTrue(str_contains($html, 'class="sql"'), 'Testing that SQL level entries are rendered with the sql style');
+        $this->assertTrue(str_contains($html, '<td>BOGUS</td>'), 'Testing that unknown log levels are rendered in a plain cell');
+    }
 }

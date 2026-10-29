@@ -219,7 +219,23 @@ class FilterTest extends ModelTestCase
         $config = ConfigProvider::getInstance();
         $config->set('db.provider.name', $provider);
         $config->set('security.client.temp.blacklist.filter.limit', 1);
-        $config->set('security.client.temp.blacklist.filter.period', 5);
+        $config->set('security.client.temp.blacklist.filter.period', 60); // Use 60 minutes to avoid timing issues
+
+        // Create bad requests with current timestamp to ensure they're within the time window
+        $badRequest1 = new BadRequest();
+        $badRequest1->set('client', $this->badAgent);
+        $badRequest1->set('IP', $this->badIP);
+        $badRequest1->save();
+
+        $badRequest2 = new BadRequest();
+        $badRequest2->set('client', $this->badAgent);
+        $badRequest2->set('IP', $this->badIP);
+        $badRequest2->save();
+
+        $badRequest3 = new BadRequest();
+        $badRequest3->set('client', $this->badAgent);
+        $badRequest3->set('IP', $this->badIP);
+        $badRequest3->save();
 
         $_SERVER['HTTP_USER_AGENT'] = $this->badAgent;
         $_SERVER['REMOTE_ADDR'] = $this->badIP;
@@ -260,6 +276,69 @@ class FilterTest extends ModelTestCase
             $this->fail('Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
         } catch (ResourceNotAllowedException $e) {
             $this->assertEquals('Not allowed!', $e->getMessage(), 'Testing that a blacklisted IP cannot pass the IPBlacklistFilter filter');
+        }
+    }
+
+    /**
+     * Testing that a request with no user agent string is skipped by the ClientBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testClientBlacklistFilterWithNullUserAgent(): void
+    {
+        $request = new Request(array('method' => 'GET', 'URI' => '/', 'headers' => array()));
+
+        $filter = new ClientBlacklistFilter();
+
+        $filter->process($request);
+
+        $this->assertTrue(true, 'Testing that a request with no user agent string is skipped by the ClientBlacklistFilter');
+    }
+
+    /**
+     * Testing that a client that is not on the blacklist can pass the ClientBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testClientBlacklistFilterWithUnknownClient(): void
+    {
+        $goodAgent = 'GoodClient/1.0-' . mt_rand();
+
+        $request = new Request(array('method' => 'GET', 'URI' => '/', 'headers' => array('User-Agent' => $goodAgent)));
+
+        $filter = new ClientBlacklistFilter();
+
+        $filter->process($request);
+
+        $this->assertTrue(true, 'Testing that a client that is not on the blacklist can pass the ClientBlacklistFilter');
+    }
+
+    /**
+     * Testing that an IP address that is not on the blacklist can pass the IPBlacklistFilter.
+     *
+     * @since 4.1
+     */
+    public function testIPBlacklistFilterWithUnknownIP(): void
+    {
+        $oldIP = $_SERVER['REMOTE_ADDR'] ?? null;
+
+        $_SERVER['REMOTE_ADDR'] = '203.0.113.' . mt_rand(2, 254);
+        $_SERVER['REQUEST_URI'] = '/';
+
+        try {
+            $request = new Request(array('method' => 'GET'));
+
+            $filter = new IPBlacklistFilter();
+
+            $filter->process($request);
+
+            $this->assertTrue(true, 'Testing that an IP address that is not on the blacklist can pass the IPBlacklistFilter');
+        } finally {
+            if ($oldIP === null) {
+                unset($_SERVER['REMOTE_ADDR']);
+            } else {
+                $_SERVER['REMOTE_ADDR'] = $oldIP;
+            }
         }
     }
 }

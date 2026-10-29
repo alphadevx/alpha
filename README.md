@@ -1,7 +1,7 @@
 [![Install and unit tests](https://github.com/alphadevx/alpha/actions/workflows/php.yml/badge.svg)](https://github.com/alphadevx/alpha/actions/workflows/php.yml)
 [![codecov](https://codecov.io/gh/alphadevx/alpha/branch/develop/graph/badge.svg?token=ASL3NLDW1F)](https://codecov.io/gh/alphadevx/alpha)
 
-Alpha Framework (4.0.0)
+Alpha Framework (4.1.0)
 =================================================================
 
 Introduction
@@ -181,7 +181,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The forum display name of the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -190,7 +190,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The email address for the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -199,7 +199,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The password for the person.
 	     *
-	     * @var Alpha\Model\Type\SmallText
+	     * @var \Alpha\Model\Type\SmallText
 	     *
 	     * @since 1.0
 	     */
@@ -234,7 +234,7 @@ An active record then uses these data types to store the attributes of an object
 	    /**
 	     * The state of the person (account status).
 	     *
-	     * @var Aplha\Model\Type\Enum
+	     * @var \Aplha\Model\Type\Enum
 	     *
 	     * @since 1.0
 	     */
@@ -367,7 +367,7 @@ All controllers in Alpha should inherit from the _Controller_ abstract class and
 
 	class HelloController extends Controller implements ControllerInterface
 	{
-		public function doGET($request)
+		public function doGET($request): \Alpha\Util\Http\Response
 		{
 			$name = $request->getParam('name');
 
@@ -441,7 +441,7 @@ Here is an example where we are injecting in a count of the items in a given sho
 	{
 	    // ...
 
-	    public function detailedView($fields = array())
+	    public function detailedView($fields = array()): string
 	    {
 	        // this->record will be set to our cart at this stage during factory instantiation
 	        $items = $this->record->getItems();
@@ -700,6 +700,4 @@ _catchError()_ method captures a general PHP error and converts it to an _Alpha\
 Contact
 -------
 
-For bug reports and feature requests, please e-mail: dev@alphaframework.org
-
-On Twitter: [@alphaframework](https://twitter.com/alphaframework)
+For bug reports and feature requests, please raise a ticket on Github here: [https://github.com/alphadevx/alpha](https://github.com/alphadevx/alpha)

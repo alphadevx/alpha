@@ -1,5 +1,26 @@
 # Changelog
 
+## [4.0.0](https://github.com/alphadevx/alpha/tree/4.0.0) (2024-02-19)
+
+[Full Changelog](https://github.com/alphadevx/alpha/compare/3.1.0...4.0.0)
+
+**Implemented enhancements:**
+
+- Upgrade Alpha to use PHP 8 [\#372](https://github.com/alphadevx/alpha/issues/372)
+- Upgrade Alpha to use Bootstrap 5 [\#365](https://github.com/alphadevx/alpha/issues/365)
+
+**Fixed bugs:**
+
+- The required fields in the Article class should not be using a custom regex [\#381](https://github.com/alphadevx/alpha/issues/381)
+
+**Closed issues:**
+
+- Grow unit test coverage to 85% [\#376](https://github.com/alphadevx/alpha/issues/376)
+- Add return types to all core methods in Alpha [\#375](https://github.com/alphadevx/alpha/issues/375)
+- Add type hints to all parameters on all core methods [\#374](https://github.com/alphadevx/alpha/issues/374)
+- Remove underscore seperator from all callback methods [\#373](https://github.com/alphadevx/alpha/issues/373)
+- Switch from Travis CI to Github Actions for building [\#369](https://github.com/alphadevx/alpha/issues/369)
+
 ## [3.1.0](https://github.com/alphadevx/alpha/tree/3.1.0) (2021-04-19)
 
 [Full Changelog](https://github.com/alphadevx/alpha/compare/3.0.0...3.1.0)
@@ -29,11 +50,17 @@
 
 **Closed issues:**
 
+- Switch from APIGen to PHPDoc for Alpha 3.1.0 [\#368](https://github.com/alphadevx/alpha/issues/368)
 - Upgrade Markdown version [\#362](https://github.com/alphadevx/alpha/issues/362)
 - Fix use of aes-256-ecb for encryption [\#360](https://github.com/alphadevx/alpha/issues/360)
 - Not all model unit tests are using the getActiveRecordProviders\(\) injector [\#357](https://github.com/alphadevx/alpha/issues/357)
 - Updated deprecated method notices in PHP Redis calls [\#356](https://github.com/alphadevx/alpha/issues/356)
 - Upgrade to PHP 7.3 [\#351](https://github.com/alphadevx/alpha/issues/351)
+
+**Merged pull requests:**
+
+- Merged the 3.1.0 dev branch into master [\#367](https://github.com/alphadevx/alpha/pull/367) ([alphadevx](https://github.com/alphadevx))
+- Release/3.0.0 release [\#339](https://github.com/alphadevx/alpha/pull/339) ([alphadevx](https://github.com/alphadevx))
 
 ## [3.0.0](https://github.com/alphadevx/alpha/tree/3.0.0) (2018-08-04)
 
@@ -117,6 +144,7 @@
 
 **Merged pull requests:**
 
+- Release/3.0.0 release [\#338](https://github.com/alphadevx/alpha/pull/338) ([alphadevx](https://github.com/alphadevx))
 - Feature/270 alpha on php7 [\#307](https://github.com/alphadevx/alpha/pull/307) ([alphadevx](https://github.com/alphadevx))
 
 ## [3.0.0-RC.2](https://github.com/alphadevx/alpha/tree/3.0.0-RC.2) (2018-07-29)

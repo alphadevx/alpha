@@ -6,6 +6,7 @@ use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\LogController;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
+use Alpha\Util\Http\Response;
 use Alpha\Util\Service\ServiceFactory;
 
 /**
@@ -68,5 +69,160 @@ class LogControllerTest extends ControllerTestCase
 
         $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
         $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
+    }
+
+    /**
+     * Test the LogController constructor.
+     *
+     * @since 4.1
+     */
+    public function testConstructor(): void
+    {
+        $controller = new LogController();
+
+        $this->assertInstanceOf(LogController::class, $controller);
+    }
+
+    /**
+     * Test doGET with an alpha log file.
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithAlphaLogFile(): void
+    {
+        $path = $this->createTempLogFile('alpha');
+
+        try {
+            $response = $this->processLogRequest($path);
+
+            $this->assertInstanceOf(Response::class, $response);
+            $this->assertEquals(200, $response->getStatus());
+            $this->assertEquals('text/html', $response->getHeader('Content-Type'));
+        } finally {
+            $this->removeTempLogFile($path);
+        }
+    }
+
+    /**
+     * Test doGET with a search log file.
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithSearchLogFile(): void
+    {
+        $path = $this->createTempLogFile('search');
+
+        try {
+            $response = $this->processLogRequest($path);
+
+            $this->assertInstanceOf(Response::class, $response);
+            $this->assertEquals(200, $response->getStatus());
+            $this->assertEquals('text/html', $response->getHeader('Content-Type'));
+        } finally {
+            $this->removeTempLogFile($path);
+        }
+    }
+
+    /**
+     * Test doGET with a feeds log file.
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithFeedsLogFile(): void
+    {
+        $path = $this->createTempLogFile('feeds');
+
+        try {
+            $response = $this->processLogRequest($path);
+
+            $this->assertInstanceOf(Response::class, $response);
+            $this->assertEquals(200, $response->getStatus());
+            $this->assertEquals('text/html', $response->getHeader('Content-Type'));
+        } finally {
+            $this->removeTempLogFile($path);
+        }
+    }
+
+    /**
+     * Test doGET with a tasks log file.
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithTasksLogFile(): void
+    {
+        $path = $this->createTempLogFile('tasks');
+
+        try {
+            $response = $this->processLogRequest($path);
+
+            $this->assertInstanceOf(Response::class, $response);
+            $this->assertEquals(200, $response->getStatus());
+            $this->assertEquals('text/html', $response->getHeader('Content-Type'));
+        } finally {
+            $this->removeTempLogFile($path);
+        }
+    }
+
+    /**
+     * Test doGET when the requested log file does not exist (exception branch).
+     *
+     * @since 4.1
+     */
+    public function testDoGETWithNoLogFile(): void
+    {
+        $response = $this->processLogRequest('/this/path/does/not/exist.log');
+
+        $this->assertInstanceOf(Response::class, $response);
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'));
+    }
+
+    /**
+     * Route a request for the given log path through the FrontController so that
+     * the full request context (used by the View layer) is established.
+     *
+     * @param string $path
+     *
+     * @return \Alpha\Util\Http\Response
+     *
+     * @since 4.1
+     */
+    private function processLogRequest(string $path): Response
+    {
+        $front = new FrontController();
+        $request = new Request(array('method' => 'GET', 'URI' => '/log/'.urlencode($path)));
+
+        return $front->process($request);
+    }
+
+    /**
+     * Create a temporary log file with the given prefix in its basename.
+     *
+     * @param string $prefix
+     *
+     * @return string
+     *
+     * @since 4.1
+     */
+    private function createTempLogFile(string $prefix): string
+    {
+        $path = sys_get_temp_dir() . '/' . $prefix . '_' . uniqid() . '.log';
+        file_put_contents($path, '');
+
+        return $path;
+    }
+
+    /**
+     * Remove a temporary log file if it exists.
+     *
+     * @param string $path
+     *
+     * @since 4.1
+     */
+    private function removeTempLogFile(string $path): void
+    {
+        if (file_exists($path)) {
+            unlink($path);
+        }
     }
 }

@@ -4,21 +4,21 @@ namespace Alpha\Test\Controller;
 
 use Alpha\Controller\Front\FrontController;
 use Alpha\Controller\InstallController;
+use Alpha\Model\ActiveRecord;
+use Alpha\Model\Person;
 use Alpha\Util\Config\ConfigProvider;
 use Alpha\Util\Http\Request;
 use Alpha\Util\Service\ServiceFactory;
-use Alpha\Model\Person;
-use Alpha\Model\ActiveRecord;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test cases for the InstallController class.
  *
- * @since 2.0
+ * @since 4.1
  *
  * @author John Collins <dev@alphaframework.org>
  * @license http://www.opensource.org/licenses/bsd-license.php The BSD License
- * @copyright Copyright (c) 2019, John Collins (founder of Alpha Framework).
+ * @copyright Copyright (c) 2026, John Collins (founder of Alpha Framework).
  * All rights reserved.
  *
  * <pre>
@@ -55,37 +55,35 @@ use PHPUnit\Framework\TestCase;
  */
 class InstallControllerTest extends TestCase
 {
+    /**
+     * @since 4.1
+     */
     protected function setup(): void
     {
         $config = ConfigProvider::getInstance();
         $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
-
         $testInstallDir = '/tmp/alphainstalltestdir';
-
         $config->set('app.file.store.dir', $testInstallDir.'/store/');
         $config->set('db.file.path', $testInstallDir.'/unittests.db');
         $config->set('db.file.test.path', $testInstallDir.'/unittests.db');
         ActiveRecord::disconnect();
-
         if (!file_exists($testInstallDir)) {
             mkdir($testInstallDir);
         }
-
         if (!file_exists($testInstallDir.'/store')) {
             mkdir($testInstallDir.'/store');
         }
-
         ActiveRecord::dropDatabase();
-
         $person = new Person();
         $person->set('email', $config->get('app.install.username'));
         $person->set('password', 'testpassword');
-
-        $sessionProvider = $config->get('session.provider.name');
         $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
         $session->set('currentUser', $person);
     }
 
+    /**
+     * @since 4.1
+     */
     protected function teardown(): void
     {
         $config = ConfigProvider::getInstance();
@@ -96,22 +94,15 @@ class InstallControllerTest extends TestCase
     }
 
     /**
-     * Testing the doGET method.
+     * @since 4.1
      */
-    public function testDoGET()
+    public function testDoGET(): void
     {
-        $config = ConfigProvider::getInstance();
-        $sessionProvider = $config->get('session.provider.name');
-        $session = ServiceFactory::getInstance($sessionProvider, 'Alpha\Util\Http\Session\SessionProviderInterface');
-
         $front = new FrontController();
-
         $request = new Request(array('method' => 'GET', 'URI' => '/install'));
         $response = $front->process($request);
-
-        $this->assertEquals(200, $response->getStatus(), 'Testing the doGET method');
-        $this->assertEquals('text/html', $response->getHeader('Content-Type'), 'Testing the doGET method');
-
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals('text/html', $response->getHeader('Content-Type'));
         $testInstallDir = '/tmp/alphainstalltestdir/store';
         $this->assertTrue(file_exists($testInstallDir.'/logs'));
         $this->assertTrue(file_exists($testInstallDir.'/attachments'));
@@ -119,34 +110,28 @@ class InstallControllerTest extends TestCase
         $this->assertTrue(file_exists($testInstallDir.'/cache/files'));
         $this->assertTrue(file_exists($testInstallDir.'/cache/images'));
         $this->assertTrue(file_exists($testInstallDir.'/cache/xls'));
-
         $person = new Person();
-        $this->assertTrue($person->checkTableExists(), 'Testing that the person database table was created');
+        $this->assertTrue($person->checkTableExists());
     }
 
     /**
-     * Testing the createApplicationDirs method.
+     * @since 4.1
      */
-    public function testCreateApplicationDirs()
+    public function testCreateApplicationDirs(): void
     {
         $controller = new InstallController();
-
         $testInstallDir = '/tmp/alphainstalltestdir';
-
         $config = ConfigProvider::getInstance();
         $config->set('app.root', $testInstallDir.'/');
         $config->set('app.file.store.dir', $testInstallDir.'/store/');
-
         if (!file_exists($testInstallDir)) {
             mkdir($testInstallDir);
         }
-
         if (!file_exists($testInstallDir.'/store')) {
             mkdir($testInstallDir.'/store');
         }
-
-        $controller->createApplicationDirs();
-
+        $body = $controller->createApplicationDirs();
+        $this->assertIsString($body);
         $this->assertTrue(file_exists($testInstallDir.'/src'));
         $this->assertTrue(file_exists($testInstallDir.'/src/Model'));
         $this->assertTrue(file_exists($testInstallDir.'/src/View'));
@@ -156,5 +141,158 @@ class InstallControllerTest extends TestCase
         $this->assertTrue(file_exists($testInstallDir.'/store/cache/files'));
         $this->assertTrue(file_exists($testInstallDir.'/store/cache/images'));
         $this->assertTrue(file_exists($testInstallDir.'/store/cache/xls'));
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testDoGETNotLoggedIn(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session->delete('currentUser');
+        $front = new FrontController();
+        $request = new Request(array('method' => 'GET', 'URI' => '/install'));
+        $response = $front->process($request);
+        $this->assertEquals(200, $response->getStatus());
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCheckRightsDatabaseInstalled(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $person = new Person();
+        $person->set('email', $config->get('app.install.username'));
+        $person->set('password', 'testpassword');
+        $session->set('currentUser', $person);
+        $front = new FrontController();
+        $request = new Request(array('method' => 'GET', 'URI' => '/install'));
+        $front->process($request);
+        $controller = new InstallController();
+        $controller->setVisibility('Admin');
+        $result = $controller->checkRights();
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCheckRightsPublicVisibility(): void
+    {
+        $controller = new InstallController();
+        $controller->setVisibility('Public');
+        $result = $controller->checkRights();
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCheckRightsNotInstallUser(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        ActiveRecord::dropDatabase();
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $person = new Person();
+        $person->set('email', 'noninstall@example.com');
+        $person->set('password', 'testpassword');
+        $session->set('currentUser', $person);
+        $controller = new InstallController();
+        $controller->setVisibility('Admin');
+        $this->expectException(\TypeError::class);
+        $controller->checkRights();
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCheckRightsInstallUserMatch(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        ActiveRecord::dropDatabase();
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $person = new Person();
+        $person->set('email', $config->get('app.install.username'));
+        $person->set('password', 'testpassword');
+        $session->set('currentUser', $person);
+        $controller = new InstallController();
+        $controller->setVisibility('Admin');
+        $result = $controller->checkRights();
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCheckRightsNoUser(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        ActiveRecord::dropDatabase();
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $session->delete('currentUser');
+        $controller = new InstallController();
+        $controller->setVisibility('Admin');
+        $this->expectException(\TypeError::class);
+        $controller->checkRights();
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testCreateApplicationDirsExisting(): void
+    {
+        $controller = new InstallController();
+        $testInstallDir = '/tmp/alphainstalltestdir';
+        $config = ConfigProvider::getInstance();
+        $config->set('app.root', $testInstallDir.'/');
+        $config->set('app.file.store.dir', $testInstallDir.'/store/');
+        $dirs = array(
+            $testInstallDir.'/src',
+            $testInstallDir.'/src/Model',
+            $testInstallDir.'/src/View',
+            $testInstallDir.'/store/logs',
+            $testInstallDir.'/store/attachments',
+            $testInstallDir.'/store/cache',
+            $testInstallDir.'/store/cache/files',
+            $testInstallDir.'/store/cache/images',
+            $testInstallDir.'/store/cache/xls',
+        );
+        foreach ($dirs as $dir) {
+            if (!file_exists($dir)) {
+                mkdir($dir, 0774, true);
+            }
+        }
+        $body = $controller->createApplicationDirs();
+        $this->assertIsString($body);
+        $this->assertStringContainsString('successfully created', $body);
+    }
+
+    /**
+     * @since 4.1
+     */
+    public function testDoGETExistingTables(): void
+    {
+        $config = ConfigProvider::getInstance();
+        $config->set('session.provider.name', 'Alpha\Util\Http\Session\SessionProviderArray');
+        $session = ServiceFactory::getInstance('Alpha\Util\Http\Session\SessionProviderArray', 'Alpha\Util\Http\Session\SessionProviderInterface');
+        $person = new Person();
+        $person->set('email', $config->get('app.install.username'));
+        $person->set('password', 'testpassword');
+        $session->set('currentUser', $person);
+        $front = new FrontController();
+        $request = new Request(array('method' => 'GET', 'URI' => '/install'));
+        $first = $front->process($request);
+        $this->assertEquals(200, $first->getStatus());
+        $second = $front->process($request);
+        $this->assertEquals(200, $second->getStatus());
+        $this->assertStringContainsString('business object tables created successfully', $second->getBody());
     }
 }

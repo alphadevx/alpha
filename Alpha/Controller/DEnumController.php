@@ -91,6 +91,9 @@ class DEnumController extends ActiveRecordController implements ControllerInterf
 
         $this->record = new DEnum();
 
+        // Set default title for error scenarios (when doGET is not called)
+        $this->setTitle('Editing a DEnum');
+
         self::$logger->debug('<<__construct');
     }
 
